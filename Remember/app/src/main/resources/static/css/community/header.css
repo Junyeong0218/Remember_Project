@@ -1,0 +1,98 @@
+header {
+    position: fixed;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    background-color: rgb(33, 35, 34);
+    z-index: 1;
+}
+
+.header_wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1120px;
+    height: 100%;
+}
+
+.header_wrapper>.left {
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+.logo {
+    height: 19px;
+}
+
+.logo>img {
+    height: 19px;
+}
+
+.searcher {
+    position: relative;
+    margin-left: 40px;
+    padding: 12px 12px 12px 33px;
+    display: flex;
+    align-items: center;
+    width: 400px;
+    height: 100%;
+    border: none;
+    border-radius: 6px;
+    background-color: rgb(245, 245, 245);
+}
+
+.search_icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    margin-top: -9px;
+    width: 18px;
+    height: 18px;
+}
+
+.search_icon>img {
+    width: 100%;
+    height: 100%;
+}
+
+.searcher_input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: rgb(245, 245, 245);
+    font-size: 14px;
+    line-height: 1;
+    color: rgb(100, 100, 100);
+    outline: none;
+}
+
+.header_wrapper>.right {
+    display: flex;
+    align-items: center;
+    height: 36px;
+}
+
+.signin,
+.signup {
+    padding: 0 20px;
+    width: 84px;
+    height: 100%;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(33, 35, 34);
+}
+
+.signup {
+    margin-left: 10px;
+    width: 94px;
+    border: 1px solid rgb(40, 100, 240);
+    background-color: rgb(40, 100, 240);
+    color: white;
+}

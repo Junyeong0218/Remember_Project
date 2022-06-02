@@ -1,0 +1,125 @@
+.left_aside {
+    position: sticky;
+    top: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: center;
+    width: 265px;
+    height: calc(100vh - 120px);
+    gap: 20px;
+}
+
+.left_aside>section {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 0px;
+    width: 100%;
+    min-height: calc((100% - 40px) / 3);
+}
+
+.left_aside>section>.title {
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 51px;
+    border-bottom: 1px solid rgb(235, 235, 235);
+    background-color: rgb(245, 245, 245);
+}
+
+section>.title>.title_logo {
+    margin-right: 4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.insite_section .title_logo {
+    background-color: rgb(40, 100, 240);
+}
+
+.job_section .title_logo {
+    background-color: rgb(224, 165, 38);
+}
+
+.subject_section .title_logo {
+    background-color: rgb(48, 176, 153);
+}
+
+.title_logo>img {
+    width: 100%;
+    height: 100%;
+}
+
+section>.title>.accent_text {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(33, 35, 34);
+}
+
+.left_aside>section>ul {
+    width: 100%;
+    overflow-y: auto;
+    scroll-behavior: auto;
+}
+
+.left_aside>section>ul::-webkit-scrollbar {
+    width: 8px;
+    background-color: rgb(245, 245, 245);
+    border-left: 1px solid rgb(235, 235, 235);
+}
+
+.left_aside>section>ul::-webkit-scrollbar-thumb {
+    border-radius: 30px;
+    background-color: rgb(174, 174, 174);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+
+.left_aside>section>ul>li {
+    width: 100%;
+    background-color: white;
+    cursor: pointer;
+}
+
+.left_aside>section>ul>li:hover {
+    background-color: rgb(245, 245, 245);
+}
+
+.left_aside>section>ul>li:not(:last-child):after {
+    margin: 0 20px;
+    display: block;
+    content: "";
+    height: 1px;
+    background-color: rgb(235, 235, 235);
+}
+
+.left_aside .button_wrapper {
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    height: 78px;
+}
+
+.left_aside>section>ul>li .title {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgb(33, 35, 34);
+    line-height: 26px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.left_aside>section>ul>li .joiner,
+.left_aside>section>ul>li .joiner>.joiner_count {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(174, 174, 174);
+    line-height: 24px;
+}
