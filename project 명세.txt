@@ -1,0 +1,11 @@
+css
+class	_ ( underline ) ex) submit_button
+id	- ( dash ) ex) update-modal
+
+js
+변수명	_ ( underline ) ex) const submit_button
+함수명	풀네임 + 카멜표기법 ex) function addEvents()
+
+java
+전부다 카멜 + 풀네임
+
