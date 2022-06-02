@@ -30,6 +30,15 @@ footer {
     color: #858585;
 }
 
+.links>a:not(:nth-child(6))::after {
+    margin: 0 14px;
+    display: inline-block;
+    content: "";
+    width: 1px;
+    height: 12px;
+    background-color: #d8d8d8;
+}
+
 .relate_service_modal {
     position: relative;
     margin-left: 20px;
@@ -61,4 +70,45 @@ footer {
 .relate_service_modal:hover>.arrow {
     transform: rotate(45deg);
     margin: 4px 0 2px 10px;
+}
+
+.copyrights {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.copyrights>span.row,
+.copyrights>div.row {
+    font-size: 12px;
+    font-weight: normal;
+    color: #858585;
+    line-height: 1.67;
+}
+
+.copyrights>div.row {
+    display: flex;
+    align-items: center;
+}
+
+.copyrights>div.row>a {
+    color: #858585;
+    transition: 300ms;
+}
+
+.copyrights>div.row>a:hover {
+    color: #1B8EE4;
+    text-decoration: underline;
+}
+
+.copyrights>div.row>.company_number:not(:last-child)::after {
+    margin: 0 5px;
+    display: inline-block;
+    content: "";
+    width: 1px;
+    height: 12px;
+    background-color: #858585;
 }

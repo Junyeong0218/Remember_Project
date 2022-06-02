@@ -24,6 +24,7 @@ li {
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
@@ -33,6 +34,4 @@ body {
     overflow-wrap: break-word;
     white-space: nowrap;
     text-overflow: ellipsis;
-    box-sizing: border-box;
 }
-

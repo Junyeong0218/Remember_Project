@@ -6,10 +6,11 @@
     <meta http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>리멤버 - 직장인 필수 앱</title>
-    <link rel="stylesheet" href="/css/container.css">
-    <link rel="stylesheet" href="/css/mypage/header.css">
-    <link rel="stylesheet" href="/css/mypage/footer.css">
-    <link rel="stylesheet" href="/css/mypage/mypage.css">
+    <link rel="stylesheet" href="/static/css/container.css">
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/mypage/header.css">
+    <link rel="stylesheet" href="/static/css/mypage/footer.css">
+    <link rel="stylesheet" href="/static/css/mypage/mycards.css">
 </head>
 
 <body>
@@ -18,12 +19,12 @@
         <header>
             <div class="header_wrapper">
                 <a href="#" class="logo">
-                    <img src="/images/mypage_company_logo.png" alt="로고">
+                    <img src="/static/images/mypage_company_logo.png" alt="로고">
                 </a>
                 <div class="business_card_searcher">
                     <input type="text" name="keyword" class="keyword_input" placeholder="명함을 검색">
                     <span class="search_icon">
-                        <img src="/images/mypage_searcher_icon.png" alt="">
+                        <img src="/static/images/mypage_searcher_icon.png" alt="">
                     </span>
                     <div class="search_results">
 
@@ -33,10 +34,10 @@
                     <a href="#" class="tab selected">내 명함첩</a>
                     <a href="#" class="tab">팀 명함첩</a>
                     <button type="button" class="add_business_card">
-                        <img src="/images/mypage_add_business_card.png" alt="명함 추가">
+                        <img src="/static/images/mypage_add_business_card.png" alt="명함 추가">
                     </button>
                     <button type="button" class="alert_modal_button">
-                        <img src="/images/show_alert_modal_button.png" alt="알림 보기">
+                        <img src="/static/images/show_alert_modal_button.png" alt="알림 보기">
                     </button>
                     <button type="button" class="alert_modal_button">
                         <span class="email">hippo2003@naver.com</span>
@@ -49,13 +50,13 @@
             <div class="regiser_profile_banner">
                 <div class="banner_wrapper">
                     <div class="banner_message">
-                        <img src="/images/register_profile_banner_img.png" alt="">
+                        <img src="/static/images/register_profile_banner_img.png" alt="">
                         <span class="banner_text">아직 이직 생각 없어도,</span>
                         <span class="banner_text_accent">프로필 등록하고 <strong>스카웃 제안</strong> 받아보세요!</span>
                     </div>
                     <button type="button" class="register_button">
                         <span class="banner_text_accent">프로필 등록하기</span>
-                        <img src="/images/mypage_banner_right_arrow.svg" alt="">
+                        <img src="/static/images/mypage_banner_right_arrow.svg" alt="">
                     </button>
                 </div>
             </div>
@@ -63,15 +64,17 @@
                 <aside class="side_bar">
                     <div class="my_business_card">
                         <button type="button" class="register_business_card">
-                            <img src="/images/register_business_card_icon.png">
-                            <span class="side_bar_text">본인의 명함을 등록하세요</span>
+                            <div class="inner">
+                                <img src="/static/images/register_business_card_icon.png">
+                                <span class="side_bar_text">본인의 명함을 등록하세요</span>
+                            </div>
                         </button>
                         <button type="button" class="side_bar_card_menu">
                             <span class="side_bar_text">내 명함</span>
                         </button>
                         <button type="button" class="side_bar_card_menu">
                             <span class="side_bar_text">커리어 프로필</span>
-                            <img src="/images/mypage_side_bar_link_icon.svg">
+                            <img src="/static/images/mypage_side_bar_link_icon.svg">
                         </button>
                     </div>
                     <div class="my_card_book">
@@ -80,7 +83,7 @@
                         </button>
                         <button type="button" class="add_group_button">
                             <span class="add_group_text">그룹</span>
-                            <img src="/images/add_card_group_icon.png">
+                            <img src="/static/images/add_card_group_icon.png">
                         </button>
                         <button type="button" class="card_group">
                             <span class="group_text">모든 명함 (<span class="whole_count">0</span>)</span>
@@ -112,6 +115,16 @@
                         <span class="text">관련 서비스</span>
                         <span class="arrow"></span>
                     </button>
+                </div>
+                <div class="copyrights">
+                    <span class="row">대표전화 : 02-556-4202</span>
+                    <span class="row">06158 서울시 강남구 테헤란로79길 6, 6층 (삼성동, 제이에스타워) (대표자:최재호) 사업자등록번호 : 211-88-81111</span>
+                    <div class="row">
+                        <a href="#" class="company_number">통신판매업 신고번호: 2016-서울강남-03104호</a>
+                        <span class="company_number">직업정보제공사업 신고번호: 서울강남 제2019-11호</span>
+                        <span class="company_number">유료직업소개사업 신고번호: 2020-3220237-14-5-00003</span>
+                    </div>
+                    <span class="row">Copyright 2019. Drama & Company All rights reserved.</span>
                 </div>
             </div>
         </footer>
