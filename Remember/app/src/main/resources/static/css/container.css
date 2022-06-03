@@ -1,4 +1,4 @@
-@import url("/css/static/pretendard.css");
+@import url("/static/css/static/pretendard.css");
 
 .container {
     width: 100%;
@@ -24,15 +24,38 @@ li {
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: Pretendard;
+    
 }
 
 body {
-    font-family: Pretendard;
+    
     font-size: 16px;
     font-weight: 400;
     overflow-wrap: break-word;
     white-space: nowrap;
     text-overflow: ellipsis;
-    box-sizing: border-box;
+
+}
+
+footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer_in{
+
+
+    width: 1200px;
+    margin: 0 16px;
+    padding: 31px 0 24px;
+}
+
+.footer_menu ul{
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
 }
 

@@ -1,0 +1,126 @@
+header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+}
+
+.header_in{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: #212322;
+}
+
+.header_top{
+    display: flex;
+    align-items: center;
+    width: 1200px;
+
+}
+
+.header_add{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    background-color: #ffffff;
+}
+
+.add_menu{
+    display: flex;
+    align-items: center;
+    width: 1200px;
+
+    line-height: 36px;
+}
+
+
+
+.header_nav{
+    display: flex;
+    align-items: center;
+    width: 1200px;
+    height: 60px;
+    line-height: 60px;
+
+}
+
+.header_nav nav{
+    display: flex;
+    align-items: center;
+    margin-left: 40px;
+}
+
+.logo{
+    line-height: 50%;
+}
+
+nav a{
+    margin: 0 15px;
+    padding: 16px 16px 18px;
+    font-weight: 400;
+    color: #ffffff;
+
+}
+
+.header_sign{
+    height: 100%;
+}
+
+.sign{
+    width: 100%;
+}
+
+.header_sign ul{
+    display: flex;
+    align-items: center;
+}
+
+.sign ul li{
+    padding: 18px 0;
+}
+
+.sign ul li:first-child::after{
+    position: relative;
+    content: "|";
+    padding: 0 3px;
+    top: -2px;
+    font-size: 10px;
+    color: #ffffff;
+}
+
+.sign ul li a {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.add_menu ul{
+    display: flex;
+    align-items: center;
+}
+
+
+.add_menu ul li:first-child:after{
+    content: "|";
+    position: relative;
+    top: -1;
+    padding: 0 15px;
+    font-size: 12px;
+    
+}
+
+.add_menu ul li a{
+    font-size: 14px;
+    font-weight: 600;
+    color: #212322;
+}
+
+
+
+
+

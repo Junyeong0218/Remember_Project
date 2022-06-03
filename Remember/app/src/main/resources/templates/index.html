@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>리멤버 - 직장인 필수 앱</title>
-    <link rel="stylesheet" href="/css/container.css">
-    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/static/css/container.css">
+    <link rel="stylesheet" href="/static/css/index.css">
 </head>
 
 <body>
@@ -16,20 +16,20 @@
             <div class="header_in">
                 <div class="header_nav">
                     <h1 class="logo">
-                        <img src="/images/logo.svg" alt="리멤버 로고">
+                        <img src="/static/images/main_logo.svg" alt="리멤버 로고">
                     </h1>
                     <nav>
-                        <a href="" class="asdf">커리어</a>
-                        <a href="">커뮤니티</a>
-                        <a href="">나우</a>
-                        <a href="">명함첩</a>
+                        <a href="#">커리어</a>
+                        <a href="#">커뮤니티</a>
+                        <a href="#">나우</a>
+                        <a href="#">명함첩</a>
                     </nav>
                 </div>
                 <div class="header_sign">
                     <div class="sign">
                         <ul>
-                            <li><a href="">로그인</a></li>
-                            <li><a href="">회원가입</a></li>
+                            <li><a href="#">로그인</a></li>
+                            <li><a href="#">회원가입</a></li>
                         </ul>                      
                     </div>   
                 </div>
@@ -37,24 +37,137 @@
         </header>
         <main>
             <div class="main_msg">
-                <h1>당장 이직 생각 없어도<br>스카웃 제안부터 받아보세요!</h1>
-                <button>스카웃 제안 받기</button>
+                <h1>350만명이 사용하는<br>직장인 필수앱 - 리멤버</h1>
+                <h2>스카웃 받고, 인맥 넓히고, 일 고민 나누고, 인사이트도 얻고!</h2>
+                <button>시작하기</button>
             </div>
         </main>
         <section>
-            <div class="main_con">
-                <div class="con_profile">
-                    <span><img src="/images/profile.png" alt=""></span>
+            <div class="main_profile">
+                <div>
+                    <span><img src="/static/images/profile.png" alt="프로필등록"></span>
                 </div>
                 <div class="con_profile_go">
-                    <h2>프로필 등록하면<br>스카웃 제안이 찾아와요!</h2>
-                    <h3>재직 중인 회사에서는<br>내 프로필을 볼 수 없으니 안심하세요.</h3>
-                    <button>지금 프로필 등록하기 <img class="arrow" src="/images/arrow.svg" alt=""></button>
+                    <h2 class="go_title">프로필 등록하면<br> 스카웃 제안이 찾아와요!</h2>
+                    <h3 class="go_msg">재직중인회사에서는<br>내 프로필을볼수없으니안심하세요.</h3>
+                    <button class="go_btn">지금 프로필 등록하기 <img class="arrow" src="/static/images/main_content_arrow.svg" alt="버튼"></button>
+                </div>
+            </div>
+            <div class="main_con">
+                <div class="con_community">
+                    <div class="community_go">
+                        <h2 class="go_title">업계 사람들과<br>깊이 있게 소통해요!</h2>
+                        <h3 class="go_msg">커리어고민과<br>직장 생활의 노하우를 공유해요.</h3>
+                        <button class="go_btn">커뮤니티 바로가기 <img class="arrow" src="/static/images/main_content_arrow.svg" alt="버튼"></button>
+                    </div>
+                    <div>
+                        <span><img src="/static/images/main_content_community.PNG" alt="커뮤니티이미지"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="main_briefing">
+                <div class="con_briefing">
+                    <div class="go_briefing">
+                        <h2 class="go_title">전문가 브리핑으로<br>인사이트 충전해요!</h2>
+                        <h3 class="go_msg">매일아침,국내최고전문가들의<br>경제브리핑을받으세요.</h3>
+                        <button class="go_btn">바로 읽어보기<img class="arrow" src="/static/images/main_content_arrow.svg" alt="버튼"></button>
+                    </div>
+                    <div style="margin-top:68px;">
+                        <span><img src="/static/images/main_content_briefing.PNG" alt="뉴스브리핑"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="main_con">
+                <div class="con_photo">
+                    <div>
+                        <span><img src="/static/images/main_content_photo.PNG" alt="명함관리"></span>
+                    </div>
+                    <div class="photo_go">
+                        <h2 class="go_title">촬영 한 번으로<br>명함관리 쉽게 해요!</h2>
+                        <h3 class="go_msg">내 인맥의 이직, 승진 소식도<br>받아보세요</h3>
+                        <button class="go_btn">명함 관리 시작하기<img class="arrow" src="/static/images/main_content_arrow.svg" alt="버튼"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="main_briefing">
+                <div class="con_briefing">
+                    <div class="go_briefing">
+                        <div class="df">
+                            <p> 기업고객 전용</p>
+                        </div>
+                        <h2 class="go_title go_solution">성공적인 비즈니스를 위한 <br> 다양한 솔루션을 제공합니다</h2>
+                    </div>
+                    <div class="list">
+                            <div class="list_box">
+                                <div class="box_recurit">
+                                    <div>채용 솔루션</div>
+                                    <span><img src="/static/images/main_content_white_arrow.svg" alt="버튼"></span>
+                                </div>
+                                <div class="recurit_msg">
+                                    <span>다른 곳에는 없는<br>핵심인재들을 만나보세요 </span>
+                                    <span style="margin-left: 25px"><img src="/static/images/main_content_best.png" alt="손모양"></span>
+                                </div>
+                                <div>
+                                </div>
+                                
+                            </div>
+                            <div class="list_box"  style="background-color: #ffffff;  color: #000;">
+                                    <div class="box_recurit">
+                                        광고 상품
+                                        <span><img src="/static/images/main_content_black_arrow.svg" alt="버튼"></span>
+                                    </div>
+                                    <div class="recurit_msg">
+                                        <span >잠재 고객을 타깃하고,<br>제품을 효과적으로 알리세요</span>
+                                        <span style="margin-left: 25px"><img src="/static/images/main_content_hand.png" alt="악수"></span>
+                                </div>
+                            </div>
+                            <div class="list_box" style="background-color: #8c8c8c;;">
+                                <div class="box_recurit">
+                                    리서치 서비스
+                                    <span><img src="/static/images/main_content_white_arrow.svg" alt="버튼"></span>
+                                </div>
+                                <div class="recurit_msg">
+                                    <span>설문조사와 전문가 인터뷰를 통해<br>고객의 정확한 니즈를 파악하세요</span>
+                                    <span style="margin-left: 25px"><img src="/static/images/main_content_paper.png" alt="서류"></span>
+                                </div>
+                            </div>
+                            <div class="list_box" style="background-color: #575757;">
+                                <div class="box_recurit">
+                                    기업용 명함 관리
+                                    <span><img src="/static/images/main_content_white_arrow.svg" alt="버튼"></span>
+                                </div>
+                                <div class="recurit_msg">
+                                    <span>소중한 회사의 영업자산,<br>팀 명함첩으로 관리하세요</span>
+                                    <span style="margin-left: 25px"><img src="/static/images/main_content_file.png" alt="파일"></span>
+                                </div>
+                            </div>
+                    </div>
                 </div>
             </div>
         </section>
         <footer>
-
+            <div class="footer_in">
+                <div class="footer_menu">
+                    <ul>
+                        <li><a href="">회사소개</a></li>
+                        <li><a href="">이용약관</a></li>
+                        <li><a href="">위치기반 서비스 이용약관</a></li>
+                        <li><a href="">개인정보처리방침</a></li>
+                        <li><a href="">도움말</a></li>
+                        <li><a href="">광고상품</a></li>
+                        <li><a href="">문의하기</a></li>
+                    </ul>
+                    <button>기업용 서비스 <img src="/static/images/main_down_arrow.svg" alt="화살표"></button>
+                </div>
+                <div class="footer_copyright">
+                    <address>
+                        대표전화 : 02-556-4202<br>
+                        06158 서울시 강남구 테헤란로79길 6, 6층(삼성동,제이에스타워)(대표자:최재호)사업자등록번호:211-88-81111<br>
+                        통신판매업 신고번호:2016-서울강남-03104호 | 직업정보제공사업 신고번호: 서울강남 제2019-11호 | 유료직업소개사업 신고번호:2020-3220237-14-5-00003<br>
+                    </address>
+                    <p>Copyright 2019.Drama & Company All rights reserved.</p>
+                </div>
+            </div>
         </footer>
     </div>
 </body>
