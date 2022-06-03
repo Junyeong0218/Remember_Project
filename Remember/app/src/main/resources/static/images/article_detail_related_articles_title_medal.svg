@@ -1,0 +1,11 @@
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M5 11H15V20L10 17.9625L5 20V11Z" fill="#EA5128"/>
+<circle cx="10" cy="8" r="8" fill="url(#paint0_angular)"/>
+<ellipse cx="9.99995" cy="8" rx="4.8" ry="5" fill="#FFE6AD"/>
+<defs>
+<radialGradient id="paint0_angular" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(10 8) scale(8)">
+<stop stop-color="#FFC951"/>
+<stop offset="1" stop-color="#FFE19E"/>
+</radialGradient>
+</defs>
+</svg>

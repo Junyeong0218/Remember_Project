@@ -1,0 +1,231 @@
+table user_mst {
+  id int pk
+  username varchar(16) unique
+  name varchar(20)
+  nickname varchar(20) unique
+  phone varchar(15) unique
+  oauth_username varchar(100)
+  provider varchar(10)
+  create_date datetime
+  update_date datetime
+}
+
+table user_detail {
+  id int pk
+  user_id int
+  profile_img varchar(100)
+  name varchar(20) unique
+  company_name varchar(50)
+  department_name varchar(50)
+  position_name varchar(50)
+  join_date datetime
+  leave_date datetime
+  career_year int
+  turnover_flag tinyint(1)
+  create_date datetime
+  update_date datetime
+}
+
+table turnover_mst {
+  id int pk
+  description varchar(50)
+  create_date datetime
+  update_date datetime
+}
+
+table card_mst {
+  id int pk
+  user_id int
+  name varchar(20)
+  phone varchar(15)
+  email varchar(50)
+  company_name varchar(50)
+  part_name varchar(50)
+  position_name varchar(50)
+  create_date datetime
+  update_date datetime
+}
+
+table card_group_mst {
+  id int pk
+  user_id int
+  group_name varchar(50)
+  create_date datetime
+  update_date datetime
+}
+
+table card_belong_group {
+  id int pk
+  group_id int
+  card_id int
+  create_date datetime
+  update_date datetime
+}
+
+table community_category_mst {
+  id int pk
+  category_name varchar(30)
+  create_date datetime
+  update_date datetime
+}
+
+table community_sub_category {
+  id int pk
+  main_category_id int 
+  category_name varchar(30)
+}
+
+table article_mst {
+  id int pk
+  user_id int
+  sub_category_id int 
+  title varchar(100)
+  contents varchar(500)
+  view_count int
+  create_date datetime
+  update_date datetime
+}
+
+table article_image {
+  id int pk
+  article_id int
+  file_name varchar(100)
+  create_date datetime
+  update_date datetime
+}
+
+table article_like {
+  id int pk
+  article_id int
+  user_id int
+  create_date datetime
+  update_date datetime
+}
+
+table article_comment_mst {
+  id int pk
+  article_id int
+  user_id int
+  contents varchar(500)
+  create_date datetime
+  update_date datetime
+}
+
+table article_comment_like {
+  id int pk
+  comment_id int
+  user_id int
+  create_date datetime
+  update_date datetime
+}
+
+table remember_now_category_mst {
+  id int pk
+  name varchar(10)
+}
+
+table remember_now_article_mst {
+  id int pk
+  user_id int
+  category_id int
+  title varchar(100)
+  contents varchar(5000)
+  create_date datetime
+  update_date datetinme
+}
+
+table remember_now_title_image {
+  id int pk
+  remember_article_id int
+  file_name varchar(100)
+  create_date datetime
+  update_date datetime
+}
+
+table remember_now_contents_image {
+  id int pk
+  remember_article_id int
+  file_name varchar(100)
+  create_date datetime
+  update_date datetime
+}
+
+ref {
+  user_detail.user_id > user_mst.id
+}
+
+ref {
+  user_detail.turnover_flag > turnover_mst.id
+}
+
+ref {
+  card_mst.user_id > user_mst.id
+}
+
+ref {
+  card_group_mst.user_id > user_mst.id
+}
+
+ref {
+  card_belong_group.group_id > card_group_mst.id
+}
+
+ref {
+  card_belong_group.card_id > card_mst.id
+}
+
+ref {
+  community_sub_category.main_category_id > community_category_mst.id
+}
+
+ref {
+  article_mst.user_id > user_mst.id
+}
+
+ref {
+  article_mst.sub_category_id > community_sub_category.id
+}
+
+ref {
+  article_image.article_id > article_mst.id
+}
+
+ref {
+  article_like.user_id > user_mst.id
+}
+
+ref {
+  article_like.article_id > article_mst.id
+}
+
+ref {
+  article_comment_mst.article_id > article_mst.id
+}
+
+ref {
+  article_comment_mst.user_id > user_mst.id
+}
+
+ref {
+  article_comment_like.comment_id > article_comment_mst.id
+}
+
+ref {
+  article_comment_like.user_id > user_mst.id
+}
+
+ref {
+  remember_now_article_mst.category_id > remember_now_category_mst.id
+}
+
+ref {
+  remember_now_article_mst.user_id > user_mst.id
+}
+
+ref {
+  remember_now_title_image.remember_article_id > remember_now_article_mst.id
+}
+
+ref {
+  remember_now_contents_image.remember_article_id > remember_now_article_mst.id
+}
