@@ -195,3 +195,196 @@ main {
     color: rgb(33, 35, 34);
     line-height: 27px;
 }
+
+.article_detail>.contents>.related_articles {
+    margin-top: 24px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(235, 235, 235);
+    border-radius: 8px;
+}
+
+.article_detail>.contents>.related_articles>.header {
+    padding: 20px 20px 12px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    border-bottom: 1px solid rgb(235, 235, 235);
+    border-radius: 8px 8px 0 0;
+    background-color: rgb(245, 245, 245);
+}
+
+.article_detail>.contents>.related_articles>.header>span {
+    height: 24px;
+    line-height: 24px;
+}
+
+.article_detail>.contents>.related_articles>.header>span>img {
+    height: 100%;
+}
+
+.article_detail>.contents>.related_articles>.header>.text {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.article_detail>.contents>.related_articles>.header>.topic {
+    color: rgb(40, 100, 240);
+}
+
+.article_detail>.contents>.related_articles>.related_article_list {
+    padding: 20px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.article_detail>.contents>.related_articles>.related_article_list>.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 13px;
+    cursor: pointer;
+}
+
+.article_detail>.contents>.related_articles>.related_article_list>.row>span {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.article_detail>.contents>.related_articles>.related_article_list>.row>.numbering {
+    color: rgb(40, 100, 240);
+}
+
+.article_detail>.contents>.related_articles>.related_article_list>.row:hover>.title {
+    text-decoration: underline;
+}
+
+.feeds>.inner_ad {
+    width: 100%;
+    height: 104px;
+    border-bottom: 1px solid rgb(235, 235, 235);
+}
+
+.inner_ad>a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: #F4F6F8;
+}
+
+.inner_ad>a>img {
+    height: 100%;
+}
+
+.comment_form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: white;
+}
+
+.comment_form>.comment_textarea {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    gap: 8px;
+}
+
+.comment_form>.comment_textarea>.profile_image {
+    width: 32px;
+    height: 32px;
+}
+
+.comment_form>.comment_textarea>.profile_image>img {
+    width: 100%;
+    height: 100%;
+}
+
+.comment_form>.comment_textarea>.comment_contents {
+    margin: 3px 0;
+    flex-grow: 1;
+    min-height: 26px;
+    height: 104px;
+    border: none;
+    font-size: 16px;
+    line-height: 26px;
+    font-weight: 400;
+    word-break: break-all;
+    overflow: auto;
+    resize: vertical;
+    outline: none;
+}
+
+.comment_form>.buttons {
+    padding: 8px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-top: 1px solid rgb(204, 204, 204);
+}
+
+.comment_form>.buttons>.input_wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.comment_form>.buttons>.input_wrapper>input {
+    width: 20px;
+    height: 20px;
+    appearance: none;
+    background-image: url("/static/images/non_checked_checkbox.svg");
+}
+
+.comment_form>.buttons>.input_wrapper>input:checked {
+    background-image: url("/static/images/checked_checkbox.svg");
+}
+
+.comment_form>.buttons>.input_wrapper>span {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgb(100, 100, 100);
+    line-height: 26px;
+    cursor: pointer;
+}
+
+.comment_form>.buttons>.submit_comment {
+    padding: 3px 12px;
+    border-radius: 4px;
+    background-color: rgb(40, 100, 240);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    color: white;
+    cursor: pointer;
+}
+
+.comment_form>.buttons>.submit_comment:disabled {
+    background-color: rgb(199, 199, 205);
+}
+
+.comments {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.comments>.title {
+    padding: 12px 20px;
+    border-bottom: 1px solid rgb(235, 235, 235);
+    background-color: rgb(245, 245, 245);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 26px;
+}
