@@ -1,37 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300&display=swap');
 
-body {
-    font-family: 'nanumgothic';
-    font-size: 15px;
-    color: #222;
-    margin: 0;
-    padding: 0;
-}
-
-.container{
-    background-color: #fff;
-    height: 100vh;
+main {
+    padding: 40px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .login {
-
     width: 360px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.header {
-    text-align: center;
-    border-bottom: 1px solid rgb(229, 229, 230);
-    background-color: #fff;
-    padding: 6px 0;
-}
-
-.header img {
-    width: 75px;
-    height: auto
 }
 
 .login-type {
@@ -44,7 +22,7 @@ body {
     margin-bottom: 60px;
     padding-bottom: 10px;
     font-size: 26px;
-    text-align:center;
+    text-align: center;
     font-weight: 550;
 }
 
@@ -94,35 +72,35 @@ a.btn5 {
 }
 
 a.btn1::before {
-    content: url(../images/btn1.png);
+    content: url(/static/images/btn1.png);
     position: absolute;
     left: 12px;
     top: 5px;
 }
 
 a.btn2::before {
-    content: url(../images/btn2.png);
+    content: url(/static/images/btn2.png);
     position: absolute;
     left: 12px;
     top: 5px;
 }
 
 a.btn3::before {
-    content: url(../images/btn3.png);
+    content: url(/static/images/btn3.png);
     position: absolute;
     left: 12px;
     top: 5px;
 }
 
 a.btn4::before {
-    content: url(../images/btn4.png);
+    content: url(/static/images/btn4.png);
     position: absolute;
     left: 12px;
     top: 5px;
 }
 
 a.btn5::before {
-    content: url(../images/btn5.png);
+    content: url(/static/images/btn5.png);
     position: absolute;
     left: 12px;
     top: 5px;
@@ -136,7 +114,7 @@ span.or-txt {
     position: relative;
 }
 
-span.or-txt:before{
+span.or-txt:before {
     content: '';
     position: absolute;
     top: 7px;
@@ -146,12 +124,13 @@ span.or-txt:before{
     height: 1px;
 }
 
-span.or-txt:after{
+span.or-txt:after {
     content: '';
     position: absolute;
     top: 7px;
     right: 0;
-    background-color: rgb(229, 229, 230);;
+    background-color: rgb(229, 229, 230);
+    ;
     width: 44%;
     height: 1px;
 }
@@ -170,3 +149,24 @@ span.or-txt:after{
     text-align: center;
 }
 
+.login_link {
+    margin-top: 26px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 350px;
+}
+
+.login_link>span {
+    font-size: 15px;
+    color: #333;
+    line-height: 22.5px;
+}
+
+.login_link>span>a {
+    font: inherit;
+    font-weight: bold;
+    color: #333;
+    text-decoration: underline;
+}

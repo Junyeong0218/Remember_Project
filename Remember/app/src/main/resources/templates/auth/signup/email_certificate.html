@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>리멤버 - 직장인 필수 앱</title>
-    <link rel="stylesheet" href="../../static/css/signup_email.css">
-    <link rel="short icon" href="../../static/images/favicon.png">
+    <link rel="stylesheet" href="/static/css/container.css">
+    <link rel="stylesheet" href="/static/css/auth/signup/email_certificate.css">
+    <link rel="stylesheet" href="/static/css/auth/header.css">
+    <link rel="short icon" href="/static/images/favicon.png">
     <script src="https://kit.fontawesome.com/9caa3067ac.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
     <div class="container">
-        <div class="inner">
-            <div class="header">
-                <a href=""><img src="../../static/images/logo.png"></a>
-            </div>  
+        <header>
+            <a href="#" class="logo">
+                <img src="/static/images/signup_logo.png">
+            </a>
+        </header>
+        <main>
             <div class="signup-email">
                 <div class="form-box">
                     <h1>계정으로 사용할 이메일과 <br> 비밀번호를 입력하세요</h1>
                 </div>
                 <div class="input-box box1">
                     <i class="fa fa-envelope-o fa-lg fa-fw"></i>
-                    <input type="email" placeholder="계정(이메일) 입력">    
+                    <input type="email" placeholder="계정(이메일) 입력">
                 </div>
                 <div class="input-box box2">
                     <i class="fa fa-lock fa-lg fa-fw"></i>
-                    <input type="password" placeholder="비밀번호 입력">    
+                    <input type="password" placeholder="비밀번호 입력">
                 </div>
                 <p>영문/숫자/특수문자 중 2가지 이상 조합하여 8자 이상 입력해 주세요.</p>
                 <button type="button" class="next-button">다음</button>
             </div>
-        </div>
+        </main>
     </div>
 </body>
+
 </html>
