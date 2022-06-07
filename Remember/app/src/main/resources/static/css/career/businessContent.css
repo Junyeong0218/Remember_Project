@@ -390,14 +390,17 @@ section{
 
 }
 
+.qna_title > img {
+    cursor: pointer;
+}
+
 .title_box{
     display: flex;
-
     font-size: 20px;
 
 }
 
-.title_box div{
+.question{
     margin-right: 12px; 
     fill: none;
      font-size: 20px;

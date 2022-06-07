@@ -22,6 +22,7 @@ main{
     margin-top: 96px;
 }
 
+
 .main_img h1{
     margin-bottom: 80px;
     line-height: 83px;
@@ -228,9 +229,6 @@ main{
     white-space: pre-line;
 }
 
-.list_name{
-
-}
 
 .list_name p{
     font-size: 14px;
@@ -299,15 +297,18 @@ main{
 
 }
 
+.qna_title > img {
+    cursor: pointer;
+}
+
 .title_box{
     display: flex;
     font-size: 20px;
 
 }
 
-.title_box div{
+.question{
     margin-right: 12px; 
-    fill: none;
      font-size: 20px;
 }
 
@@ -321,7 +322,7 @@ main{
     font-weight: 600;
 
     max-height: 1000px;
-    transition: max-height 0.5s ease-in-out 0s
+
 }
 
 
@@ -333,28 +334,12 @@ main{
 
 }
 
-.answer_box div{
-    margin-right: 12px;
-    font-weight: 600;
-}
-
-.title_arrow{
-    font-size: 25px;
-}
-
-/* .title_arrow:active{
-    transform: rotate(-90deg);
-} */
-
 .answer{
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
     vertical-align: baseline;
     line-height: 30px;
     font-size: 20px;
     font-weight: 600;
+    margin-right: 12px;
     word-break: break-all;
     white-space: pre-line;
 }
