@@ -239,6 +239,10 @@ main {
     border-radius: 6px;
 }
 
+.feed>.tag_wrapper>.insight {
+    color: rgb(40, 100, 240);
+}
+
 .feed>.tag_wrapper>.job {
     color: rgb(224, 165, 38);
 }

@@ -5,7 +5,7 @@
   
 <mapper namespace="com.remember.app.entity.community.CommunityRepository">
 
-	<select id="getCategoriesWithArticleCount" resultType="com.remember.app.entity.community.SubCategoryDetail">
+	<select id="getCategoriesWithArticleCount" resultType="com.remember.app.entity.community.category.SubCategoryDetail">
 		select
 			sc.*,
 			count(distinct am.id) as article_count
@@ -14,6 +14,79 @@
 			left outer join article_mst am on(am.sub_category_id = sc.id)
 		group by
 			sc.id;
+	</select>
+	
+	<select id="getBestArticleSummaries" resultType="com.remember.app.entity.community.article.BestArticleSummary">
+		select
+			am.id,
+			am.sub_category_id,
+			category.category_name,
+			am.title,
+			am.view_count,
+			count(distinct al.id) as like_count,
+			count(distinct acm.id) as comment_count
+		from
+			article_mst am
+			left outer join community_sub_category category on(category.id = am.sub_category_id)
+			left outer join article_like al on(al.article_id = am.id)
+			left outer join article_comment_mst acm on(acm.article_id = am.id)
+		group by
+			am.id
+		order by
+			like_count desc
+		limit 14;
+	</select>
+	
+	<select id="getArticleSummaries" resultType="com.remember.app.entity.community.article.ArticleSummary">
+		select
+			am.id,
+			
+			am.user_id,
+			um.nickname,
+			ud.department_name,
+			ud.profile_img,
+			
+			am.sub_category_id,
+			category.category_name,
+			
+			am.title,
+			am.`contents`,
+			image.file_name,
+			am.create_date,
+			am.view_count,
+			count(distinct al.id) as like_count,
+			count(distinct acm.id) as comment_count
+		from
+			article_mst am
+			left outer join user_mst um ON(um.id = am.user_id)
+			left outer join user_detail ud ON(ud.user_id = am.user_id)
+			left outer join community_sub_category category ON(category.id = am.sub_category_id)
+			left outer join article_image image ON(image.article_id = am.id)
+			left outer join article_like al ON(al.article_id = am.id)
+			left outer join article_comment_mst acm ON(acm.article_id = am.id)
+		group by
+			am.id
+		order by
+			am.create_date desc
+		limit 0, 15;
+	</select>
+	
+	<select id="getTotalArticleCount" resultType="Integer">
+		select
+			count(id)
+		from
+			article_mst;
+	</select>
+	
+	<select id="getTopicArticleCount" parameterType="String" resultType="Integer">
+		select
+			count(am.id)
+		from
+			community_category_mst ccm
+			left outer join community_sub_category category on(category.main_category_id = ccm.id)
+			left outer join article_mst am on(am.id = category.id)
+		where
+			ccm.category_eng_name = ${categoryName};
 	</select>
 
 </mapper>

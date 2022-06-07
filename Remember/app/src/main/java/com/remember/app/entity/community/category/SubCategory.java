@@ -1,4 +1,4 @@
-package com.remember.app.entity.community;
+package com.remember.app.entity.community.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
