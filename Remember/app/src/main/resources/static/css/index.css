@@ -102,6 +102,7 @@ main{
 }
 
 .main_msg h1{
+    font-weight: 600;
     font-size: 68px;
     margin: 60px 0 30px 0;
     color: #ffffff;
@@ -201,6 +202,7 @@ main{
     font-size: 48px;
     font-weight: 700;
     word-spacing: 2px;
+    margin-bottom: 20px;
 }
 
 .go_msg{
@@ -239,12 +241,16 @@ main{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: 40px;
 
 }
 
 .go_briefing h2{
-  line-height: 68px;
-  margin-bottom: 20px;
+    font-size: 54px;
+    font-weight: 700;
+    line-height: 68px;
+    text-align: center;
+
 }  
 
 .go_solution{
@@ -321,11 +327,14 @@ main{
 }
 
 .recurit_msg{
+    display: flex;
+    justify-content: space-between;
+}
+
+.solution_msg{
     font-size: 18px;
     font-weight: 400;
     line-height: 26px;
-    display: flex;
-    justify-content: space-between;
 }
 
 .recurit_msg img{
@@ -344,6 +353,7 @@ footer{
 
 .footer_in{
     width: 1120px;
+    padding: 31px 0 24px;
 }
 
 .footer_menu{
@@ -369,7 +379,7 @@ footer{
 
 
 
-.footer_menu a:nth-child(7)::after{
+.footer_menu a:nth-child(6)::after{
     content: none;
 }
 
@@ -384,18 +394,21 @@ footer{
     font-weight: bold;
 }
 
-.footer_menu button{
+.footer_btn{
     margin-left: 24px;
     width: 132px;
     height: 38px;
     line-height: 24px;
     border: 1px solid #000;
     border-radius: 4px;
-    font-size: 14;
-    font-weight: 600;
     padding: 7px 10px;
     cursor: pointer;
     
+}
+
+.footer_btn span{
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .footer_copyright{

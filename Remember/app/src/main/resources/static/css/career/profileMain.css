@@ -26,6 +26,7 @@ main{
     margin-bottom: 80px;
     line-height: 83px;
     font-size: 68px;
+    font-weight: 600;
     text-align: center;
     color: #ffffff;
 }
@@ -57,6 +58,9 @@ main{
 }
 
 .con_company span{
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 60px;
     color: #2864f0;
 }
 
@@ -282,6 +286,7 @@ main{
     margin-bottom: 20px;
     border-radius: 8px;
     border: 1px solid rgb(204, 204, 204);
+    background-color: #fff;
 }
 
 .qna_title{
@@ -296,7 +301,14 @@ main{
 
 .title_box{
     display: flex;
+    font-size: 20px;
 
+}
+
+.title_box div{
+    margin-right: 12px; 
+    fill: none;
+     font-size: 20px;
 }
 
 
@@ -320,6 +332,12 @@ main{
     width: 100%;
 
 }
+
+.answer_box div{
+    margin-right: 12px;
+    font-weight: 600;
+}
+
 .title_arrow{
     font-size: 25px;
 }
@@ -335,6 +353,8 @@ main{
     font-size: 100%;
     vertical-align: baseline;
     line-height: 30px;
+    font-size: 20px;
+    font-weight: 600;
     word-break: break-all;
     white-space: pre-line;
 }
@@ -347,13 +367,7 @@ main{
     width: 100%;
 }
 
-.con_qna{
-    background-color: aqua;
-    width: 1120px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+
 
 .con_qna h2{
     font-size: 60px;
