@@ -50,6 +50,7 @@ main {
 }
 
 .banner_text_accent>strong {
+	font: inherit;
     color: #2864f0;
 }
 

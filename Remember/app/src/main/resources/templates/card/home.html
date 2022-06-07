@@ -8,9 +8,9 @@
     <title>리멤버 - 직장인 필수 앱</title>
     <link rel="stylesheet" href="/static/css/container.css">
     <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/static/css/mypage/header.css">
-    <link rel="stylesheet" href="/static/css/mypage/footer.css">
-    <link rel="stylesheet" href="/static/css/mypage/mycards.css">
+    <link rel="stylesheet" href="/static/css/card/header.css">
+    <link rel="stylesheet" href="/static/css/card/footer.css">
+    <link rel="stylesheet" href="/static/css/card/home.css">
 </head>
 
 <body>
@@ -18,7 +18,7 @@
     <div class="container">
         <header>
             <div class="header_wrapper">
-                <a href="#" class="logo">
+                <a href="/card" class="logo">
                     <img src="/static/images/mypage_company_logo.png" alt="로고">
                 </a>
                 <div class="business_card_searcher">
@@ -31,8 +31,8 @@
                     </div>
                 </div>
                 <div class="card_tabs">
-                    <a href="#" class="tab selected">내 명함첩</a>
-                    <a href="#" class="tab">팀 명함첩</a>
+                    <a href="/card" class="tab selected">내 명함첩</a>
+                    <a href="/card/team-empty" class="tab">팀 명함첩</a>
                     <button type="button" class="add_business_card">
                         <img src="/static/images/mypage_add_business_card.png" alt="명함 추가">
                     </button>
@@ -78,7 +78,7 @@
                         </button>
                     </div>
                     <div class="my_card_book">
-                        <button type="type" class="title">
+                        <button type="button" class="title">
                             <span class="title_text">내 명함첩</span>
                         </button>
                         <button type="button" class="add_group_button">

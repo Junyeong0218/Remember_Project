@@ -17,10 +17,10 @@ spring:
     url: jdbc:mariadb://rememeber-project.c15dkezpex4v.ap-northeast-2.rds.amazonaws.com/remember?useUnicode=true&serverTimezone=Asia/Seoul&allowMultiQueries=true
     username: hippo2003
     password: wns12358
-  security:
-    user:
-      name: test
-      password: 1234
+#  security:
+#    user:
+#      name: test
+#      password: 1234
       
 mybatis:
   mapper-locations:
