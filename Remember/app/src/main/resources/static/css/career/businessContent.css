@@ -3,6 +3,7 @@ section{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
 }
 
 .con_box{
@@ -22,11 +23,12 @@ section{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+
 }
 
 .con_title h2{
-    font-size: 48px;
+    font-size: 60px;
+    font-weight: 600;
     margin-bottom: 20px;
 }
 
@@ -34,12 +36,14 @@ section{
     font-size: 20px;
     font-weight: 400;
     line-height: 30px;
+    color: rgb(33, 35, 34);
 }
 
 .con_img{
     display: flex;
     flex-direction: column;
     margin-left: 239px;
+    filter: drop-shadow(rgba(0, 0, 0, 0.1) 0px 12px 16px);
 }
 
 .con_img img{
@@ -73,6 +77,24 @@ section{
     align-items: center;
     overflow: hidden;
     padding-top: 50px;
+    position: relative;
+}
+
+.connect_msg{
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.connect_msg h2{
+    position: absolute;
+    top: 55%;
+    left: 27%;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 60px;
+    text-align: center;
 }
 
 .item_connect{
@@ -233,16 +255,26 @@ section{
 .company_list{
     width: 1120px;
     height: 320px;
-
+    position: relative;
     display: flex;
     justify-content: space-between;
 }
 
-/* .company img{
+.arrow_left{
     position: absolute;
-    top: 50%;
+    top:50%;
+    left: -5%;
+    transform: translate(0px, -50%) rotate(180deg)
+    
+}
 
-} */
+.arrow_right{
+    position: absolute;
+    top:43%;
+    left:100.5%;
+
+    
+}
 
 .list_box{
     display: flex;
@@ -253,8 +285,7 @@ section{
     padding: 40px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    word-break: break-all;
-    white-space: pre-line;
+
     background-color: rgb(255, 255, 255);
 }
 
@@ -263,6 +294,8 @@ section{
 .list_box p {
     font-size: 20px;
     line-height: 30px;
+    word-break: break-all;
+    white-space: pre-line;
 }
 
 .company_img{
@@ -296,4 +329,167 @@ section{
     border-radius: 4px;
     margin-left: 8px;
 }
+
+.business_qna{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+}
+
+.qna_list{
+    width: 1120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.qna_list h2{
+    font-size: 60px;
+    font-weight: 600;
+    line-height: 72px;
+    margin: 80px 0 24px 0;
+    text-align: center;
+}
+
+.qna_list_box{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+}
+
+.qna_list button{
+    font-size: 23px;
+    font-weight: 600;
+    color: rgb(40, 100, 240);
+    display: flex;
+    align-items: center;
+    margin-bottom: 60px;
+    background-color: transparent;
+}
+
+.qna_box{
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid rgb(204, 204, 204);
+    background-color: #fff;
+}
+
+.qna_title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 30px;
+    padding: 40px;
+    font-size: 20px;
+
+}
+
+.title_box{
+    display: flex;
+
+    font-size: 20px;
+
+}
+
+.title_box div{
+    margin-right: 12px; 
+    fill: none;
+     font-size: 20px;
+}
+
+
+
+.qna_answer{
+    display: flex;
+    line-height: 30px;
+    border-top: 1px solid rgb(204, 204, 204);
+    font-size: 20px;
+    font-weight: 600;
+
+    max-height: 1000px;
+    transition: max-height 0.5s ease-in-out 0s
+}
+
+.answer{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    line-height: 30px;
+    font-size: 20px;
+    font-weight: 600;
+    word-break: break-all;
+    white-space: pre-line;
+}
+
+
+
+.answer_box{
+    display: flex;
+    padding: 40px;
+    width: 100%;
+
+}
+
+.answer_box div{
+    margin-right: 12px;
+    font-weight: 600;
+}
+
+.answer_box span{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    line-height: 30px;
+    font-size: 20px;
+    font-weight: 600;
+    word-break: break-all;
+    white-space: pre-line;
+    color: rgb(40  , 100, 240);
+}
+
+.free_btn{
+
+    position: sticky;
+    width: 100%;
+    display: flex;
+
+    justify-content: center;
+    z-index: 9999;
+    bottom: 80px;
+    margin-bottom: 74px;
+    cursor: pointer;
+}
+
+.btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    width: 360px;
+    height: 52px;
+    border: 1px solid rgb(40, 100, 240);
+    background-color: rgb(40, 100, 240);
+    border-radius: 4px;
+    
+
+}
+
+.btn_msg{
+    color: #fff;
+}
+
+
+
+
+
 

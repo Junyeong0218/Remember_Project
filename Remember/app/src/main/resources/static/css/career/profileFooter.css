@@ -8,6 +8,7 @@ footer{
 
 .footer_in{
     width: 1120px;
+    padding: 31px 0 24px;
 }
 
 .footer_menu{
@@ -43,7 +44,7 @@ footer{
     
 }
 
-.footer_menu button{
+.footer_btn{
     margin-left: 24px;
     width: 132px;
     height: 38px;
@@ -55,6 +56,11 @@ footer{
     padding: 7px 10px;
     cursor: pointer;
     
+}
+
+.footer_btn span{
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .footer_copyright{
