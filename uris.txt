@@ -1,0 +1,14 @@
+/ -> index			ㅇㅇ
+/index -> index		ㅇㅇ
+/auth/signin
+/auth/signup
+/auth/signup/terms		ㅇㅇ
+/now			ㅇㅇ
+/now/{article_id}		ㅇㅇ
+/card			ㅇㅇ
+/card/team-empty		ㅇㅇ
+/card/teams
+/card/team/{team_id}
+/community		ㅇㅇ
+/community/{article_id}	ㅇㅇ
+/career/profile

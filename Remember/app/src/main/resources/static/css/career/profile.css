@@ -1,0 +1,188 @@
+main {
+    margin-top: 60px;
+    padding: 50px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #F5F5F5;
+}
+
+.profile_form {
+    display: flex;
+    flex-direction: column;
+    width: 635px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 4px 0px;
+}
+
+.header {
+    padding: 30px 30px 0;
+    width: 100%;
+}
+
+.form_title {
+    margin-bottom: 6px;
+    width: 100%;
+}
+
+.form_title>span {
+    font-size: 14px;
+    font-weight: normal;
+    color: rgb(225, 154, 17);
+    line-height: normal;
+}
+
+.title_underline {
+    margin-bottom: 40px;
+    width: 33.33%;
+    height: 4px;
+    border-radius: 2px;
+    background-color: rgb(225, 154, 17);
+}
+
+.title_description {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.title_description>.text {
+    font-size: 14px;
+    font-weight: normal;
+    color: rgb(51, 51, 51);
+    line-height: normal;
+}
+
+.title_description>.text.big {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.fields {
+    padding: 0 30px 30px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.multi_input {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 21px;
+    width: 100%;
+}
+
+.multi_input .multi_input>.input_wrapper {
+    margin-bottom: 0;
+}
+
+.multi_input>.input_wrapper {
+    max-width: 277px;
+}
+
+.input_wrapper {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.input_title {
+    margin-bottom: 6px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+}
+
+.input_title>span {
+    font-size: 14px;
+    font-weight: normal;
+    color: rgb(100, 100, 100);
+    line-height: normal;
+}
+
+.input_title>.essential {
+    display: flex;
+    width: 6px;
+    height: 6px;
+}
+
+.input_title>.essential>img {
+    width: 100%;
+    height: 100%;
+}
+
+.input_wrapper>input,
+.input_wrapper>select {
+    padding: 11px 12px;
+    width: 100%;
+    height: 44px;
+    border: 1px solid rgb(216, 216, 216);
+    border-radius: 4px;
+}
+
+.joining_flag_wrapper {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+}
+
+.joining_flag_wrapper>span {
+    font-size: 14px;
+    font-weight: normal;
+    color: rgb(133, 133, 133);
+    line-height: normal;
+}
+
+.joining_flag {
+    width: 16px;
+    height: 16px;
+    appearance: none;
+    background: url("/static/images/profile_unchecked_checkbox.png");
+    background-size: cover;
+}
+
+.joining_flag:hover {
+    background: url("/static/images/profile_hover_checkbox.png");
+    background-size: cover;
+}
+
+.joining_flag:checked {
+    background: url("/static/images/profile_checked_checkbox.png");
+    background-size: cover;
+}
+
+.buttons {
+    padding: 12px 30px;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-top: 1px solid rgb(238, 238, 238);
+}
+
+.buttons>.next_form {
+    padding: 0 20px;
+    min-width: 108px;
+    height: 44px;
+    border-radius: 4px;
+    background-color: rgb(33, 35, 34);
+    font-size: 16px;
+    font-weight: 400;
+    color: white;
+    line-height: 44px;
+    text-align: center;
+}
+
+.buttons>.next_form:disabled {
+    background-color: rgb(199, 199, 205);
+}

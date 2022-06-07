@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 제목</title>
+    <link rel="stylesheet" href="/static/css/container.css">
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/community/header.css">
+    <link rel="stylesheet" href="/static/css/mypage/footer.css">
+    <link rel="stylesheet" href="/static/css/community/article_detail.css">
+    <link rel="stylesheet" href="/static/css/community/right_aside.css">
+    <link rel="stylesheet" href="/static/css/community/left_aside.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header_wrapper">
+                <div class="left">
+                    <a href="#" class="logo">
+                        <img src="/static/images/community_logo.png" alt="커뮤니티 로고">
+                    </a>
+                    <div class="searcher">
+                        <span class="search_icon">
+                            <img src="/static/images/mypage_searcher_icon.png">
+                        </span>
+                        <input type="text" name="keyword" class="searcher_input" placeholder="검색어를 입력하세요">
+                    </div>
+                </div>
+                <div class="right">
+                    <button type="button" class="signin">로그인</button>
+                    <button type="button" class="signup">회원가입</button>
+                </div>
+            </div>
+        </header>
+        <main>
+            <aside class="left_aside">
+                <section class="insite_section">
+                    <div class="title">
+                        <div class="title_logo">
+                            <img src="/static/images/community_aside_insite.svg">
+                        </div>
+                        <span class="accent_text">인사이트</span>
+                    </div>
+                    <ul class="insite_list">
+                        <li class="insite">
+                            <div class="button_wrapper">
+                                <span class="title">제조/R&D</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="insite">
+                            <div class="button_wrapper">
+                                <span class="title">HR</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="insite">
+                            <div class="button_wrapper">
+                                <span class="title">건설/부동산</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="insite">
+                            <div class="button_wrapper">
+                                <span class="title">커리어/리더십</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="insite">
+                            <div class="button_wrapper">
+                                <span class="title">영업</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="insite">
+                            <div class="button_wrapper">
+                                <span class="title">IT</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="insite">
+                            <div class="button_wrapper">
+                                <span class="title">마케팅/PR</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="insite">
+                            <div class="button_wrapper">
+                                <span class="title">경영/전략</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+                <section class="job_section">
+                    <div class="title">
+                        <div class="title_logo">
+                            <img src="/static/images/community_aside_job.svg">
+                        </div>
+                        <span class="accent_text">직무·업종 커뮤니티</span>
+                    </div>
+                    <ul class="job_list">
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">CEO/법인대표</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">재무 / 회계</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">금융 / 투자</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">부동산 중개/개발/분양</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">변호사/법률전문가</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">경영지원(HR,총무,법무)</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">바이오/헬스케어</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">대학 교수</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">초·중·고 교사</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">영업 전문가</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">마케팅/PR/제휴</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">IT 기획/개발/디자인</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">IT 엔지니어</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">인공지능/빅데이터</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">제조 R&D/엔지니어</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">건설 전문가</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">생산 제조 전문가</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">무역/유통/물류 전문가</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">커머스MD/상품기획</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">공직 / 공무원</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">방송/언론</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">미디어/문화/예술</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">사회복지사</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">종교인</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">통/번역사</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">고객 대응/CS</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">비서</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">정보보안</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">데이터분석</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">ESG/CSR 담당자</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">스타트업/PE/VC</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">프랜차이즈/자영업</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">전략/기획</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">디자이너</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">은행 근무자</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">식음료/외식 업계</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">일반단체/협회</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">기업교육/산업강사</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">프리랜서/1인기업</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="job">
+                            <div class="button_wrapper">
+                                <span class="title">좋은 기획자로 성장하기</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+                <section class="subject_section">
+                    <div class="title">
+                        <div class="title_logo">
+                            <img src="/static/images/community_aside_subject.svg">
+                        </div>
+                        <span class="accent_text">관심사 커뮤니티</span>
+                    </div>
+                    <ul class="subject_list">
+                        <li class="subject">
+                            <div class="button_wrapper">
+                                <span class="title">회사생활</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="subject">
+                            <div class="button_wrapper">
+                                <span class="title">모두의 토론</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="subject">
+                            <div class="button_wrapper">
+                                <span class="title">경제/재테크</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="subject">
+                            <div class="button_wrapper">
+                                <span class="title">취미/여행/운동</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="subject">
+                            <div class="button_wrapper">
+                                <span class="title">이직/연봉/커리어</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="subject">
+                            <div class="button_wrapper">
+                                <span class="title">명예의 전당</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="subject">
+                            <div class="button_wrapper">
+                                <span class="title">은퇴 라이프</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="subject">
+                            <div class="button_wrapper">
+                                <span class="title">글로벌 회사 근무자</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="subject">
+                            <div class="button_wrapper">
+                                <span class="title">팀장 라이프</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="subject">
+                            <div class="button_wrapper">
+                                <span class="title">사원 라이프</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="subject">
+                            <div class="button_wrapper">
+                                <span class="title">외인/맥주/스피릿</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                        <li class="subject">
+                            <div class="button_wrapper">
+                                <span class="title">대리 라이프</span>
+                                <span class="joiner">참여자 <span class="joiner_count">0</span>명</span>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+            </aside>
+            <div class="main_contents">
+                <div class="article_detail">
+                    <div class="header">
+                        <div class="tags">
+                            <button type="button" class="job">금융 / 투자</button>
+                            <button type="button" class="qna">Q&A</button>
+                            <img src="/static/images/article_detail_article_menu.svg" class="article_menu_button">
+                        </div>
+                        <div class="article_summary">
+                            <span class="title">운용사 대리2년차 연봉 6000</span>
+                            <div class="article_info">
+                                <span class="update_date">06.01 22:45</span>
+                                <span>|</span>
+                                <span class="views">조회수 <span class="view_count">0</span></span>
+                            </div>
+                        </div>
+                        <div class="userinfo">
+                            <div class="profile_image">
+                                <img src="/static/images/default_profile_image.png">
+                            </div>
+                            <div class="text_wrapper">
+                                <span class="nickname">꿀팁대방출</span>
+                                <span class="department_name">자산운용</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contents">
+                        <div class="description">운용사 국내 인덱스운용쪽이고
+                            상여는 30-50%사이로 제시 받았습니다.
+                            업계 평균대비 어떤 편인가요?
+                        </div>
+                        <div class="article_like">
+                            <button type="button" class="article_like_button">
+                                <span class="like_count">0</span>
+                                <img src="/static/images/article_detail_article_like_icon.png">
+                            </button>
+                        </div>
+                        <div class="related_articles">
+                            <div class="header">
+                                <span class="text topic">IT 기획/개발/디자인</span>
+                                <span class="text">베스트글</span>
+                                <span><img src="/static/images/article_detail_related_articles_title_medal.svg"></span>
+                            </div>
+                            <ul class="related_article_list">
+                                <li class="row">
+                                    <span class="numbering">1</span>
+                                    <span class="title">asdfasfdsafasfd</span>
+                                </li>
+                                <li class="row">
+                                    <span class="numbering">1</span>
+                                    <span class="title">asdfasfdsafasfd</span>
+                                </li>
+                                <li class="row">
+                                    <span class="numbering">1</span>
+                                    <span class="title">asdfasfdsafasfd</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="inner_ad">
+                    <a href="#" class="ad">
+                        <img src="/static/images/community_main_ad1.webp">
+                    </a>
+                </div>
+                <div class="comment_form">
+                    <form class="comment_textarea">
+                        <div class="profile_image">
+                            <img src="/static/images/default_profile_image.png">
+                        </div>
+                        <textarea name="contents" class="comment_contents" placeholder="회원(으)로 댓글 달기..."></textarea>
+                    </form>
+                    <div class="buttons">
+                        <div class="input_wrapper">
+                            <input type="checkbox" class="register_to_nickname">
+                            <span>닉네임으로 등록</span>
+                        </div>
+                        <button type="button" class="submit_comment" disabled>등록</button>
+                    </div>
+                </div>
+                <div class="best_comments">
+                    <div class="total_comment_count">댓글 42</div>
+                    <div class="comment">
+                        <div class="writer_info">
+                            <div class="profile_image">
+                                <img src="/static/images/default_profile_image.png">
+                            </div>
+                            <div class="texts">
+                                <div class="userinfo">
+                                    <span class="nickname">이룻화</span>
+                                </div>
+                                <div class="comment_info">
+                                    <span class="department_name">웹 개발</span>
+                                    <span>|</span>
+                                    <span class="upload_time">5일 전</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contents">
+                            <span class="best">BEST</span>버텨보심이 어떨까 합니다. 그냥 버티면서 괴로워하는게 아니고 질문자님이 생각하신대로 면담도 하고 하면서 현재
+                            상황에 대해 윗선에 인지시키고 기대치를 낮추고 차근차근 바닥부터 보시면 어떨까해요.
+
+                            저도 딱 1년6개월 다니고 퇴사를 하고 공부를 했어요. 너무 부족함을 느껴서요.. 2년도 안되어 포기하는게, 그만두는게 더 싫어서 회피책으로 더 공부하길 택했습니다.
+                            근데 사실 그만두고 더 공부해보니 밖에서 배우는건
+                            결국 플랫폼에 대한건데 제 근본적인 문제는 시스템의 플로우를 읽지 못하는게 문제였던걸 알았어요.
+                            문제 파악을 하고나서 단순히 코드 한줄 단위에서 공부하는게 아니고 전체적인 흐름?에 대한걸 익히다보니 이제는 이직하면서도 금방 적응해서 하고 새 언어, 새 프레임웍을
+                            한다고 해도 어느정도 적응이 되더라구요.
+                            지금도 제가 짜고 다시 보면 정말 별로인 코드도 많고 유독 버그도 많습니다.
+
+                            근데 우리는 주니어고 그걸 가다듬어 가는게 경력을 만들어 가는 과정이 아닐까 싶습니다. 못한다는 소리가 죽기보다 싫었는데.. 인정하고 나니 저 스스로도 내려놓고
+                            편하게 물어보고, 심할땐 요구사항 자체가 이해안되서
+                            이해한거 이렇게 짤꺼다 그려놓고 동료 개발자들한테(경력무관) 조언 구하고 합니다ㅠㅠ
+                            뭐 이게 재능이 없다고 스스로 많이 느껴서, 저는 사실 뭐 잘하는 개발자, 시니어 개발자 이런걸 꿈꾸지 않고, 기획, pm 등 매니지먼트나 커뮤니케이션이 주가 되는
+                            여러 직무로 고민을 계속 하고 있긴합니다.
+                            당장 쉽게 포기하지마세요! 요즘 개발자 인식 좋은데 그동안 까지는 현직무에서 한번 최대한 커리어를 만들어보세요! 같이 버텨봐요!
+                        </div>
+                        <div class="comment_reaction_wrapper">
+                            <button type="button" class="reply_comment" disabled>
+                            </button>
+                            <button type="button" class="comment_like">
+                                <img src="/static/images/article_detail_article_like_icon.png">
+                                <span class="like_count">10</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="whole_comments">
+                    <div class="comment_order_buttons">
+                        <button type="button" class="order_asc active">등록순</button>
+                        <button type="button" class="order_desc">최신순</button>
+                    </div>
+                    <div class="comment">
+                        <div class="writer_info">
+                            <div class="profile_image">
+                                <img src="/static/images/default_profile_image.png">
+                            </div>
+                            <div class="texts">
+                                <div class="userinfo">
+                                    <span class="nickname">이룻화</span>
+                                    <div class="badge">
+                                        <img src="/static/images/bronze_badge.webp">
+                                    </div>
+                                    <span class="article_writer">작성자</span>
+                                    <button type="button" class="comment_menu_button">
+                                        <img src="/static/images/article_detail_article_menu.svg">
+                                    </button>
+                                </div>
+                                <div class="comment_info">
+                                    <span class="department_name">웹 개발</span>
+                                    <span>|</span>
+                                    <span class="upload_time">5일 전</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contents">
+                            버텨보심이 어떨까 합니다. 그냥 버티면서 괴로워하는게 아니고 질문자님이 생각하신대로 면담도 하고 하면서 현재
+                            상황에 대해 윗선에 인지시키고 기대치를 낮추고 차근차근 바닥부터 보시면 어떨까해요.
+
+                            저도 딱 1년6개월 다니고 퇴사를 하고 공부를 했어요. 너무 부족함을 느껴서요.. 2년도 안되어 포기하는게, 그만두는게 더 싫어서 회피책으로 더 공부하길 택했습니다.
+                            근데 사실 그만두고 더 공부해보니 밖에서 배우는건
+                            결국 플랫폼에 대한건데 제 근본적인 문제는 시스템의 플로우를 읽지 못하는게 문제였던걸 알았어요.
+                            문제 파악을 하고나서 단순히 코드 한줄 단위에서 공부하는게 아니고 전체적인 흐름?에 대한걸 익히다보니 이제는 이직하면서도 금방 적응해서 하고 새 언어, 새 프레임웍을
+                            한다고 해도 어느정도 적응이 되더라구요.
+                            지금도 제가 짜고 다시 보면 정말 별로인 코드도 많고 유독 버그도 많습니다.
+
+                            근데 우리는 주니어고 그걸 가다듬어 가는게 경력을 만들어 가는 과정이 아닐까 싶습니다. 못한다는 소리가 죽기보다 싫었는데.. 인정하고 나니 저 스스로도 내려놓고
+                            편하게 물어보고, 심할땐 요구사항 자체가 이해안되서
+                            이해한거 이렇게 짤꺼다 그려놓고 동료 개발자들한테(경력무관) 조언 구하고 합니다ㅠㅠ
+                            뭐 이게 재능이 없다고 스스로 많이 느껴서, 저는 사실 뭐 잘하는 개발자, 시니어 개발자 이런걸 꿈꾸지 않고, 기획, pm 등 매니지먼트나 커뮤니케이션이 주가 되는
+                            여러 직무로 고민을 계속 하고 있긴합니다.
+                            당장 쉽게 포기하지마세요! 요즘 개발자 인식 좋은데 그동안 까지는 현직무에서 한번 최대한 커리어를 만들어보세요! 같이 버텨봐요!
+                        </div>
+                        <div class="comment_reaction_wrapper">
+                            <button type="button" class="reply_comment">
+                                <img src="/static/images/article_detail_reply_comment.svg">
+                                <span>댓글달기</span>
+                                <span>&nbsp;|&nbsp;<span class="reply_comment_count">1</span>개</span>
+                            </button>
+                            <button type="button" class="comment_like">
+                                <img src="/static/images/article_detail_article_like_icon.png">
+                                <span class="like_count">10</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="comment reply">
+                        <div class="writer_info">
+                            <div class="profile_image">
+                                <img src="/static/images/default_profile_image.png">
+                            </div>
+                            <div class="texts">
+                                <div class="userinfo">
+                                    <span class="nickname">이룻화</span>
+                                    <div class="badge">
+                                        <img src="/static/images/bronze_badge.webp">
+                                    </div>
+                                    <span class="article_writer">작성자</span>
+                                    <button type="button" class="comment_menu_button">
+                                        <img src="/static/images/article_detail_article_menu.svg">
+                                    </button>
+                                </div>
+                                <div class="comment_info">
+                                    <span class="department_name">웹 개발</span>
+                                    <span>|</span>
+                                    <span class="upload_time">5일 전</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contents">
+                            버텨보심이 어떨까 합니다. 그냥 버티면서 괴로워하는게 아니고 질문자님이 생각하신대로 면담도 하고 하면서 현재
+                            상황에 대해 윗선에 인지시키고 기대치를 낮추고 차근차근 바닥부터 보시면 어떨까해요.
+
+                            저도 딱 1년6개월 다니고 퇴사를 하고 공부를 했어요. 너무 부족함을 느껴서요.. 2년도 안되어 포기하는게, 그만두는게 더 싫어서 회피책으로 더 공부하길 택했습니다.
+                            근데 사실 그만두고 더 공부해보니 밖에서 배우는건
+                            결국 플랫폼에 대한건데 제 근본적인 문제는 시스템의 플로우를 읽지 못하는게 문제였던걸 알았어요.
+                            문제 파악을 하고나서 단순히 코드 한줄 단위에서 공부하는게 아니고 전체적인 흐름?에 대한걸 익히다보니 이제는 이직하면서도 금방 적응해서 하고 새 언어, 새 프레임웍을
+                            한다고 해도 어느정도 적응이 되더라구요.
+                            지금도 제가 짜고 다시 보면 정말 별로인 코드도 많고 유독 버그도 많습니다.
+
+                            근데 우리는 주니어고 그걸 가다듬어 가는게 경력을 만들어 가는 과정이 아닐까 싶습니다. 못한다는 소리가 죽기보다 싫었는데.. 인정하고 나니 저 스스로도 내려놓고
+                            편하게 물어보고, 심할땐 요구사항 자체가 이해안되서
+                            이해한거 이렇게 짤꺼다 그려놓고 동료 개발자들한테(경력무관) 조언 구하고 합니다ㅠㅠ
+                            뭐 이게 재능이 없다고 스스로 많이 느껴서, 저는 사실 뭐 잘하는 개발자, 시니어 개발자 이런걸 꿈꾸지 않고, 기획, pm 등 매니지먼트나 커뮤니케이션이 주가 되는
+                            여러 직무로 고민을 계속 하고 있긴합니다.
+                            당장 쉽게 포기하지마세요! 요즘 개발자 인식 좋은데 그동안 까지는 현직무에서 한번 최대한 커리어를 만들어보세요! 같이 버텨봐요!
+                        </div>
+                        <div class="comment_reaction_wrapper">
+                            <button type="button" class="reply_comment"></button>
+                            <button type="button" class="comment_like">
+                                <img src="/static/images/article_detail_article_like_icon.png">
+                                <span class="like_count">10</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <aside class="right_aside">
+                <button type="button" class="like_rank">
+                    <img src="/static/images/community_right_aside_like_rank.svg">
+                    <span class="accent_text">좋아요 순위</span>
+                </button>
+                <div class="rememeber_now_banner">
+                    <div class="remember_now_logo">
+                        <img src="/static/images/community_remember_now_logo.webp">
+                    </div>
+                    <a href="#" class="remember_now_preview">
+                        <img src="/static/images/community_remember_now_banner1.jpg">
+                        <span class="title">스카웃 받는 일잘러들의 특징 🌟</span>
+                    </a>
+                </div>
+                <section class="best_articles_aside">
+                    <div class="title">
+                        <div class="title_logo">
+                            <img src="/static/images/community_best_articles_icon.svg">
+                        </div>
+                        <span class="accent_text">종합 베스트글</span>
+                    </div>
+                    <ul class="article_summary_list">
+                        <li class="best_article_summary">
+                            <div class="button_wrapper">
+                                <span class="title">부사수가 퇴사의사를 밝혀올 때</span>
+                                <span class="topic">회사생활</span>
+                                <div class="reactions">
+                                    <div class="views">
+                                        <img src="/static/images/community_views_icon.svg">
+                                        <span class="view_count">0</span>
+                                    </div>
+                                    <div class="likes">
+                                        <img src="/static/images/community_likes_icon.svg">
+                                        <span class="like_count">0</span>
+                                    </div>
+                                    <div class="comments">
+                                        <img src="/static/images/community_comments_icon.svg">
+                                        <span class="comment_count">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="best_article_summary">
+                            <div class="button_wrapper">
+                                <span class="title">부사수가 퇴사의사를 밝혀올 때</span>
+                                <span class="topic">회사생활</span>
+                                <div class="reactions">
+                                    <div class="views">
+                                        <img src="/static/images/community_views_icon.svg">
+                                        <span class="view_count">0</span>
+                                    </div>
+                                    <div class="likes">
+                                        <img src="/static/images/community_likes_icon.svg">
+                                        <span class="like_count">0</span>
+                                    </div>
+                                    <div class="comments">
+                                        <img src="/static/images/community_comments_icon.svg">
+                                        <span class="comment_count">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="best_article_summary">
+                            <div class="button_wrapper">
+                                <span class="title">부사수가 퇴사의사를 밝혀올 때</span>
+                                <span class="topic">회사생활</span>
+                                <div class="reactions">
+                                    <div class="views">
+                                        <img src="/static/images/community_views_icon.svg">
+                                        <span class="view_count">0</span>
+                                    </div>
+                                    <div class="likes">
+                                        <img src="/static/images/community_likes_icon.svg">
+                                        <span class="like_count">0</span>
+                                    </div>
+                                    <div class="comments">
+                                        <img src="/static/images/community_comments_icon.svg">
+                                        <span class="comment_count">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="best_article_summary">
+                            <div class="button_wrapper">
+                                <span class="title">부사수가 퇴사의사를 밝혀올 때</span>
+                                <span class="topic">회사생활</span>
+                                <div class="reactions">
+                                    <div class="views">
+                                        <img src="/static/images/community_views_icon.svg">
+                                        <span class="view_count">0</span>
+                                    </div>
+                                    <div class="likes">
+                                        <img src="/static/images/community_likes_icon.svg">
+                                        <span class="like_count">0</span>
+                                    </div>
+                                    <div class="comments">
+                                        <img src="/static/images/community_comments_icon.svg">
+                                        <span class="comment_count">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+            </aside>
+        </main>
+        <footer>
+            <div class="footer_wrapper">
+                <div class="links">
+                    <a href="#">회사소개</a>
+                    <a href="#">이용약관</a>
+                    <a href="#">개인정보처리방침</a>
+                    <a href="#">도움말</a>
+                    <a href="#">광고상품</a>
+                    <a href="#">언론보도</a>
+                    <button type="button" class="relate_service_modal">
+                        <span class="text">관련 서비스</span>
+                        <span class="arrow"></span>
+                    </button>
+                </div>
+                <div class="copyrights">
+                    <span class="row">대표전화 : 02-556-4202</span>
+                    <span class="row">06158 서울시 강남구 테헤란로79길 6, 6층 (삼성동, 제이에스타워) (대표자:최재호) 사업자등록번호 : 211-88-81111</span>
+                    <div class="row">
+                        <a href="#" class="company_number">통신판매업 신고번호: 2016-서울강남-03104호</a>
+                        <span class="company_number">직업정보제공사업 신고번호: 서울강남 제2019-11호</span>
+                        <span class="company_number">유료직업소개사업 신고번호: 2020-3220237-14-5-00003</span>
+                    </div>
+                    <span class="row">Copyright 2019. Drama & Company All rights reserved.</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>
