@@ -5,52 +5,37 @@ header{
     align-items: center;
     width: 100%;
     position: fixed;
-   top: 0;
-   z-index: 3;
-
+    top: 0;
+    z-index: 3;
+    
 }
 
 .header_in{
     display: flex;
-    align-items: center;
     justify-content: center;
-    width: 100%;
-    background-color: #212322;
-}
-
-.header_top{
-    display: flex;
     align-items: center;
-    width: 1120px;
-
+    width: 100%;    
+    background-color: rgba(245, 245, 245, 0.5);
+    backdrop-filter: blur(120px);
 }
-
-.header_add{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 100%;
-    background-color: #ffffff;
-}
-
-.add_menu{
-    display: flex;
-    align-items: center;
-    width: 1120px;
-
-    line-height: 36px;
-}
-
-
 
 .header_nav{
     display: flex;
+    justify-content: space-between;
     align-items: center;
     width: 1120px;
     height: 60px;
-    line-height: 60px;
+}
 
+.nav_box{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.logo{
+    line-height: 50%;
 }
 
 .header_nav nav{
@@ -59,20 +44,35 @@ header{
     margin-left: 40px;
 }
 
-.logo{
-    line-height: 50%;
-}
-
 nav a{
     margin: 0 15px;
     padding: 16px 16px 18px;
     font-weight: 400;
     color: #ffffff;
-
 }
 
 .header_sign{
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header_sign button{
+    padding: 6.5px 16px;
+    width: 64px;
+    height: 32px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+    background: rgb(33, 35, 34);
+    font-size: 12px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    cursor: pointer;
 }
 
 .sign{
@@ -101,29 +101,3 @@ nav a{
     font-size: 14px;
     color: #ffffff;
 }
-
-.add_menu ul{
-    display: flex;
-    align-items: center;
-}
-
-
-.add_menu ul li:first-child:after{
-    content: "|";
-    position: relative;
-    top: -1;
-    padding: 0 15px;
-    font-size: 12px;
-    
-}
-
-.add_menu ul li a{
-    font-size: 14px;
-    font-weight: 600;
-    color: #212322;
-}
-
-
-
-
-
