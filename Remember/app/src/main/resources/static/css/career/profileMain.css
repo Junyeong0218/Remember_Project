@@ -1,0 +1,367 @@
+main{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.main_img{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 900px;
+    background: url('/static/images/career_main_img.webp') no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.footer{
+    margin-top: 96px;
+}
+
+.main_img h1{
+    margin-bottom: 80px;
+    line-height: 83px;
+    font-size: 68px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.main_img button{
+    width: 319px;
+    height: 74px;
+    background-color: #ffffff;
+    border-radius: 40px;
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.con_company{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 200px 0 130px;
+}
+
+.con_company h2{
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 60px;
+    margin-bottom: 4px;
+}
+
+.con_company span{
+    color: #2864f0;
+}
+
+.title_day{
+    color: #8c8c8c;
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+
+.company_sub{
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 96px;
+    text-align: center;
+    line-height: 32px;
+}
+
+.scout_box{
+    width: 100%;
+    background-color: #fafafa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 210px;
+}
+
+.con_scout{
+    width: 1120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.scout_des{
+    display: flex;
+    justify-content: center;
+
+}
+
+.scout_des h1{
+    font-weight: 700;
+    font-size: 48px;
+    margin-top: 200px;
+    margin-bottom: 96px;
+}
+
+.scout_info{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.order_info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.scout_order{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 320px;
+    margin-bottom: 30px;
+}
+
+.scout_order h4{
+    font-weight: 700;
+    font-size: 32px;
+    text-align: center;
+    margin: 30px 0;
+}
+
+.scout_order p{
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 34px;
+    text-align: center;
+    color: rgb(100, 100, 100);
+}
+
+.profile_register{
+    display: flex;
+    align-self: flex-start;
+    gap: 140px;
+    margin-bottom: 24px;
+
+}
+
+.register_img{
+    width: 420px;
+    height: 575px;
+}
+
+.register_img img{
+    width: 100%;
+}
+
+.register_des{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.register_des h2{
+    font-size: 48px;
+    margin-bottom: 40px;
+    font-weight: 700;
+    line-height: 60px;
+}
+
+.register_des p{
+    font-size: 20px;
+    line-height: 33px;
+}
+
+.con_interview{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 1120px;
+    margin: 0 auto 100px;
+}
+
+.interview_title{
+    width: 100%;
+    margin: 196px 0 78px 0;
+}
+
+.interview_title h1{
+    font-size: 48px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.interview{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+}
+
+.interview_list{
+    display: flex;
+    flex-direction: column;
+    width: 340px;
+    height: 335px;
+    padding: 40px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: rgb(0 0 0 / 10%) 0px 0px 30px;
+}
+
+.interview_list p{ 
+    font-weight: 400;
+    line-height: 26px;
+    margin:10px 0 20px;
+    word-break: break-all;
+    white-space: pre-line;
+}
+
+.list_name{
+
+}
+
+.list_name p{
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(140, 140, 140);
+    margin-bottom: 10px;
+}
+
+.list_name img{
+    width: 104px;
+    height: 20px;
+}
+
+.interview_btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 10px;
+    width: 100%;
+    height: 44px;
+    line-height: 26px;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 5px;
+    text-align: center;
+    color: #000;
+}
+
+.con_qna{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fafafa;
+}
+
+.qna_in{
+    width: 1120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.qna_in h2{
+    margin: 200px 0 96px 0;
+    font-size: 48px;
+    font-weight: 700;
+}
+
+.qna_box{
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid rgb(204, 204, 204);
+}
+
+.qna_title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 30px;
+    padding: 40px;
+    font-size: 20px;
+
+}
+
+.title_box{
+    display: flex;
+
+}
+
+
+
+.qna_answer{
+    display: flex;
+    line-height: 30px;
+    border-top: 1px solid rgb(204, 204, 204);
+    font-size: 20px;
+    font-weight: 600;
+
+    max-height: 1000px;
+    transition: max-height 0.5s ease-in-out 0s
+}
+
+
+
+.answer_box{
+    display: flex;
+    padding: 40px;
+    width: 100%;
+
+}
+.title_arrow{
+    font-size: 25px;
+}
+
+/* .title_arrow:active{
+    transform: rotate(-90deg);
+} */
+
+.answer{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    line-height: 30px;
+    word-break: break-all;
+    white-space: pre-line;
+}
+
+.qna{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.con_qna{
+    background-color: aqua;
+    width: 1120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.con_qna h2{
+    font-size: 60px;
+    font-weight: 600;
+    line-height: 72px;
+    margin:80px 0 24px 0;
+    text-align: center;
+}
+
+
+

@@ -1,0 +1,103 @@
+header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 3;
+    
+}
+
+.header_in{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;    
+    background-color: rgba(245, 245, 245, 0.5);
+    backdrop-filter: blur(120px);
+}
+
+.header_nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1120px;
+    height: 60px;
+}
+
+.nav_box{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.logo{
+    line-height: 50%;
+}
+
+.header_nav nav{
+    display: flex;
+    align-items: center;
+    margin-left: 40px;
+}
+
+nav a{
+    margin: 0 15px;
+    padding: 16px 16px 18px;
+    font-weight: 400;
+    color: #ffffff;
+}
+
+.header_sign{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header_sign button{
+    padding: 6.5px 16px;
+    width: 64px;
+    height: 32px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+    background: rgb(33, 35, 34);
+    font-size: 12px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    cursor: pointer;
+}
+
+.sign{
+    width: 100%;
+}
+
+.header_sign ul{
+    display: flex;
+    align-items: center;
+}
+
+.sign ul li{
+    padding: 18px 0;
+}
+
+.sign ul li:first-child::after{
+    position: relative;
+    content: "|";
+    padding: 0 3px;
+    top: -2px;
+    font-size: 10px;
+    color: #ffffff;
+}
+
+.sign ul li a {
+    font-size: 14px;
+    color: #ffffff;
+}
