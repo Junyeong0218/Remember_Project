@@ -5,14 +5,23 @@ import java.util.List;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
 import com.remember.app.entity.community.category.SubCategoryDetail;
+import com.remember.app.responseDto.ArticleDetailResDto;
 
 public interface CommunityService {
 
 	public List<SubCategoryDetail> getCategoriesWithArticleCount();
 	
 	public List<BestArticleSummary> getBestArticleSummaries();
+
+	public List<BestArticleSummary> getBestArticleSummariesAboutCategory(int categoryId);
 	
-	public List<ArticleSummary> getArticleSummaries();
+	public List<ArticleSummary> getRecentAllKindArticleSummaries();
+
+	public List<ArticleSummary> getRecentArticleSummariesAbountCategory(int categoryId);
 	
-	public int getTotalArticleCount(String categoryName);
+	public int getTotalArticleCount();
+	
+	public int getTopicArticleCount(int categoryId);
+	
+	public ArticleDetailResDto getArticleDetail(int articleId);
 }

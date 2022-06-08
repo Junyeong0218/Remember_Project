@@ -26,14 +26,12 @@ function addLiTags(category_list) {
 		const li = makeLiTag(category);
 		if(category.main_category_id == 1) {
 			insight_section.appendChild(li);
-			li.onclick = () => location.href = "/community/insight/1";
 		} else if(category.main_category_id == 2) {
 			job_section.appendChild(li);
-			li.onclick = () => location.href = "/community/job/1";
 		} else if(category.main_category_id == 3) {
 			subject_section.appendChild(li);
-			li.onclick = () => location.href = "/community/subject/1";
 		}
+		li.onclick = () => location.href = "/community/" + category.id;
 	}
 }
 

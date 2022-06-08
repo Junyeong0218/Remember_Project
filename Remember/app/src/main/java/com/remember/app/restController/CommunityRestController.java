@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
 import com.remember.app.entity.community.category.SubCategoryDetail;
+import com.remember.app.responseDto.ArticleDetailResDto;
 import com.remember.app.service.CommunityService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,13 +32,34 @@ public class CommunityRestController {
 		return communityService.getBestArticleSummaries();
 	}
 	
-	@GetMapping("/recent/all")
-	public List<ArticleSummary> getRecentAllArticles() {
-		return communityService.getArticleSummaries();
+	@GetMapping("{categoryId}/best/list")
+	public List<BestArticleSummary> getBestArticlesAboutCategory(@PathVariable int categoryId) {
+		return communityService.getBestArticleSummariesAboutCategory(categoryId);
 	}
 	
-	@GetMapping("/{categoryName}/count")
-	public int getTotalArticleCount(@PathVariable String categoryName) {
-		return communityService.getTotalArticleCount(categoryName);
+	@GetMapping("/recent")
+	public List<ArticleSummary> getRecentAllKindArticles() {
+		return communityService.getRecentAllKindArticleSummaries();
 	}
+	
+	@GetMapping("/count")
+	public int getTotalArticleCount() {
+		return communityService.getTotalArticleCount();
+	}
+	
+	@GetMapping("{categoryId}/recent")
+	public List<ArticleSummary> getRecentArticlesAboutCategory(@PathVariable int categoryId) {
+		return communityService.getRecentArticleSummariesAbountCategory(categoryId);
+	}
+	
+	@GetMapping("{categoryId}/count")
+	public int getArticleCountAboutCategory(@PathVariable int categoryId) {
+		return communityService.getTopicArticleCount(categoryId);
+	}
+	
+	@GetMapping("/detail/{articleId}")
+	public ArticleDetailResDto getArticleDetail(@PathVariable int articleId) {
+		return communityService.getArticleDetail(articleId);
+	}
+	
 }

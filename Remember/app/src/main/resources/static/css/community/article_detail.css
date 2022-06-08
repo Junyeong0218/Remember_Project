@@ -608,3 +608,295 @@ main {
     flex-direction: column;
     width: 100%;
 }
+
+.feeds {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.feeds .accent_text {
+	font-size: 16px;
+    font-weight: 600;
+}
+
+.feeds>.title {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    background-color: rgb(245, 245, 245);
+    border-bottom: 1px solid rgb(235, 235, 235);
+}
+
+.feeds>.event_viewer {
+    padding: 8.5px 20px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 44px;
+    border-bottom: 1px solid rgb(235, 235, 235);
+    background-color: white;
+}
+
+.feeds>.event_viewer>.event_button {
+    margin-right: 8px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background-color: rgb(33, 35, 34);
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    line-height: 19px;
+}
+
+.feeds>.event_viewer>.event_text {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(33, 35, 34);
+    line-height: 24px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.feed {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+    border-bottom: 1px solid rgb(235, 235, 235);
+    background-color: white;
+}
+
+.feed>.tag_wrapper {
+    display: flex;
+    height: 27px;
+}
+
+.feed>.tag_wrapper>div {
+    padding: 4px 8px;
+    background-color: rgb(245, 245, 245);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 19px;
+    border-radius: 6px;
+}
+
+.feed>.tag_wrapper>.insight {
+    color: rgb(40, 100, 240);
+}
+
+.feed>.tag_wrapper>.job {
+    color: rgb(224, 165, 38);
+}
+
+.feed>.tag_wrapper.subject {
+    color: rgb(48, 176, 153);
+}
+
+.feed>.article_contents {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.feed>.article_contents>.today {
+    position: absolute;
+    top: 14px;
+    left: -8px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: rgb(234, 81, 40);
+}
+
+.feed>.article_contents>.texts {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.feed>.article_contents>.texts>.title {
+    margin-bottom: 4px;
+}
+
+.feed>.article_contents>.texts>.title,
+.feed>.article_contents>.texts>.content_summary {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(33, 35, 34);
+    line-height: 26px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.feed>.article_contents>.texts>.content_summary {
+    overflow-wrap: break-word;
+    color: rgb(174, 174, 174);
+}
+
+.feed>.article_contents>.article_image {
+    margin-left: 12px;
+    width: 66px;
+    height: 66px;
+    flex-shrink: 0;
+}
+
+.feed>.article_contents>.article_image>img {
+    width: 100%;
+    height: 100%;
+}
+
+.feed>.userinfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.feed>.userinfo>.upload_user_profile_image {
+    margin-right: 8px;
+    width: 24px;
+    height: 24px;
+}
+
+.feed>.userinfo>.username {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    color: rgb(33, 35, 34);
+}
+
+.feed>.userinfo>.user_job_category {
+    position: relative;
+    top: 1px;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgb(140, 140, 140);
+    line-height: 19px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.feed>.userinfo>.user_job_category::before {
+    margin: 0 4px;
+    display: inline-block;
+    content: "";
+    width: 1px;
+    height: 10px;
+    background-color: rgb(140, 140, 140);
+}
+
+.feed>.article_summary {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 26px;
+}
+
+.feed>.article_summary>.upload_time {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgb(174, 174, 174);
+    line-height: 26px;
+}
+
+.feed>.article_summary>.reactions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.feed>.article_summary>.reactions>div {
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.feed>.article_summary>.reactions>div>span {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgb(100, 100, 100);
+}
+
+.feeds>.inner_ad {
+    width: 100%;
+    height: 104px;
+    border-bottom: 1px solid rgb(235, 235, 235);
+}
+
+.feeds>.inner_ad>a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: #F4F6F8;
+}
+
+.feeds>.inner_ad>a>img {
+    height: 100%;
+}
+
+.pager {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 34px;
+}
+
+.pager>button {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.pager>button:disabled {
+    opacity: 0.23;
+    cursor: default;
+}
+
+.pager>button.before {
+    margin-right: 25px;
+}
+
+.pager>button.after {
+    margin-left: 25px;
+}
+
+.pager>button>img {
+    width: 100%;
+    height: 100%;
+}
+
+.pager>button.before>img {
+    transform: rotate(180deg);
+}
+
+.pager>a,
+.pager>span {
+    width: 34px;
+    font-size: 14px;
+    font-weight: normal;
+    color: rgb(33, 35, 34);
+    line-height: 34px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.pager>span.current {
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 4px;
+    background-color: white;
+    cursor: default;
+}

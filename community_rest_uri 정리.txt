@@ -1,0 +1,21 @@
+/community - GET all list
+
+/api/v1/community / recent (list)
+/api/v1/community / count   (for pager)
+
+/community/detail/{articleId} - GET all list + article detail
+
+/api/v1/community / detail / {articleId} (article_detail_data)
+/api/v1/community / recent (list)
+/api/v1/community / count   (for pager)
+
+/community/{categoryId} - GET category list
+
+/api/v1/community / {categoryId} / recent (category recent list)
+/api/v1/community / {categoryId} / count   (category article count for pager)
+
+/community/{categoryId}/detail/{articleId} - GET category list + article detail
+
+/api/v1/community / detail / {articleId} (article_detail_data)
+/api/v1/community / {categoryId} / recent (category recent list)
+/api/v1/community / {categoryId} / count   (category article count for pager)

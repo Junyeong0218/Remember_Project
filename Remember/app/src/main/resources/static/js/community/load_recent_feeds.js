@@ -2,23 +2,11 @@ const feeds = document.querySelector(".feeds");
 
 loadRecentFeeds();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 function loadRecentFeeds() {
+	const url = category_id == 0 ? "/api/v1/community/recent" : "/api/v1/community/" + category_id + "/recent";
 	$.ajax({
 		type: "get",
-		url: "/api/v1/community/recent/all",
+		url: url,
 		dataType: "json",
 		success: function (article_list) {
 			console.log(article_list);

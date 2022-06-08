@@ -9,8 +9,13 @@
 /now/{article_id}			ㅇㅇ
 -----------------------------------------------------------------------
 /card				ㅇㅇ
+/api/v1/card/group - POST 그룹 추가
+/api/v1/card/group - GET    그룹 검색
+/api/v1/card/group/{groupId} - GET 특정 그룹 검색
+/api/v1/card - GET	             본인 명함 검색
+/api/v1/card - POST	             본인 명함 등록
 /card/team-empty			ㅇㅇ
-/card/teams
+/card/teams			
 /card/team/{team_id}
 -----------------------------------------------------------------------
 /community			ㅇㅇ home

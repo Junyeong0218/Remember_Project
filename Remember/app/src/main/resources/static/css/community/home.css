@@ -417,6 +417,7 @@ main {
 
 .pager>button:disabled {
     opacity: 0.23;
+    cursor: default;
 }
 
 .pager>button.before {
@@ -436,7 +437,8 @@ main {
     transform: rotate(180deg);
 }
 
-.pager>a {
+.pager>a,
+.pager>span {
     width: 34px;
     font-size: 14px;
     font-weight: normal;
@@ -446,8 +448,9 @@ main {
     cursor: pointer;
 }
 
-.pager>a.current {
+.pager>span.current {
     border: 1px solid rgb(204, 204, 204);
     border-radius: 4px;
     background-color: white;
+    cursor: default;
 }
