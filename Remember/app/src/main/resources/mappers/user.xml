@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.remember.app.entity.user.UserRepository">
+
+	<select id="getOAuthUserByOAuthUsername" parameterType="String" resultType="com.remember.app.entity.user.UserDetail">
+		select
+			um.id,
+			um.email,
+			um.`password`,
+			um.nickname,
+			um.phone,
+			um.role,
+			um.create_date,
+			
+			oauth.oauth_username,
+			oauth.provider,
+			
+			ud.profile_img,
+			ud.`name`,
+			ud.company_name,
+			ud.department_name,
+			ud.position_name
+		from
+			user_oauth_detail oauth
+			left outer join user_mst um on(um.id = oauth.user_id)
+			left outer join user_detail ud on(ud.user_id = oauth.user_id)
+		where
+			oauth.oauth_username = #{oauth_username};
+	</select>
+	
+	<select id="getOAuthUserByPhone" parameterType="String" resultType="com.remember.app.entity.user.UserDetail">
+		select
+			um.id,
+			um.email,
+			um.`password`,
+			um.nickname,
+			um.phone,
+			um.role,
+			um.create_date,
+			
+			oauth.oauth_username,
+			oauth.provider,
+			
+			ud.profile_img,
+			ud.`name`,
+			ud.company_name,
+			ud.department_name,
+			ud.position_name
+		from
+			user_mst um
+			left outer join user_oauth_detail oauth on(oauth.user_id = um.id)
+			left outer join user_detail ud on(ud.user_id = um.id)
+		where
+			um.phone = #{phone}
+		limit 1;
+	</select>
+	
+	<select id="getIdByPhone" parameterType="String" resultType="Integer">
+		select
+			id
+		from
+			user_mst
+		where
+			phone = #{phone};
+	</select>
+	
+	<update id="updateEmailAndPasswordById" parameterType="com.remember.app.entity.user.User">
+		update
+			user_mst
+		set
+			email = #{email},
+			password = #{password}
+		where
+			id = #{id};
+	</update>
+	
+	<insert id="insertUserToMst" parameterType="com.remember.app.entity.user.User">
+		insert into
+			user_mst
+		values(
+			0,
+			#{email},
+			#{password},
+			null,
+			null,
+			#{phone},
+			#{role},
+			now(),
+			now()
+		);
+		
+		<selectKey keyProperty="id" resultType="Integer" order="AFTER">
+			select id from user_mst where email = #{email};
+		</selectKey>
+	</insert>
+	
+	<insert id="insertOAuthUserToMst" parameterType="com.remember.app.entity.user.User">
+		insert into
+			user_mst
+		values(
+			0,
+			#{email},
+			null,
+			null,
+			null,
+			#{phone},
+			#{role},
+			now(),
+			now()
+		);
+		
+		<selectKey keyProperty="id" resultType="Integer" order="AFTER">
+			select id from user_mst where email = #{email};
+		</selectKey>
+	</insert>
+	
+	<insert id="insertUserTerms" parameterType="com.remember.app.entity.user.UserTerms">
+		insert into
+			user_terms
+		values(
+			0, 
+			#{user_id},
+			#{age_flag},
+			#{term_flag},
+			#{privacy_flag},
+			#{privacy_limit_flag},
+			#{alert_flag},
+			now(),
+			now()
+		);
+	</insert>
+	
+	<insert id="insertOAuthUserToOAuthDetail" parameterType="com.remember.app.entity.user.UserOauthDetail">
+		insert into
+			user_oauth_detail
+		values(
+			0,
+			#{user_id},
+			#{oauth_username},
+			#{provider},
+			now(),
+			now()
+		);
+	</insert>
+
+</mapper>

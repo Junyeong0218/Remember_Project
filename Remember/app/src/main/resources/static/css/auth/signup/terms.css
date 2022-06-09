@@ -1,18 +1,53 @@
 main {
     padding: 40px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     width: 100%;
 }
 
-main>.title {
+main > .terms,
+main > .phone_certificate,
+main > .select_type,
+main > .email_form {
+	position: absolute;
+	left: 50%;
+	opacity: 0;
+	visibility: hidden;
+	transform: translate(-50%, 0);
+	transition: 700ms;
+}
+
+main > .terms.active,
+main > .phone_certificate.active,
+main > .select_type.active,
+main > .email_form.active {
+	opacity: 1;
+	visibility: visible;
+}
+
+main > .phone_certificate {
+	z-index: 2;
+}
+
+main > .select_type {
+	z-index: 3;
+}
+
+main > .email_form {
+	z-index: 4;
+}
+
+.terms {
+	flex-direction: column;
+	align-items: center;
+	z-index: 1;
+}
+
+.terms>.title {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-main>.title>span {
+.terms>.title>span {
     font-size: 28px;
     font-weight: 500;
     color: black;
@@ -33,10 +68,15 @@ main>.title>span {
     justify-content: flex-start;
     align-items: center;
     width: 100%;
+    cursor: pointer;
 }
 
 .checkbox_wrapper.all {
     border-bottom: 1px solid #e5e5e5;
+}
+
+.checkbox_wrapper * {
+	pointer-events: none;
 }
 
 .checkbox_wrapper>.checkbox {
@@ -95,12 +135,14 @@ main>.title>span {
     line-height: 48px;
     text-align: center;
     cursor: pointer;
+    transition: 500ms;
 }
 
 .submit_button:disabled {
     border: 1px solid #D9D9D9;
     background-color: #F5f5F5;
     color: rgba(0, 0, 0, 0.25);
+    cursor: default;
 }
 
 .login_link {

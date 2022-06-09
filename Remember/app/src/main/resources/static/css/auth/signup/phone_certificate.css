@@ -1,39 +1,31 @@
-main {
-    margin: 0 28px;
-    padding: 40px 0 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.main_wrapper {
+.phone_certificate {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.main_wrapper>.title {
+.phone_certificate>.title {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.title>.text {
+.phone_certificate>.title>.text {
     margin-top: 24px;
     font-size: 13px;
     font-weight: 500;
     color: #999;
 }
 
-.title>.text.big {
+.phone_certificate>.title>.text.big {
+	margin: 0;
     font-size: 28px;
     font-weight: 500;
     color: black;
     line-height: 36px;
 }
 
-.input_wrapper {
+.phone_certificate>.input_wrapper {
     margin-top: 42px;
     display: flex;
     flex-direction: column;
@@ -82,64 +74,5 @@ main {
     font-weight: 400;
     color: white;
     line-height: 48px;
-    cursor: pointer;
-}
-
-.onBoardingLayout {
-    margin: 0 auto;
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    overflow-y: auto;
-}
-
-.outsideNavigation {
-    height: 50px;
-    width: 100%;
-    background-color: #fff;
-    border-bottom: 1px solid #e5e5e5;
-    text-align: center;
-}
-
-.outsideNavigation_logo {
-    display: inline-block;
-    height: 30px;
-    margin: 10px auto;
-}
-
-.outsideNavigation_logo-image {
-    height: 30px;
-    cursor: pointer;
-}
-
-.onBoardingLayout_Content {
-    height: calc(100% - 50px);
-}
-
-
-
-.onBoardingContent_Title {
-    font-size: 24px;
-    color: #000;
-    font-weight: 500;
-    line-height: 36px;
-    text-align: center;
-}
-
-.onBoardingButton {
-    width: 504px;
-    height: 48px;
-    padding: 0px 15px;
-    height: 48px;
-    font-size: 15px;
-    color: #fff;
-    background-color: #333;
-    border-color: #333;
-    outline: 0;
-    line-height: 1.5;
-    display: inline-block;
-    font-weight: 400;
-    text-align: center;
-    touch-action: manipulation;
     cursor: pointer;
 }

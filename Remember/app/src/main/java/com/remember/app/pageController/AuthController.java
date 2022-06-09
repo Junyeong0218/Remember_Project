@@ -13,23 +13,9 @@ public class AuthController {
 		return "/auth/signin";
 	}
 	
-	@GetMapping("/signup/type")
-	public String selectType() {
-		return "/auth/signup/select_type";
-	}
-	
-	@GetMapping("/signup/email")
-	public String emailCertificate() {
-		return "/auth/signup/email_certificate";
-	}
-	
-	@GetMapping("/signup/phone")
-	public String phoneCertificate() {
-		return "/auth/signup/phone_certificate";
-	}
-	
-	@GetMapping("/signup/terms")
+	@GetMapping("/signup")
 	public String terms() {
-		return "/auth/signup/terms";
+		return "/auth/signup";
 	}
+
 }

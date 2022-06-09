@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리멤버 - 직장인 필수 앱</title>
+    <link rel="stylesheet" href="/static/css/container.css">
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/auth/header.css">
+    <link rel="stylesheet" href="/static/css/auth/signup/phone_certificate.css">
+    <link rel="stylesheet" href="/static/css/auth/signup/select_type.css">
+    <link rel="stylesheet" href="/static/css/auth/signup/email_certificate.css">
+    <link rel="stylesheet" href="/static/css/auth/signup/terms.css">
+    <script src="https://kit.fontawesome.com/9caa3067ac.js" crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <a href="#" class="logo">
+                <img src="/static/images/signup_logo.png">
+            </a>
+        </header>
+        <main>
+            <div class="terms active">
+            	<div class="title">
+	                <span>회원가입을 위해</span>
+	                <span>약관에 동의해주세요</span>
+	            </div>
+	            <form class="terms_form">
+	                <div class="checkbox_wrapper all">
+	                    <input type="checkbox" class="checkbox">
+	                    <div class="text_wrapper">
+	                        <span class="text bold">모두 동의합니다</span>
+	                    </div>
+	                </div>
+	                <div class="checkbox_wrapper">
+	                    <input type="checkbox" class="checkbox">
+	                    <div class="text_wrapper">
+	                        <span class="text">만 14세 이상입니다 (필수)</span>
+	                    </div>
+	                    <button type="button" class="terms_detail_modal_button">보기</button>
+	                </div>
+	                <div class="checkbox_wrapper">
+	                    <input type="checkbox" class="checkbox">
+	                    <div class="text_wrapper">
+	                        <span class="text">이용약관 (필수)</span>
+	                    </div>
+	                    <button type="button" class="terms_detail_modal_button">보기</button>
+	                </div>
+	                <div class="checkbox_wrapper">
+	                    <input type="checkbox" class="checkbox">
+	                    <div class="text_wrapper">
+	                        <span class="text">개인정보 수집 및 이용에 대한 안내 (필수)</span>
+	                    </div>
+	                    <button type="button" class="terms_detail_modal_button">보기</button>
+	                </div>
+	                <div class="checkbox_wrapper">
+	                    <input type="checkbox" class="checkbox">
+	                    <div class="text_wrapper">
+	                        <span class="text">개인정보 유효기간을 탈퇴 시 까지로 설정 (필수)</span>
+	                        <span class="text small">별도로 설정하지 않는 경우 1년으로 설정됩니다</span>
+	                    </div>
+	                    <button type="button" class="terms_detail_modal_button">보기</button>
+	                </div>
+	                <div class="checkbox_wrapper">
+	                    <input type="checkbox" class="checkbox">
+	                    <div class="text_wrapper">
+	                        <span class="text">리멤버 혜택 알림 수신 동의 (선택)</span>
+	                    </div>
+	                    <button type="button" class="terms_detail_modal_button">보기</button>
+	                </div>
+	                <button type="button" class="submit_button" disabled>다음</button>
+	            </form>
+	            <div class="login_link">
+	                <span>기존에 리멤버를 사용하셨나요?&nbsp;<a href="#">로그인</a></span>
+	            </div>
+            </div>
+            <div class="phone_certificate">
+            	<div class="title">
+                    <span class="text big">휴대폰 번호를 입력하세요</span>
+                    <span class="text">본인인증을 위해 SMS 인증번호를 전송합니다.</span>
+                </div>
+                <form class="input_wrapper">
+                    <div class="phone_number">
+                        <select name="" class="select_box">
+                            <option value="">+82</option>
+                        </select>
+                        <input type="text" class="phone" name="phone" placeholder="휴대폰 번호 입력">
+                    </div>
+                    <button type="button" class="submit_button">인증번호 전송</button>
+                </form>
+            </div>
+            <div class="select_type">
+            	<div class="signup_type">
+                    <h1>회원가입 방법을 선택하세요</h1>
+                    <a class="btn naver" href="/oauth2/authorization/naver">네이버로 회원가입</a>
+                    <a class="btn google" href="/oauth2/authorization/google">Google로 회원가입</a>
+                    <button type="button" class="btn email">이메일로 회원가입</button>
+                </div>
+                <div class="login_link">
+                    <span>기존에 리멤버를 사용하셨나요?&nbsp;<a href="#">로그인</a></span>
+                </div>
+            </div>
+            <form class="email_form" action="/auth/signin" method="post">
+            	 <div class="form_box">
+                    <h1>계정으로 사용할 이메일과 <br> 비밀번호를 입력하세요</h1>
+                </div>
+                <div class="input_box box1">
+                    <i class="fa fa-envelope-o fa-lg fa-fw"></i>
+                    <input type="email" name="username" placeholder="계정(이메일) 입력">
+                </div>
+                <div class="input_box box2">
+                    <i class="fa fa-lock fa-lg fa-fw"></i>
+                    <input type="password" name="password" placeholder="비밀번호 입력">
+                </div>
+                <p>영문/숫자/특수문자 중 2가지 이상 조합하여 8자 이상 입력해 주세요.</p>
+                <button type="button" class="submit_button">다음</button>
+            </form>
+        </main>
+    </div>
+    <script src="/static/js/auth/signup/signup.js"></script>
+</body>
+
+</html>

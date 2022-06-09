@@ -1,10 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300&display=swap');
 
-main {
-    padding: 40px 0;
+.email_form {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
 }
 
@@ -13,34 +11,22 @@ main {
     line-height: 35px;
 }
 
-.header {
-    text-align: center;
-    border-bottom: 1px solid rgb(229, 229, 230);
-    background-color: #fff;
-    padding: 6px 0;
-}
-
-.header img {
-    width: 75px;
-    height: auto
-}
-
-.signup-email {
+.signup_email {
     text-align: center;
     width: 350px;
 }
 
-.form-box {
+.form_box {
     margin-bottom: 40px;
-    ;
 }
 
-.form-box h1 {
+.form_box h1 {
     font-size: 26px;
     font-weight: 550;
+    text-align: center;
 }
 
-.input-box {
+.input_box {
     margin: 10px auto;
     width: 350px;
     border: 1px solid #222;
@@ -49,7 +35,7 @@ main {
     line-height: 48px;
 }
 
-.input-box input {
+.input_box input {
     width: 90%;
     border: none;
     outline: none;
@@ -67,7 +53,7 @@ main {
     border-right: 20px;
 }
 
-.signup-email p {
+.signup_email p {
     text-align: left;
     font-size: 13px;
     line-height: 16px;
@@ -75,7 +61,8 @@ main {
     margin-bottom: 10px;
 }
 
-.next-button {
+.submit_button {
+	margin-top: 12px;
     width: 350px;
     display: block;
     outline: none;
