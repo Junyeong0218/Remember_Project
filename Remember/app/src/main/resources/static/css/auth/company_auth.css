@@ -1,0 +1,130 @@
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+}
+
+.company_auth {
+    margin-bottom: 60px;
+}
+.company_auth_title{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    color: rgb(33, 35, 34);
+    font-weight: bold;
+    line-height: normal;
+    width: 100%;
+    padding-top: 90px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.company_auth_title h2{
+    font-size: 24px;
+    line-height: 34px;
+    font-weight: 600;
+}
+
+.company_auth_content {
+    display: flex;
+    width: 360px;
+    margin-bottom: 16px;
+    flex-direction: column;
+    gap: 8px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.signin_box {
+    display: flex;
+    height: 77px;
+    max-width: 360px;
+    border-radius: 4px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 12px;
+    min-width: 68px;
+    padding: 0 16px;
+    font-weight: 400;
+    border: 1px solid rgb(204, 204, 204);
+    background-color: rgb(255, 255, 255);
+    color: rgb(33, 35, 34);
+}
+
+.signin_txt{
+    font-size: 100%;
+    text-align: center;
+}
+
+.signin_txt span {
+    font-size: 12px;
+    line-height: 19px;
+    font-weight: 400;
+    color: rgb(100, 100, 100);
+}
+
+.signin_txt h4 {
+    font-size: 16px;
+    line-height: 26px;
+    font-weight: 600;
+}
+
+.signup_box {
+    display: flex;
+    height: 77px;
+    max-width: 360px;
+    border-radius: 4px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 12px;
+    min-width: 68px;
+    padding: 0 16px;
+    font-weight: 400;
+    border: 1px solid rgb(204, 204, 204);
+    background-color: rgb(255, 255, 255);
+    color: rgb(33, 35, 34);
+}
+
+.signup_txt{
+    font-size: 100%;
+    text-align: center;
+}
+
+.signup_txt span {
+    font-size: 12px;
+    line-height: 19px;
+    font-weight: 400;
+    color: rgb(100, 100, 100);
+}
+
+.signup_txt h4 {
+    font-size: 16px;
+    line-height: 26px;
+    font-weight: 600;
+}
+
+.info_txt{
+    font-size: 12px;
+    line-height: 19px;
+    font-weight: 300;
+    color:  rgb(100, 100, 100);
+    text-align: center;
+}
+
+.footer_wrapper {
+    margin-left: 130px;
+    font-size: 11px;
+    line-height: 10px;
+}
+
+.copyrights {
+    font-size: 7px;
+    line-height: 1px;
+}
