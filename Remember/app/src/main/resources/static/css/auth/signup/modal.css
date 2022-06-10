@@ -1,0 +1,179 @@
+.modal {
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal > .window {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: fit-content;
+    padding: 15px 20px;
+    background-color: white;
+}
+
+.modal > .window > .text {
+    font-size: 16px;
+    line-height: 22px;
+}
+
+.modal > .window > .text.gray {
+    font-size: 15px;
+    color: #666;
+    word-break: break-word;
+    white-space: pre-line;
+}
+
+.modal > .window > .text.gray:nth-child(2) {
+	margin-top: 8px;
+}
+
+.modal > .window >.buttons {
+	margin-top: 24px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 32px;
+}
+
+.modal > .window >.buttons > button {
+	padding: 0 15px;	
+    height: 100%;
+    cursor: pointer;
+}
+
+.modal > .window > .buttons > button.cancel {
+    border: 1px solid #D9D9D9;
+}
+
+.modal > .window > .buttons > button.apply {
+    margin-left: 8px;
+    background-color: #333;
+    color: white;
+}
+
+.modal > .window.certificate {
+	padding: 0;
+	width: 320px;
+}
+
+.modal > .window.certificate > .code_input_wrapper {
+	position: relative;
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border-bottom: 1px solid #E8E8E8;
+}
+
+.modal > .window.certificate > .code_input_wrapper > .text {
+	font-size: 15px;
+	color: black;
+	line-height: 20px;
+}
+
+.modal > .window.certificate > .code_input_wrapper > .close_button {
+	position: absolute;
+	top: 24px;
+	right: 24px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+}
+
+.modal > .window.certificate > .code_input_wrapper > .close_button > img {
+	width: 11px;
+	pointer-events: none;
+}
+
+.modal > .window.certificate > .code_input_wrapper > .code_input {
+	position: relative;
+	margin-top: 16px;
+	padding: 6px 11px 6px 12px;
+	width: 100%;
+	height: 38px;
+	border: 1px solid #0d0c0c;
+	font-size: 15px;
+}
+
+.modal > .window.certificate > .code_input_wrapper > .code_input.wrong {
+	border-color: #F5222D;
+}
+
+.modal > .window.certificate > .code_input_wrapper > .code_input::placeholder {
+	font-size: 15px;
+	color: #dedede
+}
+
+.modal > .window.certificate > .code_input_wrapper > .wrong_message {
+	font-size: 14px;
+	font-weight: 400;
+	color: #F5222D;
+}
+
+.modal > .window.certificate > .code_input_wrapper > .time_wrapper {
+	position: absolute;
+	top: 50%;
+	right: 36px;
+	margin-top: 10px;
+}
+
+.modal > .window.certificate > .code_input_wrapper > .time_wrapper,
+.modal > .window.certificate > .code_input_wrapper > .time_wrapper > span {
+	font-size: 13px;
+	color: #FF5252;
+}
+
+.modal > .window.certificate > .buttons {
+	margin: 0;
+	padding-right: 15px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width:100%;
+	height: 52px;
+}
+
+.modal > .window.certificate > .buttons > .resend_button {
+	height: 32px;
+	font-size: 14px;
+	color: #333;
+	text-decoration: underline;
+}
+
+.modal > .window.certificate > .buttons > .button_wrapper {
+	display: flex;
+	flex-direction: row;
+	height: 32px;
+}
+
+.modal > .window.certificate > .buttons > .button_wrapper > button {
+	padding: 0 15px;	
+    height: 100%;
+    cursor: pointer;
+}
+
+.modal > .window.certificate > .buttons > .button_wrapper > button.cancel {
+    border: 1px solid #D9D9D9;
+    cursor: pointer;
+}
+
+.modal > .window.certificate > .buttons > .button_wrapper > button.apply {
+    margin-left: 8px;
+    background-color: #333;
+    color: white;
+}
+
+.modal > .window.certificate > .buttons > .button_wrapper > button:disabled {
+	cursor: not-allowed;
+}

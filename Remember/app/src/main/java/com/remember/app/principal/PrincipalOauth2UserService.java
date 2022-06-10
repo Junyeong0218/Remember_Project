@@ -44,6 +44,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 		UserDetail userDetail = userRepository.getOAuthUserByOAuthUsername(oauth_username);
 		
 		Object termsDto = httpSession.getAttribute("dto");
+		httpSession.removeAttribute("dto");
 		
 		if(termsDto != null) {
 			// 회원가입 oauth ( oauth_username 검색 -> 존재하면 exception / 없으면 insert
@@ -72,10 +73,10 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 							
 							return new PrincipalDetails(userDetail, attributes);
 						} else {
-							throw new OAuth2AuthenticationException(new OAuth2Error("400", provider + " 회원가입 실패", "/auth/signup/terms"));
+							throw new OAuth2AuthenticationException(new OAuth2Error("400", provider + " 회원가입 실패", "/auth/signup"));
 						}
 					} else {
-						throw new OAuth2AuthenticationException(new OAuth2Error("400", provider + " 회원가입 실패", "/auth/signup/terms"));
+						throw new OAuth2AuthenticationException(new OAuth2Error("400", provider + " 회원가입 실패", "/auth/signup"));
 					}
 				} else {
 					// phone 으로 검색된 유저가 있는 경우 oauth_detail insert
@@ -89,14 +90,14 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 						
 						return new PrincipalDetails(userDetail, attributes);
 					} else {
-						throw new OAuth2AuthenticationException(new OAuth2Error("400", provider + " 회원가입 실패", "/auth/signup/terms"));
+						throw new OAuth2AuthenticationException(new OAuth2Error("400", provider + " 회원가입 실패", "/auth/signup"));
 					}
 				}
 			} else {
-				return new PrincipalDetails(userDetail, attributes);
+				throw new OAuth2AuthenticationException(new OAuth2Error("400", provider + "로 이미 가입된 회원입니다.\\n로그인 화면으로 이동합니다.", "/auth/signin"));
 			}
 		} else if(userDetail == null) {
-			throw new OAuth2AuthenticationException(new OAuth2Error("400", "간편 로그인 실패", "/auth/signup/terms"));
+			throw new OAuth2AuthenticationException(new OAuth2Error("400", "간편 로그인 실패", "/auth/signup"));
 		} else {
 			return new PrincipalDetails(userDetail, attributes);
 		}

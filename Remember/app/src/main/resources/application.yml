@@ -47,3 +47,8 @@ spring:
 mybatis:
   mapper-locations:
   - /mappers/*.xml
+  
+coolsms:
+  apikey: NCSIYYNDP4GTCCWS
+  apisecret: R2QNFN1TTTODSVKB5GBCMTDRQ9BQLWOK
+  fromnumber: 01035947111

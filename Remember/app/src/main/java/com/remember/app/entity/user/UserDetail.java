@@ -25,11 +25,32 @@ public class UserDetail {
 	
 	private String oauth_username;
 	private String provider;
+	private LocalDateTime oauth_create_date;
 	
 	private String profile_img;
 	private String name;
 	private String company_name;
 	private String department_name;
 	private String position_name;
+	
+	public User toUserEntity() {
+		return User.builder()
+							   .id(id)
+							   .email(email)
+							   .nickname(nickname)
+							   .phone(phone)
+							   .role(role)
+							   .create_date(create_date)
+							   .build();
+	}
+	
+	public UserOauthDetail toOauthDetailEntity() {
+		return UserOauthDetail.builder()
+													   .id(id)
+													   .oauth_username(oauth_username)
+													   .provider(provider)
+													   .create_date(oauth_create_date)
+													   .build();
+	}
 	
 }

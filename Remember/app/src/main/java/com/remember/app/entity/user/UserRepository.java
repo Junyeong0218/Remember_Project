@@ -1,5 +1,7 @@
 package com.remember.app.entity.user;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -9,7 +11,11 @@ public interface UserRepository {
 
 	public UserDetail getOAuthUserByPhone(String phone);
 	
-	public int getIdByPhone(String phone);
+	public UserDetail getUserByEmail(String email);
+	
+	public List<UserDetail> getAvailableLogins(String phone);
+	
+	public Integer getIdByPhone(String phone);
 	
 	public int updateEmailAndPasswordById(User user);
 	

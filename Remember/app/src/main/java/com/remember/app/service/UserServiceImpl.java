@@ -1,13 +1,19 @@
 package com.remember.app.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.remember.app.entity.user.User;
+import com.remember.app.entity.user.UserDetail;
+import com.remember.app.entity.user.UserOauthDetail;
 import com.remember.app.entity.user.UserRepository;
 import com.remember.app.entity.user.UserTerms;
 import com.remember.app.requestDto.EmailSignupReqDto;
 import com.remember.app.requestDto.TermsReqDto;
+import com.remember.app.responseDto.UserLoginFlagsResDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +27,8 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public boolean signupWithEmail(TermsReqDto termsDto, EmailSignupReqDto emailSignupReqDto) {
-		int id = userRepository.getIdByPhone(termsDto.getPhone());
+		Integer idObj = userRepository.getIdByPhone(termsDto.getPhone());
+		int id = idObj == null ? 0 : idObj.intValue();
 		
 		User user = emailSignupReqDto.toEntity(passwordEncoder);
 		user.setPhone(termsDto.getPhone());
@@ -40,5 +47,21 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public UserLoginFlagsResDto getAvailableLogins(String phone) {
+		List<UserDetail> details = userRepository.getAvailableLogins(phone);
+		if(details.size() == 0) return null;
+		
+		UserLoginFlagsResDto dto = new UserLoginFlagsResDto();
+		dto.setUser(details.get(0).toUserEntity());
+		List<UserOauthDetail> oauth_details = new ArrayList<UserOauthDetail>();
+		for(UserDetail detail : details ) {
+			oauth_details.add(detail.toOauthDetailEntity());
+		}
+		dto.setOauthDetails(oauth_details);
+		
+		return dto;
 	}
 }

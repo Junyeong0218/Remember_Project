@@ -17,6 +17,7 @@
 			
 			oauth.oauth_username,
 			oauth.provider,
+			oauth.create_date as oauth_create_date,
 			
 			ud.profile_img,
 			ud.`name`,
@@ -43,6 +44,7 @@
 			
 			oauth.oauth_username,
 			oauth.provider,
+			oauth.create_date as oauth_create_date,
 			
 			ud.profile_img,
 			ud.`name`,
@@ -56,6 +58,61 @@
 		where
 			um.phone = #{phone}
 		limit 1;
+	</select>
+	
+	<select id="getUserByEmail" parameterType="String" resultType="com.remember.app.entity.user.UserDetail">
+		select
+			um.id,
+			um.email,
+			um.`password`,
+			um.nickname,
+			um.phone,
+			um.role,
+			um.create_date,
+			
+			oauth.oauth_username,
+			oauth.provider,
+			oauth.create_date as oauth_create_date,
+			
+			ud.profile_img,
+			ud.`name`,
+			ud.company_name,
+			ud.department_name,
+			ud.position_name
+		from
+			user_mst um
+			left outer join user_oauth_detail oauth on(oauth.user_id = um.id)
+			left outer join user_detail ud on(ud.user_id = um.id)
+		where
+			um.email = #{email}
+		limit 1;
+	</select>
+	
+	<select id="getAvailableLogins" parameterType="String" resultType="com.remember.app.entity.user.UserDetail">
+		select
+			um.id,
+			um.email,
+			um.`password`,
+			um.nickname,
+			um.phone,
+			um.role,
+			um.create_date,
+			
+			oauth.oauth_username,
+			oauth.provider,
+			oauth.create_date as oauth_create_date,
+			
+			ud.profile_img,
+			ud.`name`,
+			ud.company_name,
+			ud.department_name,
+			ud.position_name
+		from
+			user_mst um
+			left outer join user_oauth_detail oauth on(oauth.user_id = um.id)
+			left outer join user_detail ud on(ud.user_id = um.id)
+		where
+			um.phone = #{phone};
 	</select>
 	
 	<select id="getIdByPhone" parameterType="String" resultType="Integer">

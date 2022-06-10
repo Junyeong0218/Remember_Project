@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.remember.app.exceptionHandler.FormLoginAuthenticationExceptionHandler;
+import com.remember.app.exceptionHandler.OAuth2AuthenticationExceptionHandler;
 import com.remember.app.principal.PrincipalOauth2UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,25 +31,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 		http.httpBasic().disable();
 		http.authorizeRequests()
-				 .antMatchers("/api/v1/auth/signup/*", "/api/v1/auth/signin/*")
+				 .antMatchers("/api/v1/auth/signup/*", "/api/v1/auth/account/list")
 				 .permitAll()
-				 .antMatchers("/api/v1/*")
+				 .antMatchers("/api/v1/*", "/card")
 				 .authenticated()
 				 .anyRequest()
 				 .permitAll()
 				 .and()
 				 .formLogin()
+				 .failureHandler(new FormLoginAuthenticationExceptionHandler())
 				 .loginPage("/auth/signup")
 				 .loginPage("/auth/signin")
 				 .loginProcessingUrl("/auth/signin")
 				 .defaultSuccessUrl("/card")
 				 .and()
 				 .oauth2Login()
+				 .failureHandler(new OAuth2AuthenticationExceptionHandler())
 				 .loginPage("/auth/signup")
 				 .loginPage("/auth/signin")
 				 .userInfoEndpoint()
 				 .userService(principalOauth2UserService)
 				 .and()
-				 .defaultSuccessUrl("/card");
+				 .defaultSuccessUrl("/card")
+				 .and()
+				 .logout()
+				 .logoutSuccessUrl("/");
 	}
 }
