@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private final PrincipalOauth2UserService principalOauth2UserService;
-
+	
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -31,30 +31,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 		http.httpBasic().disable();
 		http.authorizeRequests()
-				 .antMatchers("/api/v1/auth/signup/*", "/api/v1/auth/account/list")
-				 .permitAll()
-				 .antMatchers("/api/v1/*", "/card")
-				 .authenticated()
-				 .anyRequest()
-				 .permitAll()
+					.antMatchers("/api/v1/auth/signup/*", "/api/v1/auth/account/list")
+					 	.permitAll()
+				 	.antMatchers("/api/v1/*", "/card")
+				 		.authenticated()
+			 		.anyRequest()
+			 			.permitAll()
 				 .and()
-				 .formLogin()
-				 .failureHandler(new FormLoginAuthenticationExceptionHandler())
-				 .loginPage("/auth/signup")
-				 .loginPage("/auth/signin")
-				 .loginProcessingUrl("/auth/signin")
-				 .defaultSuccessUrl("/card")
+				 	.formLogin()
+				 		.failureHandler(new FormLoginAuthenticationExceptionHandler())
+				 		.loginPage("/auth/signup")
+				 		.loginPage("/auth/signin")
+				 		.loginPage("/auth/signin/email")
+				 		.loginPage("/auth/signin/phone")
+				 		.loginProcessingUrl("/auth/signin")
+				 		.loginProcessingUrl("/auth/signin/phone")
+				 			.defaultSuccessUrl("/card")
 				 .and()
-				 .oauth2Login()
-				 .failureHandler(new OAuth2AuthenticationExceptionHandler())
-				 .loginPage("/auth/signup")
-				 .loginPage("/auth/signin")
-				 .userInfoEndpoint()
-				 .userService(principalOauth2UserService)
+				 	.oauth2Login()
+				 		.failureHandler(new OAuth2AuthenticationExceptionHandler())
+				 		.loginPage("/auth/signup")
+				 		.loginPage("/auth/signin")
+				 		.loginPage("/auth/signin/phone")
+				 		.userInfoEndpoint()
+				 		.userService(principalOauth2UserService)
 				 .and()
-				 .defaultSuccessUrl("/card")
+				 	.defaultSuccessUrl("/card")
 				 .and()
-				 .logout()
-				 .logoutSuccessUrl("/");
+				 	.logout()
+				 	.logoutSuccessUrl("/");
 	}
 }

@@ -13,6 +13,16 @@ public class AuthController {
 		return "/auth/signin";
 	}
 	
+	@GetMapping("/signin/email")
+	public String signinEmail() {
+		return "/auth/signin_email";
+	}
+	
+	@GetMapping("/signin/phone")
+	public String signinPhone() {
+		return "/auth/signin_phone";
+	}
+	
 	@GetMapping("/signup")
 	public String terms() {
 		return "/auth/signup";

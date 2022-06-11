@@ -13,6 +13,8 @@ public interface UserRepository {
 	
 	public UserDetail getUserByEmail(String email);
 	
+	public UserDetail getUserByPhone(String phone);
+	
 	public List<UserDetail> getAvailableLogins(String phone);
 	
 	public Integer getIdByPhone(String phone);
