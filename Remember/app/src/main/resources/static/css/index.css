@@ -142,6 +142,10 @@ main{
     width: 100%;
 }
 
+.main_profile img {
+    margin-right: 69px;
+}
+
 .con_profile{
     margin-right: 69px;
     width: 536px;
@@ -151,11 +155,11 @@ main{
 
 .con_profile_go h2{
     line-height: 60px;
-    margin-bottom: 25px;
+
 }
 
 .con_profile_go h3{
-    margin-bottom: 46px;
+
     line-height: 32px;
 }
 
@@ -168,6 +172,7 @@ main{
     border-radius: 40px;
     background-color: #212322;
     cursor: pointer;
+    margin-top: 46px;
 }
 
 .arrow{
@@ -202,7 +207,11 @@ main{
     font-size: 48px;
     font-weight: 700;
     word-spacing: 2px;
-    margin-bottom: 20px;
+
+}
+
+.under{
+    margin-bottom: 25px;
 }
 
 .go_msg{
@@ -210,16 +219,6 @@ main{
     font-weight: 300;
 
 }
-
-.community_go h2{
-    margin: 43px 0 25px 0;
-    
-}
-
-.community_go h3{
-    margin-bottom: 46px;
-}
-
 
 .main_briefing{
     width: 100%;
@@ -241,7 +240,7 @@ main{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 40px;
+
 
 }
 
@@ -255,11 +254,10 @@ main{
 
 .go_solution{
     line-height: 68px;
-    margin-bottom: 92px;
+
 }
 
 .go_briefing h3{
-    margin-bottom: 46px;
     text-align: center;
     line-height: 35px;
 }
@@ -274,15 +272,8 @@ main{
     justify-content: center;
 }
 
-.photo_go h2{
-    margin: 42px 0 24px;
-}
-
-.photo_go h3{
-    margin: 0 0 47px 2px;
-}
-
 .list_box{
+
     position: relative;
     padding: 35px 50.9px 38px 31px;
     width: 400px;
@@ -294,6 +285,7 @@ main{
 }
 
 .list{
+    margin-top: 92px;
     width: 820px;
     display: flex;
     gap: 20px;

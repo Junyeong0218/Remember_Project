@@ -13,9 +13,19 @@ public class AuthController {
 		return "/auth/signin";
 	}
 	
-	@GetMapping("/signup")
-	public String signup() {
-		return "/auth/signup";
+	@GetMapping("/signup/type")
+	public String selectType() {
+		return "/auth/signup/select_type";
+	}
+	
+	@GetMapping("/signup/email")
+	public String emailCertificate() {
+		return "/auth/signup/email_certificate";
+	}
+	
+	@GetMapping("/signup/phone")
+	public String phoneCertificate() {
+		return "/auth/signup/phone_certificate";
 	}
 	
 	@GetMapping("/signup/terms")

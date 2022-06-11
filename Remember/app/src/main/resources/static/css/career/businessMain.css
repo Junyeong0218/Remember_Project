@@ -22,7 +22,7 @@ main{
     font-weight: 600;
     line-height: 72px;
     letter-spacing: -1.5px;
-    margin-bottom: 16px;
+
     color: #fff;
 }
 
@@ -30,7 +30,7 @@ main{
     font-size: 20px;
     color: #fff;
     font-weight: 400;
-    margin-bottom: 40px;
+    margin: 16px 0 40px 0;
 }
 
 .main_btn{
