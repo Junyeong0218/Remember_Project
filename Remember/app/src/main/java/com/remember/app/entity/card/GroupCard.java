@@ -2,7 +2,7 @@ package com.remember.app.entity.card;
 
 import java.time.LocalDateTime;
 
-import com.remember.app.dto.GroupRespDto;
+import com.remember.app.responseDto.GroupRespDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

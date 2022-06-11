@@ -1,8 +1,8 @@
-package com.remember.app.domain;
+package com.remember.app.entity.now;
 
 import java.time.LocalDateTime;
 
-import com.remember.app.dto.ContentRespDto;
+import com.remember.app.responseDto.ContentRespDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

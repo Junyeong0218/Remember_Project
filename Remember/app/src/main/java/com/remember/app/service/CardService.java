@@ -2,13 +2,13 @@ package com.remember.app.service;
 
 import java.util.List;
 
-import com.remember.app.dto.CardInsertReqDto;
-import com.remember.app.dto.CardUpdateReqDto;
-import com.remember.app.dto.GroupRespDto;
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupCard;
 import com.remember.app.entity.card.GroupSummary;
+import com.remember.app.requestDto.CardInsertReqDto;
+import com.remember.app.requestDto.CardUpdateReqDto;
+import com.remember.app.responseDto.GroupRespDto;
 
 
 public interface CardService {

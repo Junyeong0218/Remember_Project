@@ -1,6 +1,6 @@
-package com.remember.app.dto;
+package com.remember.app.requestDto;
 
-import com.remember.app.domain.Now;
+import com.remember.app.entity.now.Now;
 
 import lombok.Data;
 

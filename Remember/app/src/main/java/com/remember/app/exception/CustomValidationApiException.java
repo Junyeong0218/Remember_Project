@@ -1,4 +1,4 @@
-package com.remember.app.handler.exception;
+package com.remember.app.exception;
 
 import java.util.Map;
 

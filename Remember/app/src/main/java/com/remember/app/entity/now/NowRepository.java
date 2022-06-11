@@ -1,4 +1,4 @@
-package com.remember.app.domain;
+package com.remember.app.entity.now;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.remember.app.dto;
+package com.remember.app.requestDto;
 
 import java.time.LocalDateTime;
 

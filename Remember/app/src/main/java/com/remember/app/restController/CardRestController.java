@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.remember.app.dto.CardInsertReqDto;
-import com.remember.app.dto.CardUpdateReqDto;
-import com.remember.app.dto.GroupRespDto;
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
+import com.remember.app.requestDto.CardInsertReqDto;
+import com.remember.app.requestDto.CardUpdateReqDto;
+import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.service.CardService;
 
 import lombok.RequiredArgsConstructor;
