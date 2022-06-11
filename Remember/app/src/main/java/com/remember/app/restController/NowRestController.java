@@ -11,33 +11,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/now")
 public class NowRestController {
 	
-	@GetMapping("/article/list")
+//	@GetMapping("/article/list")
 //	public List<NowArticle> getNowArticleList() {
-		
-	}
-	
-	@GetMapping("/article/count")
-	public int getArticleCount() {
-		
-	}
-
-	@GetMapping("{categoryId}/article/list")
+//		
+//	}
+//	
+//	@GetMapping("/article/count")
+////	public int getArticleCount() {
+//		
+//	}
+//
+//	@GetMapping("{categoryId}/article/list")
 //	public List<NowArticle> getNowArticleListInCategory() {
-		
-	}
-	
-	@GetMapping("{categoryId}/article/count") 
-	public int getArticleCountInCategory(){
-		
-	}
-	
-	@GetMapping("/article/detail/{articleId}")
+//		
+//	}
+//	
+//	@GetMapping("{categoryId}/article/count") 
+//	public int getArticleCountInCategory(){
+//		
+//	}
+//	
+//	@GetMapping("/article/detail/{articleId}")
 //	public NowArticleResDto articleDetail() {
-		
-	}
-	
-	@getMapping("/article/related/{articleId}")
+//		
+//	}
+//	
+//	@getMapping("/article/related/{articleId}")
 //	public List<NowArticle> getRelatedArticle(@PathVariable int articleId) {
-		
-	}
+//		
+//	}
 }

@@ -7,22 +7,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>리멤버 - 직장인 필수 앱</title>
     <link rel="stylesheet" href="/static/css/container.css">
-    <link rel="stylesheet" href="/static/css/auth/header_company.css">
-    <link rel="stylesheet" href="/static/css/auth/company_auth/signin_company/phone_signin_company.css">
+    <th:block th:if="${flag} == 'common'">
+	    <link th:replace="fragment/header/auth_header_css :: auth_header_css">
+   	</th:block>
+   	<th:block th:if="${flag} == 'company'">
+	    <link th:replace="fragment/header/company_auth_header_css :: company_auth_header_css">
+   	</th:block>
+    <link rel="stylesheet" href="/static/css/auth/signin/phone.css">
     <link rel="shortcut icon" href="/static/images/favicon.png">
 </head>
 
 <body>
     <div class="container">
-        <header>
-            <a href="#" class="logo">
-                <img src="/static/images/navigation_company.png">
-            </a>
-        </header>
+        <th:block th:if="${flag} == 'common'">
+	        <header th:replace="fragment/header/auth_header :: auth_header"></header>
+    	</th:block>
+    	<th:block th:if="${flag} == 'company'">
+	        <header th:replace="fragment/header/company_auth_header :: company_auth_header"></header>
+    	</th:block>
         <main>
-            <div class="square_logo">
-                <img src="/static/images/square_logo.png">
-            </div>
             <div class="main_wrapper">
                 <div class="title">
                     <span class="text">회원가입 시 인증한</span>
@@ -34,12 +37,15 @@
                             <option value="">+82</option>
                         </select>
                         <input type="text" class="phone" name="phone" placeholder="휴대폰 번호 입력">
+                        <span class="time_wrapper"><span class="left_time"></span></span>
                     </div>
+                    <button type="button" class="send_code">인증번호 전송</button>
                     <button type="button" class="submit_button">인증번호 전송</button>
                 </form>
             </div>
         </main>
     </div>
+    <script src="/static/js/auth/signin/phone.js"></script>
 </body>
 
 </html>

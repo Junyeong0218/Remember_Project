@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>리멤버 - 채용 솔루션</title>
     <link rel="stylesheet" href="/static/css/container.css">
-    <link rel="stylesheet" href="/static/css/auth/company_auth.css">
+    <link rel="stylesheet" href="/static/css/auth/company.css">
     <link rel="stylesheet" href="/static/css/auth/header_company.css">
     <link rel="short icon" href="/static/images/favicon.png">
     <link rel="stylesheet" href="/static/css/community/footer.css">
@@ -15,11 +15,7 @@
 
 <body>
     <div class="container">
-        <header>
-            <a href="#" class="logo">
-                <img src="/static/images/navigation_company.png">
-            </a>
-        </header>
+        <header th:replace="fragment/header/company_auth_header :: company_auth_header"></header>
         <main>
             <div class="company_auth">
                 <div class="company_auth_title">
@@ -75,6 +71,7 @@
             </div>
         </footer>
     </div>
+    <script src="/static/js/auth/company.js"></script>
 </body>
 </div>
 </html>

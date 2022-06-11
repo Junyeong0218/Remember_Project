@@ -1,6 +1,7 @@
 package com.remember.app.pageController;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -9,23 +10,81 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthController {
 
 	@GetMapping("/signin")
-	public String signin() {
+	public String signin(Model model) {
+		model.addAttribute("flag", "common");
 		return "/auth/signin";
 	}
 	
 	@GetMapping("/signin/email")
-	public String signinEmail() {
-		return "/auth/signin_email";
+	public String signinEmail(Model model) {
+		model.addAttribute("flag", "common");
+		return "/auth/signin/email";
 	}
 	
 	@GetMapping("/signin/phone")
-	public String signinPhone() {
-		return "/auth/signin_phone";
+	public String signinPhone(Model model) {
+		model.addAttribute("flag", "common");
+		return "/auth/signin/phone";
 	}
 	
 	@GetMapping("/signup")
-	public String terms() {
+	public String signup(Model model) {
+		model.addAttribute("flag", "common");
 		return "/auth/signup";
+	}
+	
+	@GetMapping("/password")
+	public String findPassword(Model model) {
+		model.addAttribute("flag", "common");
+		return "/auth/reset_password";
+	}
+	
+	@GetMapping("/inquiry")
+	public String inquiry(Model model) {
+		model.addAttribute("flag", "common");
+		return "/auth/inquiry";
+	}
+	
+	@GetMapping("/company")
+	public String companyAuthFlag(Model model) {
+		model.addAttribute("flag", "company");
+		return "/auth/company";
+	}
+	
+	@GetMapping("/company/signin")
+	public String companySignin(Model model) {
+		model.addAttribute("flag", "company");
+		return "/auth/signin";
+	}
+	
+	@GetMapping("/company/signin/email")
+	public String companySigninEmail(Model model) {
+		model.addAttribute("flag", "company");
+		return "/auth/signin/email";
+	}
+	
+	@GetMapping("/company/signin/phone")
+	public String companySigninPhone(Model model) {
+		model.addAttribute("flag", "company");
+		return "/auth/signin/phone";
+	}
+	
+	@GetMapping("/company/signup")
+	public String companySignup(Model model) {
+		model.addAttribute("flag", "company");
+		return "/auth/signup";
+	}
+	
+	@GetMapping("/company/password")
+	public String companyFindPassword(Model model) {
+		model.addAttribute("flag", "company");
+		return "/auth/reset_password";
+	}
+	
+	@GetMapping("/company/inquiry")
+	public String companyInquiry(Model model) {
+		model.addAttribute("flag", "company");
+		return "/auth/inquiry";
 	}
 
 }

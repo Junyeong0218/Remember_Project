@@ -8,17 +8,23 @@
     <title>리멤버 - 직장인 필수 앱</title>
     <link rel="stylesheet" href="/static/css/container.css">
     <link rel="stylesheet" href="/static/css/auth/signin.css">
-    <link rel="stylesheet" href="/static/css/auth/header.css">
+    <th:block th:if="${flag} == 'common'">
+	    <link th:replace="fragment/header/auth_header_css :: auth_header_css">
+   	</th:block>
+   	<th:block th:if="${flag} == 'company'">
+	    <link th:replace="fragment/header/company_auth_header_css :: company_auth_header_css">
+   	</th:block>
     <link rel="short icon" href="/static/images/favicon.ico">
 </head>
 
 <body>
     <div class="container">
-        <header>
-            <a href="/" class="logo">
-                <img src="/static/images/signup_logo.png">
-            </a>
-        </header>
+    	<th:block th:if="${flag} == 'common'">
+	        <header th:replace="fragment/header/auth_header :: auth_header"></header>
+    	</th:block>
+    	<th:block th:if="${flag} == 'company'">
+	        <header th:replace="fragment/header/company_auth_header :: company_auth_header"></header>
+    	</th:block>
         <main>
             <div class="login">
                 <div class="login-type">

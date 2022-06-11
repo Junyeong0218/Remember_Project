@@ -58,7 +58,7 @@ nav a{
     align-items: center;
 }
 
-.header_sign button{
+.header_sign a{
     padding: 6.5px 16px;
     width: 64px;
     height: 32px;
