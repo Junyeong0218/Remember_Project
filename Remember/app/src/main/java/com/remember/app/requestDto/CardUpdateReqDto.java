@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class CardUpdateReqDto {
+	private int id;
 	private String name;
 	private String phone;
 	private String email;
@@ -23,6 +24,7 @@ public class CardUpdateReqDto {
 	
 	public Card toUpdateCardEntity() {
 		return Card.builder()
+				.id(id)
 				.name(name)
 				.phone(phone)
 				.email(email)

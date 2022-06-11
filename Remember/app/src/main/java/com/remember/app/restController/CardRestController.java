@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
+import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.responseDto.GroupRespDto;
@@ -32,7 +33,7 @@ public class CardRestController {
 	//본인 명함 검색 ("") get
 	@GetMapping("")
 	public ResponseEntity<?> getCard(){
-		Card card= cardService.getCard(1);
+		List<Card> card= cardService.getCard(1);
 		System.out.println(card);
 		return new ResponseEntity<>(card,HttpStatus.OK);
 	}
@@ -41,6 +42,7 @@ public class CardRestController {
 	@PostMapping("")
 	public ResponseEntity<?> registerCard(CardInsertReqDto cardInsertReqDto){
 		cardInsertReqDto.setUser_id(1);
+		System.out.println(cardInsertReqDto);
 		int result = cardService.insertNewCard(cardInsertReqDto);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
@@ -105,15 +107,17 @@ public class CardRestController {
 	@GetMapping("/{cardId}")
 	public ResponseEntity<?> getIdCard(@PathVariable int cardId){
 		System.out.println(cardId);
-		Card card= cardService.get(cardId);
+		Card card= cardService.getUserCardId(cardId);
 		
 		return new ResponseEntity<>(card,HttpStatus.OK);
 	}
 	
 	//특정ID 타인 명함 내 그룹 insert
 	@PostMapping("/{cardId}")
-	public ResponseEntity<?> addUserGroup(@PathVariable int cardId){
-		int result =cardService.addUserMyGroup(cardId);
+	public ResponseEntity<?> addUserGroup(@PathVariable int cardId,AddGroupReqDto addGroupReqDto){
+		System.out.println(addGroupReqDto);
+		System.out.println(cardId);
+		int result =cardService.addGroupUser(addGroupReqDto);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	

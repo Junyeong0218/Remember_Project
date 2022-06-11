@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.remember.app.entity.card.AddGroup;
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.CardRepository;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupCard;
 import com.remember.app.entity.card.GroupSummary;
+import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.responseDto.GroupRespDto;
@@ -23,8 +25,8 @@ public class CardServiceImpl implements CardService {
 	private final CardRepository cardRepository;
 	
 	@Override
-	public Card getCard(int user_id) {
-		
+	public List<Card> getCard(int user_id) {
+		cardRepository.getCard(user_id);
 		return cardRepository.getCard(user_id);
 	}
 	
@@ -91,14 +93,18 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public Card get(int cardId) {
+	public Card getUserCardId(int cardId) {
 		// TODO Auto-generated method stub
-		return cardRepository.get(cardId);
+		return cardRepository.getUserCard(cardId);
 	}
 	
 	@Override
-	public int addUserMyGroup(int cardId) {
+	public int addGroupUser(AddGroupReqDto addGroupReqDto) {
 		
-		return cardRepository.addUserGroup(cardId);
+		AddGroup addGroup = addGroupReqDto.toAddEntity();
+		
+		return cardRepository.addUserGroup(addGroup);
 	}
+	
+	
 }

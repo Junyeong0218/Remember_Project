@@ -20,7 +20,7 @@ public class AuthController {
 	
 	@GetMapping("/signin/phone")
 	public String signinPhone() {
-		return "/auth/signin_phone";
+		return "/auth/signin/phone";
 	}
 	
 	@GetMapping("/signup")

@@ -40,6 +40,8 @@
   		part_name = #{part_name},
   		position_name = #{position_name},
   		update_date = now()
+  	where
+  		id = #{id}
   </update>
   
   <delete id="deleteCard" parameterType="Integer">
@@ -105,7 +107,7 @@
   		id =#{id}
   </delete>
   
-  <select id="get" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+  <select id="getUserCard" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
   	select
   		*
   	from
@@ -115,15 +117,16 @@
   	
   </select>
   
-  <insert id="addUserGroup" parameterType="Integer">
+  <insert id="addUserGroup" parameterType="com.remember.app.entity.card.AddGroup">
   	insert into
   		card_belong_group
-  	values
+  	values(
   		0,
   		#{group_id},
   		#{card_id},
   		now(),
   		now()
+  	)
   </insert>
   
   </mapper>

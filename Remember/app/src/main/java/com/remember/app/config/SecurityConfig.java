@@ -31,10 +31,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 		http.httpBasic().disable();
 		http.authorizeRequests()
-					.antMatchers("/api/v1/auth/signup/*", "/api/v1/auth/account/list")
-					 	.permitAll()
-				 	.antMatchers("/api/v1/*", "/card")
-				 		.authenticated()
+//					.antMatchers("/api/v1/auth/signup/*", "/api/v1/auth/account/list")
+//					 	.permitAll()
+//				 	.antMatchers("/api/v1/*", "/card")
+//				 		.authenticated()
 			 		.anyRequest()
 			 			.permitAll()
 				 .and()
