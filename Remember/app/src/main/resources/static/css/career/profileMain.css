@@ -24,7 +24,7 @@ main{
 
 
 .main_img h1{
-    margin-bottom: 80px;
+
     line-height: 83px;
     font-size: 68px;
     font-weight: 600;
@@ -39,6 +39,7 @@ main{
     border-radius: 40px;
     font-size: 24px;
     font-weight: 600;
+    margin-top: 80px;
     cursor: pointer;
 }
 
@@ -65,6 +66,10 @@ main{
     color: #2864f0;
 }
 
+.con_company img{
+    margin-top: 96px;
+}
+
 .title_day{
     color: #8c8c8c;
     margin-bottom: 40px;
@@ -74,7 +79,6 @@ main{
 .company_sub{
     font-size: 20px;
     font-weight: 400;
-    margin-bottom: 96px;
     text-align: center;
     line-height: 32px;
 }
@@ -167,7 +171,7 @@ main{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+
 }
 
 .register_des h2{

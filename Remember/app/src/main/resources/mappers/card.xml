@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.remember.app.entity.card.CardRepository">
+  <select id="getCard" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+  select
+  	*
+  from
+  	card_mst
+  where
+  	user_id = #{user_id}
+  </select>
+  
+  <insert id="insertCard" parameterType="com.remember.app.entity.card.Card">
+  	insert into
+  		card_mst
+  	values(
+  		0,
+  		#{user_id},
+  		#{name},
+  		#{phone},
+  		#{email},
+  		#{company_name},
+  		#{part_name},
+  		#{position_name},
+  		now(),
+  		now()
+  	)
+  </insert>
+  
+  <update id="updateCard" parameterType="com.remember.app.entity.card.Card">
+  	update
+  		card_mst
+  	set
+  		name = #{name},
+  		phone = #{phone},
+  		email = #{email},
+  		company_name = #{company_name},
+  		part_name = #{part_name},
+  		position_name = #{position_name},
+  		update_date = now()
+  </update>
+  
+  <delete id="deleteCard" parameterType="Integer">
+  	delete
+  	from
+  		card_mst
+  	where
+  		user_id = #{user_id}
+  </delete>
+  
+  <insert id="insertGroup" parameterType="com.remember.app.entity.card.Group">
+  	insert into
+  		card_group_mst
+  	values(
+  		0,
+  		#{user_id},
+  		#{group_name},
+  		now(),
+  		now()
+  	)
+  </insert>
+  
+  <select id="getGroup" parameterType="Integer" resultType="com.remember.app.entity.card.GroupSummary">
+  	SELECT
+		cgm.group_name,
+		COUNT(distinct cbg.card_id) AS card_count
+	FROM
+		card_group_mst cgm
+		LEFT OUTER JOIN card_belong_group cbg ON(cbg.group_id = cgm.id)
+	WHERE
+		cgm.user_id = #{user_id}
+	GROUP BY
+		cgm.id
+  </select>
+  
+  <select id="getGroupByGroupId" parameterType="Integer" resultType="com.remember.app.entity.card.GroupCard">
+  	select
+	  	cm.*,
+	  	cgm.group_name
+	from
+	  	card_belong_group cbg
+	  	LEFT OUTER JOIN card_mst cm ON(cm.id = cbg.card_id)
+	  	LEFT OUTER JOIN card_group_mst cgm ON(cgm.id = cbg.group_id)
+	where
+	  	group_id = #{groupId}
+  </select>
+  
+  <update id="updateGroup" parameterType="com.remember.app.entity.card.Group">
+  	update
+  		card_group_mst
+  	set
+  		group_name = #{group_name},
+  		update_date = now()
+  	where
+  		id = #{id}
+  </update>
+  
+  <delete id="deleteGroup" parameterType="com.remember.app.entity.card.Group">
+  	delete
+  	from
+  		card_group_mst
+  	where
+  		id =#{id}
+  </delete>
+  
+  <select id="get" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+  	select
+  		*
+  	from
+  		card_mst
+  	where
+  		id = #{id}
+  	
+  </select>
+  
+  <insert id="addUserGroup" parameterType="Integer">
+  	insert into
+  		card_belong_group
+  	values
+  		0,
+  		#{group_id},
+  		#{card_id},
+  		now(),
+  		now()
+  </insert>
+  
+  </mapper>

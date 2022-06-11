@@ -1,19 +1,25 @@
 server:
   port: 8080
-  servlet:    encoding:      charset: UTF-8
+  servlet:
+    encoding:
+      charset: UTF-8
       enabled: true
       force: true
       force-request: true
       force-response: true
-  tomcat:    uri-encoding: UTF-8
+  tomcat:
+    uri-encoding: UTF-8
     
 spring:
   mvc:
     static-path-pattern: /static/**
   web:
-    resources:      static-locations:      - classpath:/static/
+    resources:
+      static-locations:
+      - classpath:/static/
       add-mappings: true
-  datasource:    driver-class-name: org.mariadb.jdbc.Driver
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://rememeber-project.c15dkezpex4v.ap-northeast-2.rds.amazonaws.com/remember?useUnicode=true&serverTimezone=Asia/Seoul&allowMultiQueries=true
     username: hippo2003
     password: wns12358

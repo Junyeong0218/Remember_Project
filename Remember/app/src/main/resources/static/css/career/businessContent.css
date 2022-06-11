@@ -29,6 +29,10 @@ section{
 .con_title h2{
     font-size: 60px;
     font-weight: 600;
+
+}
+
+.title_under{
     margin-bottom: 20px;
 }
 
@@ -207,11 +211,15 @@ section{
     color: rgb(100, 100, 100);
 }
 
+.search_con{
+    margin-top: 8px;
+}
+
 .search_title h2{
     font-size: 36px;
     font-weight: 600;
     line-height: 48px;
-    margin-bottom: 8px;
+
     color: rgb(33, 35, 34);
 }
 
@@ -243,7 +251,11 @@ section{
     font-weight: 600;
     line-height: 72px;
     text-align: center;
-    margin: 150px 0 60px 0;
+
+}
+
+.company_title{
+    margin-bottom: 60px;
 }
 
 .company{
@@ -351,8 +363,12 @@ section{
     font-size: 60px;
     font-weight: 600;
     line-height: 72px;
-    margin: 80px 0 24px 0;
+
     text-align: center;
+}
+
+.qna_list_title{
+    margin-bottom: 24px;
 }
 
 .qna_list_box{
