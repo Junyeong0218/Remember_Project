@@ -51,6 +51,13 @@ public class PhoneCertificateService {
 		}
 	}
 	
+	public String getRandomNumber(String phone) {
+		String number = generateRandomNumber();
+		
+		phoneCodeMap.put(phone, number);
+		return number;
+	}
+	
 	public boolean isEqual(String code, String phone) {
 		boolean result = phoneCodeMap.get(phone).equals(code);
 		if(result) {

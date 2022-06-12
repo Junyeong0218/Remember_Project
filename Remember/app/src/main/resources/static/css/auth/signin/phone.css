@@ -1,4 +1,5 @@
 main {
+	position: relative;
     margin: 0;
     padding: 40px 0 40px;
     display: flex;
@@ -7,13 +8,26 @@ main {
     width: 100%;
 }
 
-.main_wrapper {
+.main_wrapper,
+.user_list_wrapper {
+	position: absolute;
+	top: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+	visibility: hidden;
+	opacity: 0;
+	transition: 700ms;
 }
 
-.main_wrapper>.title {
+.main_wrapper.active,
+.user_list_wrapper.active {
+	opacity: 1;
+	visibility: visible;
+}
+
+.main_wrapper>.title,
+.user_list_wrapper>.title {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -58,14 +72,42 @@ main {
     line-height: 48px;
 }
 
-.phone {
+.phone_number>.select_box.hidden {
+	display: none;
+}
+
+.phone,
+.code {
+	position: absolute;
+	top: 0;
+	right: 0;
     padding: 0 15px;
-    flex-grow: 1;
+    width: 270px;
     height: 100%;
     line-height: 48px;
     border: 1px solid #D9D9D9;
     font-size: 15px;
-    color: #D9D9D9;
+    color: #333;
+    transition: 500ms;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.phone::-webkit-inner-spin-button,
+.phone::-webkit-outer-spin-button,
+.code::-webkit-inner-spin-button,
+.code::-webkit-outer-spin-button {
+	appearance: none;
+}
+
+.phone.active,
+.code.active {
+	opacity: 1;
+	visibility: visible;
+}
+
+.code.active {
+	width: 100%;
 }
 
 .time_wrapper {
@@ -81,8 +123,17 @@ main {
 	color: #FF5252;
 }
 
+.button_wrapper {
+	position: relative;
+	width: 100%;
+	height: 48px;
+}
+
 .submit_button,
 .send_code {
+	position: absolute;
+	top: 0;
+	display: block;
     width: 100%;
     height: 48px;
     background-color: #333;
@@ -91,12 +142,13 @@ main {
     color: white;
     line-height: 48px;
     cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: 500ms;
 }
 
-.send_code {
-	display: none;
-}
-
-.send_code.active {
-	display: block;
+.send_code.active,
+.submit_button.active {
+	opacity: 1;
+	visibility: visible;
 }

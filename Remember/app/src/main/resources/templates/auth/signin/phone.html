@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>리멤버 - 직장인 필수 앱</title>
-    <link rel="stylesheet" href="/static/css/container.css">
+    <th:block th:replace="/fragment/config" />
     <th:block th:if="${flag} == 'common'">
 	    <link th:replace="fragment/header/auth_header_css :: auth_header_css">
    	</th:block>
@@ -14,7 +14,6 @@
 	    <link th:replace="fragment/header/company_auth_header_css :: company_auth_header_css">
    	</th:block>
     <link rel="stylesheet" href="/static/css/auth/signin/phone.css">
-    <link rel="shortcut icon" href="/static/images/favicon.png">
 </head>
 
 <body>
@@ -33,15 +32,27 @@
                 </div>
                 <form class="input_wrapper">
                     <div class="phone_number">
-                        <select name="" class="select_box">
+                        <select name="region" class="select_box">
                             <option value="">+82</option>
                         </select>
-                        <input type="text" class="phone" name="phone" placeholder="휴대폰 번호 입력">
+                        <input type="number" class="phone active" name="phone" placeholder="휴대폰 번호 입력">
+                        <input type="number" class="code" name="code" max="9999" placeholder="인증번호 입력">
                         <span class="time_wrapper"><span class="left_time"></span></span>
                     </div>
-                    <button type="button" class="send_code">인증번호 전송</button>
-                    <button type="button" class="submit_button">인증번호 전송</button>
+                    <div class="button_wrapper">
+	                    <button type="button" class="send_code active">인증번호 전송</button>
+	                    <button type="button" class="submit_button">인증번호 전송</button>
+                    </div>
                 </form>
+            </div>
+            <div class="user_list_wrapper">
+            	<button type="button" class="user naver">
+            		<img src="/static/images/btn2.png">
+            		<div class="text_wrapper">
+            			<span class="text">네이버로 로그인</span>
+            			<span class="text small"></span>
+            		</div>
+            	</button>
             </div>
         </main>
     </div>
