@@ -123,3 +123,49 @@
     color: rgb(174, 174, 174);
     line-height: 24px;
 }
+
+.left_aside > section > .select_job {
+	padding: 16px 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	background-color: white;
+	gap: 8px;
+}
+
+.left_aside > section > .select_job > img {
+	width: 56px;
+	height: 56px;
+}
+
+.left_aside > section > .select_job > .texts {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.left_aside > section > .select_job > .texts > .text {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 24px;
+}
+
+.left_aside > section > .select_job > .texts > .text.bold {
+	font-weight: 600;
+}
+
+.left_aside > section > .select_job > .texts > .text.gray {
+	color: rgb(140, 140, 140);
+}
+
+.left_aside > section > .select_job > .select_job_modal_button {
+	padding: 0 20px;
+	height: 36px;
+	border-radius: 4px;
+	background-color: rgb(33, 35, 34);
+	font-size: 14px;
+	font-weight: 400;
+	color: white;
+	line-height: 36px;
+}

@@ -1,0 +1,194 @@
+.modal {
+	position: fixed;
+	top: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal > .window {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border-radius: 8px;
+	background-color: white;
+}
+
+.modal > .not_login {
+	padding: 24px;
+	width: 360px;
+}
+
+.modal > .not_login > .title {
+	margin: 16px 0 8px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.modal > .not_login > .title > .text {
+	font-size: 16px;
+	font-weight: 600;
+	color: rgb(33, 35, 34);
+	line-height: 26px;
+}
+
+.modal > .not_login > .login_link,
+.modal > .not_login > .login_link > a {
+	font-size: 12px;
+	font-weight: 400;
+	color: rgb(100, 100, 100);
+	line-height: 19px;
+}
+
+.modal > .not_login > .login_link > a {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.modal > .not_login > .buttons {
+	margin-top: 24px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	height: 44px;
+}
+
+.modal > .not_login > .buttons > button {
+	padding: 0 20px;
+	width: 152px;
+	height: 100%;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 44px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.modal > .not_login > .buttons > .close_modal {
+	border: 1px solid rgb(204, 204, 204);
+	background-color: white;
+	color: rgb(33, 35, 34);
+}
+
+.modal > .not_login > .buttons > .to_signup_button {
+	border: 1px solid rgb(33, 35, 34);
+	background-color: rgb(33, 35, 34);
+	color: white;
+}
+
+.modal > .profile_form {
+	width: 635px;
+}
+
+.modal > .profile_form > .title {
+	padding: 24px 30px;
+	width: 100%;
+	height: 74px;
+	font-size: 22px;
+	font-weight: bold;
+	color: rgb(51, 51, 51);
+	line-height: normal;
+}
+
+.modal > .profile_form > form {
+	padding: 0 30px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.modal > .profile_form > form > .input_wrapper {
+	margin-bottom: 24px;
+	display: flex;
+	flex-direction: column;
+}
+
+.modal > .profile_form > form > .input_wrapper:nth-child(4) {
+	margin-bottom: 8px;
+}
+
+.modal > .profile_form > form > .input_wrapper > .title {
+	margin-bottom: 8px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 6px;
+}
+
+.modal > .profile_form > form > .input_wrapper > .title > .text {
+	font-size: 14px;
+	font-weight: normal;
+	color: rgb(100, 100, 100);
+}
+
+.modal > .profile_form > form > .input_wrapper > .title > img {
+	width: 6px;
+	height: 6px;
+}
+
+.modal > .profile_form > form > .input_wrapper > input {
+	padding: 11px 12px;
+	width: 100%;
+	height: 44px;
+	border: 1px solid rgb(216, 216, 216);
+	border-radius: 4px;
+	font-size: 15px;
+	font-weight: normal;
+	color: rgb(51, 51, 51);
+	outline: none;
+}
+
+.modal > .profile_form > form > .input_wrapper > input::placeholder {
+	color: rgb(216, 216, 216);
+}
+
+.modal > .profile_form > form > .text {
+	margin-bottom: 24px;
+	font-size: 13px;
+	font-weight: normal;
+	color: rgb(100, 100, 100);
+	line-height: normal;
+}
+
+.modal > .profile_form > .buttons {
+	padding: 12px 30px;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+	width: 100%;
+	height: 73px;
+	border-top: 1px solid rgb(235, 235, 235);
+}
+
+.modal > .profile_form > .buttons > button {
+	width: 116px;
+	height: 48px;
+	border-radius: 4px;
+	font-size: 15px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.modal > .profile_form > .buttons > button:disabled {
+	background-color: rgb(204, 204, 204);
+	cursor: default;
+}
+
+.modal > .profile_form > .buttons > .close_modal {
+	background-color: rgb(133, 133, 133);
+	color: white;
+}
+
+.modal > .profile_form > .buttons > .submit_detail {
+	margin-left: 6px;
+	background-color: rgb(225, 154, 17);
+	color: white;
+}

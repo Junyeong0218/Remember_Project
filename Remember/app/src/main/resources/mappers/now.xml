@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="com.remember.app.entity.now.NowRepository">
+  <mapper namespace="com.remember.app.entity.now.NowArticleRepository">
   
   	<select id = "getNowArticleList" resultType="com.remember.app.entity.now.NowArticle">
   		select 
@@ -24,7 +24,7 @@
   		limit 0, 10;	
   	</select>  
   	
-  	<select id = "getNowArticleDetail" parameterType="Integer" resultType = "com.remember.app.entity.now.NowArticleDetail">
+  	<select id = "getNowArticleDetail" parameterType="Integer" resultType = "com.remember.app.responseDto.NowArticleDetailRespDto">
 		select
 			*
 		from 
@@ -49,7 +49,7 @@
 			category_id= #{category_id}	
   	</select>
   	
-  	<select id = "getNowArticleRelated" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticle">
+  	<select id = "getNowArticleRelated" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticleRelated">
   		select 
   			id,
   			title,
@@ -62,5 +62,3 @@
   	</select> 
   	
   </mapper>
-
-</mapper>
