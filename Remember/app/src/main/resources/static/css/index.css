@@ -139,12 +139,14 @@ main{
     align-items: center;
 
     padding: 289px 0 216px 0;
+
     width: 100%;
 }
 
-.main_profile img {
-    margin-right: 69px;
+.profile_img{
+	margin-right:69px;
 }
+
 
 .con_profile{
     margin-right: 69px;
