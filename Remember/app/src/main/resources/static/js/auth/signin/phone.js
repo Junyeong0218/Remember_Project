@@ -39,8 +39,27 @@ submit_button.onclick = () => {
 		success: function (data) {
 			console.log(data);
 			if(data == true) {
-				const user_data = getUserData();
-				console.log(user_data);
+				console.log("휴대폰 인증 완료");
+				const form = document.createElement("form");
+				form.className = "login";
+				form.action = "/auth/signin";
+				form.method = "post";
+				const username = document.createElement("input");
+				const password = document.createElement("input");
+				username.type = "text";
+				password.type = "text";
+				username.name = "username";
+				password.name = "password";
+				username.value = phone_input.value;
+				password.value = phone_input.value;
+				form.appendChild(username);
+				form.appendChild(password);
+				
+				document.body.appendChild(form);
+				
+				form.submit();
+				/*const user_data = getUserData();
+				console.log(user_data);*/
 				/*if(user_data.user)*/
 			}
 		},
@@ -62,7 +81,6 @@ function getUserData() {
 		async: false,
 		dataType: "json",
 		success: function (data) {
-			console.log(data);
 			user_data = data;
 		},
 		error: function (xhr, status) {

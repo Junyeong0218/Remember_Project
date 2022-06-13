@@ -8,6 +8,10 @@ main {
     width: 100%;
 }
 
+form.login {
+	display: none;
+}
+
 .main_wrapper,
 .user_list_wrapper {
 	position: absolute;

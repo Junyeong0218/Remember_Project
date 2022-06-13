@@ -38,9 +38,8 @@ public class AuthRestController {
 	}
 	
 	@PostMapping("/signup/phone/certificate")
-	public boolean sendPhoneMessage(String phone) {
-		System.out.println(phoneCertificateService.getRandomNumber(phone));
-		return true;
+	public String sendPhoneMessage(String phone) {
+		return phoneCertificateService.getRandomNumber(phone);
 //		return phoneCertificateService.sendMessage(phone);
 	}
 	
