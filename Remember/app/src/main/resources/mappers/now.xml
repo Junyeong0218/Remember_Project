@@ -1,5 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.remember.app.entity.now.NowRepository">
+  
+  	<select id = "getNowArticleList" resultType="com.remember.app.entity.now.NowArticle">
+  		select 
+  			*
+  		from
+  			now_article_mst
+  		order_by
+  			create_date DESC
+  		limit 0, 10;
+  	</select>  
+  	
+  	<select id = "getNowArticleListWithCategory" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticle">
+  		select 
+  			*
+  		from
+  			now_article_mst
+  		order_by
+  			create_date DESC
+  		limit 0, 10;	
+  	</select>  
+  	
+  	<select id = "getNowArticleDetail" parameterType="Integer" resultType = "com.remember.app.entity.now.NowArticleDetail">
+		select
+			*
+		from 
+			now_article_mst  
+		where
+			article_id= #{article_id}		
+  	</select>
+  	
+  	<select id="getNowArticleTotalCount" resultType="Integer">
+  		select
+  			count(id)
+  		from
+  			now_article_mst
+  	</select>
+  	
+  	<select id="getNowArticleTotalCounWithCategory" parameterType="Integer" resultType="Integer">
+  		select
+  			count(id)
+  		from
+  			now_article_mst
+  		where
+			category_id= #{category_id}	
+  	</select>
+  	
+  	<select id = "getNowArticleRelated" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticle">
+  		select 
+  			id,
+  			title,
+  			create_date
+  		from
+  			now_article_mst
+  		order_by
+  			create_date DESC
+  		limit 3;
+  	</select> 
+  	
+  </mapper>
 
 
