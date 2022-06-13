@@ -1,23 +1,25 @@
-package com.remember.app.service;
+package com.remember.app.entity.now;
 
 import java.util.List;
 
-import com.remember.app.entity.now.NowArticle;
-import com.remember.app.entity.now.NowArticleRelated;
+
+import org.apache.ibatis.annotations.Mapper;
+
 import com.remember.app.responseDto.NowArticleDetailRespDto;
 
-public interface NowService {
+@Mapper
+public interface NowArticleRepository {
 	
 	public List<NowArticle> getNowArticleList();
 	
-	public List<NowArticle> getNowArticleListWithCategory(int articleId);
+	public List<NowArticle> getNowArticleListWithCategory(int categoryId);
 	
 	public NowArticleDetailRespDto getNowArticleDetail(int articleId);
 	
 	public int getNowArticleTotalCount();
 	
-	public int getNowArticleTotalCountWithCategory(int categoryId);
+	public int getNowArticleTotalCounWithCategory(int categoryId);
 	
 	public List<NowArticleRelated> getNowArticleRelated(int articleId);
-
+	
 }
