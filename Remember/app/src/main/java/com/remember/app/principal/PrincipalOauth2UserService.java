@@ -54,10 +54,10 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 				if(userDetail == null) {
 					// insert
 					User user = User.builder()
-							.email((String) attributes.get("email"))
-							.phone(dto.getPhone())
-							.role("ROLE_USER")
-							.build();
+													.email((String) attributes.get("email"))
+													.phone(dto.getPhone())
+													.role("ROLE_USER")
+													.build();
 					if(userRepository.insertOAuthUserToMst(user) == 1) {
 						UserTerms terms = dto.toEntity();
 						terms.setUser_id(user.getId());

@@ -8,16 +8,6 @@ main {
     align-items: center;
 }
 
-.square_logo {
-    width: 100%;
-    text-align: center;
-}
-
-.square_logo img {
-    width: 52px;
-    height: 52px;
-}
-
 .form-box {
     width: 350px;
     line-height: 35px;
@@ -47,7 +37,6 @@ main {
     font-size: 28px;
     font-weight: 500;
     text-align: center;
-    padding-top: 40px;
 }
 
 .input-box {
@@ -113,6 +102,7 @@ main {
     font-size: 13px;
     padding: 0 8px;
     flex: 1 1;
+    color: #333;
 }
 
 .login_footer span{

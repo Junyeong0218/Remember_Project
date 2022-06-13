@@ -38,12 +38,23 @@ public class AuthRestController {
 	}
 	
 	@PostMapping("/signup/phone/certificate")
-	public boolean sendPhoneMessage(String phone) {
-		return phoneCertificateService.sendMessage(phone);
+	public String sendPhoneMessage(String phone) {
+		return phoneCertificateService.getRandomNumber(phone);
+//		return phoneCertificateService.sendMessage(phone);
 	}
 	
 	@GetMapping("/signup/phone/certificate")
 	public boolean isEqual(String code, String phone) {
+		return phoneCertificateService.isEqual(code, phone);
+	}
+	
+	@PostMapping("/signin/phone/certificate")
+	public String sendPhoneMessageTest(String phone) {
+		return phoneCertificateService.getRandomNumber(phone);
+	}
+	
+	@GetMapping("/signin/phone/certificate")
+	public boolean isEqualSignin(String code, String phone) {
 		return phoneCertificateService.isEqual(code, phone);
 	}
 	
@@ -54,5 +65,10 @@ public class AuthRestController {
 		System.out.println(emailSignupReqDto);
 		
 		return userService.signupWithEmail(termsDto, emailSignupReqDto);
+	}
+	
+	@GetMapping("/user")
+	public UserLoginFlagsResDto getLoginFlagsByPhone(String phone) {
+		return userService.getAvailableLogins(phone);
 	}
 }

@@ -127,7 +127,7 @@ function showPhoneCertificateModal(phone_number) {
 		dataType: "json",
 		success: function (data) {
 			console.log(data);
-			if(data == true) {
+			if(data != null) {
 				const div = makePhoneCertificateModal();
 				document.querySelector(".container").appendChild(div);
 				const left_time_tag = div.querySelector(".left_time");
