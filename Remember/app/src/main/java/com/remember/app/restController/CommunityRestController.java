@@ -2,14 +2,19 @@ package com.remember.app.restController;
 
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
+import com.remember.app.entity.community.category.CommunityJoinUser;
+import com.remember.app.entity.community.category.JoinedCategory;
 import com.remember.app.entity.community.category.SubCategoryDetail;
+import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.responseDto.ArticleDetailResDto;
 import com.remember.app.service.CommunityService;
 
@@ -25,6 +30,11 @@ public class CommunityRestController {
 	@GetMapping("/categories")
 	public List<SubCategoryDetail> getCategories() {
 		return communityService.getCategoriesWithArticleCount();
+	}
+	
+	@GetMapping("/article/categories")
+	public List<JoinedCategory> getJoinedCategories(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		return communityService.getJoinedCategories(principalDetails.getId());
 	}
 	
 	@GetMapping("/best/list")
@@ -60,6 +70,31 @@ public class CommunityRestController {
 	@GetMapping("/detail/{articleId}")
 	public ArticleDetailResDto getArticleDetail(@PathVariable int articleId) {
 		return communityService.getArticleDetail(articleId);
+	}
+	
+	@GetMapping("/{categoryId}/user")
+	public boolean isUserJoinCategory(@PathVariable int categoryId,
+																		 @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		CommunityJoinUser join = CommunityJoinUser.builder()
+																							    .sub_category_id(categoryId)
+																							    .user_id(principalDetails.getId())
+																							    .build();
+		return communityService.isUserJoinCategory(join);
+	}
+	
+	@GetMapping("/category/{categoryId}")
+	public String getCategoryName(@PathVariable int categoryId) {
+		return communityService.getCategoryName(categoryId);
+	}
+	
+	@PostMapping("/category/{categoryId}")
+	public boolean joinCategory(@PathVariable int categoryId,
+			 												@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		CommunityJoinUser join = CommunityJoinUser.builder()
+																							    .sub_category_id(categoryId)
+																							    .user_id(principalDetails.getId())
+																							    .build();
+		return communityService.joinCategory(join);
 	}
 	
 }

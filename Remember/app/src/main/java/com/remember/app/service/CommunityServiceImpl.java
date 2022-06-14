@@ -10,6 +10,8 @@ import com.remember.app.entity.community.article.ArticleDetail;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
 import com.remember.app.entity.community.article.CommentDetail;
+import com.remember.app.entity.community.category.CommunityJoinUser;
+import com.remember.app.entity.community.category.JoinedCategory;
 import com.remember.app.entity.community.category.SubCategoryDetail;
 import com.remember.app.responseDto.ArticleDetailResDto;
 
@@ -24,6 +26,11 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public List<SubCategoryDetail> getCategoriesWithArticleCount() {
 		return communityRepository.getCategoriesWithArticleCount();
+	}
+	
+	@Override
+	public List<JoinedCategory> getJoinedCategories(int id) {
+		return communityRepository.getJoinedCategories(id);
 	}
 	
 	@Override
@@ -81,6 +88,21 @@ public class CommunityServiceImpl implements CommunityService {
 																												  .build();
 																
 		return dto;
+	}
+	
+	@Override
+	public boolean isUserJoinCategory(CommunityJoinUser communityJoinUser) {
+		return communityRepository.isUserJoinCategory(communityJoinUser) == 1;
+	}
+	
+	@Override
+	public String getCategoryName(int categoryId) {
+		return communityRepository.getCategoryName(categoryId);
+	}
+	
+	@Override
+	public boolean joinCategory(CommunityJoinUser communityJoinUser) {
+		return communityRepository.joinCategory(communityJoinUser) == 1;
 	}
 	
 }

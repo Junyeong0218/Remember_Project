@@ -21,8 +21,9 @@ function loadCategoryData() {
 }
 
 function addLiTags(category_list) {
-	let has_profile = hasProfile();
-	if(has_profile) {
+	let has_profile = principal?.department_name != null;
+	console.log(has_profile);
+	if(principal == null || has_profile == true) {
 		for(let i = 0; i < category_list.length; i++) {
 			const category = category_list[i];
 			const li = makeLiTag(category);
@@ -35,8 +36,7 @@ function addLiTags(category_list) {
 			}
 			li.onclick = () => location.href = "/community/" + category.id;
 		}
-	} else {
-		/*const min_index = category_list.findIndex(e => e.main_category_id == 2);*/
+	} else if(has_profile == false) {
 		for(let i = 0; i < category_list.length; i++) {
 			const category = category_list[i];
 			if(category.main_category_id == 1) {

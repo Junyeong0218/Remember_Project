@@ -15,6 +15,8 @@ public interface UserRepository {
 	
 	public UserDetail getUserByPhone(String phone);
 	
+	public UserDetail getUserById(int id);
+	
 	public List<UserDetail> getAvailableLogins(String phone);
 	
 	public Integer getIdByPhone(String phone);
@@ -29,4 +31,7 @@ public interface UserRepository {
 	
 	public int insertOAuthUserToOAuthDetail(UserOauthDetail userOauthDetail);
 	
+	public int insertUserDetail(UserDetail userDetail);
+	
+	public int updateNameAndNickNameInMst(User user);
 }

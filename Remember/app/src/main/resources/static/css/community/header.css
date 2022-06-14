@@ -117,6 +117,10 @@ header {
 	height: 100%;
 }
 
+.toggle_alert_modal_button {
+	cursor: pointer;
+}
+
 .hover_my_menu_button > img,
 .toggle_alert_modal_button > img {
 	width: 24px;
@@ -137,8 +141,6 @@ header {
 	background-color: white;
 	overflow-y: scroll;
 	box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 16px 0px;
-	opacity: 0;
-	transition: 500ms;
 }
 
 .modal_wrapper > .alert_modal.active {
@@ -177,6 +179,12 @@ header {
 	border-radius: 10px;
 	background-color: white;
 	box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 16px 0px;
+	opacity: 0;
+	transition: 500ms;
+}
+
+.modal_wrapper > .my_menu.active {
+	opacity: 1;
 }
 
 .modal_wrapper > .my_menu > .link {

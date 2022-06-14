@@ -31,28 +31,18 @@ if(principal == null) {
 			toggle_alert_modal_wrapper.querySelector(".alert_modal").remove();
 		} else {
 			alert_open_flag = true;
-			toggle_alert_modal_wrapper.innerHTML += `
-				<div class="alert_modal" style="transition: 500ms;">
-					<div class="no_alerts">
-						<img src="/static/images/community_modal_no_alerts.svg">
-						<span class="text">알림이 없습니다.</span>
-					</div>
-				</div>
-			`;
+			const modal = makeAlertModal();
+			toggle_alert_modal_wrapper.appendChild(modal);
 		}
 	}
 	
 	hover_my_menu_wrapper.onmouseenter = (event) => {
 		if(hover_my_menu_wrapper.querySelector(".my_menu") != null) return;
-		hover_my_menu_wrapper.innerHTML += `
-			<div class="my_menu">
-				<a href="#" class="link">내 프로필</a>
-				<a href="#" class="link">내 활동내역</a>
-				<a href="#" class="link">내가 쓴 글 내역 공개</a>
-				<a href="#" class="link">좋아요 순위</a>
-				<a href="/logout" class="link">로그아웃</a>
-			</div>
-		`;
+		const modal = makeMyMenuModal();
+		hover_my_menu_wrapper.appendChild(modal);
+		setTimeout(() => {
+			modal.classList.add("active");
+		}, 30);
 		hover_my_menu_wrapper.querySelector(".my_menu").onmouseleave = (event) => {
 			hover_my_menu_wrapper.querySelector(".my_menu").remove();
 		}
@@ -65,4 +55,29 @@ if(principal == null) {
 			hover_my_menu_wrapper.querySelector(".my_menu").remove();
 		}
 	}
+}
+
+function makeAlertModal() {
+	const div = document.createElement("div");
+	div.className = "alert_modal";
+	div.innerHTML = `
+		<div class="no_alerts">
+			<img src="/static/images/community_modal_no_alerts.svg">
+			<span class="text">알림이 없습니다.</span>
+		</div>
+	`;
+	return div;
+}
+
+function makeMyMenuModal() {
+	const div = document.createElement("div");
+	div.className = "my_menu";
+	div.innerHTML = `
+		<a href="#" class="link">내 프로필</a>
+		<a href="#" class="link">내 활동내역</a>
+		<a href="#" class="link">내가 쓴 글 내역 공개</a>
+		<a href="#" class="link">좋아요 순위</a>
+		<a href="/logout" class="link">로그아웃</a>
+	`;
+	return div;
 }

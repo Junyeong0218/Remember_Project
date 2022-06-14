@@ -192,3 +192,322 @@
 	background-color: rgb(225, 154, 17);
 	color: white;
 }
+
+.modal > .join_category {
+	padding-top: 30px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 400px;
+}
+
+.modal > .join_category > .text {
+	line-height: normal;
+}
+
+.modal > .join_category > .text.category {
+	margin-bottom: 4px;
+	font-size: 14px;
+	font-weight: bold;
+	color: rgb(224, 165, 38);
+}
+
+.modal > .join_category > .text.big {
+	margin-bottom: 16px;
+	font-size: 22px;
+	font-weight: bold;
+	color: rgb(33, 35, 34);
+}
+
+.modal > .join_category > .text.small {
+	margin-bottom: 30px;
+	font-size: 13px;
+	font-weight: normal;
+	color: rgb(100, 100, 100);
+}
+
+.modal > .join_category > .buttons {
+	padding: 12px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+	width: 100%;
+	height: 77px;
+	border-top: 1px solid rgb(235, 235, 235);
+	gap: 6px;
+}
+
+.modal > .join_category > .buttons > button {
+	padding: 0 24px;
+	width: 100%;
+	height: 52px;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: 400;
+	color: white;
+	line-height: 52px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.modal > .join_category > .buttons > .close_modal {
+	background-color: rgb(100, 100, 100);
+}
+
+.modal > .join_category > .buttons > .join_category {
+	background-color: rgb(33, 35, 34);
+}
+
+.modal > .register_article {
+	padding: 40px 24px 24px;
+	display: flex;
+	flex-direction: column;
+	width: 620px;
+}
+
+.modal > .register_article > .title {
+	width: 100%;
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 26px;
+}
+
+.modal > .register_article > .writer {
+	width: 100%;
+	font-size: 14px;
+	font-weight: 400;
+	color: rgb(174, 174, 174);
+	line-height: 24px;
+}
+
+.modal > .register_article > hr {
+	margin: 12px 0 24px;
+	width: 620px;
+	height: 1px;
+	border: none;
+	background-color: rgb(235, 235, 235);
+}
+
+.modal > .register_article > form {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.modal > .register_article > form > .row {
+	position: relative;
+	display: none;
+	cursor: pointer;
+}
+
+.modal > .register_article > form > .row.active {
+	display: block;
+}
+
+.modal > .register_article > form > .row > .community_selector,
+.modal > .register_article > form > .row > .tag_selector,
+.modal > .register_article > form > .row >.add_image_button {
+	position: relative;
+	margin-bottom: 12px;
+	padding: 12px 0;
+	width: 100%;
+	height: 51px;
+	border-bottom: 1px solid rgb(235, 235, 235);
+	background-color: white;
+	font-size: 16px;
+	font-weight: 400;
+	color: rgb(33, 35, 34);
+	line-height: 26px;
+}
+
+.modal > .register_article > form > .row >.add_image_button {
+	margin: 0;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	color: rgb(174, 174, 174);
+	cursor: pointer;
+}
+
+.modal > .register_article > form > .row >.add_image_button > input {
+	display: none;
+}
+
+.modal > .register_article > form > .row > .community_selector.clicked,
+.modal > .register_article > form > .row > .tag_selector.clicked {
+	border-color: rgb(40, 100, 240);
+}
+
+.modal > .register_article > form > .row > .community_selector::after,
+.modal > .register_article > form > .row > .tag_selector::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: 8px;
+	margin-top: -8px;
+	width: 16px;
+	height: 16px;
+	background: url("/static/images/insert_new_article_selector_down.svg");
+}
+
+.modal > .register_article > form > .row > .community_selector.clicked::after,
+.modal > .register_article > form > .row > .tag_selector.clicked::after {
+	background: url("/static/images/insert_new_article_selector_up.svg");
+}
+
+.modal > .register_article > form > input {
+	margin-bottom: 12px;
+	padding: 12px 0;
+	width: 100%;
+	height: 51px;
+	border: none;
+	border-bottom: 1px solid rgb(235, 235, 235);
+	font-size: 16px;
+	font-weight: 400;
+	color: rgb(33, 35, 34);
+	line-height: 26px;
+	outline: none;
+}
+
+.modal > .register_article > form > input::placeholder,
+.modal > .register_article > form > textarea::placeholder {
+	color: rgb(174, 174, 174);
+}
+
+.modal > .register_article > form > textarea {
+	padding: 12px 0;
+	width: 100%;
+	height: 220px;
+	border: none;
+	font-size: 16px;
+	font-weight: 400;
+	color: rgb(51, 51, 51);
+	line-height: 26px;
+	outline: none;
+	resize: none;
+}
+
+.modal > .register_article > form > textarea::placeholder {
+	white-space: pre-line;
+}
+
+.modal > .register_article > form > .modal_image_wrapper {
+	padding: 12px 0 24px;
+	display: none;
+	flex-direction: row;
+	width: 100%;
+	gap: 12px;
+	overflow-x: auto;
+}
+
+.modal > .register_article > form > .modal_image_wrapper.active {
+	display: flex;
+}
+
+.modal > .register_article > form > .modal_image_wrapper > .image_box {
+    position: relative;
+    padding-bottom: calc(20% - 9.6px);
+    flex-shrink: 0;
+	width: calc(20% - 9.6px);
+    height: 0px;
+    border: 1px solid rgb(204, 204, 204);
+    overflow: hidden;
+}
+
+.modal > .register_article > form > .modal_image_wrapper > .image_box > .image {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.modal > .register_article > form > .modal_image_wrapper > .image_box > .hover_blind {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.3);
+	z-index: 2;
+	visibility: hidden;
+}
+
+.modal > .register_article > form > .modal_image_wrapper > .image_box > .delete_image_button {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	z-index: 3;
+	visibility: hidden;
+	cursor: pointer;
+}
+
+.modal > .register_article > form > .modal_image_wrapper > .image_box:hover > .hover_blind,
+.modal > .register_article > form > .modal_image_wrapper > .image_box:hover > .delete_image_button {
+	visibility: visible;
+}
+
+.modal > .register_article > form > .buttons {
+	margin-top: 24px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	height: 44px;
+}
+
+.modal > .register_article > form > .buttons > .checkbox_wrapper {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	gap: 10px;
+}
+
+.modal > .register_article > form > .buttons > .checkbox_wrapper > input {
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	background: url("/static/images/insert_new_article_unchecked_checkbox.svg");
+	cursor: pointer;
+}
+
+.modal > .register_article > form > .buttons > .checkbox_wrapper > input:checked {
+	background: url("/static/images/insert_new_article_checked_checkbox.svg");
+}
+
+.modal > .register_article > form > .buttons > .checkbox_wrapper > .text {
+	font-size: 16px;
+	font-weight: 400;
+	color: rgb(100, 100, 100);
+	line-height: 26px;
+	cursor: pointer;
+}
+
+.modal > .register_article > form > .buttons > .button_wrapper {
+	display: flex;
+	width: 224px;
+	height: 100%;
+	gap: 8px;
+}
+
+.modal > .register_article > form > .buttons > .button_wrapper > button {
+	width: 100%;
+	height: 100%;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: 400;
+	color: white;
+	line-height: 44px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.modal > .register_article > form > .buttons > .button_wrapper > .close_modal {
+	background-color: rgb(100, 100, 100);
+}
+
+.modal > .register_article > form > .buttons > .button_wrapper > .register_article {
+	background-color: rgb(33, 35, 34);
+}

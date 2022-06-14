@@ -13,6 +13,7 @@ import com.remember.app.entity.user.UserRepository;
 import com.remember.app.entity.user.UserTerms;
 import com.remember.app.requestDto.EmailSignupReqDto;
 import com.remember.app.requestDto.TermsReqDto;
+import com.remember.app.requestDto.UserDetailReqDto;
 import com.remember.app.responseDto.UserLoginFlagsResDto;
 
 import lombok.RequiredArgsConstructor;
@@ -63,5 +64,20 @@ public class UserServiceImpl implements UserService {
 		dto.setOauthDetails(oauth_details);
 		
 		return dto;
+	}
+	
+	@Override
+	public boolean insertUserDetail(UserDetailReqDto userDetailReqDto) {
+		if(userRepository.insertUserDetail(userDetailReqDto.toUserDetailEntity()) == 1) {
+			if(userRepository.updateNameAndNickNameInMst(userDetailReqDto.toUserEntity()) == 1) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public UserDetail getUserDetailById(int id) {
+		return userRepository.getUserById(id);
 	}
 }

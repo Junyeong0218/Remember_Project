@@ -20,9 +20,167 @@ new_article_input.onclick = () => {
 		}
 		modal.querySelectorAll("input").forEach(e => e.onblur = () => activeSubmitButton(modal));
 		modal.querySelector(".submit_detail").onclick = () => submitProfile(modal);
+	} else if(category_id != 0) {
+		const join_flag = getCategoryJoinFlag();
+		if(join_flag == false) {
+			// categoty_join_modal 띄우기
+			const modal = makeJoinCategoryModal();
+			document.querySelector(".container").appendChild(modal);
+			document.body.style = "overflow: hidden;";
+			modal.querySelector(".close_modal").onclick = () => {
+				modal.remove();
+				document.body.style = "";
+			}
+			modal.querySelector(".join_category").onclick = joinCategory;
+		} else {
+			// article_insert_modal 띄우기
+			insertArticleModalForSpecificCategory();
+		}
 	} else {
-		
+		// article_insert_modal 띄우기
+		insertArticleModalForTotalCategory();
 	}
+}
+
+function insertArticleModalForSpecificCategory() {
+	const modal = makeInsertArticleModal();
+	document.querySelector(".container").appendChild(modal);
+	document.body.style = "overflow: hidden;";
+	modal.querySelector(".close_modal").onclick = () => {
+		modal.remove();
+		document.body.style = "";
+	}
+}
+
+function insertArticleModalForTotalCategory() {
+	const modal = makeInsertArticleModal();
+	document.querySelector(".container").appendChild(modal);
+	document.body.style = "overflow: hidden;";
+	modal.querySelector(".close_modal").onclick = () => {
+		modal.remove();
+		document.body.style = "";
+	}
+	let is_opened_commnunity_selector = false;
+	modal.querySelector(".community_selector").onclick = (event) => {
+		const select_box = makeCommunitySelectBox();
+		event.target.parentElement.appendChild(select_box);
+	}
+}
+
+function makeCommunitySelectBox() {
+	const categories = getJoinedCagories();
+	const div = document.createElement("div");
+	div.className = "categories";
+	let prev_main_id = 0;
+	for(let i = 0; i < categories.length; i++) {
+		if(prev_main_id != categories[i].main_category_id) {
+			const category_title = makeCategoryTitle(categories[i]);
+			div.appendChild(category_title);
+		}
+		const sub_category = makeSubCategory(categories[i]);
+		div.appendChild(sub_category);
+		prev_main_id = categories[i].main_category_id;
+	}
+	return div;
+}
+
+function makeSubCategory(category) {
+	const div = document.createElement("div");
+	div.className = "category";
+	div.innerHTML = `${category.category_name}`;
+	return div;
+}
+
+function makeCategoryTitle(category) {
+	const class_name = category.main_category_id == 1 ? "insight" : 
+										  category.main_category_id == 2 ? "job" : "subject" ;
+	const img_src = category.main_category_id == 1 ? "community_aside_insite.svg" : 
+								  category.main_category_id == 2 ? "community_aside_job.svg" : "community_aside_subject.svg" ;
+	const div = document.createElement("div");
+	div.className = "title";
+	div.innerHTML = `
+		<div class="${class_name}">
+			<img src="/static/images/${img_src}">
+		</div>
+		<span class="text">${category.category_kor_name}</span>
+	`;
+	return div;
+}
+
+function getJoinedCagories() {
+	let categories;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/community/article/categories",
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			console.log(data);
+			categories = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return categories;
+}
+
+function joinCategory() {
+	$.ajax({
+		type: "post",
+		url: "/api/v1/community/category/" + category_id,
+		dataType: "json",
+		success: function (data) {
+			if(data == true) {
+				location.reload();
+			} else {
+				alert("카테고리 가입에 실패했습니다.");
+			}
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+}
+
+function getCategoryName() {
+	let category_name;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/community/category/" + category_id,
+		async: false,
+		dataType: "text",
+		success: function (data) {
+			console.log(data);
+			category_name = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return category_name;
+}
+
+function getCategoryJoinFlag() {
+	let flag = false;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/community/" + category_id + "/user",
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			console.log(data);
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
 }
 
 function hasProfile() {
@@ -148,4 +306,82 @@ function makeSubmitProfileModal() {
 		</div>
 	`;
 	return div;
+}
+
+function makeJoinCategoryModal() {
+	const category_name = getCategoryName();
+	console.log(category_name);
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window join_category">
+			<span class="text category">${category_name}</span>
+			<span class="text big">커뮤니티에 참여하세요!</span>
+			<span class="text small">참여 후 좋아요 및 글작성을 할 수 있습니다.</span>
+			<div class="buttons">
+				<button type="button" class="close_modal">취소</button>
+				<button type="button" class="join_category">참여하기</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeInsertArticleModal() {
+	const placeholder_message = getTextAreaPlaceholderMessage();
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window register_article">
+			<div class="title">게시글 쓰기</div>
+			<div class="writer">취뽀하자(닉네임)</div>
+			<hr>
+			<form>
+				<div class="row ${category_id == 0 ? 'active' : ''}">
+					<div class="community_selector" style="color: rgb(174, 174, 174);">커뮤니티를 선택하세요</div>
+				</div>
+				<div class="row ${category_id != 0 ? 'active' : ''}">
+					<div class="tag_selector"></div>
+				</div>
+				<input type="text" class="article_title" name="title" placeholder="제목을 입력하세요">
+				<textarea class="article_contents" name="contents" placeholder="${placeholder_message}"></textarea>
+				<div class="row active">
+					<button type="button" class="add_image_button">
+						<span class="text">사진 첨부</span>
+						<img src="/static/images/insert_new_article_add_image_button.svg">
+						<input type="file" name="file" accept=".jpg, .png, .jpeg" multiple>
+					</button>
+				</div>
+				<div class="modal_image_wrapper active">
+					<div class="image_box">
+						<img class="image" src="/static/images/profile.png">
+						<span class="hover_blind"></span>
+						<button type="button" class="delete_image_button">
+							<img src="/static/images/insert_new_article_delete_image_button.svg">
+						</button>
+					</div>
+					<div class="image_box">
+						<img class="image" src="/static/images/profile.png">
+					</div>
+				</div>
+				<div class="buttons">
+					<div class="checkbox_wrapper">
+						<input type="checkbox" class="use_nickname" checked>
+						<span class="text">닉네임으로 등록</span>
+					</div>
+					<div class="button_wrapper">
+						<button type="button" class="close_modal">닫기</button>
+						<button type="button" class="register_article">등록</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	`;
+	return div;
+}
+
+function getTextAreaPlaceholderMessage() {
+	return category_id < 9 ? "내용을 입력하세요" : 
+				  category_id > 48 ? "내용을 입력하세요\n\n* 커리어, 직장동료 등 회사생활 이야기를 나눠요\n* 에티켓을 준수해, 유익한 공간을 함께 만들어요" : 
+				  category_id > 8 ? "내용을 입력하세요\n\n* 같은 일 하는 회원들과 자유롭게 대화해요\n* 커리어 이야기, 업계 새소식, 정보를 공유해요\n* 에티켓을 준수해, 유익한 공간을 함께 만들어요" : "내용을 입력하세요";
 }

@@ -189,5 +189,51 @@
 			am.id,
 			acm.id;
 	</select>
+	
+	<select id="isUserJoinCategory" parameterType="com.remember.app.entity.community.category.CommunityJoinUser" resultType="Integer">
+		select
+			count(id)
+		from
+			community_join_user
+		where
+			sub_category_id = ${sub_category_id} and 
+			user_id = ${user_id};
+	</select>
+	
+	<select id="getCategoryName" parameterType="Integer" resultType="String">
+		select
+			category_name
+		from
+			community_sub_category
+		where
+			id = #{categoryId};
+	</select>
+	
+	<insert id="joinCategory" parameterType="com.remember.app.entity.community.category.CommunityJoinUser">
+		insert into
+			community_join_user
+		values(
+			0,
+			#{sub_category_id},
+			#{user_id},
+			now(),
+			now()
+		);
+	</insert>
+	
+	<select id="getJoinedCategories" parameterType="Integer" resultType="com.remember.app.entity.community.category.JoinedCategory">
+		select 
+			category.id as main_category_id,
+			category.category_kor_name,
+			
+			sub.id as sub_category_id,
+			sub.category_name
+		from 
+			community_join_user `join`
+			left outer join community_sub_category sub on(sub.id = `join`.sub_category_id)
+			left outer join community_category_mst category on(category.id = sub.main_category_id)
+		where
+			`join`.user_id = #{id};
+	</select>
 
 </mapper>

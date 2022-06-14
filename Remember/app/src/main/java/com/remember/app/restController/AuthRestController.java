@@ -12,6 +12,7 @@ import com.remember.app.entity.user.UserDetail;
 import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.requestDto.EmailSignupReqDto;
 import com.remember.app.requestDto.TermsReqDto;
+import com.remember.app.requestDto.UserDetailReqDto;
 import com.remember.app.responseDto.UserLoginFlagsResDto;
 import com.remember.app.service.PhoneCertificateService;
 import com.remember.app.service.UserService;
@@ -82,5 +83,16 @@ public class AuthRestController {
 	@GetMapping("/user")
 	public UserLoginFlagsResDto getLoginFlagsByPhone(String phone) {
 		return userService.getAvailableLogins(phone);
+	}
+	
+	@PostMapping("/detail")
+	public boolean insertUserDetail(@AuthenticationPrincipal PrincipalDetails principalDetails,
+																	UserDetailReqDto userDetailReqDto) {
+		userDetailReqDto.setUser_id(principalDetails.getId());
+		if(userService.insertUserDetail(userDetailReqDto)) {
+			principalDetails.setUserDetail(userService.getUserDetailById(principalDetails.getId()));
+			return true;
+		}
+		return false;
 	}
 }
