@@ -74,6 +74,7 @@ header {
 }
 
 .card_tabs {
+	position:relative;
     display: flex;
     height: 100%;
 }
@@ -101,7 +102,8 @@ header {
 }
 
 .card_tabs>.add_business_card,
-.card_tabs>.alert_modal_button {
+.card_tabs>.alert_modal_button,
+.card_tabs>.mypage_button {
     padding: 16px 15px;
     display: flex;
     align-items: center;
@@ -115,19 +117,52 @@ header {
 }
 
 .card_tabs>.add_business_card>img,
-.card_tabs>.alert_modal_button>img {
+.card_tabs>.alert_modal_button>img,
+.card_tabs>.mypage_button>img {
     width: 24px;
     height: 24px;
 }
 
-.alert_modal_button>.email {
+.mypage_button>.email {
     max-width: 80px;
     overflow: hidden;
     text-overflow: ellipsis;
+    pointer-events: none;
 }
 
-.alert_modal_button>.arrow {
+.mypage_button>.arrow {
     border-top: 4px solid;
     border-right: 4px solid transparent;
     border-left: 4px solid transparent;
+    pointer-events: none;
+}
+
+.tabs_menu{
+	position: absolute;
+	top:100%;
+	left:65%;
+
+	min-width:160px;
+	background-color: #fff;
+	border: 1px solid #ccc;
+}
+
+.menu_box  a{
+	display:block;
+	clear:both;
+	color:#333;
+	font-size:13px;
+	padding: 10px 20px;
+}
+
+.menu_box  li:hover a{
+	color:#fff;
+	background-color: #333;
+	transition: all 0.3s;
+}
+
+
+.menu_box  li:nth-child(2),
+			 :nth-child(6) {
+	border-bottom: 1px solid #ccc;
 }

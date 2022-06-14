@@ -15,7 +15,7 @@ public class CardInsertReqDto {
 	private String phone;
 	private String email;
 	private String company_name;
-	private String part_name;
+	private String department_name;
 	private String position_name;
 	
 	public Card cardMstToEntity() {
@@ -25,7 +25,7 @@ public class CardInsertReqDto {
 				.phone(phone)
 				.email(email)
 				.company_name(company_name)
-				.part_name(part_name)
+				.department_name(department_name)
 				.position_name(position_name)
 				.build();
 	}

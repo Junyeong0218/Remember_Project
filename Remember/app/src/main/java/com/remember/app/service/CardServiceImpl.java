@@ -49,15 +49,16 @@ public class CardServiceImpl implements CardService {
 	
 	@Override
 	public List<GroupSummary> getGroups(int user_id) {
+		
 		return cardRepository.getGroup(user_id);
 	}
 	
 	@Override
 	public GroupRespDto getGroupId(int group_id) {
 		List<GroupCard> details = cardRepository.getGroupByGroupId(group_id);
-		if(details.size() == 0) return null;
-		
 		GroupRespDto respDto = new GroupRespDto();
+		if(details.size() == 0) return respDto;
+		
 		respDto.setGroup_name(details.get(0).getGroup_name());
 		List<Card> card_list = new ArrayList<Card>();
 		for(GroupCard detail : details) {
@@ -106,5 +107,8 @@ public class CardServiceImpl implements CardService {
 		return cardRepository.addUserGroup(addGroup);
 	}
 	
-	
+	@Override
+	public List<Card> getCardSummaryList(int user_id) {
+		return cardRepository.getCardSummaryList(user_id);
+	}
 }

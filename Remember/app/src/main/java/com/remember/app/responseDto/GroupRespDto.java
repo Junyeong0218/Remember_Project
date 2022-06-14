@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class GroupRespDto {
+	
+	private int group_id;
 	private String group_name;
 	private List<Card> card_list;
 	

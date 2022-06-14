@@ -2,11 +2,14 @@ package com.remember.app.restController;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.remember.app.entity.user.UserDetail;
+import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.requestDto.EmailSignupReqDto;
 import com.remember.app.requestDto.TermsReqDto;
 import com.remember.app.responseDto.UserLoginFlagsResDto;
@@ -34,6 +37,15 @@ public class AuthRestController {
 		} catch (Exception e) {
 			System.out.println("catched");
 			return new UserLoginFlagsResDto();
+		}
+	}
+	
+	@GetMapping("/principal")
+	public UserDetail getPrincipal(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		try {
+			return principalDetails.getUser();
+		} catch (NullPointerException e) {
+			return null;
 		}
 	}
 	
