@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="com.remember.app.entity.now.NowRepository">
+  <mapper namespace="com.remember.app.entity.now.NowArticleRepository">
   
   	<select id = "getNowArticleList" resultType="com.remember.app.entity.now.NowArticle">
   		select 
@@ -19,6 +19,8 @@
   			*
   		from
   			now_article_mst
+  		where
+  			category_id=#{category_id}
   		order_by
   			create_date DESC
   		limit 0, 10;	
@@ -40,7 +42,7 @@
   			now_article_mst
   	</select>
   	
-  	<select id="getNowArticleTotalCounWithCategory" parameterType="Integer" resultType="Integer">
+  	<select id="getNowArticleTotalCountWithCategory" parameterType="Integer" resultType="Integer">
   		select
   			count(id)
   		from
@@ -49,7 +51,7 @@
 			category_id= #{category_id}	
   	</select>
   	
-  	<select id = "getNowArticleRelated" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticle">
+  	<select id = "getNowArticleRelated" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticleRelated">
   		select 
   			id,
   			title,
@@ -63,4 +65,4 @@
   	
   </mapper>
 
-</mapper>
+
