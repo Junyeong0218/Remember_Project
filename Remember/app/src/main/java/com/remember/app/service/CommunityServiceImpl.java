@@ -1,18 +1,27 @@
 package com.remember.app.service;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.remember.app.entity.community.CommunityRepository;
 import com.remember.app.entity.community.article.ArticleDetail;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
 import com.remember.app.entity.community.article.CommentDetail;
+import com.remember.app.entity.community.article.Tag;
 import com.remember.app.entity.community.category.CommunityJoinUser;
 import com.remember.app.entity.community.category.JoinedCategory;
 import com.remember.app.entity.community.category.SubCategoryDetail;
+import com.remember.app.requestDto.AddArticleReqDto;
 import com.remember.app.responseDto.ArticleDetailResDto;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +31,8 @@ import lombok.RequiredArgsConstructor;
 public class CommunityServiceImpl implements CommunityService {
 
 	private final CommunityRepository communityRepository;
+	
+	private final String filePath;
 	
 	@Override
 	public List<SubCategoryDetail> getCategoriesWithArticleCount() {
@@ -103,6 +114,39 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public boolean joinCategory(CommunityJoinUser communityJoinUser) {
 		return communityRepository.joinCategory(communityJoinUser) == 1;
+	}
+	
+	@Override
+	public List<Tag> getTagsAboutMainCategory(int mainCategoryId) {
+		return communityRepository.getTagsAboutMainCategory(mainCategoryId);
+	}
+	
+	@Override
+	public boolean insertArticle(AddArticleReqDto addArticleReqDto) {
+		if(downloadArticleImageFiles(addArticleReqDto.getFiles())) {
+			
+		}
+		return false;
+	}
+	
+	private boolean downloadArticleImageFiles(List<MultipartFile> files) {
+		try {
+			for(int i = 0; i < files.size(); i++) {
+				Path path = Paths.get(filePath, "article_images");
+				File file = new File(path.toString());
+				
+				if(! file.exists()) {
+					file.mkdirs();
+				}
+				
+				String fileName = UUID.randomUUID().toString().replace("-", "") + "_" + files.get(i).getOriginalFilename();
+				Path imagePath = Paths.get(filePath, "article_images/" + fileName);
+				Files.write(imagePath, files.get(i).getBytes());
+			}
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 }

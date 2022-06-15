@@ -1,7 +1,5 @@
 package com.remember.app.entity.community.article;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,16 +13,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Article {
-
+public class Tag {
+	
 	private int id;
-	private int user_id;
-	private int sub_category_id;
-	private int article_tag_id;
-	private String title;
-	private String contents;
-	private int view_count;
-	private LocalDateTime create_date;
-	private LocalDateTime update_date;
+	private String tag_name;
 	
 }

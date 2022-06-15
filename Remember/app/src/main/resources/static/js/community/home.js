@@ -1,4 +1,5 @@
 const new_article_input = document.querySelector(".new_article_input");
+let files = new Array();
 
 new_article_input.onclick = () => {
 	if(principal == null) {
@@ -60,20 +61,204 @@ function insertArticleModalForTotalCategory() {
 		modal.remove();
 		document.body.style = "";
 	}
+	
+	const writer_name_tag = modal.querySelector(".writer");
+	const use_nickname_checkbox = modal.querySelector(".use_nickname");
+	const use_nickname_text = use_nickname_checkbox.nextElementSibling;
+	use_nickname_checkbox.onclick = (event) => {
+		console.log(event.target.checked);
+		if(event.target.checked) {
+			writer_name_tag.innerText = `${principal.nickname}(닉네임)`;
+		} else {
+			writer_name_tag.innerText = `${principal.name}(실명)`;
+		}
+	}
+	use_nickname_text.onclick = () => use_nickname_checkbox.click();
+	use_nickname_checkbox.click();
+	
+	const community_selector = modal.querySelector(".community_selector");
 	let is_opened_commnunity_selector = false;
-	modal.querySelector(".community_selector").onclick = (event) => {
-		const select_box = makeCommunitySelectBox();
-		event.target.parentElement.appendChild(select_box);
+	let categories;
+	let selected_category_index = -1;
+	
+	const tag_selector = modal.querySelector(".tag_selector");
+	let is_opened_tag_selector = false;
+	let tags;
+	let selected_tag_index = -1;
+	community_selector.onclick = (event) => {
+		if(categories == null) {
+			categories = getJoinedCagories();
+		}
+		if(! is_opened_commnunity_selector) {
+			const select_box = makeCommunitySelectBox(categories);
+			event.target.parentElement.appendChild(select_box);
+			const children = select_box.children;
+			for(let i = 0; i < children.length; i++) {
+				if(children[i].className == "category") {
+					children[i].onclick = () => {
+						selected_category_index = categories.findIndex(e => e.category_name == children[i].innerText);
+						event.target.innerText = children[i].innerText;
+						modal.querySelector(".categories").remove();
+						community_selector.classList.remove("clicked");
+						community_selector.style = "";
+						is_opened_commnunity_selector = false;
+						tags = getTagsAboutMainCategory(categories[selected_category_index].main_category_id);
+						selected_tag_index = 0;						
+						tag_selector.innerText = tags[selected_tag_index].tag_name;
+						tag_selector.parentElement.classList.add("active");
+					}
+				}
+			}
+			community_selector.classList.add("clicked");
+			is_opened_commnunity_selector = true;
+		} else {
+			modal.querySelector(".categories").remove();
+			community_selector.classList.remove("clicked");
+			is_opened_commnunity_selector = false;
+			selected_category_index = 0;
+		}
+	}
+	
+	tag_selector.onclick = (event) => {
+		if(! is_opened_tag_selector) {
+			const select_box = makeTagSelectBox(tags);
+			event.target.parentElement.appendChild(select_box);
+			const children = select_box.children;
+			for(let i = 0; i < children.length; i++) {
+				children[i].onclick = () => {
+					selected_tag_index = i;
+					tag_selector.innerText = children[i].innerText;
+					tag_selector.classList.remove("clicked");
+					select_box.remove();
+					is_opened_tag_selector = false;
+				}
+			}
+			tag_selector.classList.add("clicked");
+			is_opened_tag_selector = true;
+		} else {
+			tag_selector.classList.remove("clicked");
+			modal.querySelector(".tags").remove();
+			is_opened_tag_selector = false;
+		}
+	}
+	
+	const add_image_button = modal.querySelector(".add_image_button"); 
+	const file_input = modal.querySelector("input[name='file']");
+	const modal_image_wrapper = modal.querySelector(".modal_image_wrapper");
+	add_image_button.onclick = () => file_input.click();
+	file_input.onchange = (event) => {
+		loadUploadFiles(event, modal_image_wrapper);
+	}
+	
+	const title_input_tag = modal.querySelector("input[name='title']");
+	const contents_area_tag = modal.querySelector("textarea[name='contents']");
+	const insert_article_button = modal.querySelector(".register_article_button");
+	insert_article_button.onclick = (event) => {
+		if(selected_category_index == -1 ||
+			selected_tag_index == -1 ||
+			title_input_tag.value == "" ||
+			contents_area_tag.value == "") {
+			alert("게시글 내용을 정확히 입력해주세요.");	
+		} else {
+			const form_data = new FormData();
+			form_data.append("sub_category_id", categories[selected_category_index].sub_category_id);
+			form_data.append("article_tag_id", tags[selected_tag_index].id);
+			form_data.append("title", title_input_tag.value);
+			form_data.append("contents", contents_area_tag.value);
+			for(let i = 0; i < files.length; i++) {
+				form_data.append("files", files[i]);
+			}
+			$.ajax({
+				type: "post",
+				url: "/api/v1/community/article",
+				data: form_data,
+				encType: "multipart/form-data",
+				processData: false,
+				contentType: false,
+				dataType: "json",
+				success: function (data) {
+					if(data == true) {
+						location.reload();
+					} else {
+						console.log(data);
+					}
+				},
+				error: function (xhr, status) {
+					console.log(xhr);
+					console.log(status);
+				}
+			});
+		}
+		event.preventDefault();
+		console.log("------------------------------------------");
+		console.log(categories);
+		console.log(selected_category_index);
+		console.log(tags);
+		console.log(selected_tag_index);
+		console.log(modal.querySelector("input[name='title']").value);
+		console.log(modal.querySelector("textarea[name='contents']").value);
+		console.log(files);
+		console.log(writer_name_tag.innerText);
 	}
 }
 
-function makeCommunitySelectBox() {
-	const categories = getJoinedCagories();
+function loadUploadFiles(event, modal_image_wrapper) {
+	if(event.target.files.length + files.length > 10) {
+		alert("파일은 10개까지만 등록할 수 있습니다.");
+		return;
+	}
+	for(let i = 0; i < event.target.files.length; i++) {
+		const fileReader = new FileReader();
+		fileReader.onloadend = (e) => {
+			modal_image_wrapper.classList.add("active");
+			files.push(event.target.files[i]);
+			const file_name = event.target.files[i].name;
+			
+			const image_tag = makeImageTag(e.target.result);
+			modal_image_wrapper.appendChild(image_tag);
+			image_tag.querySelector(".delete_image_button").onclick = () => {
+				image_tag.remove();
+				files = files.filter(file => file.name != file_name);
+			}
+		}
+		
+		fileReader.readAsDataURL(event.target.files[i]);
+	}
+}
+
+function makeImageTag(img_src) {
+	const div = document.createElement("div");
+	div.className = "image_box";
+	div.innerHTML = `
+		<img class="image" src="${img_src}">
+		<span class="hover_blind"></span>
+		<button type="button" class="delete_image_button">
+			<img src="/static/images/insert_new_article_delete_image_button.svg">
+		</button>
+	`;
+	return div;
+}
+
+function makeTagSelectBox(tags) {
+	const div = document.createElement("div");
+	div.className = "tags";
+	for(let i = 0; i < tags.length; i++) {
+		div.innerHTML += `<div class="tag">${tags[i].tag_name}</div>`;
+	}
+	return div;
+}
+
+function makeCommunitySelectBox(categories) {
 	const div = document.createElement("div");
 	div.className = "categories";
 	let prev_main_id = 0;
 	for(let i = 0; i < categories.length; i++) {
 		if(prev_main_id != categories[i].main_category_id) {
+			if(categories[i].main_category_id > 1) {
+				const hr = document.createElement("hr");
+				hr.className = "separator";
+				div.appendChild(hr);
+			}
 			const category_title = makeCategoryTitle(categories[i]);
 			div.appendChild(category_title);
 		}
@@ -99,12 +284,31 @@ function makeCategoryTitle(category) {
 	const div = document.createElement("div");
 	div.className = "title";
 	div.innerHTML = `
-		<div class="${class_name}">
+		<div class="icon ${class_name}">
 			<img src="/static/images/${img_src}">
 		</div>
 		<span class="text">${category.category_kor_name}</span>
 	`;
 	return div;
+}
+
+function getTagsAboutMainCategory(main_category_id) {
+	let tags;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/community/" + main_category_id + "/tag/list",
+		async: false,
+		dataType: "json",
+		success: function (tag_list) {
+			console.log(tag_list);
+			tags = tag_list;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return tags;
 }
 
 function getJoinedCagories() {
@@ -334,7 +538,7 @@ function makeInsertArticleModal() {
 	div.innerHTML = `
 		<div class="window register_article">
 			<div class="title">게시글 쓰기</div>
-			<div class="writer">취뽀하자(닉네임)</div>
+			<div class="writer"></div>
 			<hr>
 			<form>
 				<div class="row ${category_id == 0 ? 'active' : ''}">
@@ -352,26 +556,15 @@ function makeInsertArticleModal() {
 						<input type="file" name="file" accept=".jpg, .png, .jpeg" multiple>
 					</button>
 				</div>
-				<div class="modal_image_wrapper active">
-					<div class="image_box">
-						<img class="image" src="/static/images/profile.png">
-						<span class="hover_blind"></span>
-						<button type="button" class="delete_image_button">
-							<img src="/static/images/insert_new_article_delete_image_button.svg">
-						</button>
-					</div>
-					<div class="image_box">
-						<img class="image" src="/static/images/profile.png">
-					</div>
-				</div>
+				<div class="modal_image_wrapper"></div>
 				<div class="buttons">
 					<div class="checkbox_wrapper">
-						<input type="checkbox" class="use_nickname" checked>
+						<input type="checkbox" class="use_nickname">
 						<span class="text">닉네임으로 등록</span>
 					</div>
 					<div class="button_wrapper">
 						<button type="button" class="close_modal">닫기</button>
-						<button type="button" class="register_article">등록</button>
+						<button type="button" class="register_article_button">등록</button>
 					</div>
 				</div>
 			</form>

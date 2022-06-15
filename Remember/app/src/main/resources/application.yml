@@ -18,6 +18,9 @@ spring:
       static-locations:
       - classpath:/static/
       add-mappings: true
+  servlet:
+    multipart:      enabled: true
+      max-file-size: 2MB
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://rememeber-project.c15dkezpex4v.ap-northeast-2.rds.amazonaws.com/remember?useUnicode=true&serverTimezone=Asia/Seoul&allowMultiQueries=true
@@ -58,3 +61,6 @@ coolsms:
   apikey: NCSIYYNDP4GTCCWS
   apisecret: R2QNFN1TTTODSVKB5GBCMTDRQ9BQLWOK
   fromnumber: 01035947111
+  
+file:
+  path: C:/Remember_workspace/Remember_Project/file_upload/

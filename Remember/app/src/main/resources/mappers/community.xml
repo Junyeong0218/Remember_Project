@@ -233,7 +233,21 @@
 			left outer join community_sub_category sub on(sub.id = `join`.sub_category_id)
 			left outer join community_category_mst category on(category.id = sub.main_category_id)
 		where
-			`join`.user_id = #{id};
+			`join`.user_id = #{id}
+		order by
+			main_category_id asc,
+			sub_category_id asc;
+	</select>
+	
+	<select id="getTagsAboutMainCategory" parameterType="Integer" resultType="com.remember.app.entity.community.article.Tag">
+		select
+			tag.id,
+			tag.tag_name
+		from
+			article_tag_belong_category belong
+			left outer join article_tag_mst tag on(tag.id = belong.article_tag_id)
+		where
+			belong.main_category_id = #{mainCategoryId};
 	</select>
 
 </mapper>

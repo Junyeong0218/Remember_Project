@@ -7,6 +7,7 @@
 	width: 100%;
 	height: 100vh;
 	background-color: rgba(0, 0, 0, 0.6);
+	z-index: 1;
 }
 
 .modal > .window {
@@ -298,7 +299,6 @@
 .modal > .register_article > form > .row {
 	position: relative;
 	display: none;
-	cursor: pointer;
 }
 
 .modal > .register_article > form > .row.active {
@@ -319,6 +319,7 @@
 	font-weight: 400;
 	color: rgb(33, 35, 34);
 	line-height: 26px;
+	cursor: pointer;
 }
 
 .modal > .register_article > form > .row >.add_image_button {
@@ -357,6 +358,90 @@
 .modal > .register_article > form > .row > .community_selector.clicked::after,
 .modal > .register_article > form > .row > .tag_selector.clicked::after {
 	background: url("/static/images/insert_new_article_selector_up.svg");
+}
+
+.modal > .register_article > form > .row > .categories,
+.modal > .register_article > form > .row > .tags {
+	position: absolute;
+	top: 100%;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	min-height: 16px;
+	max-height: 220px;
+	border: 1px solid rgb(204 204 204);
+	border-radius: 4px;
+	background-color: white;
+	overflow: scroll scroll;
+	z-index: 1;
+}
+
+.modal > .register_article > form > .row > .categories > .title {
+	padding: 12px 20px;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 52px;
+	gap: 4px;
+}
+
+.modal > .register_article > form > .row > .categories > .title > .icon {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+}
+
+.modal > .register_article > form > .row > .categories > .title > .text {
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 24px;
+}
+
+.modal > .register_article > form > .row > .categories > .title > .icon.insight {
+    background-color: rgb(40, 100, 240);
+}
+
+.modal > .register_article > form > .row > .categories > .title > .icon.insight + .text {
+	color: rgb(40, 100, 240);
+}
+
+.modal > .register_article > form > .row > .categories > .title > .icon.job {
+	background-color: rgb(224, 165, 38);
+}
+
+.modal > .register_article > form > .row > .categories > .title > .icon.job + .text {
+	color: rgb(224, 165, 38);
+}
+
+.modal > .register_article > form > .row > .categories > .title > .icon.subject {
+	background-color: rgb(48, 176, 153);
+}
+
+.modal > .register_article > form > .row > .categories > .title > .icon.subject + .text {
+	color: rgb(48, 176, 153);
+}
+
+.modal > .register_article > form > .row > .categories > .category,
+.modal > .register_article > form > .row > .tags > .tag {
+	padding: 8px 48px;
+	width: 100%;
+	height: 44px;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 24px;
+	cursor: pointer;
+}
+
+.modal > .register_article > form > .row > .categories > .category:hover,
+.modal > .register_article > form > .row > .tags > .tag:hover {
+	background-color: rgb(245, 245, 245);
+}
+
+.modal > .register_article > form > .row > .categories > .separator {
+	margin: 0 20px;
+	height: 1px;
+	border: none;
+	background-color: rgb(204, 204, 204);
 }
 
 .modal > .register_article > form > input {
@@ -402,6 +487,15 @@
 	width: 100%;
 	gap: 12px;
 	overflow-x: auto;
+}
+
+.modal > .register_article > form > .modal_image_wrapper::-webkit-scrollbar {
+    height: 10px;
+}
+
+.modal > .register_article > form > .modal_image_wrapper::-webkit-scrollbar-thumb {
+    background-color: rgb(174, 174, 174);
+    border-radius: 5px;
 }
 
 .modal > .register_article > form > .modal_image_wrapper.active {
@@ -508,6 +602,6 @@
 	background-color: rgb(100, 100, 100);
 }
 
-.modal > .register_article > form > .buttons > .button_wrapper > .register_article {
+.modal > .register_article > form > .buttons > .button_wrapper > .register_article_button {
 	background-color: rgb(33, 35, 34);
 }

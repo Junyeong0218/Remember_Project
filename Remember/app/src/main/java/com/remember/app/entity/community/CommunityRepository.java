@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.remember.app.entity.community.article.ArticleDetail;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
+import com.remember.app.entity.community.article.Tag;
 import com.remember.app.entity.community.category.CommunityJoinUser;
 import com.remember.app.entity.community.category.JoinedCategory;
 import com.remember.app.entity.community.category.SubCategoryDetail;
@@ -37,4 +38,6 @@ public interface CommunityRepository {
 	public int joinCategory(CommunityJoinUser communityJoinUser);
 	
 	public List<JoinedCategory> getJoinedCategories(int id);
+	
+	public List<Tag> getTagsAboutMainCategory(int mainCategoryId);
 }

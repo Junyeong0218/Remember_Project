@@ -4,9 +4,11 @@ import java.util.List;
 
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
+import com.remember.app.entity.community.article.Tag;
 import com.remember.app.entity.community.category.CommunityJoinUser;
 import com.remember.app.entity.community.category.JoinedCategory;
 import com.remember.app.entity.community.category.SubCategoryDetail;
+import com.remember.app.requestDto.AddArticleReqDto;
 import com.remember.app.responseDto.ArticleDetailResDto;
 
 public interface CommunityService {
@@ -34,4 +36,8 @@ public interface CommunityService {
 	public boolean joinCategory(CommunityJoinUser communityJoinUser);
 	
 	public List<JoinedCategory> getJoinedCategories(int id);
+	
+	public List<Tag> getTagsAboutMainCategory(int mainCategoryId);
+	
+	public boolean insertArticle(AddArticleReqDto addArticleReqDto);
 }

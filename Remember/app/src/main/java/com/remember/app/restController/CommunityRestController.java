@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
+import com.remember.app.entity.community.article.Tag;
 import com.remember.app.entity.community.category.CommunityJoinUser;
 import com.remember.app.entity.community.category.JoinedCategory;
 import com.remember.app.entity.community.category.SubCategoryDetail;
 import com.remember.app.principal.PrincipalDetails;
+import com.remember.app.requestDto.AddArticleReqDto;
 import com.remember.app.responseDto.ArticleDetailResDto;
 import com.remember.app.service.CommunityService;
 
@@ -95,6 +97,19 @@ public class CommunityRestController {
 																							    .user_id(principalDetails.getId())
 																							    .build();
 		return communityService.joinCategory(join);
+	}
+	
+	@GetMapping("/{mainCategoryId}/tag/list")
+	public List<Tag> getTagsAboutMainCategory(@PathVariable int mainCategoryId) {
+		return communityService.getTagsAboutMainCategory(mainCategoryId);
+	}
+	
+	@PostMapping("/article")
+	public boolean insertArticle(@AuthenticationPrincipal PrincipalDetails principalDetails,
+															AddArticleReqDto addArticleReqDto) {
+		System.out.println(addArticleReqDto);
+		if(addArticleReqDto.getFiles() != null) addArticleReqDto.getFiles().forEach(e -> System.out.println(e.getOriginalFilename()));
+		return false;
 	}
 	
 }
