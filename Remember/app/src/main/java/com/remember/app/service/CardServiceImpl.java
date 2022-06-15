@@ -39,11 +39,7 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public int insertGroup(int user_id,String group_name) {
-		Group group = Group.builder()
-				.user_id(user_id)
-				.group_name(group_name)
-				.build();
+	public int insertGroup(Group group) {
 		return cardRepository.insertGroup(group);
 	}
 	

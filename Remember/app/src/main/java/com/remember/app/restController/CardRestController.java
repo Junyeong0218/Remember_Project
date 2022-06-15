@@ -66,10 +66,18 @@ public class CardRestController {
 	
 	//그룹추가 (/group) post
 	@PostMapping("/group")
-	public ResponseEntity<?> addGroup( String group_name){
+	public ResponseEntity<?> addGroup(@AuthenticationPrincipal PrincipalDetails principalDetails, String group_name){
 		System.out.println(group_name);
-		int result = cardService.insertGroup(1, group_name);
-		return new ResponseEntity<>(result,HttpStatus.OK);
+		Group group = Group.builder()
+				.user_id(principalDetails.getId())
+				.group_name(group_name)
+				.build();
+		int result = cardService.insertGroup(group);
+		if(result == 1) {
+			return new ResponseEntity<>(group.getId(),HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(0,HttpStatus.OK);
+		}
 	}
 	
 	//그룹검색 get

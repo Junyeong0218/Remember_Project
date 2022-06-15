@@ -18,7 +18,7 @@ public interface CardService {
 	
 	public int insertNewCard(CardInsertReqDto cardInsertReqDto);
 	
-	public int insertGroup(int user_id, String group_name);
+	public int insertGroup(Group group);
 	
 	public int deleteCard(int user_id);
 	

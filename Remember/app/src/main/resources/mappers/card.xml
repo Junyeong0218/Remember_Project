@@ -62,24 +62,30 @@
   		#{group_name},
   		now(),
   		now()
-  	)
+  	);
+  	
+  	<selectKey keyProperty="id" resultType="Integer" order="AFTER">
+  		select id from card_group_mst where user_id = #{user_id} and group_name = #{group_name};
+  	</selectKey>
   </insert>
   
   <select id="getGroup" parameterType="Integer" resultType="com.remember.app.entity.card.GroupSummary">
   	SELECT 
-	cgm.id,
-	cgm.group_name,
-	COUNT(DISTINCT cbg.id) AS card_count,
-	COUNT(DISTINCT cbg2.card_id) AS total_count
-FROM 
-	card_group_mst cgm
-	LEFT OUTER JOIN card_belong_group cbg ON(cbg.group_id = cgm.id)
-	LEFT OUTER JOIN card_group_mst cgm2 ON(cgm2.user_id=#{user_id})
-	LEFT OUTER JOIN card_belong_group cbg2 ON(cbg2.group_id = cgm2.id)
-WHERE
-	cgm.user_id=#{user_id}
-GROUP BY
-	cgm.id;
+		cgm.id,
+		cgm.group_name,
+		COUNT(DISTINCT cbg.id) AS card_count,
+		COUNT(DISTINCT cbg2.card_id) AS total_count
+	FROM 
+		card_group_mst cgm
+		LEFT OUTER JOIN card_belong_group cbg ON(cbg.group_id = cgm.id)
+		LEFT OUTER JOIN card_group_mst cgm2 ON(cgm2.user_id=#{user_id})
+		LEFT OUTER JOIN card_belong_group cbg2 ON(cbg2.group_id = cgm2.id)
+	WHERE
+		cgm.user_id=#{user_id}
+	GROUP BY
+		cgm.id
+	order by
+		cgm.create_date desc;
   </select>
   
   <select id="getGroupByGroupId" parameterType="Integer" resultType="com.remember.app.entity.card.GroupCard">

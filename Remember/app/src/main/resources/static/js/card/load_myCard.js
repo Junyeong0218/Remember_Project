@@ -7,13 +7,16 @@ XX 그룹 ( X개 ) -> 버튼 -> click -> 어떤 명함들이 해당 그룹에 �
 -> index[0].click();
  */
  
-getAllGroups();
-
 const whole_cards = document.querySelector(".card_group");
 const wholeCount = document.querySelector('.whole_count');
 const main_contents = document.querySelector(".main_contents");
 const addGroupBtn = document.querySelector('.add_group_button');
-const addGroupBox = document.querySelector('.add_group');
+const addGroup = document.querySelector('.add_group');
+const myCard = document.querySelector('.my_card_book');
+
+getAllGroups();
+
+addGroupBtn.onclick = toggleAddGroupTag;
  
 function getAllGroups(){
 	$.ajax({
@@ -99,11 +102,66 @@ function makeGroupTag(group_data) {
      return button;                      
 }
 
-addGroupBtn.onclick = () =>{
-	console.log("클릭");
-	addGroupBox.innerHTML="";
-	addGroupBox.innerHTML +=`
-		<input>dfd</input>
-	`;
+
+
+function toggleAddGroupTag(){
+	const addGroupBox = addGroup.querySelector('.add_group_box');
+	if(addGroupBox == null) {
+		const div = document.createElement("div");
+		div.className = "add_group_box";
+		div.innerHTML = `
+			<input type="text" class="add_group_input" name="group_name" placeholder="그룹명 입력">
+			<div class="add_group_close">
+				<img class="add_group_close_btn" src="/static/images/card_add_group_close.PNG" alt="닫기버튼">
+			</div>
+		`;
+		addGroup.appendChild(div);
+		const addGroupCloseBtn = div.querySelector('.add_group_close_btn');
+		addGroupCloseBtn.onclick = () =>{
+			div.remove();
+		}
+		const addGroupInput = div.querySelector('.add_group_input')
+		addGroupInput.onkeypress = function() {
+   			if(window.event.keyCode == 13) {
+       		  	console.log(addGroupInput.value); 
+       		 	enter(addGroupInput.value);
+			}
+
+		};
+	}
 }
+
+function enter(group_name){
+	$.ajax({
+		type:'post',
+		url:'/api/v1/card/group',
+		data:{
+			"group_name":group_name
+		},
+		dataType:'json',
+		success:function(group_id){
+			console.log(group_id);
+			if(group_id > 0){
+				console.log(group_name);
+				const beforeElement = myCard.children[4];
+				const groupTag = makeGroupTag({"group_name":group_name, "card_count":0});
+				myCard.insertBefore(groupTag,beforeElement);
+				addGroup.querySelector('.add_group_box').remove();
+				groupTag.onclick = () => getGroup(group_id);
+			}else {
+				alert("그룹 생성 실패");
+			}
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	})
+}
+
+
+
+
+
+
 
