@@ -51,6 +51,98 @@ function insertArticleModalForSpecificCategory() {
 		modal.remove();
 		document.body.style = "";
 	}
+	
+	const writer_name_tag = modal.querySelector(".writer");
+	const use_nickname_checkbox = modal.querySelector(".use_nickname");
+	const use_nickname_text = use_nickname_checkbox.nextElementSibling;
+	use_nickname_checkbox.onclick = (event) => {
+		if(event.target.checked) {
+			writer_name_tag.innerText = `${principal.nickname}(닉네임)`;
+		} else {
+			writer_name_tag.innerText = `${principal.name}(실명)`;
+		}
+	}
+	use_nickname_text.onclick = () => use_nickname_checkbox.click();
+	use_nickname_checkbox.click();
+
+	const tag_selector = modal.querySelector(".tag_selector");
+	let is_opened_tag_selector = false;
+	let tags = getTagsAbountSubCategory(category_id);
+	let selected_tag_index = -1;
+	tag_selector.innerText = tags[0].tag_name;
+	
+	tag_selector.onclick = (event) => {
+		if(! is_opened_tag_selector) {
+			const select_box = makeTagSelectBox(tags);
+			event.target.parentElement.appendChild(select_box);
+			const children = select_box.children;
+			for(let i = 0; i < children.length; i++) {
+				children[i].onclick = () => {
+					selected_tag_index = i;
+					tag_selector.innerText = children[i].innerText;
+					tag_selector.classList.remove("clicked");
+					select_box.remove();
+					is_opened_tag_selector = false;
+				}
+			}
+			tag_selector.classList.add("clicked");
+			is_opened_tag_selector = true;
+		} else {
+			tag_selector.classList.remove("clicked");
+			modal.querySelector(".tags").remove();
+			is_opened_tag_selector = false;
+		}
+	}
+	
+	const add_image_button = modal.querySelector(".add_image_button"); 
+	const file_input = modal.querySelector("input[name='file']");
+	const modal_image_wrapper = modal.querySelector(".modal_image_wrapper");
+	add_image_button.onclick = () => file_input.click();
+	file_input.onchange = (event) => {
+		loadUploadFiles(event, modal_image_wrapper);
+	}
+	
+	const title_input_tag = modal.querySelector("input[name='title']");
+	const contents_area_tag = modal.querySelector("textarea[name='contents']");
+	const insert_article_button = modal.querySelector(".register_article_button");
+	insert_article_button.onclick = () => {
+		if(selected_category_index == -1 ||
+			selected_tag_index == -1 ||
+			title_input_tag.value == "" ||
+			contents_area_tag.value == "") {
+			alert("게시글 내용을 정확히 입력해주세요.");	
+		} else {
+			const form_data = new FormData();
+			form_data.append("sub_category_id", category_id);
+			form_data.append("article_tag_id", tags[selected_tag_index].id);
+			form_data.append("title", title_input_tag.value);
+			form_data.append("contents", contents_area_tag.value);
+			form_data.append("use_nickname", use_nickname_checkbox.checked);
+			for(let i = 0; i < files.length; i++) {
+				form_data.append("files", files[i]);
+			}
+			$.ajax({
+				type: "post",
+				url: "/api/v1/community/article",
+				data: form_data,
+				encType: "multipart/form-data",
+				processData: false,
+				contentType: false,
+				dataType: "json",
+				success: function (data) {
+					if(data == true) {
+						location.reload();
+					} else {
+						console.log(data);
+					}
+				},
+				error: function (xhr, status) {
+					console.log(xhr);
+					console.log(status);
+				}
+			});
+		}
+	}
 }
 
 function insertArticleModalForTotalCategory() {
@@ -66,7 +158,6 @@ function insertArticleModalForTotalCategory() {
 	const use_nickname_checkbox = modal.querySelector(".use_nickname");
 	const use_nickname_text = use_nickname_checkbox.nextElementSibling;
 	use_nickname_checkbox.onclick = (event) => {
-		console.log(event.target.checked);
 		if(event.target.checked) {
 			writer_name_tag.innerText = `${principal.nickname}(닉네임)`;
 		} else {
@@ -102,7 +193,7 @@ function insertArticleModalForTotalCategory() {
 						community_selector.classList.remove("clicked");
 						community_selector.style = "";
 						is_opened_commnunity_selector = false;
-						tags = getTagsAboutMainCategory(categories[selected_category_index].main_category_id);
+						tags = getTagsAbountSubCategory(categories[selected_category_index].sub_category_id);
 						selected_tag_index = 0;						
 						tag_selector.innerText = tags[selected_tag_index].tag_name;
 						tag_selector.parentElement.classList.add("active");
@@ -153,7 +244,7 @@ function insertArticleModalForTotalCategory() {
 	const title_input_tag = modal.querySelector("input[name='title']");
 	const contents_area_tag = modal.querySelector("textarea[name='contents']");
 	const insert_article_button = modal.querySelector(".register_article_button");
-	insert_article_button.onclick = (event) => {
+	insert_article_button.onclick = () => {
 		if(selected_category_index == -1 ||
 			selected_tag_index == -1 ||
 			title_input_tag.value == "" ||
@@ -165,6 +256,7 @@ function insertArticleModalForTotalCategory() {
 			form_data.append("article_tag_id", tags[selected_tag_index].id);
 			form_data.append("title", title_input_tag.value);
 			form_data.append("contents", contents_area_tag.value);
+			form_data.append("use_nickname", use_nickname_checkbox.checked);
 			for(let i = 0; i < files.length; i++) {
 				form_data.append("files", files[i]);
 			}
@@ -189,16 +281,6 @@ function insertArticleModalForTotalCategory() {
 				}
 			});
 		}
-		event.preventDefault();
-		console.log("------------------------------------------");
-		console.log(categories);
-		console.log(selected_category_index);
-		console.log(tags);
-		console.log(selected_tag_index);
-		console.log(modal.querySelector("input[name='title']").value);
-		console.log(modal.querySelector("textarea[name='contents']").value);
-		console.log(files);
-		console.log(writer_name_tag.innerText);
 	}
 }
 
@@ -292,11 +374,11 @@ function makeCategoryTitle(category) {
 	return div;
 }
 
-function getTagsAboutMainCategory(main_category_id) {
+function getTagsAbountSubCategory(sub_category_id) {
 	let tags;
 	$.ajax({
 		type: "get",
-		url: "/api/v1/community/" + main_category_id + "/tag/list",
+		url: "/api/v1/community/" + sub_category_id + "/tag/list",
 		async: false,
 		dataType: "json",
 		success: function (tag_list) {

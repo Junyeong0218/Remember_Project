@@ -2,6 +2,7 @@ package com.remember.app.service;
 
 import java.util.List;
 
+import com.remember.app.entity.community.article.ArticleLike;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
 import com.remember.app.entity.community.article.Tag;
@@ -13,7 +14,7 @@ import com.remember.app.responseDto.ArticleDetailResDto;
 
 public interface CommunityService {
 
-	public List<SubCategoryDetail> getCategoriesWithArticleCount();
+	public List<SubCategoryDetail> getCategoriesWithJoinCount();
 	
 	public List<BestArticleSummary> getBestArticleSummaries();
 
@@ -27,7 +28,7 @@ public interface CommunityService {
 	
 	public int getTopicArticleCount(int categoryId);
 	
-	public ArticleDetailResDto getArticleDetail(int articleId);
+	public ArticleDetailResDto getArticleDetail(int articleId, int userId);
 	
 	public boolean isUserJoinCategory(CommunityJoinUser communityJoinUser);
 	
@@ -37,7 +38,11 @@ public interface CommunityService {
 	
 	public List<JoinedCategory> getJoinedCategories(int id);
 	
-	public List<Tag> getTagsAboutMainCategory(int mainCategoryId);
+	public List<Tag> getTagsAboutSubCategory(int subCategoryId);
 	
 	public boolean insertArticle(AddArticleReqDto addArticleReqDto);
+	
+	public boolean insertArticleLike(ArticleLike articleLike);
+
+	public boolean deleteArticleLike(ArticleLike articleLike);
 }

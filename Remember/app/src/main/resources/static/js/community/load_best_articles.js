@@ -25,7 +25,7 @@ function addBestArticleSummaryTags(article_summary_list) {
 			const article_summary = article_summary_list[i];
 			const tag = makeBestArticleSummaryTag(article_summary);
 			best_article_list.appendChild(tag);
-			tag.onclick = () => location.href = `/community/${article_summary.id}`;
+			tag.onclick = () => location.href = `/community/detail/${article_summary.id}`;
 		}
 	} else {
 		const best_article_list = document.querySelector(".best_articles");
@@ -33,11 +33,13 @@ function addBestArticleSummaryTags(article_summary_list) {
 			for(let i = 0; i < 3; i++) {
 				const tag = makeMainBestArticleTag(article_summary_list[i]);
 				best_article_list.appendChild(tag);
+				tag.onclick = () => location.href = `/community/detail/${article_summary_list[i].id}`;
 			}
 		} else {
 			for(let i = 0; i < article_summary_list.length; i++) {
 				const tag = makeMainBestArticleTag(article_summary_list[i]);
 				best_article_list.appendChild(tag);
+				tag.onclick = () => location.href = `/community/detail/${article_summary_list[i].id}`;
 			}
 		}
 	}
@@ -92,5 +94,6 @@ function makeBestArticleSummaryTag(article_summary) {
             </div>
         </div>
 	`;
+	return li;
 }
 

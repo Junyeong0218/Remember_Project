@@ -28,7 +28,7 @@ function addArticleTags(article_list) {
 		const article = article_list[i];
 		const tag = makeArticleTag(article);
 		feeds.appendChild(tag);
-		tag.onclick = () => location.href = `/community/${article.id}`;
+		tag.onclick = () => location.href = category_id == 0 ? `/community/detail/${article.id}` : `/community/${category_id}/detail/${article.id}`;
 	}
 }
 
@@ -44,16 +44,16 @@ function makeInnerAdTag() {
 }
 
 function makeArticleTag(article) {
-	const topic = article.sub_category_id == 1 ? "insight" : 
-							   article.sub_category_id == 2 ? "job" : "subject";
+	const topic = article.sub_category_id < 9 ? "insight" : 
+							   article.sub_category_id > 48 ? "subject" : "job";
 	const is_today = new Date() - new Date(article.create_date) < 1000 * 60 * 60 * 24;
-	const upload_time = makeUploadTimeString(article_create_date);
+	const upload_time = makeUploadTimeString(article.create_date);
 	
 	const div = document.createElement("div");
 	div.className = "feed";
 	div.innerHTML = `
 		<div class="tag_wrapper">
-            <div class="${topic}">${article.category_name}</div>
+${category_id == 0 ? '<div class="' + topic + '">' + article.category_name + '</div>' : '<div class="tag">' + article.tag_name + '</div>'}
         </div>
         <div class="article_contents">
             ${is_today ? '<span class="today"></span>' : ''}
@@ -61,9 +61,10 @@ function makeArticleTag(article) {
                 <div class="title">${article.title}</div>
                 <div class="content_summary">${article.contents.substring(0, 50)}</div>
             </div>
+${article.file_name == null ? '' : '<div class="article_image"><img src="/image/article_images/' + article.file_name + '"></div>'}
         </div>
         <div class="userinfo">
-            <img src="/static/file_upload/${article.profile_img}" class="upload_user_profile_image">
+            <img src="/static/images/default_profile_image.png" class="upload_user_profile_image">
             <span class="nickname">${article.nickname}</span>
             <span class="user_job_category">${article.department_name}</span>
         </div>

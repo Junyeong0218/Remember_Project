@@ -13,31 +13,15 @@
     <link rel="stylesheet" href="/static/css/community/article_detail.css">
     <link rel="stylesheet" href="/static/css/community/right_aside.css">
     <link rel="stylesheet" href="/static/css/community/left_aside.css">
+    <link rel="stylesheet" href="/static/css/community/modal.css">
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="/static/js/community/request_flag.js"></script>
+    <script src="/static/js/get_principal.js"></script>
 </head>
 
 <body>
     <div class="container">
-        <header>
-            <div class="header_wrapper">
-                <div class="left">
-                    <a href="#" class="logo">
-                        <img src="/static/images/community_logo.png" alt="커뮤니티 로고">
-                    </a>
-                    <div class="searcher">
-                        <span class="search_icon">
-                            <img src="/static/images/mypage_searcher_icon.png">
-                        </span>
-                        <input type="text" name="keyword" class="searcher_input" placeholder="검색어를 입력하세요">
-                    </div>
-                </div>
-                <div class="right">
-                    <button type="button" class="signin">로그인</button>
-                    <button type="button" class="signup">회원가입</button>
-                </div>
-            </div>
-        </header>
+        <header th:replace="fragment/header/community_header :: community_header"></header>
         <main>
             <aside class="left_aside">
                 <section class="insight_section">
@@ -106,7 +90,7 @@
                         <div class="article_like">
                             <button type="button" class="article_like_button">
                                 <span class="like_count">0</span>
-                                <img src="/static/images/article_detail_article_like_icon.png">
+                                <span class=like_icon></span>
                             </button>
                         </div>
                         <div class="related_articles">
@@ -219,6 +203,7 @@
             </div>
         </footer>
     </div>
+    <script src="/static/js/community/set_header.js"></script>
     <script src="/static/js/community/load_article_detail.js"></script>
     <script src="/static/js/community/load_left_aside.js"></script>
     <script src="/static/js/community/load_best_articles.js"></script>

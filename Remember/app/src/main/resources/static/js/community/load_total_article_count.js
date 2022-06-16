@@ -25,7 +25,7 @@ function loadTotalArticleCount() {
 function appendPageLinks(count) {
 	let current = location.search == "" ? 1 : Number(location.search.replace("?page=", ""));
 	console.log(current);
-	const last_page = count == 0 ? 1 : count%15 == 0 ? count/15 : count/15 + 1;
+	const last_page = count == 0 ? 1 : count%15 == 0 ? Math.floor(count/15) : Math.floor(count/15) + 1;
 	console.log(last_page);
 	const min_page_number = Math.floor(current/10) + 1;
 	const max_page_number = (Math.floor(current/10) + 1) * 10 < last_page ? (Math.floor(current/10) + 1) * 10 : last_page;

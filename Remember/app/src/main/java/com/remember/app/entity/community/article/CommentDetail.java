@@ -26,4 +26,15 @@ public class CommentDetail {
 	private int related_comment_id;
 	private LocalDateTime create_date;
 	private int like_count;
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof CommentDetail) {
+			CommentDetail target = (CommentDetail) obj;
+			if(target.id == this.id) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

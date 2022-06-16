@@ -55,6 +55,18 @@ if(principal == null) {
 			hover_my_menu_wrapper.querySelector(".my_menu").remove();
 		}
 	}
+	if(! location.pathname.includes("detail")) {
+		const new_article_input = document.querySelector(".new_article_input");
+		if(category_id == 0) {
+			new_article_input.placeholder = principal.nickname + "님, 지금 회사에서 어떤 고민이 있으신가요?";
+		} else if(category_id < 9) {
+			new_article_input.placeholder = "회원님의 인사이트를 나눠주세요!";
+		} else if(category_id > 48) {
+			new_article_input.placeholder = principal.nickname + "님, 지금 하고 계신 생각을 회원님들과 나눠주세요!";
+		} else {
+			new_article_input.placeholder = principal.nickname + "님, 일 관련 고민이나 업계 이슈에 대한 생각을 들려주세요!";
+		}
+	}
 }
 
 function makeAlertModal() {

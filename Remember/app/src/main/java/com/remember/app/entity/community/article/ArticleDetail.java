@@ -25,6 +25,9 @@ public class ArticleDetail {
 	private int sub_category_id;
 	private String category_name;
 	
+	private int tag_id;
+	private String tag_name;
+	
 	private String title;
 	private String contents;
 	
@@ -36,6 +39,8 @@ public class ArticleDetail {
 
 	private LocalDateTime create_date;
 	
+	private boolean like_flag;
+	
 	private int comment_id;
 	private int commented_user_id;
 	private String commented_user_nickname;
@@ -43,7 +48,7 @@ public class ArticleDetail {
 	private String commented_user_profile_img;
 	private String comment_contents;
 	private int related_comment_id;
-	private int comment_create_date;
+	private LocalDateTime comment_create_date;
 	private int comment_like_count;
 	
 }

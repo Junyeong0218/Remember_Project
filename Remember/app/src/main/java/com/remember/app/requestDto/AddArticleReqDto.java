@@ -24,6 +24,7 @@ public class AddArticleReqDto {
 	private int article_tag_id;
 	private String title;
 	private String contents;
+	private boolean use_nickname;
 	private List<MultipartFile> files;
 	
 	public Article toArticleEntity() {
@@ -33,6 +34,7 @@ public class AddArticleReqDto {
 								   .article_tag_id(article_tag_id)
 								   .title(title)
 								   .contents(contents)
+								   .use_nickname(use_nickname)
 								   .build();
 	}
 	

@@ -62,7 +62,7 @@ main {
     color: rgb(48, 176, 153);
 }
 
-.article_detail>.header>.tags>button.insite {
+.article_detail>.header>.tags>button.insight {
     color: rgb(40, 100, 240);
 }
 
@@ -170,6 +170,11 @@ main {
     overflow-x: auto;
 }
 
+.article_detail>.contents>.article_image {
+	margin-bottom: 10px;
+	width: 100%;
+}
+
 .article_detail>.contents>.article_like {
     display: flex;
     justify-content: center;
@@ -187,7 +192,17 @@ main {
     height: 100%;
     border: 1px solid rgb(204, 204, 204);
     border-radius: 50%;
+    background-color: white;
     cursor: pointer;
+}
+
+.article_detail>.contents>.article_like>.article_like_button.pressed {
+	border-color: rgb(224, 165, 38);
+	background-color: rgb(255, 245, 226);
+}
+
+.article_detail>.contents>.article_like>.article_like_button * {
+	pointer-events: none;
 }
 
 .article_detail>.contents>.article_like .like_count {
@@ -196,6 +211,20 @@ main {
     font-weight: bold;
     color: rgb(33, 35, 34);
     line-height: 27px;
+}
+
+.article_detail>.contents>.article_like>.article_like_button > .like_icon {
+	width: 15px;
+	height: 15px;
+	background: url("/static/images/article_detail_article_like_icon.png");
+}
+
+.article_detail>.contents>.article_like>.article_like_button.pressed > .like_count {
+	color: rgb(224, 165, 38);
+}
+
+.article_detail>.contents>.article_like>.article_like_button.pressed > .like_icon {
+	background: url("/static/images/article_detail_article_like_pressed_icon.png");
 }
 
 .article_detail>.contents>.related_articles {

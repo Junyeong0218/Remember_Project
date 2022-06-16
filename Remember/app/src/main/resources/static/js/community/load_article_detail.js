@@ -11,15 +11,17 @@ function loadArticleDetail() {
 		success: function (data) {
 			const article_data = data.articleDetail;
 			const comment_list = data.commentList;
+			const article_images = data.imageList;
 			console.log(article_data);
 			console.log(comment_list);
-			/*if(article_data == null) {
+			console.log(article_images);
+			if(article_data == null) {
 				alert("asfadsfasdf");
-			} else {*/
-				/*document.head.title = article_data.title;
-				setArticleDetailTag(article_data);*/
-				loadRelatedArticles(1);
-			/*}*/
+			} else {
+				document.querySelector("title").innerText = article_data.title;
+				setArticleDetailTag(article_data, article_images);
+				loadRelatedArticles(article_data.sub_category_id);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -195,19 +197,122 @@ function makeCommentUploadTimeString(create_date) {
 	}
 }
 
-function setArticleDetailTag(article_data) {
-	const tag = article_detail_tag.querySelector(".tags > .tag");
-	tag.className = article_data.category_name;
-	tag.innerText = article_data.category_name;
+function setArticleDetailTag(article_data, article_images) {
+	const category_tag = article_detail_tag.querySelector(".tags > .tag");
+	category_tag.className = article_data.sub_category_id < 9 ? "insight" : 
+														article_data.sub_category_id > 48 ? "subject" : "job";
+	category_tag.innerText = article_data.category_name;
+	const tag = document.createElement("button");
+	tag.type = "button";
+	tag.className = "tag";
+	tag.innerText = article_data.tag_name;
+	article_detail_tag.querySelector(".tags").appendChild(tag);
 	
 	article_detail_tag.querySelector(".title").innerText = article_data.title;
 	article_detail_tag.querySelector(".upload_time").innerText = makeArticleDetailUploadTimeText(article_data.create_date);
 	article_detail_tag.querySelector(".article_info .view_count").innerText = article_data.view_count;
-	article_detail_tag.querySelector(".userinfo > .nickname").innerText = article_data.nickname;
-	article_detail_tag.querySelector(".userinfo > .department_name").innerText = article_data.department_name;
+	article_detail_tag.querySelector(".userinfo .nickname").innerText = article_data.nickname;
+	article_detail_tag.querySelector(".userinfo .department_name").innerText = article_data.department_name;
 	article_detail_tag.querySelector(".description").innerText = article_data.contents;
-	article_detail_tag.querySelector(".article_like > .like_count").innerText = article_data.like_count;
-	article_detail_tag.querySelector(".related_articles > .topic").innerText = article_data.category_name;
+	article_detail_tag.querySelector(".related_articles .topic").innerText = article_data.category_name;
+	
+	const like_count_tag = article_detail_tag.querySelector(".article_like .like_count");
+	like_count_tag.innerText = article_data.like_count;
+	const article_like_button = article_detail_tag.querySelector(".article_like_button");
+	if(article_data.like_flag) article_like_button.classList.add("pressed");
+	
+	for(let i = 0; i < article_images.length; i++) {
+		const image_tag = document.createElement("img");
+		image_tag.className = "article_image";
+		image_tag.src = "/image/article_images/" + article_images[i];
+		
+		article_detail_tag.querySelector(".contents").insertBefore(image_tag, article_detail_tag.querySelector(".article_like"));
+	}
+	
+	article_like_button.onclick = () => {
+		if(principal == null) {
+			// 로그인 이동 모달 출력
+			const modal = makeLoginModal();
+			document.querySelector(".container").appendChild(modal);
+			document.body.style = "overflow: hidden;";
+			modal.querySelector(".to_signup_button").onclick = () => location.href = "/auth/signup";
+			modal.querySelector(".close_modal").onclick = () => {
+				modal.remove();
+				document.body.style = "";
+			}
+		} else if(article_data.like_flag == true) {
+			if(deleteLike()) {
+				article_data.like_flag = false;
+				like_count_tag.innerText = Number(like_count_tag.innerText) - 1; 
+				article_like_button.classList.remove("pressed");
+			} else {
+				alert("게시글 좋아요 삭제에 실패했습니다.");
+			}
+		} else if(insertLike()) {
+			article_data.like_flag = true;
+			like_count_tag.innerText = Number(like_count_tag.innerText) + 1; 
+			article_like_button.classList.add("pressed");
+		} else {
+			alert("게시글 좋아요에 실패했습니다.");
+		}
+	}
+}
+
+function insertLike() {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/community/article/" + article_id + "/like",
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			console.log(data);
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function deleteLike() {
+	let flag = false;
+	$.ajax({
+		type: "delete",
+		url: "/api/v1/community/article/" + article_id + "/like",
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			console.log(data);
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function makeLoginModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div. innerHTML = `
+		<div class="window not_login">
+			<div class="title">
+				<span class="text">이 기능은 회원만 이용하실 수 있습니다.</span>
+				<span class="text">회원으로 가입하시겠습니까?</span>
+			</div>
+			<span class="login_link">이미 회원이라면?&nbsp;<a href="/auth/signin">로그인 하기</a></span>
+			<div class="buttons">
+				<button type="button" class="close_modal">닫기</button>
+				<button type="button" class="to_signup_button">회원가입</button>
+			</div>
+		</div>
+	`;
+	return div;
 }
 
 function makeArticleDetailUploadTimeText(create_date) {

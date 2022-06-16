@@ -25,6 +25,9 @@ public class ArticleSummary {
 	private int sub_category_id;
 	private String category_name;
 	
+	private int tag_id;
+	private String tag_name;
+	
 	private String title;
 	private String contents;
 	private String file_name;

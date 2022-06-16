@@ -21,5 +21,6 @@ import lombok.ToString;
 public class ArticleDetailResDto {
 
 	private ArticleDetail articleDetail;
+	private List<String> imageList;
 	private List<CommentDetail> commentList;
 }

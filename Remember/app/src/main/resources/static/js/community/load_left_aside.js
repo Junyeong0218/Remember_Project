@@ -87,7 +87,7 @@ function makeLiTag(category) {
 	li.innerHTML = `
 		<div class="button_wrapper">
             <span class="title">${category.category_name}</span>
-            <span class="joiner">참여자 <span class="joiner_count">${category.article_count}</span>명</span>
+            <span class="joiner">참여자 <span class="joiner_count">${category.join_count}</span>명</span>
         </div>
 	`;
 	return li;

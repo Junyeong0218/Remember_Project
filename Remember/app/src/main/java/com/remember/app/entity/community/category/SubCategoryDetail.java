@@ -17,5 +17,5 @@ public class SubCategoryDetail {
 	private int main_category_id;
 	private String category_name;
 	
-	private int article_count;
+	private int join_count;
 }

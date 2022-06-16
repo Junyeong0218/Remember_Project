@@ -15,16 +15,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Article {
+public class ArticleImage {
 
 	private int id;
-	private int user_id;
-	private int sub_category_id;
-	private int article_tag_id;
-	private String title;
-	private String contents;
-	private int view_count;
-	private boolean use_nickname;
+	private int article_id;
+	private String file_name;
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
 	

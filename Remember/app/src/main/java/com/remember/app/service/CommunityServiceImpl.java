@@ -4,7 +4,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.remember.app.entity.community.CommunityRepository;
+import com.remember.app.entity.community.article.Article;
 import com.remember.app.entity.community.article.ArticleDetail;
+import com.remember.app.entity.community.article.ArticleImage;
+import com.remember.app.entity.community.article.ArticleLike;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
 import com.remember.app.entity.community.article.CommentDetail;
@@ -35,8 +37,8 @@ public class CommunityServiceImpl implements CommunityService {
 	private final String filePath;
 	
 	@Override
-	public List<SubCategoryDetail> getCategoriesWithArticleCount() {
-		return communityRepository.getCategoriesWithArticleCount();
+	public List<SubCategoryDetail> getCategoriesWithJoinCount() {
+		return communityRepository.getCategoriesWithJoinCount();
 	}
 	
 	@Override
@@ -75,26 +77,39 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 	
 	@Override
-	public ArticleDetailResDto getArticleDetail(int articleId) {
-		List<ArticleDetail> details = communityRepository.getArticleDetail(articleId);
+	public ArticleDetailResDto getArticleDetail(int articleId, int userId) {
+		List<ArticleDetail> details = null;
+		if(userId == 0) {
+			details = communityRepository.getArticleDetail(articleId);
+		} else {
+			details = communityRepository.getArticleDetailForLoginUser(articleId, userId);
+		}
 		
 		if(details.size() == 0) return new ArticleDetailResDto(); 
 		
 		List<CommentDetail> comments = new ArrayList<CommentDetail>();
+		List<String> articleImages = new ArrayList<String>();
 		
 		for(ArticleDetail detail : details) {
-			comments.add(CommentDetail.builder().id(detail.getComment_id())
-																						 .user_id(detail.getCommented_user_id())
-																						 .nickname(detail.getCommented_user_nickname())
-																						 .department_name(detail.getCommented_user_department_name())
-																						 .profile_img(detail.getCommented_user_profile_img())
-																						 .contents(detail.getComment_contents())
-																						 .related_comment_id(detail.getRelated_comment_id())
-																						 .create_date(detail.getCreate_date())
-																						 .like_count(detail.getComment_like_count())
-																						 .build());
+			if(! comments.contains(CommentDetail.builder().id(detail.getComment_id()).build())) {
+				comments.add(CommentDetail.builder().id(detail.getComment_id())
+																							 .user_id(detail.getCommented_user_id())
+																							 .nickname(detail.getCommented_user_nickname())
+																							 .department_name(detail.getCommented_user_department_name())
+																							 .profile_img(detail.getCommented_user_profile_img())
+																							 .contents(detail.getComment_contents())
+																							 .related_comment_id(detail.getRelated_comment_id())
+																							 .create_date(detail.getComment_create_date())
+																							 .like_count(detail.getComment_like_count())
+																							 .build());
+				
+			}
+			if(! articleImages.contains(detail.getFile_name())) {
+				articleImages.add(detail.getFile_name());
+			}
 		}
 		ArticleDetailResDto dto = ArticleDetailResDto.builder().articleDetail(details.get(0))
+																												  .imageList(articleImages)
 																												  .commentList(comments)
 																												  .build();
 																
@@ -117,20 +132,38 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 	
 	@Override
-	public List<Tag> getTagsAboutMainCategory(int mainCategoryId) {
-		return communityRepository.getTagsAboutMainCategory(mainCategoryId);
+	public List<Tag> getTagsAboutSubCategory(int subCategoryId) {
+		return communityRepository.getTagsAboutSubCategory(subCategoryId);
 	}
 	
 	@Override
 	public boolean insertArticle(AddArticleReqDto addArticleReqDto) {
-		if(downloadArticleImageFiles(addArticleReqDto.getFiles())) {
-			
+		List<String> imageNames = downloadArticleImageFiles(addArticleReqDto.getFiles());
+		if(imageNames != null) {
+			Article article = addArticleReqDto.toArticleEntity();
+			if(communityRepository.insertArticle(article) == 1) {
+				if(imageNames.size() == 0) {
+					return true;
+				} else {
+					List<ArticleImage> articleImages = new ArrayList<ArticleImage>();
+					for(String imageName : imageNames) {
+						articleImages.add(ArticleImage.builder()
+																					   .article_id(article.getId())
+																					   .file_name(imageName)
+																					   .build());
+					}
+					if(communityRepository.insertArticleImages(articleImages) > 0) {
+						return true;
+					}
+				}
+			}
 		}
 		return false;
 	}
 	
-	private boolean downloadArticleImageFiles(List<MultipartFile> files) {
+	private List<String> downloadArticleImageFiles(List<MultipartFile> files) {
 		try {
+			List<String> imageNames = new ArrayList<String>();
 			for(int i = 0; i < files.size(); i++) {
 				Path path = Paths.get(filePath, "article_images");
 				File file = new File(path.toString());
@@ -142,11 +175,22 @@ public class CommunityServiceImpl implements CommunityService {
 				String fileName = UUID.randomUUID().toString().replace("-", "") + "_" + files.get(i).getOriginalFilename();
 				Path imagePath = Paths.get(filePath, "article_images/" + fileName);
 				Files.write(imagePath, files.get(i).getBytes());
+				imageNames.add(fileName);
 			}
-			return true;
+			return imageNames;
 		} catch (Exception e) {
-			return false;
+			return null;
 		}
+	}
+	
+	@Override
+	public boolean insertArticleLike(ArticleLike articleLike) {
+		return communityRepository.insertArticleLike(articleLike) == 1;
+	}
+	
+	@Override
+	public boolean deleteArticleLike(ArticleLike articleLike) {
+		return communityRepository.deleteArticleLike(articleLike) == 1;
 	}
 	
 }

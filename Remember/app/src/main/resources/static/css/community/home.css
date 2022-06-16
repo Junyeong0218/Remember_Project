@@ -64,6 +64,7 @@ main {
     flex-direction: column;
     width: 100%;
     background-color: white;
+    cursor: pointer;
 }
 
 .best_articles>.row:not(:last-child)::after {
@@ -75,6 +76,10 @@ main {
 
 .best_articles>.row:last-child {
     padding-bottom: 8px;
+}
+
+.best_articles>.row * {
+	pointer-events: none;
 }
 
 .row>.title {
@@ -223,6 +228,7 @@ main {
     gap: 12px;
     border-bottom: 1px solid rgb(235, 235, 235);
     background-color: white;
+    cursor: pointer;
 }
 
 .feed>.tag_wrapper {
@@ -230,7 +236,7 @@ main {
     height: 27px;
 }
 
-.feed>.tag_wrapper>div {
+.feed>.tag_wrapper> div {
     padding: 4px 8px;
     background-color: rgb(245, 245, 245);
     font-size: 12px;
@@ -260,7 +266,7 @@ main {
 
 .feed>.article_contents>.today {
     position: absolute;
-    top: 14px;
+    top: 10px;
     left: -8px;
     width: 4px;
     height: 4px;

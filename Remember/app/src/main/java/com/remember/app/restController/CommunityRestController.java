@@ -3,12 +3,14 @@ package com.remember.app.restController;
 import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.remember.app.entity.community.article.ArticleLike;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
 import com.remember.app.entity.community.article.Tag;
@@ -31,7 +33,7 @@ public class CommunityRestController {
 	
 	@GetMapping("/categories")
 	public List<SubCategoryDetail> getCategories() {
-		return communityService.getCategoriesWithArticleCount();
+		return communityService.getCategoriesWithJoinCount();
 	}
 	
 	@GetMapping("/article/categories")
@@ -70,8 +72,11 @@ public class CommunityRestController {
 	}
 	
 	@GetMapping("/detail/{articleId}")
-	public ArticleDetailResDto getArticleDetail(@PathVariable int articleId) {
-		return communityService.getArticleDetail(articleId);
+	public ArticleDetailResDto getArticleDetail(@PathVariable int articleId,
+																						@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		int userId = 0;
+		if(principalDetails != null) userId = principalDetails.getId();
+		return communityService.getArticleDetail(articleId, userId);
 	}
 	
 	@GetMapping("/{categoryId}/user")
@@ -99,17 +104,36 @@ public class CommunityRestController {
 		return communityService.joinCategory(join);
 	}
 	
-	@GetMapping("/{mainCategoryId}/tag/list")
-	public List<Tag> getTagsAboutMainCategory(@PathVariable int mainCategoryId) {
-		return communityService.getTagsAboutMainCategory(mainCategoryId);
+	@GetMapping("/{subCategoryId}/tag/list")
+	public List<Tag> getTagsAboutMainCategory(@PathVariable int subCategoryId) {
+		return communityService.getTagsAboutSubCategory(subCategoryId);
 	}
 	
 	@PostMapping("/article")
 	public boolean insertArticle(@AuthenticationPrincipal PrincipalDetails principalDetails,
 															AddArticleReqDto addArticleReqDto) {
+		addArticleReqDto.setUser_id(principalDetails.getId());
 		System.out.println(addArticleReqDto);
 		if(addArticleReqDto.getFiles() != null) addArticleReqDto.getFiles().forEach(e -> System.out.println(e.getOriginalFilename()));
-		return false;
+		return communityService.insertArticle(addArticleReqDto);
+	}
+	
+	@PostMapping("/article/{articleId}/like")
+	public boolean insertArticleLike(@PathVariable int articleId,
+																   @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		return communityService.insertArticleLike(ArticleLike.builder()
+																												  .article_id(articleId)
+																												  .user_id(principalDetails.getId())
+																												  .build());
+	}
+	
+	@DeleteMapping("/article/{articleId}/like")
+	public boolean deleteArticleLike(@PathVariable int articleId,
+																	@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		return communityService.deleteArticleLike(ArticleLike.builder()
+																												  .article_id(articleId)
+																											      .user_id(principalDetails.getId())
+																											      .build());
 	}
 	
 }

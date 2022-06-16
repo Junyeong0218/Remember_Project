@@ -5,13 +5,13 @@
   
 <mapper namespace="com.remember.app.entity.community.CommunityRepository">
 
-	<select id="getCategoriesWithArticleCount" resultType="com.remember.app.entity.community.category.SubCategoryDetail">
+	<select id="getCategoriesWithJoinCount" resultType="com.remember.app.entity.community.category.SubCategoryDetail">
 		select
 			sc.*,
-			count(distinct am.id) as article_count
+			count(distinct `join`.id) as join_count
 		from
 			community_sub_category sc
-			left outer join article_mst am on(am.sub_category_id = sc.id)
+			left outer join community_join_user `join` on(`join`.sub_category_id = sc.id)
 		group by
 			sc.id;
 	</select>
@@ -59,12 +59,15 @@
 			am.id,
 			
 			am.user_id,
-			um.nickname,
+			if(am.use_nickname = true, um.nickname, um.`name`) as nickname,
 			ud.department_name,
 			ud.profile_img,
 			
 			am.sub_category_id,
 			category.category_name,
+			
+			am.article_tag_id as tag_id,
+			tag.tag_name,
 			
 			am.title,
 			am.`contents`,
@@ -75,12 +78,13 @@
 			count(distinct acm.id) as comment_count
 		from
 			article_mst am
-			left outer join user_mst um ON(um.id = am.user_id)
-			left outer join user_detail ud ON(ud.user_id = am.user_id)
-			left outer join community_sub_category category ON(category.id = am.sub_category_id)
-			left outer join article_image image ON(image.article_id = am.id)
-			left outer join article_like al ON(al.article_id = am.id)
-			left outer join article_comment_mst acm ON(acm.article_id = am.id)
+			left outer join user_mst um on(um.id = am.user_id)
+			left outer join user_detail ud on(ud.user_id = am.user_id)
+			left outer join community_sub_category category on(category.id = am.sub_category_id)
+			left outer join article_tag_mst tag on(tag.id = am.article_tag_id)
+			left outer join article_image image on(image.article_id = am.id)
+			left outer join article_like al on(al.article_id = am.id)
+			left outer join article_comment_mst acm on(acm.article_id = am.id)
 		group by
 			am.id
 		order by
@@ -100,6 +104,9 @@
 			am.sub_category_id,
 			category.category_name,
 			
+			am.article_tag_id as tag_id,
+			tag.tag_name,
+			
 			am.title,
 			am.`contents`,
 			image.file_name,
@@ -109,12 +116,13 @@
 			count(distinct acm.id) as comment_count
 		from
 			article_mst am
-			left outer join user_mst um ON(um.id = am.user_id)
-			left outer join user_detail ud ON(ud.user_id = am.user_id)
-			left outer join community_sub_category category ON(category.id = am.sub_category_id)
-			left outer join article_image image ON(image.article_id = am.id)
-			left outer join article_like al ON(al.article_id = am.id)
-			left outer join article_comment_mst acm ON(acm.article_id = am.id)
+			left outer join user_mst um on(um.id = am.user_id)
+			left outer join user_detail ud on(ud.user_id = am.user_id)
+			left outer join community_sub_category category on(category.id = am.sub_category_id)
+			left outer join article_tag_mst tag on(tag.id = am.article_tag_id)
+			left outer join article_image image on(image.article_id = am.id)
+			left outer join article_like al on(al.article_id = am.id)
+			left outer join article_comment_mst acm on(acm.article_id = am.id)
 		where
 			am.sub_category_id = #{categoryId}
 		group by
@@ -152,6 +160,9 @@
 			am.sub_category_id,
 			category.category_name,
 			
+			am.article_tag_id as tag_id,
+			tag.tag_name,
+			
 			am.title,
 			am.`contents`,
 			
@@ -174,20 +185,79 @@
 			count(distinct acl.id) as comment_like_count
 		from 
 			article_mst am
-			left outer join user_mst um ON(um.id = am.user_id)
-			left outer join user_detail ud ON(ud.user_id = am.user_id)
-			left outer join community_sub_category category ON(category.id = am.sub_category_id)
-			left outer join article_image image ON(image.article_id = am.id)
-			left outer join article_like al ON(al.article_id = am.id)
-			left outer join article_comment_mst acm ON(acm.article_id = am.id)
-			left outer join user_mst um2 ON(um2.id = acm.user_id)
-			left outer join user_detail ud2 ON(ud2.user_id = acm.user_id)
-			left outer join article_comment_like acl ON(acl.comment_id = acm.id)
+			left outer join user_mst um on(um.id = am.user_id)
+			left outer join user_detail ud on(ud.user_id = am.user_id)
+			left outer join community_sub_category category on(category.id = am.sub_category_id)
+			left outer join article_tag_mst tag on(tag.id = am.article_tag_id)
+			left outer join article_image image on(image.article_id = am.id)
+			left outer join article_like al on(al.article_id = am.id)
+			left outer join article_comment_mst acm on(acm.article_id = am.id)
+			left outer join user_mst um2 on(um2.id = acm.user_id)
+			left outer join user_detail ud2 on(ud2.user_id = acm.user_id)
+			left outer join article_comment_like acl on(acl.comment_id = acm.id)
 		where
 			am.id = #{articleId}
 		group by
 			am.id,
-			acm.id;
+			acm.id,
+			image.id;
+	</select>
+	
+	<select id="getArticleDetailForLoginUser" parameterType="Integer" resultType="com.remember.app.entity.community.article.ArticleDetail">
+		select
+			am.id,
+			
+			am.user_id,
+			um.nickname,
+			ud.department_name,
+			ud.profile_img,
+			
+			am.sub_category_id,
+			category.category_name,
+			
+			am.article_tag_id as tag_id,
+			tag.tag_name,
+			
+			am.title,
+			am.`contents`,
+			
+			image.file_name,
+			
+			am.view_count,
+			count(distinct al.id) as like_count,
+			count(distinct acm.id) as comment_count,
+			
+			am.create_date,
+			
+			if(al.user_id = #{userId}, true, false) as like_flag,
+			
+			acm.id as comment_id,
+			acm.user_id as commented_user_id,
+			um2.nickname as commented_user_nickname,
+			ud2.department_name as commented_user_department_name,
+			ud2.profile_img as commented_user_profile_img,
+			acm.`contents` as comment_contents,
+			acm.related_comment_id,
+			acm.create_date as comment_create_date,
+			count(distinct acl.id) as comment_like_count
+		from 
+			article_mst am
+			left outer join user_mst um on(um.id = am.user_id)
+			left outer join user_detail ud on(ud.user_id = am.user_id)
+			left outer join community_sub_category category on(category.id = am.sub_category_id)
+			left outer join article_tag_mst tag on(tag.id = am.article_tag_id)
+			left outer join article_image image on(image.article_id = am.id)
+			left outer join article_like al on(al.article_id = am.id)
+			left outer join article_comment_mst acm on(acm.article_id = am.id)
+			left outer join user_mst um2 on(um2.id = acm.user_id)
+			left outer join user_detail ud2 on(ud2.user_id = acm.user_id)
+			left outer join article_comment_like acl on(acl.comment_id = acm.id)
+		where
+			am.id = #{articleId}
+		group by
+			am.id,
+			acm.id,
+			image.id;
 	</select>
 	
 	<select id="isUserJoinCategory" parameterType="com.remember.app.entity.community.category.CommunityJoinUser" resultType="Integer">
@@ -239,15 +309,72 @@
 			sub_category_id asc;
 	</select>
 	
-	<select id="getTagsAboutMainCategory" parameterType="Integer" resultType="com.remember.app.entity.community.article.Tag">
+	<select id="getTagsAboutSubCategory" parameterType="Integer" resultType="com.remember.app.entity.community.article.Tag">
 		select
 			tag.id,
 			tag.tag_name
 		from
-			article_tag_belong_category belong
+			community_sub_category sub
+			left outer join article_tag_belong_category belong on(belong.main_category_id = sub.main_category_id)
 			left outer join article_tag_mst tag on(tag.id = belong.article_tag_id)
 		where
-			belong.main_category_id = #{mainCategoryId};
+			sub.id = #{subCategoryId};
 	</select>
+	
+	<insert id="insertArticle" parameterType="com.remember.app.entity.community.article.Article">
+		insert into
+			article_mst
+		values(
+			0,
+			#{user_id},
+			#{sub_category_id},
+			#{article_tag_id},
+			#{title},
+			#{contents},
+			0,
+			#{use_nickname},
+			now(),
+			now()
+		);
+		
+		<selectKey keyProperty="id" resultType="Integer" order="AFTER">
+			select id from article_mst where user_id = #{user_id} order by create_date desc limit 1;
+		</selectKey>
+	</insert>
+	
+	<insert id="insertArticleImages" parameterType="List">
+		insert into
+			article_image
+		values
+		<foreach collection="list" index="index" item="item" separator=",">
+		(
+			0,
+			#{item.article_id},
+			#{item.file_name},
+			now(),
+			now()
+		)
+		</foreach>
+		;
+	</insert>
+	
+	<insert id="insertArticleLike" parameterType="com.remember.app.entity.community.article.ArticleLike">
+		insert into
+			article_like
+		values(
+			0,
+			#{article_id},
+			#{user_id},
+			now(),
+			now()
+		);
+	</insert>
+	
+	<delete id="deleteArticleLike" parameterType="com.remember.app.entity.community.article.ArticleLike">
+		delete from
+			article_like
+		where
+			article_id = #{article_id} and user_id = #{user_id};
+	</delete>
 
 </mapper>
