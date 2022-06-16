@@ -25,6 +25,10 @@
   		#{company_name},
   		#{department_name},
   		#{position_name},
+  		#{landline_phone},
+  		#{fax},
+  		#{address},
+  		#{sub_address},
   		now(),
   		now()
   	)
@@ -40,6 +44,10 @@
   		company_name = #{company_name},
   		department_name = #{department_name},
   		position_name = #{position_name},
+  		landline_phone = #{landline_phone},
+  		fax = #{fax},
+  		address = #{address},
+  		sub_address = #{sub_address},
   		update_date = now()
   	where
   		id = #{id}

@@ -7,6 +7,7 @@ const addBtn = document.querySelector('.add_business_card');
 const cardTabs = document.querySelector('.card_tabs');
 
 
+
 console.log(principal);
 
 header_email.innerText = principal.email;
@@ -104,19 +105,63 @@ function addMenu(){
 	buttons[buttons.length-1].onclick = () => {
 		const addCardForm = makeAddCardForm();
 		const main_contents = document.querySelector(".main_contents");
+		const cardInput = addCardForm.querySelectorAll('.input_con');
+		const cardDetail = cardDetailTag();
 		main_contents.innerHTML = '';
 		main_contents.appendChild(addCardForm);
 		document.querySelector('.my_business_card').classList.add("hidden");
 		modal.remove();
-		
+		addCardForm.querySelector('.cancel').onclick = () => {
+		console.log('취소');
+		location.reload();
+		}
+		addCardForm.querySelector('.save').onclick = () => {
+			
+			console.log('저장');
+			$.ajax({
+				type:'post',
+				url:'/api/v1/card',
+				data:{
+					'name': cardInput[0].value,
+					'position_name': cardInput[1].value,
+					'department_name':cardInput[2].value,
+					'company_name':cardInput[3].value,
+					'email':cardInput[4].value,
+					'phone':cardInput[5].value,
+					'landline_phone':cardInput[6].value,
+					'fax':cardInput[7].value,
+					'address':cardInput[8].value,
+					'sub_address':cardInput[9].value,
+					},
+				dataType:'json',
+				success:function(data){
+					console.log(data)
+					if(data == 1){
+						addCardForm.remove();
+						main_contents.innerHTML = '';
+						main_contents.appendChild(cardDetail);
+						document.querySelector('.my_business_card').classList.remove("hidden");
+						
+					}else {
+						alert('명함 추가 실패')
+					}
+				},
+				error: function (xhr, stauts) {
+				console.log(xhr);
+				console.log(stauts);
+				}
+			})
+		}
 	}
+
 }
+
+
 
 function makeAddCardForm(){
 	const div = document.createElement("div");
-	div.className = "";
+	div.className = "card_content";
 	div.innerHTML = `
-		<div class="card_content">
 			<div class="card_header">
 				<div class="card_title">명함 입력</div>
 				<div class="add_card_btn">
@@ -136,13 +181,13 @@ function makeAddCardForm(){
 								<div class="input_title">
 									이름
 								</div>
-								<input type="text" class="input_con" name="username" placeholder="이름 입력">
+								<input type="text" class="input_con" name="name" placeholder="이름 입력">
 							</div>
 							<div>
 								<div class="input_title">
 									직책
 								</div>
-								<input type="text" class="input_con" name="username" placeholder="직책 입력">
+								<input type="text" class="input_con" name="position_name" placeholder="직책 입력">
 							</div>
 						</div>
 						<div class="item_box">
@@ -150,13 +195,13 @@ function makeAddCardForm(){
 								<div class="input_title">
 									부서
 								</div>
-								<input type="text" class="input_con" name="username" placeholder="부서명 입력">
+								<input type="text" class="input_con" name="department_name" placeholder="부서명 입력">
 							</div>
 							<div>
 								<div class="input_title">
 									회사
 								</div>
-								<input type="text" class="input_con" name="username" placeholder="회사명 입력">
+								<input type="text" class="input_con" name="company_name" placeholder="회사명 입력">
 							</div>
 						</div>
 						
@@ -166,37 +211,129 @@ function makeAddCardForm(){
 							<div class="input_title">
 								이메일
 							</div>
-							<input type="text" class="input_con" name="username" placeholder="이메일 주소 입력">
+							<input type="text" class="input_con" name="email" placeholder="이메일 주소 입력">
 							<div class="input_title">
 								휴대폰
 							</div>
-							<input type="text" class="input_con" name="username" placeholder="휴대폰 번호 입력">
+							<input type="text" class="input_con" name="phone" placeholder="휴대폰 번호 입력">
 							<div class="input_title">
 								유선전화
 							</div>
-							<input type="text" class="input_con" name="username" placeholder="유선전화 번호 입력">
+							<input type="text" class="input_con" name="landline_phone" placeholder="유선전화 번호 입력">
 							<div class="input_title">
 								팩스
 							</div>
-							<input type="text" class="input_con" name="username" placeholder="팩스 번호 입력">
+							<input type="text" class="input_con" name="fax" placeholder="팩스 번호 입력">
 						</div>
 						<div class="item_box">
 							<div class="input_title">
 								주소
 							</div>
-							<input type="text" class="input_con" name="username" placeholder="주소 입력">
-							<input type="text" class="input_con" name="username" placeholder="상세 주소 입력">
+							<input type="text" class="input_con" name="address" placeholder="주소 입력">
+							<input type="text" class="input_con" name="sub_address" placeholder="상세 주소 입력">
 							
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 	`;
 	
-	
+	return div;	
+}
+
+function cardDetailTag(){
+	const div = document.createElement('div');
+	div.className ='detail_box';
+	div.innerHTML = `
+		<div class= "detail_top">
+			<div class="top_btn">
+				<button class="t_btn edit">편집</button>
+				<div class="t_btn_box">
+				<button class="t_btn send">전달</button>
+				<button class="t_btn send">
+					<span class="btn_more"></span>
+				</button>
+				</div>
+			</div>
+		</div>
+		<div class = "detail_body">
+			<div class="detail_profile">
+            <div class="profile_box">
+                <span class="detail_profile_img">
+                    <img src="/static/images/card_profile_user.png" alt="프로필 기본">
+                </span>
+                <div class="profile_info">
+                    <div class="profile_name">sdfdf</div>
+                    <div class="profile_position">dfdfd</div>
+                    <div class="profile_company">dfsfds</div>
+                </div>
+
+            </div>
+        </div>
+        <div class="profile_detail">
+            <div class="profile_detail_info">
+                <div class="info_box">
+                    <div class="info_title">이메일</div>
+                    <div class="info_con_box">
+                        <div class="info_con"></div>
+                        <div class="info_no_value">이메일 없음</div>
+                    </div>
+                </div>
+                <div class="info_box">
+                    <div class="info_title">휴대폰</div>
+                    <div class="info_con_box">
+                        <div class="info_con"></div>
+                        <div class="info_no_value">휴대폰 번호 없음</div>
+                    </div>
+                </div>
+                <div class="info_box">
+                    <div class="info_title">유선전화</div>
+                    <div class="info_con_box">
+                        <div class="info_con"></div>
+                        <div class="info_no_value">유선전화 번호 없음</div>
+                    </div>
+                </div>
+                <div class="info_box">
+                    <div class="info_title">팩스</div>
+                    <div class="info_con_box">
+                        <div class="info_con"></div>
+                        <div class="info_no_value">팩스번호 없음</div>
+                    </div>
+                </div>
+                <div class="info_box">
+                    <div class="info_title">그룹</div>
+                    <div class="info_con_box">
+                        <div class="info_con"></div>
+                        <div class="info_no_value">미지정</div>
+                    </div>
+                </div>
+            </div>
+            <div class="profile_detail_info">
+                <div class="info_box">
+                    <div class="info_title">주소</div>
+                    <div class="info_con_box">
+                        <div class="info_con"></div>
+                        <div class="info_no_value">주소 없음</div>
+                    </div>
+                </div>
+                <div class="info_box">
+                    <div class="info_title">등록일</div>
+                    <div class="info_con_box">
+                        <div class="info_con"></div>
+                        <div class="info_no_value">미지정</div>
+                    </div>
+                </div>
+                
+        
+        </div>
+        
+        </div>
+    </div>
+	`;
 	return div;
 }
+
+
 
 function addEvent(event) {
 	if(event.target.className == 'mypage_button') {
