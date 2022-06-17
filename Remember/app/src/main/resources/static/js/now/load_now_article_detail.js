@@ -1,9 +1,9 @@
-const now_article_detail_tag = document.querySelector(".now_article_detail");
+const now_article_detail_tag = document.querySelector(".article_detail");
 
 loadNowArticleDetail();
 
 function loadNowArticleDetail() {
-	const url = "/api/v1/now/article/detail" + article_id;
+	const url = "/api/v1/now/article/detail/" + article_id;
 	$.ajax({
 		type: "get",
 		url: url,
@@ -38,7 +38,7 @@ function makeNowArticleDetailUploadTimeText(create_date) {
 function loadNowRelatedArticles() {
 	$.ajax({
 		type: "get",
-		url: "/api/v1/now/article/related" + article_id,
+		url: "/api/v1/now/article/related/" + article_id,
 		dataType: "json",
 		success: function (data) {
 			console.log(data);
@@ -56,16 +56,6 @@ function loadNowRelatedArticles() {
 	});
 }
 
-function makeNowRelatedArticleTag(now_related_article, numbering) {
-	const li = document.createElement("li");
-	li.className = "row"; 
-	li.innerHTML = `
-	    <span class="numbering">${numbering}</span>
-        <span class="title">${now_related_article.title}</span>
-	`;
-	return li;
-}
-
 
 function setNowArticleDetailTag(now_article_data) {
 	const tag = now_article_detail_tag.querySelector(".tags > .tag");
@@ -75,7 +65,7 @@ function setNowArticleDetailTag(now_article_data) {
 	now_article_detail_tag.querySelector(".title").innerText = now_article_data.title;
 	now_article_detail_tag.querySelector(".upload_time").innerText = makeNowArticleDetailUploadTimeText(now_article_data.create_date);
 	now_article_detail_tag.querySelector(".description").innerText = now_article_data.contents;
-	now_article_detail_tag.querySelector(".now_related_articles > .topic").innerText = now_article_data.category_name;
+	now_article_detail_tag.querySelector(".now_related_articles > .topic").innerText = now_article_data.title;
 
 }
 	

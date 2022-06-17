@@ -6,60 +6,90 @@
   
   	<select id = "getNowArticleList" resultType="com.remember.app.entity.now.NowArticle">
   		select 
-  			*
+  			am.id,
+  		
+  			am.create_date,
+  			am.category_id,
+  			am.title,
+  			am.contents,
+  			ti.file_name
   		from
-  			now_article_mst
+  			now_article_mst am
+  			left outer join now_category_mst category ON(category.id = am.category_id)
+  			left outer join now_title_image ti ON(ti.article_id = am.id)
   		order_by
-  			create_date DESC
+  			am.create_date DESC
   		limit 0, 10;
   	</select>  
   	
   	<select id = "getNowArticleListWithCategory" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticle">
   		select 
-  			*
+  			am.id,
+  			
+  			am.create_date,
+  			am.category_id,
+  			am.title,
+  			am.contents,
+  			ti.file_name
   		from
-  			now_article_mst
+  			now_article_mst am
+  			left outer join now_category_mst category ON(category.id = am.category_id)
+  			left outer join now_title_image ti ON(ti.article_id = am.id)
   		where
-  			category_id=#{category_id}
+  			am.category_id = {categoryId}
   		order_by
-  			create_date DESC
+  			am.create_date DESC
   		limit 0, 10;	
   	</select>  
   	
   	<select id = "getNowArticleDetail" parameterType="Integer" resultType = "com.remember.app.entity.now.NowArticleDetail">
 		select
-			*
+			am.id,
+			am.user_id,
+			am.category_id,
+			
+			am.create_date,
+			am.title,
+			am.contents,
+			ci.file_name
 		from 
-			now_article_mst  
+			now_article_mst am
+			left outer join now_contents_image ci ON(ci.article_id = am.id)
 		where
-			article_id= #{article_id}		
+			am.id= #{articleId}		
   	</select>
   	
   	<select id="getNowArticleTotalCount" resultType="Integer">
   		select
-  			count(id)
+  			count(am.id)
   		from
   			now_article_mst
   	</select>
   	
   	<select id="getNowArticleTotalCountWithCategory" parameterType="Integer" resultType="Integer">
   		select
-  			count(id)
+  			count(am.id)
   		from
   			now_article_mst
+  			left outer join now_category_mst category ON(category.id = am.category_id)
   		where
-			category_id= #{category_id}	
+			am.category_id= #{categoryId}	
   	</select>
   	
   	<select id = "getNowArticleRelated" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticleRelated">
   		select 
-  			id,
-  			title,
-  			create_date
+  			am.id,
+  			am.user_id,
+  			am.title,
+  			am.create_date
+  			ti.file_name
   		from
   			now_article_mst
+  			left outer join now_title_image ti ON(ti.article_id = am.id)
+  		where
+  			am.id != {articleId}
   		order_by
-  			create_date DESC
+  			am.create_date DESC
   		limit 3;
   	</select> 
   	

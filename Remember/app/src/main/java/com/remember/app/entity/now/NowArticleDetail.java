@@ -16,7 +16,6 @@ public class NowArticleDetail {
 	private int id;
 	
 	private int user_id;
-	private String profile_img;
 	
 	private LocalDateTime create_date;
 	private String title;

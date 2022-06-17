@@ -55,5 +55,6 @@ public class NowServiceImpl implements NowService{
 		return nowArticleRepository.getNowArticleRelated(articleId);
 	}
 	
+	
 
 }

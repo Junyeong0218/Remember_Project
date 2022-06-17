@@ -5,7 +5,7 @@ const after_page_button = pager.querySelector(".after");
 loadNowTotalArticleCount();
 
 function loadNowTotalArticleCount() {
-	const url = category_id == 0 ? "/api/v1/now/article/count" : "/api/v1/now/" + category_id + "article/count"; 
+	const url = category_id == 0 ? "/api/v1/now/article/count" : "/api/v1/now/" + category_id + "/article/count"; 
 	$.ajax({
 		type: "get",
 		url: url,
