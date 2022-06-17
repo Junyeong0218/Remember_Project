@@ -214,8 +214,8 @@ main {
 }
 
 .article_detail>.contents>.article_like>.article_like_button > .like_icon {
-	width: 15px;
-	height: 15px;
+	width: 16px;
+	height: 16px;
 	background: url("/static/images/article_detail_article_like_icon.png");
 }
 
@@ -378,6 +378,7 @@ main {
     height: 20px;
     appearance: none;
     background-image: url("/static/images/non_checked_checkbox.svg");
+    cursor: pointer;
 }
 
 .comment_form>.buttons>.input_wrapper>input:checked {
@@ -395,16 +396,18 @@ main {
 .comment_form>.buttons>.submit_comment {
     padding: 3px 12px;
     border-radius: 4px;
-    background-color: rgb(40, 100, 240);
+    background-color: rgb(33, 35, 34);
     font-size: 16px;
     font-weight: 400;
     line-height: 26px;
     color: white;
     cursor: pointer;
+    transition: 500ms;
 }
 
 .comment_form>.buttons>.submit_comment:disabled {
     background-color: rgb(199, 199, 205);
+    cursor: default;
 }
 
 .total_comment_count {
@@ -421,6 +424,32 @@ main {
     display: flex;
     flex-direction: column;
     width: 100%;
+}
+
+.best_comments.no_bests {
+	margin: 0;
+}
+
+.whole_comments.hidden {
+	display: none;
+}
+
+.no_comments {
+	margin-bottom: 80px;
+	padding: 45px 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	background-color: white;
+}
+
+.no_comments > span {
+	font-size: 14px;
+	font-weight: normal;
+	color: rgb(100, 100, 100);
+	line-height: normal;
 }
 
 .comment {
@@ -499,7 +528,7 @@ main {
     line-height: 1;
 }
 
-.comment>.writer_info>.texts>.userinfo>.comment_menu_button {
+.comment>.writer_info > .comment_menu_button {
     position: absolute;
     top: 50%;
     right: 0;
@@ -509,7 +538,7 @@ main {
     cursor: pointer;
 }
 
-.comment>.writer_info>.texts>.userinfo>.comment_menu_button>img {
+.comment>.writer_info > .comment_menu_button>img {
     width: 100%;
     height: 100%;
     pointer-events: none;
@@ -527,6 +556,34 @@ main {
     font-weight: 400;
     color: rgb(174, 174, 174);
     line-height: 19px;
+}
+
+.comment>.writer_info>.pop_up {
+	position: absolute;
+	top: 45px;
+	right: 0;
+	padding: 12px 0;
+	display: flex;
+	flex-direction: column;
+	border-radius: 10px;
+	background-color: white;
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 16px 0px;
+}
+
+.comment > .writer_info > .pop_up > .row {
+	padding: 10px 20px;
+	font-size: 14px;
+	font-weight: normal;
+	color: rgb(51, 51, 51);
+	cursor: pointer;
+}
+
+.comment > .writer_info > .pop_up > .row.red {
+	color: rgb(234, 81, 40);
+}
+
+.comment > .writer_info > .pop_up > .row:hover {
+	background-color: rgb(235, 235, 235);
 }
 
 .comment>.contents {
@@ -584,17 +641,28 @@ main {
     display: flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;
 }
 
-.comment>.comment_reaction_wrapper>.comment_like>img {
+.comment>.comment_reaction_wrapper>.comment_like > .comment_like_icon {
     width: 16px;
+    height: 16px;
+    background: url("/static/images/article_detail_article_like_icon.png");
 }
 
-.comment>.comment_reaction_wrapper>.comment_like>span {
+.comment>.comment_reaction_wrapper>.comment_like.pressed > .comment_like_icon {
+    background: url("/static/images/community_article_detail_comment_like_pressed.png");
+}
+
+.comment>.comment_reaction_wrapper>.comment_like > .like_count {
     font-size: 14px;
     font-weight: 400;
     color: rgb(100, 100, 100);
     line-height: 24px;
+}
+
+.comment>.comment_reaction_wrapper>.comment_like.pressed > .like_count {
+	color: rgb(224, 165, 38);
 }
 
 .comment>.comment_reaction_wrapper>button>* {

@@ -5,10 +5,12 @@ import java.util.List;
 import com.remember.app.entity.community.article.ArticleLike;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
+import com.remember.app.entity.community.article.CommentLike;
 import com.remember.app.entity.community.article.Tag;
 import com.remember.app.entity.community.category.CommunityJoinUser;
 import com.remember.app.entity.community.category.JoinedCategory;
 import com.remember.app.entity.community.category.SubCategoryDetail;
+import com.remember.app.requestDto.AddArticleCommentReqDto;
 import com.remember.app.requestDto.AddArticleReqDto;
 import com.remember.app.responseDto.ArticleDetailResDto;
 
@@ -45,4 +47,10 @@ public interface CommunityService {
 	public boolean insertArticleLike(ArticleLike articleLike);
 
 	public boolean deleteArticleLike(ArticleLike articleLike);
+	
+	public boolean insertArticleComment(AddArticleCommentReqDto addArticleCommentReqDto);
+	
+	public boolean insertArticleCommentLike(CommentLike commentLike);
+
+	public boolean deleteArticleCommentLike(CommentLike commentLike);
 }

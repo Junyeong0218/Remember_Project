@@ -51,4 +51,6 @@ public class ArticleDetail {
 	private LocalDateTime comment_create_date;
 	private int comment_like_count;
 	
+	private boolean comment_like_flag;
+	
 }

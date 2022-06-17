@@ -19,10 +19,12 @@ import com.remember.app.entity.community.article.ArticleLike;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
 import com.remember.app.entity.community.article.CommentDetail;
+import com.remember.app.entity.community.article.CommentLike;
 import com.remember.app.entity.community.article.Tag;
 import com.remember.app.entity.community.category.CommunityJoinUser;
 import com.remember.app.entity.community.category.JoinedCategory;
 import com.remember.app.entity.community.category.SubCategoryDetail;
+import com.remember.app.requestDto.AddArticleCommentReqDto;
 import com.remember.app.requestDto.AddArticleReqDto;
 import com.remember.app.responseDto.ArticleDetailResDto;
 
@@ -101,6 +103,7 @@ public class CommunityServiceImpl implements CommunityService {
 																							 .related_comment_id(detail.getRelated_comment_id())
 																							 .create_date(detail.getComment_create_date())
 																							 .like_count(detail.getComment_like_count())
+																							 .like_flag(detail.isComment_like_flag())
 																							 .build());
 				
 			}
@@ -108,9 +111,28 @@ public class CommunityServiceImpl implements CommunityService {
 				articleImages.add(detail.getFile_name());
 			}
 		}
+		
+		List<CommentDetail> orderedCommentList = new ArrayList<CommentDetail>();
+		int index = 0;
+		while(comments.size() != 0) {
+			
+			CommentDetail comment = comments.get(index);
+			if(comment.getRelated_comment_id() == 0) {
+				orderedCommentList.add(comment);
+				index++;
+				for(int i = index; i < comments.size(); i++) {
+					if(comments.get(i).getRelated_comment_id() == comment.getId()) {
+						orderedCommentList.add(comments.get(i));
+					}
+				}
+				comments.removeAll(orderedCommentList);
+				index = 0;
+			}
+		}
+		System.out.println(orderedCommentList);
 		ArticleDetailResDto dto = ArticleDetailResDto.builder().articleDetail(details.get(0))
 																												  .imageList(articleImages)
-																												  .commentList(comments)
+																												  .commentList(orderedCommentList)
 																												  .build();
 																
 		return dto;
@@ -191,6 +213,25 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public boolean deleteArticleLike(ArticleLike articleLike) {
 		return communityRepository.deleteArticleLike(articleLike) == 1;
+	}
+	
+	@Override
+	public boolean insertArticleComment(AddArticleCommentReqDto addArticleCommentReqDto) {
+		if(addArticleCommentReqDto.getRelated_comment_id() == 0) {
+			return communityRepository.insertArticleComment(addArticleCommentReqDto.toCommentEntity()) == 1;
+		} else {
+			return communityRepository.insertRelatedArticleComment(addArticleCommentReqDto.toRelatedCommentEntity()) == 1;
+		}
+	}
+	
+	@Override
+	public boolean insertArticleCommentLike(CommentLike commentLike) {
+		return communityRepository.insertArticleCommentLike(commentLike) == 1;
+	}
+	
+	@Override
+	public boolean deleteArticleCommentLike(CommentLike commentLike) {
+		return communityRepository.deleteArticleCommentLike(commentLike) == 1;
 	}
 	
 }

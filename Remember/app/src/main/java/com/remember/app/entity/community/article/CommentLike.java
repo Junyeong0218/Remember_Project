@@ -15,15 +15,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Comment {
+public class CommentLike {
 
 	private int id;
-	private int article_id;
+	private int comment_id;
 	private int user_id;
-	private String contents;
-	private boolean use_nickname;
-	private int related_comment_id;
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
-	
+
 }

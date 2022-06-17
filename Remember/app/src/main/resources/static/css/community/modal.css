@@ -605,3 +605,57 @@
 .modal > .register_article > form > .buttons > .button_wrapper > .register_article_button {
 	background-color: rgb(33, 35, 34);
 }
+
+.modal > .comment_menu {
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 360px;
+	background-color: white;
+}
+
+.modal > .comment_menu > .text {
+	font-size: 12px;
+	font-weight: 400;
+	color: rgb(100, 100, 100);
+	line-height: 19px;
+}
+
+.modal > .comment_menu > .text.bold {
+	margin: 16px 0 8px;
+	font-size: 16px;
+	font-weight: 600;
+	color: rgb(33, 35, 34);
+	line-height: 26px;
+}
+
+.modal > .comment_menu > .buttons {
+	margin-top: 24px;
+	display: flex;
+	align-items: center;
+	width:100%;
+	height: 44px;
+	gap: 8px;
+}
+
+.modal > .comment_menu > .buttons > button {
+	width: 100%;
+	height: 100%;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 44px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.modal > .comment_menu > .buttons > .cancel_button {
+	border: 1px solid rgb(204, 204, 204);
+	color: rgb(33, 35, 34);
+}
+
+.modal > .comment_menu > .buttons > .report_button {
+	background-color: #EA5128;
+	color: white;
+}

@@ -176,7 +176,7 @@
 			
 			acm.id as comment_id,
 			acm.user_id as commented_user_id,
-			um2.nickname as commented_user_nickname,
+			if(acm.use_nickname = true, um2.nickname, um2.name) as commented_user_nickname,
 			ud2.department_name as commented_user_department_name,
 			ud2.profile_img as commented_user_profile_img,
 			acm.`contents` as comment_contents,
@@ -200,7 +200,9 @@
 		group by
 			am.id,
 			acm.id,
-			image.id;
+			image.id
+		order by
+			acm.create_date asc;
 	</select>
 	
 	<select id="getArticleDetailForLoginUser" parameterType="Integer" resultType="com.remember.app.entity.community.article.ArticleDetail">
@@ -233,13 +235,15 @@
 			
 			acm.id as comment_id,
 			acm.user_id as commented_user_id,
-			um2.nickname as commented_user_nickname,
+			if(acm.use_nickname = true, um2.nickname, um2.name) as commented_user_nickname,
 			ud2.department_name as commented_user_department_name,
 			ud2.profile_img as commented_user_profile_img,
 			acm.`contents` as comment_contents,
 			acm.related_comment_id,
 			acm.create_date as comment_create_date,
-			count(distinct acl.id) as comment_like_count
+			count(distinct acl.id) as comment_like_count,
+			
+			if(acl.user_id = #{userId}, true, false) as comment_like_flag
 		from 
 			article_mst am
 			left outer join user_mst um on(um.id = am.user_id)
@@ -257,7 +261,9 @@
 		group by
 			am.id,
 			acm.id,
-			image.id;
+			image.id
+		order by
+			acm.create_date asc;
 	</select>
 	
 	<select id="isUserJoinCategory" parameterType="com.remember.app.entity.community.category.CommunityJoinUser" resultType="Integer">
@@ -375,6 +381,56 @@
 			article_like
 		where
 			article_id = #{article_id} and user_id = #{user_id};
+	</delete>
+	
+	<insert id="insertArticleComment" parameterType="com.remember.app.entity.community.article.Comment">
+		insert into
+			article_comment_mst
+		values(
+			0,
+			#{article_id},
+			#{user_id},
+			#{contents},
+			#{use_nickname},
+			null,
+			now(),
+			now()
+		);
+	</insert>
+	
+	<insert id="insertRelatedArticleComment" parameterType="com.remember.app.entity.community.article.Comment">
+		insert into
+			article_comment_mst
+		values(
+			0,
+			#{article_id},
+			#{user_id},
+			#{contents},
+			#{use_nickname},
+			#{related_comment_id},
+			now(),
+			now()
+		);
+	</insert>
+	
+	<insert id="insertArticleCommentLike" parameterType="com.remember.app.entity.community.article.CommentLike">
+		insert into
+			article_comment_like
+		values(
+			0,
+			#{comment_id},
+			#{user_id},
+			now(),
+			now()
+		);
+	</insert>
+	
+	<delete id="deleteArticleCommentLike" parameterType="com.remember.app.entity.community.article.CommentLike">
+		delete from
+			article_comment_like
+		where
+			comment_id = #{comment_id} and
+			user_id = #{user_id};
 	</delete>
 
 </mapper>

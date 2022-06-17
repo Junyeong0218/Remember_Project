@@ -10,6 +10,8 @@ import com.remember.app.entity.community.article.ArticleImage;
 import com.remember.app.entity.community.article.ArticleLike;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
+import com.remember.app.entity.community.article.Comment;
+import com.remember.app.entity.community.article.CommentLike;
 import com.remember.app.entity.community.article.Tag;
 import com.remember.app.entity.community.category.CommunityJoinUser;
 import com.remember.app.entity.community.category.JoinedCategory;
@@ -53,4 +55,12 @@ public interface CommunityRepository {
 	public int insertArticleLike(ArticleLike articleLike);
 
 	public int deleteArticleLike(ArticleLike articleLike);
+	
+	public int insertArticleComment(Comment comment);
+	
+	public int insertRelatedArticleComment(Comment comment);
+	
+	public int insertArticleCommentLike(CommentLike commentLike);
+
+	public int deleteArticleCommentLike(CommentLike commentLike);
 }

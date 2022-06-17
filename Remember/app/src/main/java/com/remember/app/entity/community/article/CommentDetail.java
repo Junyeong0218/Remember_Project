@@ -27,6 +27,8 @@ public class CommentDetail {
 	private LocalDateTime create_date;
 	private int like_count;
 	
+	private boolean like_flag;
+	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof CommentDetail) {

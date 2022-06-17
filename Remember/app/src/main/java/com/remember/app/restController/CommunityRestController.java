@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.remember.app.entity.community.article.ArticleLike;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
+import com.remember.app.entity.community.article.CommentLike;
 import com.remember.app.entity.community.article.Tag;
 import com.remember.app.entity.community.category.CommunityJoinUser;
 import com.remember.app.entity.community.category.JoinedCategory;
 import com.remember.app.entity.community.category.SubCategoryDetail;
 import com.remember.app.principal.PrincipalDetails;
+import com.remember.app.requestDto.AddArticleCommentReqDto;
 import com.remember.app.requestDto.AddArticleReqDto;
 import com.remember.app.responseDto.ArticleDetailResDto;
 import com.remember.app.service.CommunityService;
@@ -134,6 +136,33 @@ public class CommunityRestController {
 																												  .article_id(articleId)
 																											      .user_id(principalDetails.getId())
 																											      .build());
+	}
+	
+	@PostMapping("/article/{articleId}/comment")
+	public boolean insertArticleComment(@PathVariable int articleId,
+																			 AddArticleCommentReqDto addArticleCommentReqDto,
+			   																 @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		addArticleCommentReqDto.setArticle_id(articleId);
+		addArticleCommentReqDto.setUser_id(principalDetails.getId());
+		return communityService.insertArticleComment(addArticleCommentReqDto);
+	}
+	
+	@PostMapping("/comment/{commentId}/like")
+	public boolean insertArticleCommentLike(@PathVariable int commentId,
+																					 @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		return communityService.insertArticleCommentLike(CommentLike.builder()
+																																 		 .comment_id(commentId)
+																																 		 .user_id(principalDetails.getId())
+																																 		 .build());
+	}
+	
+	@DeleteMapping("/comment/{commentId}/like")
+	public boolean deleteArticleCommentLike(@PathVariable int commentId,
+																					  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		return communityService.deleteArticleCommentLike(CommentLike.builder()
+																																 		 .comment_id(commentId)
+																																 		 .user_id(principalDetails.getId())
+																																 		 .build());
 	}
 	
 }
