@@ -106,9 +106,17 @@ function addMenu(){
 		const addCardForm = makeAddCardForm();
 		const main_contents = document.querySelector(".main_contents");
 		const cardInput = addCardForm.querySelectorAll('.input_con');
-		const cardDetail = cardDetailTag();
+		
 		main_contents.innerHTML = '';
 		main_contents.appendChild(addCardForm);
+		const addProfileImgBtn = addCardForm.querySelector('.card_profile > button');
+		const imgInput = addCardForm.querySelector('.profile_img_input');
+		const imgTag = addCardForm.querySelector('.proflie_img');
+		console.log(imgTag);
+		addProfileImgBtn.onclick = () => imgInput.click();
+		imgInput.onchange = (event) => {
+			AddProfileImg(event,imgTag);
+		}
 		document.querySelector('.my_business_card').classList.add("hidden");
 		modal.remove();
 		addCardForm.querySelector('.cancel').onclick = () => {
@@ -116,8 +124,8 @@ function addMenu(){
 		location.reload();
 		}
 		addCardForm.querySelector('.save').onclick = () => {
-			
 			console.log('저장');
+			
 			$.ajax({
 				type:'post',
 				url:'/api/v1/card',
@@ -134,13 +142,16 @@ function addMenu(){
 					'sub_address':cardInput[9].value,
 					},
 				dataType:'json',
-				success:function(data){
-					console.log(data)
-					if(data == 1){
+				success:function(card_id){
+					console.log(card_id);
+					if(card_id > 0){
+						const cardDetail = cardDetailTag(getUserCard(card_id));
 						addCardForm.remove();
 						main_contents.innerHTML = '';
 						main_contents.appendChild(cardDetail);
 						document.querySelector('.my_business_card').classList.remove("hidden");
+						
+						// 미분류명함 card_count select
 						
 					}else {
 						alert('명함 추가 실패')
@@ -154,6 +165,26 @@ function addMenu(){
 		}
 	}
 
+}
+
+function getUserCard(card_id){
+	let card_data; 
+	$.ajax({
+		type:'get',
+		url:'/api/v1/card/'+card_id,
+		async: false,
+		dataType:'json',
+		success:function(data){
+			console.log(data);
+			card_data = data;
+
+		},
+		error: function (xhr, stauts) {
+				console.log(xhr);
+				console.log(stauts);
+		}
+	});
+	return card_data;
 }
 
 
@@ -171,8 +202,9 @@ function makeAddCardForm(){
 			</div>
 			<div class="card_body">
 				<div class="card_profile">
-					<img src="/static/images/card_profile_user.png" alt="프로필 기본">
-					<button class="btn save">프로필 사진 추가</button>
+					<img class="proflie_img" src="/static/images/card_profile_user.png" alt="프로필 기본">
+					<input type="file" name="file" class="profile_img_input" accept="image/*">
+					<button type="button" class="btn save">프로필 사진 추가</button>
 				</div>
 				<div class="card_inputs">
 					<div class="input_item top">
@@ -241,7 +273,18 @@ function makeAddCardForm(){
 	return div;	
 }
 
-function cardDetailTag(){
+function AddProfileImg(event, imgTag){
+	const reader = new FileReader();
+	console.log(imgTag);
+	reader.onloadend = (e) => {
+		imgTag.src = e.target.result;
+	}
+	reader.readAsDataURL(event.target.files[0]);
+}
+
+function cardDetailTag(card_data){
+	const position_text = card_data.position_name != "" && card_data.department_name != "" ? card_data.position_name + " / " + card_data.department_name :
+						  card_data.position_name == "" ? card_data.department_name : card_data.position_name;
 	const div = document.createElement('div');
 	div.className ='detail_box';
 	div.innerHTML = `
@@ -263,11 +306,10 @@ function cardDetailTag(){
                     <img src="/static/images/card_profile_user.png" alt="프로필 기본">
                 </span>
                 <div class="profile_info">
-                    <div class="profile_name">sdfdf</div>
-                    <div class="profile_position">dfdfd</div>
-                    <div class="profile_company">dfsfds</div>
+                    <div class="profile_name">${card_data.name}</div>
+                    <div class="profile_position">${position_text}</div>
+                    <div class="profile_company">${card_data.company_name}</div>
                 </div>
-
             </div>
         </div>
         <div class="profile_detail">
@@ -275,29 +317,29 @@ function cardDetailTag(){
                 <div class="info_box">
                     <div class="info_title">이메일</div>
                     <div class="info_con_box">
-                        <div class="info_con"></div>
-                        <div class="info_no_value">이메일 없음</div>
+ ${card_data.email == '' ? '<div class="info_no_value">이메일 없음</div>' : 
+						   '<div class="info_con  link">' + card_data.email + '</div>'}  
                     </div>
                 </div>
                 <div class="info_box">
                     <div class="info_title">휴대폰</div>
                     <div class="info_con_box">
-                        <div class="info_con"></div>
-                        <div class="info_no_value">휴대폰 번호 없음</div>
+ ${card_data.phone == '' ? '<div class="info_no_value">휴대폰 번호 없음</div>' : 
+						   '<div class="info_con">' + card_data.phone + '</div>'}                       
                     </div>
                 </div>
                 <div class="info_box">
                     <div class="info_title">유선전화</div>
                     <div class="info_con_box">
-                        <div class="info_con"></div>
-                        <div class="info_no_value">유선전화 번호 없음</div>
+ ${card_data.landline_phone == '' ? '<div class="info_no_value">유선전화 번호 없음</div>' : 
+						   '<div class="info_con">' + card_data.landline_phone + '</div>'}  
                     </div>
                 </div>
                 <div class="info_box">
                     <div class="info_title">팩스</div>
                     <div class="info_con_box">
-                        <div class="info_con"></div>
-                        <div class="info_no_value">팩스번호 없음</div>
+ ${card_data.fax == '' ? '<div class="info_no_value">팩스 번호 없음</div>' : 
+						   '<div class="info_con">' + card_data.fax + '</div>'}  
                     </div>
                 </div>
                 <div class="info_box">
@@ -311,26 +353,45 @@ function cardDetailTag(){
             <div class="profile_detail_info">
                 <div class="info_box">
                     <div class="info_title">주소</div>
-                    <div class="info_con_box">
-                        <div class="info_con"></div>
-                        <div class="info_no_value">주소 없음</div>
-                    </div>
+                    <div class="info_con_box">    
+ ${card_data.address == '' ? '<div class="info_no_value">주소 없음</div>' : 
+						   '<div class="info_con link">' + card_data.address +  card_data.sub_address +'</div>'}  
+                	</div>
                 </div>
                 <div class="info_box">
                     <div class="info_title">등록일</div>
                     <div class="info_con_box">
-                        <div class="info_con"></div>
-                        <div class="info_no_value">미지정</div>
+                        <div class="info_con">${makeCardDate(card_data.create_date)}</div>
                     </div>
                 </div>
-                
-        
-        </div>
-        
+        	</div>  
         </div>
     </div>
+         <div class="profile_memo">
+            <div class="info_title">메모</div>
+                <div class="info_con_box">
+                    <div class="info_con"></div>
+                    <div class="info_no_value">메모없음</div>
+                </div>
+             </div>
+        </div>
+        <div class="add_memo">
+            메모를 추가하세요 
+            <button class="t_btn">+ 메모추가</button>
+        </div>
 	`;
+
 	return div;
+}
+
+
+
+function makeCardDate(create_date){
+	const date = new Date();
+	date.getFullYear();
+	const month = date.getMonth() + 1 ;
+	const day = String(date.getDate());
+	return `${date.getFullYear()}년 ${month}월 ${day}일 `;
 }
 
 

@@ -14,9 +14,9 @@ import com.remember.app.responseDto.GroupRespDto;
 
 public interface CardService {
 	
-	public List<Card> getCard(int user_id);
+	public List<Card> getCards(int user_id);
 	
-	public int insertNewCard(CardInsertReqDto cardInsertReqDto);
+	public int insertNewCard(Card card);
 	
 	public int insertGroup(Group group);
 	
@@ -32,7 +32,7 @@ public interface CardService {
 	
 	public int deleteGroupCard(Group group);
 	
-	public Card getUserCardId(int cardId);
+	public Card getUserCard(int cardId);
 	
 	public int addGroupUser(AddGroupReqDto addGroupReqDto);
 	

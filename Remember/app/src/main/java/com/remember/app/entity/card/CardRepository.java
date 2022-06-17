@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface CardRepository {
 	
-	public List<Card> getCard(int user_id);
+	public List<Card> getCards(int user_id);
 	
 	public int insertCard(Card card);
 	

@@ -36,7 +36,7 @@ public class CardRestController {
 	@GetMapping("")
 	public ResponseEntity<?> getCard(@AuthenticationPrincipal PrincipalDetails principalDetails){
 		
-		List<Card> card= cardService.getCard(principalDetails.getId());
+		List<Card> card= cardService.getCards(principalDetails.getId());
 		System.out.println(card);
 		return new ResponseEntity<>(card,HttpStatus.OK);
 	}
@@ -46,8 +46,13 @@ public class CardRestController {
 	public ResponseEntity<?> registerCard(@AuthenticationPrincipal PrincipalDetails principalDetails, CardInsertReqDto cardInsertReqDto){
 		cardInsertReqDto.setUser_id(principalDetails.getId());
 		System.out.println(cardInsertReqDto);
-		int result = cardService.insertNewCard(cardInsertReqDto);
-		return new ResponseEntity<>(result, HttpStatus.OK);
+		Card card = cardInsertReqDto.cardMstToEntity();
+		int result = cardService.insertNewCard(card);
+		if(result == 1) {
+			return new ResponseEntity<>(card.getId(), HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(0, HttpStatus.OK);
+		}
 	}
 	
 	//본인명함 수정 put
@@ -125,7 +130,7 @@ public class CardRestController {
 	@GetMapping("/{cardId}")
 	public ResponseEntity<?> getIdCard(@PathVariable int cardId){
 		System.out.println(cardId);
-		Card card= cardService.getUserCardId(cardId);
+		Card card = cardService.getUserCard(cardId);
 		
 		return new ResponseEntity<>(card,HttpStatus.OK);
 	}

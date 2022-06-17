@@ -25,14 +25,12 @@ public class CardServiceImpl implements CardService {
 	private final CardRepository cardRepository;
 	
 	@Override
-	public List<Card> getCard(int user_id) {
-		cardRepository.getCard(user_id);
-		return cardRepository.getCard(user_id);
+	public List<Card> getCards(int user_id) {
+		return cardRepository.getCards(user_id);
 	}
 	
 	@Override
-	public int insertNewCard(CardInsertReqDto cardInsertReqDto) {
-		Card card = cardInsertReqDto.cardMstToEntity();
+	public int insertNewCard(Card card) {
 		System.out.println(card);
 		return cardRepository.insertCard(card);
 
@@ -90,8 +88,7 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public Card getUserCardId(int cardId) {
-		// TODO Auto-generated method stub
+	public Card getUserCard(int cardId) {
 		return cardRepository.getUserCard(cardId);
 	}
 	
