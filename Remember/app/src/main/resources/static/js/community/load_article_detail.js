@@ -82,7 +82,15 @@ function setComments(comment_list) {
 			best_comments.appendChild(best_comment_tag);
 			const best_comment_like_button = best_comment_tag.querySelector(".comment_like");
 			best_comment_like_button.onclick = () => {
-				if(like_count_ordered_comment_list[i].like_flag == true) {
+				if(principal == null) {
+					const modal = makeLoginModal();
+					document.querySelector(".container").appendChild(modal);
+					document.body.style = "overflow: hidden;";
+					modal.querySelector(".close_modal").onclick= () => {
+						modal.remove();
+						document.body.style = "";
+					}
+				} else if(like_count_ordered_comment_list[i].like_flag == true) {
 					if(deleteCommentLike(like_count_ordered_comment_list[i].id)) {
 						best_comment_like_button.classList.remove("pressed");
 						best_comment_like_button.children[1].innerText = Number(best_comment_like_button.children[1].innerText) - 1;
@@ -161,7 +169,7 @@ function setComments(comment_list) {
 					const modal = makeLoginModal();
 					document.querySelector(".container").appendChild(modal);
 					document.body.style = "overflow: hidden;";
-					modal.querySelector(".cancel_button").onclick= () => {
+					modal.querySelector(".close_modal").onclick= () => {
 						modal.remove();
 						document.body.style = "";
 					}
@@ -201,16 +209,16 @@ function setComments(comment_list) {
 			// 답글 달기 버튼 이벤트
 			const reply_comment_button = comment_tag.querySelector(".reply_comment");
 			if(reply_comment_button != null) {
-				if(principal == null) {
-					const modal = makeLoginModal();
-					document.querySelector(".container").appendChild(modal);
-					document.body.style = "overflow: hidden;";
-					modal.querySelector(".cancel_button").onclick= () => {
-						modal.remove();
-						document.body.style = "";
-					}
-				} else {
-					reply_comment_button.onclick = () => {
+				reply_comment_button.onclick = () => {
+					if(principal == null) {
+						const modal = makeLoginModal();
+						document.querySelector(".container").appendChild(modal);
+						document.body.style = "overflow: hidden;";
+						modal.querySelector(".close_modal").onclick= () => {
+							modal.remove();
+							document.body.style = "";
+						}
+					} else {
 						const exist_tag = whole_comments.querySelector(".comment_form");
 						if(exist_tag != null) {
 							exist_tag.remove();
