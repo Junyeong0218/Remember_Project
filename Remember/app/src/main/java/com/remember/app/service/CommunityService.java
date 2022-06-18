@@ -16,7 +16,7 @@ import com.remember.app.responseDto.ArticleDetailResDto;
 
 public interface CommunityService {
 
-	public List<SubCategoryDetail> getCategoriesWithJoinCount();
+	public List<SubCategoryDetail> getCategoriesWithJoinCount(int userId);
 	
 	public List<BestArticleSummary> getBestArticleSummaries();
 

@@ -16,6 +16,22 @@
 			sc.id;
 	</select>
 	
+	<select id="getCategoriesWithJoinCountForLoginUser" parameterType="Integer" resultType="com.remember.app.entity.community.category.SubCategoryDetail">
+		select
+			sc.*,
+			count(distinct `join`.id) as join_count,
+			if(`join`.user_id = #{userId}, true, false) as join_flag
+		from
+			community_sub_category sc
+			left outer join community_join_user `join` on(`join`.sub_category_id = sc.id)
+		group by
+			sc.id
+		order by
+			sc.main_category_id asc,
+			join_flag desc,
+			sc.id asc;
+	</select>
+	
 	<select id="getBestArticleSummaries" resultType="com.remember.app.entity.community.article.BestArticleSummary">
 		select
 			am.id,

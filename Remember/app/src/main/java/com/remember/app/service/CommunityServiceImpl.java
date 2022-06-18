@@ -39,8 +39,12 @@ public class CommunityServiceImpl implements CommunityService {
 	private final String filePath;
 	
 	@Override
-	public List<SubCategoryDetail> getCategoriesWithJoinCount() {
-		return communityRepository.getCategoriesWithJoinCount();
+	public List<SubCategoryDetail> getCategoriesWithJoinCount(int userId) {
+		if(userId == 0) {
+			return communityRepository.getCategoriesWithJoinCount();
+		} else {
+			return communityRepository.getCategoriesWithJoinCountForLoginUser(userId);
+		}
 	}
 	
 	@Override

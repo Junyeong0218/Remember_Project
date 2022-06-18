@@ -766,6 +766,7 @@ main {
     gap: 12px;
     border-bottom: 1px solid rgb(235, 235, 235);
     background-color: white;
+    cursor: pointer;
 }
 
 .feed>.tag_wrapper {

@@ -18,4 +18,6 @@ public class SubCategoryDetail {
 	private String category_name;
 	
 	private int join_count;
+	
+	private boolean join_flag;
 }

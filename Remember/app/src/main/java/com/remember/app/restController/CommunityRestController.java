@@ -34,8 +34,10 @@ public class CommunityRestController {
 	private final CommunityService communityService;
 	
 	@GetMapping("/categories")
-	public List<SubCategoryDetail> getCategories() {
-		return communityService.getCategoriesWithJoinCount();
+	public List<SubCategoryDetail> getCategories(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		int userId = 0;
+		if(principalDetails != null) userId = principalDetails.getId();
+		return communityService.getCategoriesWithJoinCount(userId);
 	}
 	
 	@GetMapping("/article/categories")

@@ -22,6 +22,8 @@ public interface CommunityRepository {
 
 	public List<SubCategoryDetail> getCategoriesWithJoinCount();
 	
+	public List<SubCategoryDetail> getCategoriesWithJoinCountForLoginUser(int userId); 
+	
 	public List<BestArticleSummary> getBestArticleSummaries();
 
 	public List<BestArticleSummary> getBestArticleSummariesAboutCategory(int categoryId);
