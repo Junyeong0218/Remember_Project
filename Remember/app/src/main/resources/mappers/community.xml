@@ -292,6 +292,57 @@
 			user_id = ${user_id};
 	</select>
 	
+	<select id="getCategoryDetail" parameterType="Integer" resultType="com.remember.app.entity.community.category.CategoryDetail">
+		select
+			sc.id as sub_category_id,
+			sc.category_name,
+			
+			count(distinct `join`.id) as join_count,
+			
+			tag.id as tag_id,
+			tag.tag_name,
+			
+			am.id as article_id,
+			am.title as article_title
+		from
+			community_sub_category sc
+			left outer join community_join_user `join` on(`join`.sub_category_id = sc.id)
+			left outer join article_tag_belong_category belong on(belong.main_category_id = sc.main_category_id)
+			left outer join article_tag_mst tag on(tag.id = belong.article_tag_id)
+			left outer join article_mst am on(am.sub_category_id = sc.id and am.id = (select id from article_mst where sub_category_id = sc.id order by create_date desc limit 1))
+		where
+			sc.id = #{categoryId}
+		group by
+			sc.id,
+			tag.id;
+	</select>
+	
+	<select id="getCategoryDetailForLoginUser" parameterType="Integer" resultType="com.remember.app.entity.community.category.CategoryDetail">
+		select
+			sc.id as sub_category_id,
+			sc.category_name,
+			
+			count(distinct `join`.id) as join_count,
+			if(`join`.user_id = #{userId}, true, false) as join_flag,
+			
+			tag.id as tag_id,
+			tag.tag_name,
+			
+			am.id as article_id,
+			am.title as article_title
+		from
+			community_sub_category sc
+			left outer join community_join_user `join` on(`join`.sub_category_id = sc.id)
+			left outer join article_tag_belong_category belong on(belong.main_category_id = sc.main_category_id)
+			left outer join article_tag_mst tag on(tag.id = belong.article_tag_id)
+			left outer join article_mst am on(am.sub_category_id = sc.id and am.id = (select id from article_mst where sub_category_id = sc.id order by create_date desc limit 1))
+		where
+			sc.id = #{categoryId}
+		group by
+			sc.id,
+			tag.id;
+	</select>
+	
 	<select id="getCategoryName" parameterType="Integer" resultType="String">
 		select
 			category_name

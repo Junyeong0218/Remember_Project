@@ -22,6 +22,7 @@ import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.requestDto.AddArticleCommentReqDto;
 import com.remember.app.requestDto.AddArticleReqDto;
 import com.remember.app.responseDto.ArticleDetailResDto;
+import com.remember.app.responseDto.CategoryDetailResDto;
 import com.remember.app.service.CommunityService;
 
 import lombok.RequiredArgsConstructor;
@@ -91,6 +92,14 @@ public class CommunityRestController {
 																							    .user_id(principalDetails.getId())
 																							    .build();
 		return communityService.isUserJoinCategory(join);
+	}
+	
+	@GetMapping("/category/{categoryId}/detail")
+	public CategoryDetailResDto getCategoryDetail(@PathVariable int categoryId,
+																									@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		int userId = 0;
+		if(principalDetails != null) userId = principalDetails.getId();
+		return communityService.getCategoryDetail(categoryId, userId);
 	}
 	
 	@GetMapping("/category/{categoryId}")

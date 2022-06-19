@@ -7,6 +7,7 @@ function loadRecentFeeds() {
 	$.ajax({
 		type: "get",
 		url: url,
+		data: {"page":page},
 		dataType: "json",
 		success: function (article_list) {
 			console.log(article_list);

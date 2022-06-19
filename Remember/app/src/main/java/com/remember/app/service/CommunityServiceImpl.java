@@ -21,12 +21,14 @@ import com.remember.app.entity.community.article.BestArticleSummary;
 import com.remember.app.entity.community.article.CommentDetail;
 import com.remember.app.entity.community.article.CommentLike;
 import com.remember.app.entity.community.article.Tag;
+import com.remember.app.entity.community.category.CategoryDetail;
 import com.remember.app.entity.community.category.CommunityJoinUser;
 import com.remember.app.entity.community.category.JoinedCategory;
 import com.remember.app.entity.community.category.SubCategoryDetail;
 import com.remember.app.requestDto.AddArticleCommentReqDto;
 import com.remember.app.requestDto.AddArticleReqDto;
 import com.remember.app.responseDto.ArticleDetailResDto;
+import com.remember.app.responseDto.CategoryDetailResDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -145,6 +147,35 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public boolean isUserJoinCategory(CommunityJoinUser communityJoinUser) {
 		return communityRepository.isUserJoinCategory(communityJoinUser) == 1;
+	}
+	
+	@Override
+	public CategoryDetailResDto getCategoryDetail(int categoryId, int userId) {
+		List<CategoryDetail> details = null;
+		if(userId == 0) {
+			details = communityRepository.getCategoryDetail(categoryId);
+		} else {
+			details = communityRepository.getCategoryDetailForLoginUser(categoryId, userId);
+		}
+		List<Tag> tags = new ArrayList<Tag>();
+		for(CategoryDetail detail : details) {
+			tags.add(Tag.builder()
+									  .id(detail.getTag_id())
+									  .tag_name(detail.getTag_name())
+									  .build());
+		}
+		CategoryDetail detail = details.get(0);
+		return CategoryDetailResDto.builder()
+																  .id(detail.getSub_category_id())
+																  .category_name(detail.getCategory_name())
+																  .join_count(detail.getJoin_count())
+																  .join_flag(detail.isJoin_flag())
+																  .tag_list(tags)
+																  .article_summary(ArticleSummary.builder()
+																		  															.id(detail.getArticle_id())
+																		  															.title(detail.getArticle_title())
+																		  															.build())
+																  .build();
 	}
 	
 	@Override

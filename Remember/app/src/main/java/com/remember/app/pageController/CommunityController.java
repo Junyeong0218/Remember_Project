@@ -9,9 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/community")
 public class CommunityController {
 
-	@GetMapping(value = {"", "/{categoryId}"})
-	public String home(@PathVariable(required = false) Integer categoryId) {
+	@GetMapping("")
+	public String home() {
 		return "/community/home";
+	}
+	
+	@GetMapping("/{categoryId}")
+	public String category(@PathVariable(required = false) Integer categoryId) {
+		return "/community/category";
 	}
 	
 	@GetMapping(value = {"/detail/{articleId}", "/{categoryId}/detail/{articleId}"})

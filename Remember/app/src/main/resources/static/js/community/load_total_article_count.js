@@ -66,7 +66,9 @@ function makeCurrentPageTag(number) {
 
 function makePageLinkTag(number) {
 	const a = document.createElement("a");
-	a.href = "?page=" + number;
+	a.href = location.search == "" ? "?page=" + number : 
+					location.search == "?" ? "page=" + number : 
+					location.search.includes("tag=") ? ",page=" + number : "";
 	a.className = "page_link";
 	a.innerText = number;
 	return a;

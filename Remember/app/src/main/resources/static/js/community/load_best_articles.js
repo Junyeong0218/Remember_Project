@@ -18,7 +18,7 @@ function loadBestArticleList() {
 
 function addBestArticleSummaryTags(article_summary_list) {
 	const uri = location.pathname;
-	if(uri.includes("detail")) {
+	if(category_id != 0 || article_id != 0) {
 		const best_article_aside = document.querySelector(".best_articles_aside");
 		const best_article_list = best_article_aside.querySelector(".article_summary_list");
 		for(let i = 0; i < article_summary_list.length; i++) {

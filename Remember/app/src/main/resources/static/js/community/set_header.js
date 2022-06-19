@@ -55,7 +55,7 @@ if(principal == null) {
 			hover_my_menu_wrapper.querySelector(".my_menu").remove();
 		}
 	}
-	if(! location.pathname.includes("detail")) {
+	if(category_id != 0 || article_id != 0) {
 		const new_article_input = document.querySelector(".new_article_input");
 		if(category_id == 0) {
 			new_article_input.placeholder = principal.nickname + "님, 지금 회사에서 어떤 고민이 있으신가요?";

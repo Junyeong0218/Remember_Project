@@ -13,6 +13,7 @@ import com.remember.app.entity.community.article.BestArticleSummary;
 import com.remember.app.entity.community.article.Comment;
 import com.remember.app.entity.community.article.CommentLike;
 import com.remember.app.entity.community.article.Tag;
+import com.remember.app.entity.community.category.CategoryDetail;
 import com.remember.app.entity.community.category.CommunityJoinUser;
 import com.remember.app.entity.community.category.JoinedCategory;
 import com.remember.app.entity.community.category.SubCategoryDetail;
@@ -41,6 +42,10 @@ public interface CommunityRepository {
 	public List<ArticleDetail> getArticleDetailForLoginUser(int articleId, int userId);
 	
 	public int isUserJoinCategory(CommunityJoinUser communityJoinUser);
+	
+	public List<CategoryDetail> getCategoryDetail(int categoryId);
+
+	public List<CategoryDetail> getCategoryDetailForLoginUser(int categoryId, int userId);
 	
 	public String getCategoryName(int categoryId);
 	

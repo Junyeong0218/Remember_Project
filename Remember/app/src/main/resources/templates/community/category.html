@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리멤버 - 커뮤니티</title>
+    <link rel="stylesheet" href="/static/css/container.css">
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/community/header.css">
+    <link rel="stylesheet" href="/static/css/community/footer.css">
+    <link rel="stylesheet" href="/static/css/community/home.css">
+    <link rel="stylesheet" href="/static/css/community/right_aside.css">
+    <link rel="stylesheet" href="/static/css/community/left_aside.css">
+    <link rel="stylesheet" href="/static/css/community/modal.css">
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="/static/js/community/request_flag.js"></script>
+    <script src="/static/js/get_principal.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header th:replace="fragment/header/community_header :: community_header"></header>
+        <main>
+            <aside class="left_aside">
+                <section class="insight_section">
+                    <div class="title">
+                        <div class="title_logo">
+                            <img src="/static/images/community_aside_insite.svg">
+                        </div>
+                        <span class="accent_text">인사이트</span>
+                    </div>
+                    <ul class="insight_list">
+
+                    </ul>
+                </section>
+                <section class="job_section">
+                    <div class="title">
+                        <div class="title_logo">
+                            <img src="/static/images/community_aside_job.svg">
+                        </div>
+                        <span class="accent_text">직무·업종 커뮤니티</span>
+                    </div>
+                    <ul class="job_list">
+
+                    </ul>
+                </section>
+                <section class="subject_section">
+                    <div class="title">
+                        <div class="title_logo">
+                            <img src="/static/images/community_aside_subject.svg">
+                        </div>
+                        <span class="accent_text">관심사 커뮤니티</span>
+                    </div>
+                    <ul class="subject_list">
+
+                    </ul>
+                </section>
+            </aside>
+            <div class="main_contents">
+
+                <div class="selected_category">
+                    <span class="title"></span>
+                    <div class="join_info">
+                        <span>참여자 <span class="join_count">0</span>명</span>
+                    </div>
+                    <a href="#" class="welcome_article">
+                        <span class="tag">공지</span>
+                        <span class="title">asfdadsf</span>
+                    </a>
+                    <div class="tags">
+                        <button type="button" class="tag selected">홈</button>
+                    </div>
+                </div>
+
+                <div class="new_article_receiver">
+                    <div class="profile_image">
+                        <img src="/static/images/default_profile_image.png">
+                    </div>
+                    <div class="input_wrapper">
+                        <img src="/static/images/community_write_new_article_icon.svg" class="new_article_input_icon">
+                        <input type="text" name="contents" class="new_article_input"
+                            placeholder="회원님, 지금 회사에서 어떤 고민이 있으신가요?" readonly>
+                    </div>
+                </div>
+                <!-- page 당 feed 15개 -->
+                <div class="feeds">
+                    <div class="title">
+                        <span class="accent_text">새글피드</span>
+                    </div>
+                    <a href="#" class="event_viewer">
+                        <button type="button" class="event_button">EVENT</button>
+                        <span class="event_text">베스트글 선정되면, 리워드 드려요!</span>
+                    </a>
+
+                </div>
+                <div class="pager">
+                    <button type="button" class="before" disabled>
+                        <img src="/static/images/community_pager_icon.svg">
+                    </button>
+
+                    <button type="button" class="after">
+                        <img src="/static/images/community_pager_icon.svg">
+                    </button>
+                </div>
+            </div>
+            <aside class="right_aside">
+                <button type="button" class="like_rank">
+                    <img src="/static/images/community_right_aside_like_rank.svg">
+                    <span class="accent_text">좋아요 순위</span>
+                </button>
+                <section class="best_articles_aside">
+                    <div class="title">
+                        <div class="title_logo">
+                            <img src="/static/images/community_best_articles_icon.svg">
+                        </div>
+                        <span class="accent_text">종합 베스트글</span>
+                    </div>
+                    <ul class="article_summary_list">
+
+                    </ul>
+                </section>
+            </aside>
+        </main>
+        <footer>
+            <div class="footer_wrapper">
+                <div class="links">
+                    <a href="#">회사소개</a>
+                    <a href="#">이용약관</a>
+                    <a href="#" class="bold">개인정보처리방침</a>
+                    <a href="#">도움말</a>
+                    <a href="#">광고상품</a>
+                    <button type="button" class="relate_service_modal">
+                        <span class="text">관련 서비스</span>
+                        <span class="arrow"></span>
+                    </button>
+                </div>
+                <div class="copyrights">
+                    <span class="row">대표전화 : 02-556-4202</span>
+                    <span class="row">06158 서울시 강남구 테헤란로79길 6, 6층 (삼성동, 제이에스타워) (대표자:최재호) 사업자등록번호 : 211-88-81111</span>
+                    <div class="row">
+                        <a href="#" class="company_number">통신판매업 신고번호: 2016-서울강남-03104호</a>
+                        <span class="company_number">직업정보제공사업 신고번호: 서울강남 제2019-11호</span>
+                        <span class="company_number">유료직업소개사업 신고번호: 2020-3220237-14-5-00003</span>
+                    </div>
+                    <span class="row">Copyright 2019. Drama & Company All rights reserved.</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="/static/js/community/set_header.js"></script>
+    <script src="/static/js/community/set_category_detail.js"></script>
+    <script src="/static/js/community/load_left_aside.js"></script>
+    <script src="/static/js/community/load_best_articles.js"></script>
+    <script src="/static/js/community/load_recent_feeds.js"></script>
+    <script src="/static/js/community/load_total_article_count.js"></script>
+    <script src="/static/js/community/home.js"></script>
+</body>
+
+</html>

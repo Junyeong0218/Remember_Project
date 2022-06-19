@@ -13,6 +13,7 @@ import com.remember.app.entity.community.category.SubCategoryDetail;
 import com.remember.app.requestDto.AddArticleCommentReqDto;
 import com.remember.app.requestDto.AddArticleReqDto;
 import com.remember.app.responseDto.ArticleDetailResDto;
+import com.remember.app.responseDto.CategoryDetailResDto;
 
 public interface CommunityService {
 
@@ -33,6 +34,8 @@ public interface CommunityService {
 	public ArticleDetailResDto getArticleDetail(int articleId, int userId);
 	
 	public boolean isUserJoinCategory(CommunityJoinUser communityJoinUser);
+	
+	public CategoryDetailResDto getCategoryDetail(int categoryId, int userId);
 	
 	public String getCategoryName(int categoryId);
 	
