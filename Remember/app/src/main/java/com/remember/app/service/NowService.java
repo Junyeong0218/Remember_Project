@@ -19,5 +19,7 @@ public interface NowService {
 	public int getNowArticleTotalCountWithCategory(int categoryId);
 	
 	public List<NowArticleRelated> getNowArticleRelated(int articleId);
+	
+	public void uploadNowArticle(NowArticle nowArticle);
 
 }

@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="/static/css/now/header.css">
     <link rel="stylesheet" href="/static/css/now/footer.css">
     <link rel="stylesheet" href="/static/css/now/article_list.css">
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="/static/js/now/request_flag.js"></script>
 </head>
 
 <body>
@@ -28,14 +30,14 @@
         </header>
         <main>
             <nav class="category_nav">
-                <a href="#" class="category active">전체</a>
-                <a href="#" class="category">오늘의 이슈</a>
-                <a href="#" class="category">커리어</a>
-                <a href="#" class="category">유통/커머스</a>
-                <a href="#" class="category">IT/스타트업</a>
-                <a href="#" class="category">글로벌 경제</a>
-                <a href="#" class="category">경영/HR</a>
-                <a href="#" class="category">회사생활</a>
+                <a href="/now" class="category active">전체</a>
+                <a href="/now" class="category">오늘의 이슈</a>
+                <a href="/now" class="category">커리어</a>
+                <a href="/now" class="category">유통/커머스</a>
+                <a href="/now" class="category">IT/스타트업</a>
+                <a href="/now" class="category">글로벌 경제</a>
+                <a href="/now" class="category">경영/HR</a>
+                <a href="/now" class="category">회사생활</a>
             </nav>
             <div class="article">
                 <div class="article_info">
@@ -220,6 +222,7 @@
             </div>
         </footer>
     </div>
+      <script src="/static/js/now/load_now_total_article_count.js"></script>
 </body>
 
 </html>

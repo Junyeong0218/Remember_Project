@@ -3,61 +3,131 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.remember.app.entity.now.NowArticleRepository">
-  
+   	
+  	<insert id="uploadNowArticle" parameterType="com.remember.app.entity.now.NowArticle">
+			insert all
+			
+			into now_article_mst am(
+				am.user_id,
+				am.category_id,
+				am.title,
+				am.contents, 
+				am.create_date,
+				am.update_date
+			)
+			
+			VALUES(	
+				#{user_id},
+				#{category_id},
+				#{title}, 
+				#{contents},
+				NOW(),
+				NOW()
+			)
+			
+			into now_title_image ti(
+				ti.file_name
+			)
+			VALUES(
+				#{file_name}
+			)
+			
+			into now_contents_image ci(
+				ci.file_name
+			)
+			VALUES(
+				#{file_name}
+			)
+			
+			
+	</insert>
+  	
   	<select id = "getNowArticleList" resultType="com.remember.app.entity.now.NowArticle">
   		select 
-  			*
+  			am.id,
+  		
+  			am.create_date,
+  			am.category_id,
+  			am.title,
+  			am.contents,
+  			ti.file_name
   		from
-  			now_article_mst
+  			now_article_mst am
+  			left outer join now_category_mst category ON(category.id = am.category_id)
+  			left outer join now_title_image ti ON(ti.article_id = am.id)
   		order_by
-  			create_date DESC
+  			am.create_date DESC
   		limit 0, 10;
   	</select>  
   	
   	<select id = "getNowArticleListWithCategory" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticle">
   		select 
-  			*
+  			am.id,
+  			
+  			am.create_date,
+  			am.category_id,
+  			am.title,
+  			am.contents,
+  			ti.file_name
   		from
-  			now_article_mst
+  			now_article_mst am
+  			left outer join now_category_mst category ON(category.id = am.category_id)
+  			left outer join now_title_image ti ON(ti.article_id = am.id)
+  		where
+  			am.category_id = {categoryId}
   		order_by
-  			create_date DESC
+  			am.create_date DESC
   		limit 0, 10;	
   	</select>  
   	
   	<select id = "getNowArticleDetail" parameterType="Integer" resultType = "com.remember.app.responseDto.NowArticleDetailRespDto">
 		select
-			*
+			am.id,
+			am.user_id,
+			am.category_id,
+			
+			am.create_date,
+			am.title,
+			am.contents,
+			ci.file_name
 		from 
-			now_article_mst  
+			now_article_mst am
+			left outer join now_contents_image ci ON(ci.article_id = am.id)
 		where
-			article_id= #{article_id}		
+			am.id= #{articleId}		
   	</select>
   	
   	<select id="getNowArticleTotalCount" resultType="Integer">
   		select
-  			count(id)
+  			count(am.id)
   		from
   			now_article_mst
   	</select>
   	
-  	<select id="getNowArticleTotalCounWithCategory" parameterType="Integer" resultType="Integer">
+  	<select id="getNowArticleTotalCountWithCategory" parameterType="Integer" resultType="Integer">
   		select
-  			count(id)
+  			count(am.id)
   		from
   			now_article_mst
+  			left outer join now_category_mst category ON(category.id = am.category_id)
   		where
-			category_id= #{category_id}	
+			am.category_id= #{categoryId}	
   	</select>
   	
   	<select id = "getNowArticleRelated" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticleRelated">
   		select 
-  			id,
-  			title,
-  			create_date
+  			am.id,
+  			am.user_id,
+  			am.title,
+  			am.create_date
+  			ti.file_name
   		from
   			now_article_mst
+  			left outer join now_title_image ti ON(ti.article_id = am.id)
+  		where
+  			am.id != {articleId}
   		order_by
-  			create_date DESC
+  			am.create_date DESC
   		limit 3;
   	</select> 
   	

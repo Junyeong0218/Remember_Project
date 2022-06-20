@@ -51,4 +51,10 @@ public class NowRestController {
 	public List<NowArticleRelated> getRelatedArticle(@PathVariable int articleId) {
 		return nowService.getNowArticleRelated(articleId);
 	}
+	
+	@GetMapping("/article/upload")
+	public void uploadNowArticle(NowArticle nowArticle) {
+		nowService.uploadNowArticle(nowArticle);
+	}
+	
 }
