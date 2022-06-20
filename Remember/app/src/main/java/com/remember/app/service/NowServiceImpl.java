@@ -54,7 +54,12 @@ public class NowServiceImpl implements NowService{
 	public List<NowArticleRelated> getNowArticleRelated(int articleId) {
 		return nowArticleRepository.getNowArticleRelated(articleId);
 	}
-	
-	
+
+
+	@Override
+	public void uploadNowArticle(NowArticle nowArticle) {
+		nowArticleRepository.uploadNowArticle(nowArticle);;
+		
+	}
 
 }

@@ -3,7 +3,45 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.remember.app.entity.now.NowArticleRepository">
-  
+   	
+  	<insert id="uploadNowArticle" parameterType="com.remember.app.entity.now.NowArticle">
+			insert all
+			
+			into now_article_mst am(
+				am.user_id,
+				am.category_id,
+				am.title,
+				am.contents, 
+				am.create_date,
+				am.update_date
+			)
+			
+			VALUES(	
+				#{user_id},
+				#{category_id},
+				#{title}, 
+				#{contents},
+				NOW(),
+				NOW()
+			)
+			
+			into now_title_image ti(
+				ti.file_name
+			)
+			VALUES(
+				#{file_name}
+			)
+			
+			into now_contents_image ci(
+				ci.file_name
+			)
+			VALUES(
+				#{file_name}
+			)
+			
+			
+	</insert>
+  	
   	<select id = "getNowArticleList" resultType="com.remember.app.entity.now.NowArticle">
   		select 
   			am.id,

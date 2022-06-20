@@ -9,6 +9,8 @@ import com.remember.app.responseDto.NowArticleDetailRespDto;
 
 @Mapper
 public interface NowArticleRepository {
+
+	public void uploadNowArticle(NowArticle nowArticle);
 	
 	public List<NowArticle> getNowArticleList();
 	
@@ -21,5 +23,6 @@ public interface NowArticleRepository {
 	public int getNowArticleTotalCounWithCategory(int categoryId);
 	
 	public List<NowArticleRelated> getNowArticleRelated(int articleId);
+	
 	
 }
