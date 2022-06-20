@@ -4,10 +4,15 @@ loadRecentFeeds();
 
 function loadRecentFeeds() {
 	const url = category_id == 0 ? "/api/v1/community/recent" : "/api/v1/community/" + category_id + "/recent";
+	const page_param = page > 0 ? page - 1 : page;
+	const data = category_id == 0 ? {"page":page_param} :
+																  {"tagId":tag_id,
+																    "page":page_param};
+	
 	$.ajax({
 		type: "get",
 		url: url,
-		data: {"page":page},
+		data: data,
 		dataType: "json",
 		success: function (article_list) {
 			console.log(article_list);

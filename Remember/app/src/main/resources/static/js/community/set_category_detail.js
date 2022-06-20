@@ -31,11 +31,12 @@ function setCategoryDetail(category_detail) {
 		button.className = "tag";
 		button.innerText = tag_list[i].tag_name;
 		button.onclick = () => {
-			console.log(tag_list[i].id);
-			setTabBorder(i + 1);
+			location.href = "/community/" + category_id + "?tag_id=" + tag_list[i].id;
 		}
 		selected_category.querySelector(".tags").appendChild(button);
 	}
+	const tag_index = tag_list.findIndex(e => e.id == tag_id);
+	setTabBorder(tag_index == -1 ? 0 : tag_index + 1);
 	if(principal != null) {
 		 selected_category.querySelector(".join_info > span").innerHTML += " ·&nbsp;";
 		if(category_detail.join_flag == true) {
@@ -44,6 +45,25 @@ function setCategoryDetail(category_detail) {
 			button.className = "leave_community";
 			button.innerText = "나가기";
 			selected_category.querySelector(".join_info").appendChild(button);
+			button.onclick = () => {
+				$.ajax({
+					type: "delete",
+					url: "/api/v1/community/category/" + category_id,
+					dataType: "json",
+					success: function (data) {
+						console.log(data);
+						if(data == true) {
+							location.reload();
+						} else {
+							alert("카테고리 퇴장 실패");
+						}
+					},
+					error: function (xhr, status) {
+						console.log(xhr);
+						console.log(status);
+					}
+				});
+			}
 		} else {
 			const button = document.createElement("button");
 			button.type = "button";
@@ -51,6 +71,25 @@ function setCategoryDetail(category_detail) {
 			button.classList.add(category_detail.id < 9 ? "insight" : category_detail.id > 48 ? "subject" : "job");
 			button.innerText = "참여하기";
 			selected_category.querySelector(".join_info").appendChild(button);
+			button.onclick = () => {
+				$.ajax({
+					type: "post",
+					url: "/api/v1/community/category/" + category_id,
+					dataType: "json",
+					success: function (data) {
+						console.log(data);
+						if(data == true) {
+							location.reload();
+						} else {
+							alert("카테고리 참가 실패");
+						}
+					},
+					error: function (xhr, status) {
+						console.log(xhr);
+						console.log(status);
+					}
+				});
+			}
 		}
 	}
 }

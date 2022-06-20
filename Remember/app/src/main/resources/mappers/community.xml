@@ -105,7 +105,7 @@
 			am.id
 		order by
 			am.create_date desc
-		limit 0, 15;
+		limit #{page}, 15;
 	</select>
 	
 	<select id="getTopicArticleSummaries" parameterType="Integer" resultType="com.remember.app.entity.community.article.ArticleSummary">
@@ -145,14 +145,56 @@
 			am.id
 		order by
 			am.create_date desc
-		limit 0, 15;
+		limit #{page}, 15;
 	</select>
 	
-	<select id="getTotalArticleCount" resultType="Integer">
+	<select id="getTopicArticleSummariesWithTag" parameterType="Integer" resultType="com.remember.app.entity.community.article.ArticleSummary">
+		select
+			am.id,
+			
+			am.user_id,
+			um.nickname,
+			ud.department_name,
+			ud.profile_img,
+			
+			am.sub_category_id,
+			category.category_name,
+			
+			am.article_tag_id as tag_id,
+			tag.tag_name,
+			
+			am.title,
+			am.`contents`,
+			image.file_name,
+			am.create_date,
+			am.view_count,
+			count(distinct al.id) as like_count,
+			count(distinct acm.id) as comment_count
+		from
+			article_mst am
+			left outer join user_mst um on(um.id = am.user_id)
+			left outer join user_detail ud on(ud.user_id = am.user_id)
+			left outer join community_sub_category category on(category.id = am.sub_category_id)
+			left outer join article_tag_mst tag on(tag.id = am.article_tag_id)
+			left outer join article_image image on(image.article_id = am.id)
+			left outer join article_like al on(al.article_id = am.id)
+			left outer join article_comment_mst acm on(acm.article_id = am.id)
+		where
+			am.sub_category_id = #{categoryId} and
+			am.article_tag_id = #{tagId}
+		group by
+			am.id
+		order by
+			am.create_date desc
+		limit #{page}, 15;
+	</select>
+	
+	<select id="getTotalArticleCount" parameterType="Integer" resultType="Integer">
 		select
 			count(id)
 		from
-			article_mst;
+			article_mst
+		limit #{page}, 15;
 	</select>
 	
 	<select id="getTopicArticleCount" parameterType="Integer" resultType="Integer">
@@ -161,7 +203,19 @@
 		from
 			article_mst
 		where
-			sub_category_id = #{categoryId};
+			sub_category_id = #{categoryId}
+		limit #{page}, 15;
+	</select>
+	
+	<select id="getTopicArticleCountWithTag" parameterType="Integer" resultType="Integer">
+		select
+			count(id)
+		from
+			article_mst
+		where
+			sub_category_id = #{categoryId} and
+			article_tag_id = #{tagId}
+		limit #{page}, 15;
 	</select>
 	
 	<select id="getArticleDetail" parameterType="Integer" resultType="com.remember.app.entity.community.article.ArticleDetail">
@@ -281,6 +335,114 @@
 		order by
 			acm.create_date asc;
 	</select>
+		
+	<select id="getCommentListASC" parameterType="Integer" resultType="com.remember.app.entity.community.article.CommentDetail">
+		select
+			acm.id,
+			acm.user_id,
+			if(acm.use_nickname = true, um.nickname, um.`name`) as nickname,
+			ud.department_name,
+			ud.profile_img,
+			acm.`contents`,
+			acm.related_comment_id,
+			acm.create_date,
+			count(distinct acl.id) as like_count
+		from 
+			article_mst am
+			left outer join article_comment_mst acm on(acm.article_id = am.id)
+			left outer join user_mst um on(um.id = acm.user_id)
+			left outer join user_detail ud on(ud.user_id = acm.user_id)
+			left outer join article_comment_like acl on(acl.comment_id = acm.id)
+		where
+			am.id = #{articleId}
+		group by
+			am.id,
+			acm.id
+		order by
+			acm.create_date asc;
+	</select>
+	
+	<select id="getCommentListDESC" parameterType="Integer" resultType="com.remember.app.entity.community.article.CommentDetail">
+		select
+			acm.id,
+			acm.user_id,
+			if(acm.use_nickname = true, um.nickname, um.`name`) as nickname,
+			ud.department_name,
+			ud.profile_img,
+			acm.`contents`,
+			acm.related_comment_id,
+			acm.create_date,
+			count(distinct acl.id) as like_count
+		from 
+			article_mst am
+			left outer join article_comment_mst acm on(acm.article_id = am.id)
+			left outer join user_mst um on(um.id = acm.user_id)
+			left outer join user_detail ud on(ud.user_id = acm.user_id)
+			left outer join article_comment_like acl on(acl.comment_id = acm.id)
+		where
+			am.id = #{articleId}
+		group by
+			am.id,
+			acm.id
+		order by
+			acm.create_date desc;
+	</select>
+	
+	<select id="getCommentListForUserASC" parameterType="Integer" resultType="com.remember.app.entity.community.article.CommentDetail">
+		select
+			acm.id,
+			acm.user_id,
+			if(acm.use_nickname = true, um.nickname, um.`name`) as nickname,
+			ud.department_name,
+			ud.profile_img,
+			acm.`contents`,
+			acm.related_comment_id,
+			acm.create_date,
+			count(distinct acl.id) as like_count,
+			
+			if(acl.user_id = #{userId}, true, false) as like_flag
+		from 
+			article_mst am
+			left outer join article_comment_mst acm on(acm.article_id = am.id)
+			left outer join user_mst um on(um.id = acm.user_id)
+			left outer join user_detail ud on(ud.user_id = acm.user_id)
+			left outer join article_comment_like acl on(acl.comment_id = acm.id)
+		where
+			am.id = #{articleId}
+		group by
+			am.id,
+			acm.id
+		order by
+			acm.create_date asc;
+	</select>
+	
+	<select id="getCommentListForUserDESC" parameterType="Integer" resultType="com.remember.app.entity.community.article.CommentDetail">
+		select
+			acm.id,
+			acm.user_id,
+			if(acm.use_nickname = true, um.nickname, um.`name`) as nickname,
+			ud.department_name,
+			ud.profile_img,
+			acm.`contents`,
+			acm.related_comment_id,
+			acm.create_date,
+			count(distinct acl.id) as like_count,
+			
+			if(acl.user_id = #{userId}, true, false) as like_flag
+		from 
+			article_mst am
+			left outer join article_comment_mst acm on(acm.article_id = am.id)
+			left outer join user_mst um on(um.id = acm.user_id)
+			left outer join user_detail ud on(ud.user_id = acm.user_id)
+			left outer join article_comment_like acl on(acl.comment_id = acm.id)
+		where
+			am.id = #{articleId}
+		group by
+			am.id,
+			acm.id
+		order by
+			acm.create_date desc;
+	</select>
 	
 	<select id="isUserJoinCategory" parameterType="com.remember.app.entity.community.category.CommunityJoinUser" resultType="Integer">
 		select
@@ -363,6 +525,14 @@
 			now()
 		);
 	</insert>
+	
+	<delete id="leaveCategory" parameterType="com.remember.app.entity.community.category.CommunityJoinUser">
+		delete from
+			community_join_user
+		where
+			sub_category_id = #{sub_category_id} and
+			user_id = #{user_id};
+	</delete>
 	
 	<select id="getJoinedCategories" parameterType="Integer" resultType="com.remember.app.entity.community.category.JoinedCategory">
 		select 
@@ -499,5 +669,14 @@
 			comment_id = #{comment_id} and
 			user_id = #{user_id};
 	</delete>
+	
+	<update id="updateArticleViewCount">
+		update
+			article_mst
+		set
+			view_count = view_count + 1
+		where
+			id = #{articleId};
+	</update>
 
 </mapper>

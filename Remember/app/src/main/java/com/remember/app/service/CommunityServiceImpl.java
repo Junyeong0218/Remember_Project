@@ -65,23 +65,31 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 	
 	@Override
-	public List<ArticleSummary> getRecentAllKindArticleSummaries() {
-		return communityRepository.getTotalArticleSummaries();
+	public List<ArticleSummary> getRecentAllKindArticleSummaries(int page) {
+		return communityRepository.getTotalArticleSummaries(page * 15);
 	}
 	
 	@Override
-	public List<ArticleSummary> getRecentArticleSummariesAbountCategory(int categoryId) {
-		return communityRepository.getTopicArticleSummaries(categoryId);
+	public List<ArticleSummary> getRecentArticleSummariesAbountCategory(int categoryId, int tagId, int page) {
+		if(tagId == 0) {
+			return communityRepository.getTopicArticleSummaries(categoryId, page * 15);
+		} else {
+			return communityRepository.getTopicArticleSummariesWithTag(categoryId, tagId, page * 15);
+		}
 	}
 	
 	@Override
-	public int getTotalArticleCount() {
-		return communityRepository.getTotalArticleCount();
+	public int getTotalArticleCount(int page) {
+		return communityRepository.getTotalArticleCount(page * 15);
 	}
 	
 	@Override
-	public int getTopicArticleCount(int categoryId) {
-		return communityRepository.getTopicArticleCount(categoryId);
+	public int getTopicArticleCount(int categoryId, int tagId, int page) {
+		if(tagId == 0) {
+			return communityRepository.getTopicArticleCount(categoryId, page * 15);
+		} else {
+			return communityRepository.getTopicArticleCountWithTag(categoryId, tagId, page * 15);
+		}
 	}
 	
 	@Override
@@ -145,6 +153,68 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 	
 	@Override
+	public List<CommentDetail> getCommentListASC(int articleId, int userId) {
+		List<CommentDetail> details = null;
+		if(userId == 0) {
+			details = communityRepository.getCommentListASC(articleId);
+		} else {
+			details = communityRepository.getCommentListForUserASC(articleId, userId);
+		}
+		
+		List<CommentDetail> orderedCommentList = new ArrayList<CommentDetail>();
+		int index = 0;
+		while(details.size() != 0) {
+			
+			CommentDetail comment = details.get(index);
+			if(comment.getRelated_comment_id() == 0) {
+				orderedCommentList.add(comment);
+				index++;
+				for(int i = index; i < details.size(); i++) {
+					if(details.get(i).getRelated_comment_id() == comment.getId()) {
+						orderedCommentList.add(details.get(i));
+					}
+				}
+				details.removeAll(orderedCommentList);
+				index = 0;
+			}
+		}
+		System.out.println(orderedCommentList);
+		
+		return orderedCommentList;
+	}
+	
+	@Override
+	public List<CommentDetail> getCommentListDESC(int articleId, int userId) {
+		List<CommentDetail> details = null;
+		if(userId == 0) {
+			details = communityRepository.getCommentListDESC(articleId);
+		} else {
+			details = communityRepository.getCommentListForUserDESC(articleId, userId);
+		}
+		
+		List<CommentDetail> orderedCommentList = new ArrayList<CommentDetail>();
+		int index = 0;
+		while(details.size() != 0) {
+			
+			CommentDetail comment = details.get(index);
+			if(comment.getRelated_comment_id() == 0) {
+				orderedCommentList.add(comment);
+				index++;
+				for(int i = index; i < details.size(); i++) {
+					if(details.get(i).getRelated_comment_id() == comment.getId()) {
+						orderedCommentList.add(details.get(i));
+					}
+				}
+				details.removeAll(orderedCommentList);
+				index = 0;
+			}
+		}
+		System.out.println(orderedCommentList);
+		
+		return orderedCommentList;
+	}
+	
+	@Override
 	public boolean isUserJoinCategory(CommunityJoinUser communityJoinUser) {
 		return communityRepository.isUserJoinCategory(communityJoinUser) == 1;
 	}
@@ -186,6 +256,11 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public boolean joinCategory(CommunityJoinUser communityJoinUser) {
 		return communityRepository.joinCategory(communityJoinUser) == 1;
+	}
+	
+	@Override
+	public boolean leaveCategory(CommunityJoinUser communityJoinUser) {
+		return communityRepository.leaveCategory(communityJoinUser) == 1;
 	}
 	
 	@Override
@@ -267,6 +342,11 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public boolean deleteArticleCommentLike(CommentLike commentLike) {
 		return communityRepository.deleteArticleCommentLike(commentLike) == 1;
+	}
+	
+	@Override
+	public boolean updateArticleViewCount(int articleId) {
+		return communityRepository.updateArticleViewCount(articleId) == 1;
 	}
 	
 }

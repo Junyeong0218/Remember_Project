@@ -1,8 +1,11 @@
 const article_detail_tag = document.querySelector(".article_detail");
+const comment_order_asc_button = document.querySelector(".order_asc");
+const comment_order_desc_button = document.querySelector(".order_desc");
 
 loadArticleDetail();
 
 function loadArticleDetail() {
+	updateViewCountPlusOne();
 	const url = "/api/v1/community/detail/" + article_id;
 	$.ajax({
 		type: "get",
@@ -46,6 +49,23 @@ function makeCommentReportModal() {
 		</div>
 	`;
 	return div;
+}
+
+function updateViewCountPlusOne() {
+	if(principal != null) {
+		$.ajax({
+			type: "put",
+			url: "/api/v1/community/article/" + article_id + "/view",
+			dataType: "json",
+			success: function (data) {
+				console.log("is updated : " + data);
+			},
+			error: function (xhr, status) {
+				console.log(xhr);
+				console.log(status);
+			}
+		});
+	}
 }
 
 function makeCommentMenuPopup() {
