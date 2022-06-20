@@ -52,16 +52,34 @@ function getAllCards() {
 		dataType:'json',
 		success:function(card_list){
 			console.log(card_list);
-
 			main_contents.innerHTML = "";
 			if(card_list.length ==1 && card_list[0] == null){
 				const no_contents_tag = makeNoContentsTag();
 				main_contents.appendChild(no_contents_tag);
 			}else{
 				const groupList = groupListTag();
+				main_contents.appendChild(groupList);		
+				const all_checkbox = groupList.querySelector(".top_list_btn > input");
+				all_checkbox.onclick = (event) => {
+					const cards = list_group.querySelectorAll(".card_list_con");
+					cards.forEach(item => item.querySelector(".check_btn").checked = event.target.checked);
+				}
+				cardListInfoTag(card_list);
+				const list_group = document.querySelector(".list_group");
+				const cards = list_group.querySelectorAll(".card_list_con");
 				
-				main_contents.appendChild(groupList);
+				for(let i =0; i < cards.length; i++){
+						cards[i].onclick = () => {
+						console.log(card_list[i]);
+						cards.forEach((item, index) => {
+							if(index != i) item.classList.remove("active");
+							else 		   item.classList.add("active");
+						});
+					}
+				}
+				cards[0].click();
 			}
+			
 		},
 		error:function(xhr,status){
 			console.log(xhr);
@@ -109,17 +127,17 @@ function groupListTag(){
 	div.className="card_list_box";
 	div.innerHTML = `
 		<div class="card_list_top">
-		<div class="btn_left_box">
-			<div class="top_btn_left">
-				<button class="top_btn">
-					<input type="checkbox" id="check" class="check_btn">
-					<label for="check"></label>
-				</button>
-				<button class="top_btn more">
-					<span></span>
-				</button>
+			<div class="btn_left_box">
+				<div class="top_btn_left">
+					<button class="top_list_btn">
+						<input type="checkbox" id="check" class="check_btn">
+						<label for="check"></label>
+					</button>
+					<button class="top_btn more">
+						<span></span>
+					</button>
+				</div>
 			</div>
-		</div>
 			<div class="top_right">
 				<select class="top_select">
 					<option label="등록일순" value="">등록일순</option>
@@ -128,10 +146,100 @@ function groupListTag(){
 				</select>
 			</div>
 		</div>
+		<div class="list_group">
+			
+		</div>
+		<div class="list_page">
+			<button class="page btn left">«</button>
+			<div class="page num"> 1 </div>
+			<button class="page btn right">»</button>
+		</div>
 
 	`;
 	return div;
 }
+
+function cardListInfoTag(card_list) {
+	const list_group = document.querySelector(".list_group");
+	let prev_date;
+	for(let i = 0; i < card_list.length; i++) {
+		const create_date = makeCardCreateDate(card_list[i].create_date);
+		console.log(create_date);
+		if(prev_date == create_date) {
+			// 날짜 출력 X card만 출력
+			const department_text = makeDepartmentText(card_list[i].department_name, card_list[i].position_name);
+			const groups = list_group.querySelectorAll(".all_card_list");
+			const div = groups[groups.length - 1];
+			div.innerHTML += `
+				<div class="card_list_con">
+
+					<div class="list_con_check">
+						<input type="checkbox" id="check" class="check_btn">
+						<label for="check"></label>
+					</div>
+					<div class="list_con_info">
+						<div class="list_info_name">
+							<span>${card_list[i].name}</span>
+						</div>
+		${department_text == "" ? '' : '<div class="list_info position">' + department_text + '</div>'}
+		${card_list[i].company_name == null || card_list[i].company_name == "" ? '' : '<div class="list_info company">' + card_list[i].company_name + '</div>'}
+					</div>
+				</div>
+			`;
+		} else {
+			const department_text = makeDepartmentText(card_list[i].department_name, card_list[i].position_name);
+			const div = document.createElement('div');
+			div.className = "all_card_list";
+			div.innerHTML = `
+				<div class="card_list_title">${create_date}</div>
+				<div class="card_list_con">
+
+					<div class="list_con_check">
+						<input type="checkbox" id="check" class="check_btn">
+						<label for="check"></label>
+					</div>
+					<div class="list_con_info">
+						<div class="list_info_name">
+							<span>${card_list[i].name}</span>
+						</div>
+		${department_text == "" ? '' : '<div class="list_info position">' + department_text + '</div>'}
+		${card_list[i].company_name == null || card_list[i].company_name == "" ? '' : '<div class="list_info company">' + card_list[i].company_name + '</div>'}
+					</div>
+				</div>
+			`;
+			list_group.appendChild(div);
+			prev_date = create_date;
+		}
+	}
+}
+
+function makeDepartmentText(department_name, position_name) {
+	return department_name != "" && position_name != "" ? position_name + " / " + department_name :
+		   position_name != "" ? position_name :
+		   department_name != "" ? department_name : "";
+}
+
+function makeCardCreateDate(create_date) {
+	const date = new Date(create_date);
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+	return `${date.getFullYear()}-${month}-${day}`;
+}
+
+/*<div class="card_list_con">
+			<div class ="list_mark"></div>
+			<div class="list_con_check">
+				<input type="checkbox" id="check" class="check_btn">
+				<label for="check"></label>
+			</div>
+			<div class="list_con_info">
+				<div class="list_info_name">
+					<span>${card_list.name}</span>
+				</div>
+				<div class="list_info position">dd</div>
+				<div class="list_info company">d</div>
+			</div>
+		</div>*/
 
 function makeGroupTag(group_data) {
 	const button = document.createElement("button");
