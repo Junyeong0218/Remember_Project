@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="/static/css/card/header.css">
     <link rel="stylesheet" href="/static/css/card/footer.css">
     <link rel="stylesheet" href="/static/css/card/home.css">
+    <script src="https://kit.fontawesome.com/a29a2deeae.js" crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="/static/js/get_principal.js"></script>
 </head>
 
 <body>
@@ -39,15 +42,15 @@
                     <button type="button" class="alert_modal_button">
                         <img src="/static/images/show_alert_modal_button.png" alt="알림 보기">
                     </button>
-                    <button type="button" class="alert_modal_button">
-                        <span class="email">hippo2003@naver.com</span>
+                    <button type="button" class="mypage_button">
+                        <span class="email"></span>
                         <span class="arrow"></span>
                     </button>
                 </div>
             </div>
         </header>
         <main>
-            <div class="regiser_profile_banner">
+            <div class="register_profile_banner">
                 <div class="banner_wrapper">
                     <div class="banner_message">
                         <img src="/static/images/register_profile_banner_img.png" alt="">
@@ -85,19 +88,17 @@
                             <span class="add_group_text">그룹</span>
                             <img src="/static/images/add_card_group_icon.png">
                         </button>
+                        <div class="add_group">
+                        	
+                        </div>
                         <button type="button" class="card_group">
-                            <span class="group_text">모든 명함 (<span class="whole_count">0</span>)</span>
+                            <span class="group_text">모든 명함 (<span class="whole_count"></span>)</span>
                         </button>
-                        <button type="button" class="card_no_group">
-                            <span class="sub_group_arrow"></span>
-                            <span class="group_text">미분류 명함 (<span class="no_group_count">0</span>)</span>
-                        </button>
+                        
                     </div>
                 </aside>
                 <div class="main_contents">
-                    <div class="no_contents">
-                        <span class="text">등록된 명함이 없습니다.</span>
-                    </div>
+                    
                 </div>
             </div>
             <div class="blanks"></div>
@@ -129,6 +130,8 @@
             </div>
         </footer>
     </div>
+    <script type="text/javascript" src="/static/js/card/load_header.js"></script>
+    <script type="text/javascript" src="/static/js/card/load_myCard.js"></script>
 </body>
 
 </html>

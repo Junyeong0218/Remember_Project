@@ -19,7 +19,8 @@ spring:
       - classpath:/static/
       add-mappings: true
   servlet:
-    multipart:      enabled: true
+    multipart:
+      enabled: true
       max-file-size: 2MB
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver

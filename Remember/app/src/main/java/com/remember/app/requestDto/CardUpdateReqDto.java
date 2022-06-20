@@ -17,7 +17,7 @@ public class CardUpdateReqDto {
 	private String phone;
 	private String email;
 	private String company_name;
-	private String part_name;
+	private String department_name;
 	private String position_name;
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
@@ -29,7 +29,7 @@ public class CardUpdateReqDto {
 				.phone(phone)
 				.email(email)
 				.company_name(company_name)
-				.part_name(part_name)
+				.department_name(department_name)
 				.position_name(position_name)
 				.build();
 	}

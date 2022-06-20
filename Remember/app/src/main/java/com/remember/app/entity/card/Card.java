@@ -18,8 +18,12 @@ public class Card {
 	private String phone;
 	private String email;
 	private String company_name;
-	private String part_name;
+	private String department_name;
 	private String position_name;
+	private String landline_phone;
+	private String fax;
+	private String address;
+	private String sub_address;
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
 }

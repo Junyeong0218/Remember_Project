@@ -20,7 +20,7 @@ public class GroupCard {
 	private String phone;
 	private String email;
 	private String company_name;
-	private String part_name;
+	private String department_name;
 	private String position_name;
 	private String group_name;
 	private LocalDateTime create_date;
@@ -35,7 +35,7 @@ public class GroupCard {
 				   .phone(phone)
 				   .email(email)
 				   .company_name(company_name)
-				   .part_name(part_name)
+				   .department_name(department_name)
 				   .position_name(position_name)
 				   .create_date(create_date)
 				   .update_date(update_date)

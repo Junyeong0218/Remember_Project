@@ -25,39 +25,34 @@ public class CardServiceImpl implements CardService {
 	private final CardRepository cardRepository;
 	
 	@Override
-	public List<Card> getCard(int user_id) {
-		cardRepository.getCard(user_id);
-		return cardRepository.getCard(user_id);
+	public List<Card> getCards(int user_id) {
+		return cardRepository.getCards(user_id);
 	}
 	
 	@Override
-	public int insertNewCard(CardInsertReqDto cardInsertReqDto) {
-		Card card = cardInsertReqDto.cardMstToEntity();
+	public int insertNewCard(Card card) {
 		System.out.println(card);
 		return cardRepository.insertCard(card);
 
 	}
 	
 	@Override
-	public int insertGroup(int user_id,String group_name) {
-		Group group = Group.builder()
-				.user_id(user_id)
-				.group_name(group_name)
-				.build();
+	public int insertGroup(Group group) {
 		return cardRepository.insertGroup(group);
 	}
 	
 	@Override
 	public List<GroupSummary> getGroups(int user_id) {
+		
 		return cardRepository.getGroup(user_id);
 	}
 	
 	@Override
 	public GroupRespDto getGroupId(int group_id) {
 		List<GroupCard> details = cardRepository.getGroupByGroupId(group_id);
-		if(details.size() == 0) return null;
-		
 		GroupRespDto respDto = new GroupRespDto();
+		if(details.size() == 0) return respDto;
+		
 		respDto.setGroup_name(details.get(0).getGroup_name());
 		List<Card> card_list = new ArrayList<Card>();
 		for(GroupCard detail : details) {
@@ -93,8 +88,7 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public Card getUserCardId(int cardId) {
-		// TODO Auto-generated method stub
+	public Card getUserCard(int cardId) {
 		return cardRepository.getUserCard(cardId);
 	}
 	
@@ -106,5 +100,8 @@ public class CardServiceImpl implements CardService {
 		return cardRepository.addUserGroup(addGroup);
 	}
 	
-	
+	@Override
+	public List<Card> getCardSummaryList(int user_id) {
+		return cardRepository.getCardSummaryList(user_id);
+	}
 }

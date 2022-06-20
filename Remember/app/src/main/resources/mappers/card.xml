@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="com.remember.app.entity.card.CardRepository">
-  <select id="getCard" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+  <select id="getCards" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
   select
   	*
   from
@@ -23,11 +23,19 @@
   		#{phone},
   		#{email},
   		#{company_name},
-  		#{part_name},
+  		#{department_name},
   		#{position_name},
+  		#{landline_phone},
+  		#{fax},
+  		#{address},
+  		#{sub_address},
   		now(),
   		now()
-  	)
+  	);
+  	<selectKey keyProperty="id" resultType="Integer" order="AFTER">
+  		select id from card_mst where user_id = #{user_id} and name = #{name} order by create_date desc limit 1;
+  	</selectKey>
+
   </insert>
   
   <update id="updateCard" parameterType="com.remember.app.entity.card.Card">
@@ -38,8 +46,12 @@
   		phone = #{phone},
   		email = #{email},
   		company_name = #{company_name},
-  		part_name = #{part_name},
+  		department_name = #{department_name},
   		position_name = #{position_name},
+  		landline_phone = #{landline_phone},
+  		fax = #{fax},
+  		address = #{address},
+  		sub_address = #{sub_address},
   		update_date = now()
   	where
   		id = #{id}
@@ -62,20 +74,30 @@
   		#{group_name},
   		now(),
   		now()
-  	)
+  	);
+  	
+  	<selectKey keyProperty="id" resultType="Integer" order="AFTER">
+  		select id from card_group_mst where user_id = #{user_id} and group_name = #{group_name};
+  	</selectKey>
   </insert>
   
   <select id="getGroup" parameterType="Integer" resultType="com.remember.app.entity.card.GroupSummary">
-  	SELECT
+  	SELECT 
+		cgm.id,
 		cgm.group_name,
-		COUNT(distinct cbg.card_id) AS card_count
-	FROM
+		COUNT(DISTINCT cbg.id) AS card_count,
+		COUNT(DISTINCT cbg2.card_id) AS total_count
+	FROM 
 		card_group_mst cgm
 		LEFT OUTER JOIN card_belong_group cbg ON(cbg.group_id = cgm.id)
+		LEFT OUTER JOIN card_group_mst cgm2 ON(cgm2.user_id=#{user_id})
+		LEFT OUTER JOIN card_belong_group cbg2 ON(cbg2.group_id = cgm2.id)
 	WHERE
-		cgm.user_id = #{user_id}
+		cgm.user_id=#{user_id}
 	GROUP BY
 		cgm.id
+	order by
+		cgm.create_date desc;
   </select>
   
   <select id="getGroupByGroupId" parameterType="Integer" resultType="com.remember.app.entity.card.GroupCard">
@@ -88,6 +110,7 @@
 	  	LEFT OUTER JOIN card_group_mst cgm ON(cgm.id = cbg.group_id)
 	where
 	  	group_id = #{groupId}
+	  	
   </select>
   
   <update id="updateGroup" parameterType="com.remember.app.entity.card.Group">
@@ -128,5 +151,25 @@
   		now()
   	)
   </insert>
+  
+  <select id="getCardSummaryList" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+  	select
+  		card.id,
+  		card.`name`,
+  		card.company_name,
+  		card.department_name,
+  		card.position_name,
+  		card.create_date
+  	from
+  		card_group_mst `group`
+  		left outer join card_belong_group belong on(belong.group_id = `group`.id)
+  		left outer join card_mst card on(card.id=belong.card_id)
+  	where
+  		`group`.user_id = #{user_id}
+  	group by
+  		belong.card_id
+  	order by
+  		card.create_date desc;
+  </select>
   
   </mapper>
