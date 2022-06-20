@@ -25,14 +25,17 @@ function getAllGroups(){
 		dataType: 'json',
 		success:function(group_list){
 			console.log(group_list);	
-			wholeCount.innerText = group_list[0].card_count;
+			wholeCount.innerText = group_list[0].total_count;
 			whole_cards.onclick = getAllCards;
+			let total_count = 0;
 			const wrapper = document.querySelector(".my_card_book");
 			for(let i = 0; i < group_list.length; i++) {
+				total_count+=group_list[i].card_count;
 				const group_tag = makeGroupTag(group_list[i]);
 				wrapper.appendChild(group_tag);
 				group_tag.onclick = () => getGroup(group_list[i].id);
 			}
+			wholeCount.innerText = total_count;
 			whole_cards.click();
 		},
 		error:function(xhr,status){
@@ -49,10 +52,15 @@ function getAllCards() {
 		dataType:'json',
 		success:function(card_list){
 			console.log(card_list);
+
 			main_contents.innerHTML = "";
 			if(card_list.length ==1 && card_list[0] == null){
 				const no_contents_tag = makeNoContentsTag();
 				main_contents.appendChild(no_contents_tag);
+			}else{
+				const groupList = groupListTag();
+				
+				main_contents.appendChild(groupList);
 			}
 		},
 		error:function(xhr,status){
@@ -61,6 +69,8 @@ function getAllCards() {
 		}
 	})
 }
+
+
 
 function getGroup(group_id) {
 	$.ajax({
@@ -75,6 +85,9 @@ function getGroup(group_id) {
 				main_contents.appendChild(no_contents_tag);
 			} else {
 				// 그룹에 속한 명함들의 리스트를 태그로 출력
+				/*const groupList = groupListTag();
+				
+				main_contents.appendChild(groupList);*/
 			}
 		},
 		error: function (xhr, status) {
@@ -88,6 +101,35 @@ function makeNoContentsTag() {
 	const div = document.createElement("div");
 	div.className = "no_contents";
 	div.innerHTML = '<span class="text">등록된 명함이 없습니다.</span>';
+	return div;
+}
+
+function groupListTag(){
+	const div = document.createElement('div');
+	div.className="card_list_box";
+	div.innerHTML = `
+		<div class="card_list_top">
+		<div class="btn_left_box">
+			<div class="top_btn_left">
+				<button class="top_btn">
+					<input type="checkbox" id="check" class="check_btn">
+					<label for="check"></label>
+				</button>
+				<button class="top_btn more">
+					<span></span>
+				</button>
+			</div>
+		</div>
+			<div class="top_right">
+				<select class="top_select">
+					<option label="등록일순" value="">등록일순</option>
+					<option label="이름순" value="">이름순</option>
+					<option label="회사명순" value="">회사명순</option>
+				</select>
+			</div>
+		</div>
+
+	`;
 	return div;
 }
 
@@ -124,14 +166,14 @@ function toggleAddGroupTag(){
 		addGroupInput.onkeypress = function() {
    			if(window.event.keyCode == 13) {
        		  	console.log(addGroupInput.value); 
-       		 	enter(addGroupInput.value);
+       		 	inputAddGroup(addGroupInput.value);
 			}
 
 		};
 	}
 }
 
-function enter(group_name){
+function inputAddGroup(group_name){
 	$.ajax({
 		type:'post',
 		url:'/api/v1/card/group',

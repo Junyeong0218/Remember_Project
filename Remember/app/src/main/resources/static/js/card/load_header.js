@@ -150,6 +150,14 @@ function addMenu(){
 						main_contents.innerHTML = '';
 						main_contents.appendChild(cardDetail);
 						document.querySelector('.my_business_card').classList.remove("hidden");
+						const editBtn =cardDetail.querySelector('.edit');
+						editBtn.onclick = () => {
+							const editForm = makeEditTag();
+							console.log("클릭");
+							cardDetail.remove();
+							main_contents.innerHTML='';
+							main_contents.appendChild(editForm);
+						}
 						
 						// 미분류명함 card_count select
 						
@@ -381,6 +389,16 @@ function cardDetailTag(card_data){
         </div>
 	`;
 
+	return div;
+}
+
+function makeEditTag(){
+	const div = document.createElement('div');
+	div.className="edit_con";
+	div.innerHTML=`
+	<div>sdfsdf</div>
+	`;
+	
 	return div;
 }
 

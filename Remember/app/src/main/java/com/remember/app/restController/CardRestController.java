@@ -41,6 +41,12 @@ public class CardRestController {
 		return new ResponseEntity<>(card,HttpStatus.OK);
 	}
 	
+	@GetMapping("/all")
+	public ResponseEntity<?> getAllCard(@AuthenticationPrincipal PrincipalDetails principalDetails){
+		List<GroupSummary> groups = cardService.getGroups(principalDetails.getId());
+		return new ResponseEntity<>(groups,HttpStatus.OK);
+	}
+	
 	//본인 명함 등록 post
 	@PostMapping("")
 	public ResponseEntity<?> registerCard(@AuthenticationPrincipal PrincipalDetails principalDetails, CardInsertReqDto cardInsertReqDto){
