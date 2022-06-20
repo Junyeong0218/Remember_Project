@@ -18,6 +18,7 @@ import com.remember.app.entity.community.article.ArticleImage;
 import com.remember.app.entity.community.article.ArticleLike;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
+import com.remember.app.entity.community.article.Comment;
 import com.remember.app.entity.community.article.CommentDetail;
 import com.remember.app.entity.community.article.CommentLike;
 import com.remember.app.entity.community.article.Tag;
@@ -27,6 +28,7 @@ import com.remember.app.entity.community.category.JoinedCategory;
 import com.remember.app.entity.community.category.SubCategoryDetail;
 import com.remember.app.requestDto.AddArticleCommentReqDto;
 import com.remember.app.requestDto.AddArticleReqDto;
+import com.remember.app.requestDto.UpdateArticleReqDto;
 import com.remember.app.responseDto.ArticleDetailResDto;
 import com.remember.app.responseDto.CategoryDetailResDto;
 
@@ -116,6 +118,7 @@ public class CommunityServiceImpl implements CommunityService {
 																							 .contents(detail.getComment_contents())
 																							 .related_comment_id(detail.getRelated_comment_id())
 																							 .create_date(detail.getComment_create_date())
+																							 .deleted(detail.isComment_deleted())
 																							 .like_count(detail.getComment_like_count())
 																							 .like_flag(detail.isComment_like_flag())
 																							 .build());
@@ -192,6 +195,8 @@ public class CommunityServiceImpl implements CommunityService {
 			details = communityRepository.getCommentListForUserDESC(articleId, userId);
 		}
 		
+		System.out.println("details");
+		System.out.println(details);
 		List<CommentDetail> orderedCommentList = new ArrayList<CommentDetail>();
 		int index = 0;
 		while(details.size() != 0) {
@@ -199,16 +204,26 @@ public class CommunityServiceImpl implements CommunityService {
 			CommentDetail comment = details.get(index);
 			if(comment.getRelated_comment_id() == 0) {
 				orderedCommentList.add(comment);
-				index++;
-				for(int i = index; i < details.size(); i++) {
+				for(int i = 0; i < index + 1; i++) {
 					if(details.get(i).getRelated_comment_id() == comment.getId()) {
+						System.out.println(details.get(i));
 						orderedCommentList.add(details.get(i));
 					}
 				}
 				details.removeAll(orderedCommentList);
 				index = 0;
-			}
+			} else index++;
 		}
+		System.out.println(orderedCommentList);
+		orderedCommentList.sort((a, b) -> {
+			if(a.getRelated_comment_id() != 0 && b.getRelated_comment_id() != 0 && a.getRelated_comment_id() == b.getRelated_comment_id()) {
+				System.out.println("a " + a.getId() + " comp b " + b.getId());
+				System.out.println(a.getCreate_date().compareTo(b.getCreate_date()));
+				return a.getCreate_date().compareTo(b.getCreate_date());
+			} else {
+				return 0;
+			}
+		});
 		System.out.println(orderedCommentList);
 		
 		return orderedCommentList;
@@ -293,6 +308,60 @@ public class CommunityServiceImpl implements CommunityService {
 		return false;
 	}
 	
+	@Override
+	public boolean updateArticle(UpdateArticleReqDto updateArticleReqDto) {
+		int deleteCount = 0;
+		boolean deleteFlag = false;
+		if(updateArticleReqDto.getDelete_file_names().size() > 0) {
+			deleteCount = communityRepository.deleteArticleImages(updateArticleReqDto.toArticleImages());
+			System.out.println(deleteCount);
+			if(deleteCount > 0) {
+				deleteFlag = deleteArticleImageFiles(updateArticleReqDto.getDelete_file_names());
+			}
+		} else {
+			deleteFlag = true;
+		}
+		if(deleteFlag) {
+			List<String> fileNames = downloadArticleImageFiles(updateArticleReqDto.getFiles());
+			if(fileNames.size() > 0) {
+				List<ArticleImage> articleImages = new ArrayList<ArticleImage>();
+				for(String imageName : fileNames) {
+					articleImages.add(ArticleImage.builder()
+																				   .article_id(updateArticleReqDto.getId())
+																				   .file_name(imageName)
+																				   .build());
+				}
+				communityRepository.insertArticleImages(articleImages);
+			}
+			int result = communityRepository.updateArticle(updateArticleReqDto.toArticleEntity());
+			if(result == 1) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean deleteArticle(int articleId, int userId) {
+		return communityRepository.deleteArticle(articleId, userId) == 1;
+	}
+	
+	private boolean deleteArticleImageFiles(List<String> files) {
+		try {
+			for(String fileName : files) {
+				Path path = Paths.get(filePath, "article_images/" + fileName);
+				File file = new File(path.toString());
+				
+				if(file.exists()) {
+					file.delete();
+				}
+			}
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
 	private List<String> downloadArticleImageFiles(List<MultipartFile> files) {
 		try {
 			List<String> imageNames = new ArrayList<String>();
@@ -332,6 +401,16 @@ public class CommunityServiceImpl implements CommunityService {
 		} else {
 			return communityRepository.insertRelatedArticleComment(addArticleCommentReqDto.toRelatedCommentEntity()) == 1;
 		}
+	}
+	
+	@Override
+	public boolean updateArticleComment(Comment comment) {
+		return communityRepository.updateArticleComment(comment) == 1;
+	}
+	
+	@Override
+	public boolean deleteArticleComment(Comment comment) {
+		return communityRepository.deleteArticleComment(comment) == 1;
 	}
 	
 	@Override

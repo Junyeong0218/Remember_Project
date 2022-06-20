@@ -94,10 +94,16 @@ public interface CommunityRepository {
 	public List<Tag> getTagsAboutSubCategory(int subCategoryId);
 	
 	
-	// 게시글 작성 및 이미지 인서트
+	// 게시글 작성 및 이미지 인서트, 수정, 삭제
 	public int insertArticle(Article article);
 	
 	public int insertArticleImages(List<ArticleImage> articleImages);
+	
+	public int updateArticle(Article article);
+	
+	public int deleteArticleImages(List<ArticleImage> articleImages);
+	
+	public int deleteArticle(int articleId, int userId);
 	
 	
 	// 게시글 좋아요 및 좋아요 취소
@@ -106,10 +112,14 @@ public interface CommunityRepository {
 	public int deleteArticleLike(ArticleLike articleLike);
 	
 	
-	// 댓글 답글 작성
+	// 댓글 답글 작성 및 수정, 삭제
 	public int insertArticleComment(Comment comment);
 	
 	public int insertRelatedArticleComment(Comment comment);
+	
+	public int updateArticleComment(Comment comment);
+
+	public int deleteArticleComment(Comment comment);
 	
 	
 	// 댓글 답글에 좋아요 및 좋아요 취소

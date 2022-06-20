@@ -25,6 +25,7 @@ public class CommentDetail {
 	private String contents;
 	private int related_comment_id;
 	private LocalDateTime create_date;
+	private boolean deleted;
 	private int like_count;
 	
 	private boolean like_flag;

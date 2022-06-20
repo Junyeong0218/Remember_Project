@@ -46,6 +46,8 @@
 			left outer join community_sub_category category on(category.id = am.sub_category_id)
 			left outer join article_like al on(al.article_id = am.id)
 			left outer join article_comment_mst acm on(acm.article_id = am.id)
+		where
+			am.deleted = false
 		group by
 			am.id
 		order by
@@ -62,7 +64,8 @@
 			article_mst am
 			left outer join article_like al on(al.article_id = am.id)
 		where
-			am.sub_category_id = #{categoryId}
+			am.sub_category_id = #{categoryId} and
+			am.deleted = false
 		group by
 			am.id
 		order by
@@ -101,6 +104,8 @@
 			left outer join article_image image on(image.article_id = am.id)
 			left outer join article_like al on(al.article_id = am.id)
 			left outer join article_comment_mst acm on(acm.article_id = am.id)
+		where
+			am.deleted = false
 		group by
 			am.id
 		order by
@@ -140,7 +145,8 @@
 			left outer join article_like al on(al.article_id = am.id)
 			left outer join article_comment_mst acm on(acm.article_id = am.id)
 		where
-			am.sub_category_id = #{categoryId}
+			am.sub_category_id = #{categoryId} and
+			am.deleted = false
 		group by
 			am.id
 		order by
@@ -181,7 +187,8 @@
 			left outer join article_comment_mst acm on(acm.article_id = am.id)
 		where
 			am.sub_category_id = #{categoryId} and
-			am.article_tag_id = #{tagId}
+			am.article_tag_id = #{tagId} and
+			am.deleted = false
 		group by
 			am.id
 		order by
@@ -194,6 +201,8 @@
 			count(id)
 		from
 			article_mst
+		where
+			deleted = false
 		limit #{page}, 15;
 	</select>
 	
@@ -203,7 +212,8 @@
 		from
 			article_mst
 		where
-			sub_category_id = #{categoryId}
+			sub_category_id = #{categoryId} and
+			deleted = false
 		limit #{page}, 15;
 	</select>
 	
@@ -214,7 +224,8 @@
 			article_mst
 		where
 			sub_category_id = #{categoryId} and
-			article_tag_id = #{tagId}
+			article_tag_id = #{tagId} and
+			deleted = false
 		limit #{page}, 15;
 	</select>
 	
@@ -252,6 +263,7 @@
 			acm.`contents` as comment_contents,
 			acm.related_comment_id,
 			acm.create_date as comment_create_date,
+			acm.deleted as comment_deleted,
 			count(distinct acl.id) as comment_like_count
 		from 
 			article_mst am
@@ -272,7 +284,8 @@
 			acm.id,
 			image.id
 		order by
-			acm.create_date asc;
+			acm.create_date asc,
+			image.id asc;
 	</select>
 	
 	<select id="getArticleDetailForLoginUser" parameterType="Integer" resultType="com.remember.app.entity.community.article.ArticleDetail">
@@ -311,6 +324,7 @@
 			acm.`contents` as comment_contents,
 			acm.related_comment_id,
 			acm.create_date as comment_create_date,
+			acm.deleted as comment_deleted,
 			count(distinct acl.id) as comment_like_count,
 			
 			if(acl.user_id = #{userId}, true, false) as comment_like_flag
@@ -333,7 +347,8 @@
 			acm.id,
 			image.id
 		order by
-			acm.create_date asc;
+			acm.create_date asc,
+			image.id asc;
 	</select>
 		
 	<select id="getCommentListASC" parameterType="Integer" resultType="com.remember.app.entity.community.article.CommentDetail">
@@ -346,6 +361,7 @@
 			acm.`contents`,
 			acm.related_comment_id,
 			acm.create_date,
+			acm.deleted,
 			count(distinct acl.id) as like_count
 		from 
 			article_mst am
@@ -372,6 +388,7 @@
 			acm.`contents`,
 			acm.related_comment_id,
 			acm.create_date,
+			acm.deleted,
 			count(distinct acl.id) as like_count
 		from 
 			article_mst am
@@ -398,6 +415,7 @@
 			acm.`contents`,
 			acm.related_comment_id,
 			acm.create_date,
+			acm.deleted,
 			count(distinct acl.id) as like_count,
 			
 			if(acl.user_id = #{userId}, true, false) as like_flag
@@ -426,6 +444,7 @@
 			acm.`contents`,
 			acm.related_comment_id,
 			acm.create_date,
+			acm.deleted,
 			count(distinct acl.id) as like_count,
 			
 			if(acl.user_id = #{userId}, true, false) as like_flag
@@ -577,7 +596,9 @@
 			0,
 			#{use_nickname},
 			now(),
-			now()
+			now(),
+			false,
+			null
 		);
 		
 		<selectKey keyProperty="id" resultType="Integer" order="AFTER">
@@ -600,6 +621,42 @@
 		</foreach>
 		;
 	</insert>
+	
+	<update id="updateArticle" parameterType="com.remember.app.entity.community.article.Article">
+		update
+			article_mst
+		set
+			sub_category_id = #{sub_category_id},
+			title = #{title},
+			contents = #{contents},
+			use_nickname = #{use_nickname},
+			update_date = now()
+		where
+			id = #{id},
+			user_id = #{user_id};
+	</update>
+	
+	<delete id="deleteArticleImages" parameterType="List">
+		delete from
+			article_image
+		where
+			file_name in(
+			<foreach collection="list" index="index" item="item" separator=",">
+				#{item.file_name}
+			</foreach>
+			);
+	</delete>
+	
+	<update id="deleteArticle" parameterType="Integer">
+		update
+			article_mst
+		set
+			deleted = true,
+			deleted_date = now()
+		where
+			id = #{articleId} and
+			user_id = #{userId};
+	</update>
 	
 	<insert id="insertArticleLike" parameterType="com.remember.app.entity.community.article.ArticleLike">
 		insert into
@@ -649,6 +706,31 @@
 			now()
 		);
 	</insert>
+	
+	<update id="updateArticleComment" parameterType="com.remember.app.entity.community.article.Comment">
+		update
+			article_comment_mst
+		set
+			contents = #{contents},
+			use_nickname = #{use_nickname},
+			update_date = now()
+		where
+			id = #{id} and
+			article_id = #{article_id} and
+			user_id = #{user_id};
+	</update>
+	
+	<update id="deleteArticleComment" parameterType="com.remember.app.entity.community.article.Comment">
+		update
+			article_comment_mst
+		set
+			deleted = true,
+			deleted_date = now()
+		where
+			id = #{id} and
+			article_id = #{article_id} and
+			user_id = #{user_id};
+	</update>
 	
 	<insert id="insertArticleCommentLike" parameterType="com.remember.app.entity.community.article.CommentLike">
 		insert into

@@ -34,6 +34,81 @@ function loadArticleDetail() {
 	});
 }
 
+comment_order_asc_button.onclick = () => {
+	$.ajax({
+		type: "get",
+		url: "/api/v1/community/article/" + article_id + "/comments/asc",
+		dataType: "json",
+		success: function (comment_list) {
+			console.log(comment_list);
+			const best_comments = document.querySelectorAll(".best_comments > .comment");
+			const whole_comments = document.querySelectorAll(".whole_comments > .comment");
+			comment_order_asc_button.classList.add("active");
+			comment_order_desc_button.classList.remove("active");
+			best_comments.forEach(e => e.remove());
+			whole_comments.forEach(e => e.remove());
+			setComments(comment_list);
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+}
+
+comment_order_desc_button.onclick = () => {
+	$.ajax({
+		type: "get",
+		url: "/api/v1/community/article/" + article_id + "/comments/desc",
+		dataType: "json",
+		success: function (comment_list) {
+			console.log(comment_list);
+			const best_comments = document.querySelectorAll(".best_comments > .comment");
+			const whole_comments = document.querySelectorAll(".whole_comments > .comment");
+			comment_order_desc_button.classList.add("active");
+			comment_order_asc_button.classList.remove("active");
+			best_comments.forEach(e => e.remove());
+			whole_comments.forEach(e => e.remove());
+			setComments(comment_list);
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+}
+
+function makeArticleDeleteConfirmModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window article_delete_confirm">
+			<span class="text bold">게시글을 삭제하시겠습니까?</span>
+			<span class="text">다른 회원님들이 남긴 의견까지 영구 삭제됩니다</span>
+			<div class="buttons">
+				<button type="button" class="cancel_button">취소</button>
+				<button type="button" class="delete_button">삭제</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeCommentDeleteConfirmModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window delete_confirm">
+			<span class="text bold">댓글을 삭제하시겠습니까?</span>
+			<div class="buttons">
+				<button type="button" class="cancel_button">취소</button>
+				<button type="button" class="delete_button">삭제</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
 function makeCommentReportModal() {
 	const div = document.createElement("div");
 	div.className = "modal";
@@ -68,6 +143,27 @@ function updateViewCountPlusOne() {
 	}
 }
 
+function makeArticleMenuPopupForUser() {
+	const div = document.createElement("div");
+	div.className = "pop_up";
+	div.innerHTML = `
+		<span class="row amend">수정</span>
+		<span class="row red delete">삭제</span>
+		<span class="row share">공유</span>
+	`;
+	return div;
+}
+
+function makeCommentMenuPopupForUser() {
+	const div = document.createElement("div");
+	div.className = "pop_up";
+	div.innerHTML = `
+		<span class="row amend">수정</span>
+		<span class="row red delete">삭제</span>
+	`;
+	return div;
+}
+
 function makeCommentMenuPopup() {
 	const div = document.createElement("div");
 	div.className = "pop_up";
@@ -84,7 +180,7 @@ function setComments(comment_list) {
 	const total_comment_count = best_comments.querySelector(".total_comment_count");
 	const whole_comments = document.querySelector(".whole_comments");
 	
-	let like_count_ordered_comment_list = comment_list.filter(e => e.like_count != 0)
+	let like_count_ordered_comment_list = comment_list.filter(e => e.like_count != 0 && e.deleted == false)
 																										.sort((a, b) => b.like_count - a.like_count);
 	if(like_count_ordered_comment_list.length > 3) {
 		like_count_ordered_comment_list = like_count_ordered_comment_list.splice(3, like_count_ordered_comment_list.length - 3);
@@ -153,7 +249,13 @@ function setComments(comment_list) {
 	} else {
 		total_comment_count.innerText += ` ${comment_list.length}`;
 		for(let i = 0; i < comment_list.length; i++) {
-			const comment_tag = makeCommentTag(comment_list[i], comment_list);
+			let comment_tag;
+			if(comment_list[i].deleted == true) {
+				comment_tag = makeDeletedCommentTag();
+				whole_comments.appendChild(comment_tag);
+				continue;
+			}
+			comment_tag = makeCommentTag(comment_list[i], comment_list);
 			whole_comments.appendChild(comment_tag);
 			
 			// 댓글 메뉴 버튼 팝업 및 모달창
@@ -161,20 +263,113 @@ function setComments(comment_list) {
 			comment_menu_button.onclick = () => {
 				let pop_up = comment_tag.querySelector(".pop_up");
 				if(pop_up == null) {
-					pop_up = makeCommentMenuPopup();
-					comment_tag.querySelector(".writer_info").appendChild(pop_up);
-					pop_up.children[1].onclick = () => {
-						const modal = makeCommentReportModal();
-						document.querySelector(".container").appendChild(modal);
-						document.body.style = "overflow: hidden;";
-						modal.querySelector(".cancel_button").onclick = () => {
-							modal.remove();
-							document.body.style = "";
+					if(principal != null && (principal.id == comment_list[i].user_id)) {
+						// 본인 댓글
+						pop_up = makeCommentMenuPopupForUser();
+						comment_tag.querySelector(".writer_info").appendChild(pop_up);
+						pop_up.children[0].onclick = () => {
+							console.log("수정 폼으로 변경");
+							const exist_tag = whole_comments.querySelector(".comment_form");
+							if(exist_tag != null) {
+								exist_tag.remove();
+							} 
+							const amend_form = makeReplyCommentForm();
+							const index = i == comment_list.length - 1 ? -1 : i;
+							if(index != -1) {
+								whole_comments.insertBefore(amend_form, whole_comments.children[index + 2]);
+							} else {
+								whole_comments.appendChild(amend_form);
+							}
+							comment_tag.classList.add("hidden");
+							
+							const input_wrapper = amend_form.querySelector(".input_wrapper");
+							const amend_comment_contents = amend_form.querySelector(".comment_contents");
+							const amend_comment_submit_button = amend_form.querySelector(".submit_comment");
+							input_wrapper.children[0].onclick = (event) => {
+								if(event.target.checked == true) {
+									amend_comment_contents.placeholder = principal.nickname + "(으)로 댓글 달기...";
+								} else {
+									amend_comment_contents.placeholder = principal.name + "(으)로 댓글 달기...";
+								}
+							}
+							input_wrapper.children[1].onclick = () => input_wrapper.children[0].click();
+							input_wrapper.children[0].click();
+							amend_comment_contents.oninput = (event) => {
+								activeCommentSubmitButton(event, amend_comment_submit_button);
+							}
+							amend_comment_submit_button.onclick = () => {
+								amend_comment_submit_button.disabled = true;
+								console.log(amend_comment_contents.value);
+								console.log(article_id);
+								console.log(input_wrapper.children[0].checked);
+								console.log(comment_list[i].id);
+								$.ajax({
+									type: "put",
+									url: "/api/v1/community/article/" + article_id + "/comment",
+									data: {"id":comment_list[i].id,
+												 "contents":amend_comment_contents.value,
+												 "use_nickname":input_wrapper.children[0].checked,
+												 "related_comment_id":comment_list[i].id},
+									dataType: "json",
+									success: function (data) {
+										console.log(data);
+										if(data == true) {
+											location.reload();
+										} else {
+											alert("댓글 달기 실패");
+										}
+									},
+									error: function (xhr, status) {
+										console.log(xhr);
+										console.log(status);
+									}
+								});
+							}
 						}
-						modal.querySelector(".report_button").onclick = () => {
-							alert("신고완료!");
-							modal.remove();
-							document.body.style = "";
+						pop_up.children[1].onclick = () => {
+							const modal = makeCommentDeleteConfirmModal();
+							document.querySelector(".container").appendChild(modal);
+							document.body.style = "overflow: hidden;";
+							modal.querySelector(".cancel_button").onclick = () => {
+								document.body.style = "";
+								modal.remove();
+							}
+							modal.querySelector(".delete_button").onclick = (event) => {
+								event.target.disabled = true;
+								$.ajax({
+									type: "delete",
+									url: "/api/v1/community/article/" + article_id + "/comment/" + comment_list[i].id,
+									dataType: "json",
+									success: function (data) {
+										if(data == true) {
+											location.reload();
+										} else {
+											alert("댓글 삭제 실패");
+										}
+									},
+									error: function (xhr, status) {
+										console.log(xhr);
+										console.log(status);
+									}
+								});
+							}
+						}
+					} else {
+						pop_up = makeCommentMenuPopup();
+						comment_tag.querySelector(".writer_info").appendChild(pop_up);
+						pop_up.children[1].onclick = () => {
+							const modal = makeCommentReportModal();
+							document.querySelector(".container").appendChild(modal);
+							document.body.style = "overflow: hidden;";
+							modal.querySelector(".cancel_button").onclick = () => {
+								modal.remove();
+								document.body.style = "";
+							}
+							modal.querySelector(".report_button").onclick = () => {
+								alert("신고완료!");
+								modal.remove();
+								document.body.style = "";
+							}
 						}
 					}
 				} else {
@@ -298,6 +493,27 @@ function setComments(comment_list) {
 			}
 		}
 	}
+}
+
+function makeAmendCommentForm(comment) {
+	const div = document.createElement("div");
+	div.className = "comment_form";
+	div.innerHTML = `
+	    <form class="comment_textarea">
+	        <div class="profile_image">
+	            <img src="/static/images/default_profile_image.png">
+	        </div>
+	        <textarea name="contents" class="comment_contents" placeholder="${comment.nickname}(으)로 댓글 달기..." value="${comment.contents}"></textarea>
+	    </form>
+	    <div class="buttons">
+	        <div class="input_wrapper">
+	            <input type="checkbox" class="register_to_nickname" checked="${comment.use_nickname}">
+	            <span>닉네임으로 등록</span>
+	        </div>
+	        <button type="button" class="submit_comment" disabled>등록</button>
+	    </div>
+	`;
+	return div;
 }
 
 function makeReplyCommentForm() {
@@ -434,6 +650,13 @@ function makeBestCommentTag(comment) {
             </button>
         </div>
 	`;
+	return div;
+}
+
+function makeDeletedCommentTag() {
+	const div = document.createElement("div");
+	div.className = "comment";
+	div.innerHTML = `<div class="deleted">삭제된 댓글입니다.</div>`;
 	return div;
 }
 
@@ -574,6 +797,309 @@ function setArticleDetailTag(article_data, article_images) {
 			alert("게시글 좋아요에 실패했습니다.");
 		}
 	}
+	
+	const article_menu_button = article_detail_tag.querySelector(".article_menu_button");
+	article_menu_button.onclick = () => {
+		let pop_up = article_detail_tag.querySelector(".tags > .pop_up");
+		if(pop_up == null) {
+			if(principal == null || article_data.user_id != principal.id) {
+				pop_up = makeCommentMenuPopup();
+				article_detail_tag.querySelector(".tags").appendChild(pop_up);
+				pop_up.children[1].onclick = () => {
+					const modal = makeCommentReportModal();
+					document.querySelector(".container").appendChild(modal);
+					document.body.style = "overflow: hidden;";
+					modal.querySelector(".cancel_button").onclick = () => {
+						modal.remove();
+						document.body.style = "";
+					}
+					modal.querySelector(".report_button").onclick = () => {
+						alert("신고완료!");
+						modal.remove();
+						document.body.style = "";
+					}
+				}
+			} else {
+				pop_up = makeArticleMenuPopupForUser();
+				article_detail_tag.querySelector(".tags").appendChild(pop_up);
+				
+				pop_up.querySelector(".amend").onclick = () => {
+					console.log("게시글 수정");
+					let files = new Array();
+					const modal = makeAmentArticleModal(article_data);
+					let origin_images = new Array();
+					article_images.forEach(e => origin_images.push(e));
+					for(let i = 0; i < origin_images.length; i++) {
+						const image_tag = makeImageTag("/image/article_images/" + origin_images[i]);
+						modal.querySelector(".modal_image_wrapper").appendChild(image_tag);
+						image_tag.querySelector(".delete_image_button").onclick = () => {
+							origin_images.splice(origin_images.findIndex(e => e == origin_images[i]), 1);
+							image_tag.remove();
+							
+							console.log(origin_images);
+						}
+					}
+					if(origin_images.length > 0) modal.querySelector(".modal_image_wrapper").classList.add("active");
+					
+					document.querySelector(".container").appendChild(modal);
+					document.body.style = "overflow: hidden;";
+					modal.querySelector(".close_modal").onclick = () => {
+						document.body.style = "";
+						modal.remove();
+					}
+					
+					const writer_name_tag = modal.querySelector(".writer");
+					const use_nickname_checkbox = modal.querySelector(".use_nickname");
+					const use_nickname_text = use_nickname_checkbox.nextElementSibling;
+					use_nickname_checkbox.onclick = (event) => {
+						if(event.target.checked) {
+							writer_name_tag.innerText = `${principal.nickname}(닉네임)`;
+						} else {
+							writer_name_tag.innerText = `${principal.name}(실명)`;
+						}
+					}
+					use_nickname_text.onclick = () => use_nickname_checkbox.click();
+
+					const tag_selector = modal.querySelector(".tag_selector");
+					let is_opened_tag_selector = false;
+					let tags = getTagsAbountSubCategory(article_data.sub_category_id);
+					let selected_tag_index = tags.findIndex(e => e.tag_name == article_data.tag_name);
+					
+					tag_selector.onclick = (event) => {
+						if(! is_opened_tag_selector) {
+							const select_box = makeTagSelectBox(tags);
+							event.target.parentElement.appendChild(select_box);
+							const children = select_box.children;
+							for(let i = 0; i < children.length; i++) {
+								children[i].onclick = () => {
+									selected_tag_index = i;
+									tag_selector.innerText = children[i].innerText;
+									tag_selector.classList.remove("clicked");
+									select_box.remove();
+									is_opened_tag_selector = false;
+								}
+							}
+							tag_selector.classList.add("clicked");
+							is_opened_tag_selector = true;
+						} else {
+							tag_selector.classList.remove("clicked");
+							modal.querySelector(".tags").remove();
+							is_opened_tag_selector = false;
+						}
+					}
+					
+					const add_image_button = modal.querySelector(".add_image_button"); 
+					const file_input = modal.querySelector("input[name='file']");
+					const modal_image_wrapper = modal.querySelector(".modal_image_wrapper");
+					add_image_button.onclick = () => file_input.click();
+					file_input.onchange = (event) => {
+						loadUploadFiles(event, modal_image_wrapper, origin_images, files);
+					}
+					
+					const title_input_tag = modal.querySelector("input[name='title']");
+					const contents_area_tag = modal.querySelector("textarea[name='contents']");
+					const insert_article_button = modal.querySelector(".register_article_button");
+					insert_article_button.onclick = () => {
+						if(selected_tag_index == -1 ||
+							title_input_tag.value == "" ||
+							contents_area_tag.value == "") {
+							alert("게시글 내용을 정확히 입력해주세요.");	
+						} else {
+							const form_data = new FormData();
+							form_data.append("sub_category_id", article_data.sub_category_id);
+							form_data.append("article_tag_id", tags[selected_tag_index].id);
+							form_data.append("title", title_input_tag.value);
+							form_data.append("contents", contents_area_tag.value);
+							form_data.append("use_nickname", use_nickname_checkbox.checked);
+							console.log("new images");
+							for(let i = 0; i < files.length; i++) {
+								form_data.append("files", files[i]);
+								console.log(files[i]);
+							}
+							const delete_images = new Array();
+							for(let i = 0; i < article_images.length; i++) {
+								console.log(origin_images.findIndex(e => e == article_images[i]));
+								if(origin_images.findIndex(e => e == article_images[i]) == -1) {
+									form_data.append("delete_file_names", article_images[i]);
+									delete_images.push(article_images[i]);
+								}
+							}
+							console.log("delete target images");
+							console.log(delete_images);
+							$.ajax({
+								type: "put",
+								url: "/api/v1/community/article/" + article_data.id,
+								data: form_data,
+								encType: "multipart/form-data",
+								processData: false,
+								contentType: false,
+								dataType: "json",
+								success: function (data) {
+									if(data == true) {
+										location.reload();
+									} else {
+										console.log(data);
+									}
+								},
+								error: function (xhr, status) {
+									console.log(xhr);
+									console.log(status);
+								}
+							});
+						}
+					}
+				}
+				pop_up.querySelector(".delete").onclick = () => {
+					console.log("게시글 삭제");
+					const modal = makeArticleDeleteConfirmModal();
+					document.querySelector(".container").appendChild(modal);
+					document.body.style = "overflow: hidden;";
+					modal.querySelector(".cancel_button").onclick = () => {
+						document.body.style = "";
+						modal.remove();
+					}
+					
+					modal.querySelector(".delete_button").onclick = () => {
+						$.ajax({
+							type: "delete",
+							url: "/api/v1/community/article/" + article_id,
+							dataType: "json",
+							success: function (data) {
+								if(data == true) {
+									alert("게시글 삭제가 완료되었습니다.");
+									location.href = "/community";
+								} else {
+									alert("게시글 삭제 실패");
+								}
+							},
+							error: function (xhr, status) {
+								console.log(xhr);
+								console.log(status);
+							}
+						});
+					}
+				}
+				pop_up.querySelector(".share").onclick = () => {
+					console.log("게시글 공유");
+				}
+			}
+		} else {
+			pop_up.remove();
+		}
+	}
+}
+
+function makeTagSelectBox(tags) {
+	const div = document.createElement("div");
+	div.className = "tags";
+	for(let i = 0; i < tags.length; i++) {
+		div.innerHTML += `<div class="tag">${tags[i].tag_name}</div>`;
+	}
+	return div;
+}
+
+function loadUploadFiles(event, modal_image_wrapper, origin_images, files) {
+	if(event.target.files.length + origin_images.length + files.length > 10) {
+		alert("파일은 10개까지만 등록할 수 있습니다.");
+		return;
+	}
+	for(let i = 0; i < event.target.files.length; i++) {
+		const fileReader = new FileReader();
+		fileReader.onloadend = (e) => {
+			modal_image_wrapper.classList.add("active");
+			files.push(event.target.files[i]);
+			const file_name = event.target.files[i].name;
+			
+			const image_tag = makeImageTag(e.target.result);
+			modal_image_wrapper.appendChild(image_tag);
+			image_tag.querySelector(".delete_image_button").onclick = () => {
+				image_tag.remove();
+				files = files.filter(file => file.name != file_name);
+			}
+		}
+		
+		fileReader.readAsDataURL(event.target.files[i]);
+	}
+}
+
+function makeImageTag(img_src) {
+	const div = document.createElement("div");
+	div.className = "image_box";
+	div.innerHTML = `
+		<img class="image" src="${img_src}">
+		<span class="hover_blind"></span>
+		<button type="button" class="delete_image_button">
+			<img src="/static/images/insert_new_article_delete_image_button.svg">
+		</button>
+	`;
+	return div;
+}
+
+function getTagsAbountSubCategory(sub_category_id) {
+	let tags;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/community/" + sub_category_id + "/tag/list",
+		async: false,
+		dataType: "json",
+		success: function (tag_list) {
+			console.log(tag_list);
+			tags = tag_list;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return tags;
+}
+
+function makeAmentArticleModal(article_data) {
+	const placeholder_message = getTextAreaPlaceholderMessage(article_data.sub_category_id);
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window register_article">
+			<div class="title">게시글 수정</div>
+			<div class="writer">${article_data.nickname}(${article_data.use_nickname == true ? '닉네임' : '실명'})</div>
+			<hr>
+			<form>
+				<div class="row active disabled">
+					<div class="community_selector">${article_data.category_name}</div>
+				</div>
+				<div class="row active">
+					<div class="tag_selector">${article_data.tag_name}</div>
+				</div>
+				<input type="text" class="article_title" name="title" placeholder="제목을 입력하세요" value="${article_data.title}">
+				<textarea class="article_contents" name="contents" placeholder="${placeholder_message}">${article_data.contents}</textarea>
+				<div class="row active">
+					<button type="button" class="add_image_button">
+						<span class="text">사진 첨부</span>
+						<img src="/static/images/insert_new_article_add_image_button.svg">
+						<input type="file" name="file" accept=".jpg, .png, .jpeg" multiple>
+					</button>
+				</div>
+				<div class="modal_image_wrapper"></div>
+				<div class="buttons">
+					<div class="checkbox_wrapper">
+						<input type="checkbox" class="use_nickname" checked="${article_data.use_nickname}">
+						<span class="text">닉네임으로 등록</span>
+					</div>
+					<div class="button_wrapper">
+						<button type="button" class="close_modal">닫기</button>
+						<button type="button" class="register_article_button">등록</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	`;
+	return div;
+}
+
+function getTextAreaPlaceholderMessage(category_id) {
+	return category_id < 9 ? "내용을 입력하세요" : 
+				  category_id > 48 ? "내용을 입력하세요\n\n* 커리어, 직장동료 등 회사생활 이야기를 나눠요\n* 에티켓을 준수해, 유익한 공간을 함께 만들어요" : 
+				  category_id > 8 ? "내용을 입력하세요\n\n* 같은 일 하는 회원들과 자유롭게 대화해요\n* 커리어 이야기, 업계 새소식, 정보를 공유해요\n* 에티켓을 준수해, 유익한 공간을 함께 만들어요" : "내용을 입력하세요";
 }
 
 function insertLike() {

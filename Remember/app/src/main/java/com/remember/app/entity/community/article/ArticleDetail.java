@@ -41,6 +41,8 @@ public class ArticleDetail {
 	
 	private boolean like_flag;
 	
+	private boolean deleted;
+	
 	private int comment_id;
 	private int commented_user_id;
 	private String commented_user_nickname;
@@ -49,6 +51,7 @@ public class ArticleDetail {
 	private String comment_contents;
 	private int related_comment_id;
 	private LocalDateTime comment_create_date;
+	private boolean comment_deleted;
 	private int comment_like_count;
 	
 	private boolean comment_like_flag;

@@ -319,6 +319,7 @@ main {
     flex-direction: column;
     width: 100%;
     background-color: white;
+    border-bottom: 1px solid rgb(235, 235, 235);
 }
 
 .comment_form>.comment_textarea {
@@ -466,6 +467,10 @@ main {
     background-color: rgb(245, 245, 245);
 }
 
+.comment.hidden {
+	display: none;
+}
+
 .comment>.writer_info {
     position: relative;
     display: flex;
@@ -558,7 +563,8 @@ main {
     line-height: 19px;
 }
 
-.comment>.writer_info>.pop_up {
+.comment>.writer_info>.pop_up,
+.article_detail>.header>.tags> .pop_up {
 	position: absolute;
 	top: 45px;
 	right: 0;
@@ -570,19 +576,27 @@ main {
 	box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 16px 0px;
 }
 
-.comment > .writer_info > .pop_up > .row {
+.article_detail>.header>.tags> .pop_up {
+	top: 37px;
+}
+
+.comment > .writer_info > .pop_up > .row,
+.article_detail>.header>.tags> .pop_up > .row {
 	padding: 10px 20px;
+	min-width: 160px;
 	font-size: 14px;
 	font-weight: normal;
 	color: rgb(51, 51, 51);
 	cursor: pointer;
 }
 
-.comment > .writer_info > .pop_up > .row.red {
+.comment > .writer_info > .pop_up > .row.red,
+.article_detail>.header>.tags> .pop_up > .row.red {
 	color: rgb(234, 81, 40);
 }
 
-.comment > .writer_info > .pop_up > .row:hover {
+.comment > .writer_info > .pop_up > .row:hover,
+.article_detail>.header>.tags> .pop_up > .row:hover {
 	background-color: rgb(235, 235, 235);
 }
 
@@ -667,6 +681,10 @@ main {
 
 .comment>.comment_reaction_wrapper>button>* {
     pointer-events: none;
+}
+
+.comment > .deleted {
+	color: rgb(174, 174, 174);
 }
 
 .comment_order_buttons {

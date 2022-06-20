@@ -27,5 +27,7 @@ public class Article {
 	private boolean use_nickname;
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
+	private boolean deleted;
+	private LocalDateTime deleted_date;
 	
 }

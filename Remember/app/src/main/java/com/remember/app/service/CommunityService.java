@@ -5,6 +5,7 @@ import java.util.List;
 import com.remember.app.entity.community.article.ArticleLike;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
+import com.remember.app.entity.community.article.Comment;
 import com.remember.app.entity.community.article.CommentDetail;
 import com.remember.app.entity.community.article.CommentLike;
 import com.remember.app.entity.community.article.Tag;
@@ -13,6 +14,7 @@ import com.remember.app.entity.community.category.JoinedCategory;
 import com.remember.app.entity.community.category.SubCategoryDetail;
 import com.remember.app.requestDto.AddArticleCommentReqDto;
 import com.remember.app.requestDto.AddArticleReqDto;
+import com.remember.app.requestDto.UpdateArticleReqDto;
 import com.remember.app.responseDto.ArticleDetailResDto;
 import com.remember.app.responseDto.CategoryDetailResDto;
 
@@ -54,11 +56,19 @@ public interface CommunityService {
 	
 	public boolean insertArticle(AddArticleReqDto addArticleReqDto);
 	
+	public boolean updateArticle(UpdateArticleReqDto updateArticleReqDto);
+	
+	public boolean deleteArticle(int articleId, int userId);
+	
 	public boolean insertArticleLike(ArticleLike articleLike);
 
 	public boolean deleteArticleLike(ArticleLike articleLike);
 	
 	public boolean insertArticleComment(AddArticleCommentReqDto addArticleCommentReqDto);
+	
+	public boolean updateArticleComment(Comment comment);
+	
+	public boolean deleteArticleComment(Comment comment);
 	
 	public boolean insertArticleCommentLike(CommentLike commentLike);
 

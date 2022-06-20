@@ -25,5 +25,7 @@ public class Comment {
 	private int related_comment_id;
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
+	private boolean deleted;
+	private LocalDateTime deleted_date;
 	
 }

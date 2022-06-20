@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.remember.app.entity.community.article.ArticleLike;
 import com.remember.app.entity.community.article.ArticleSummary;
 import com.remember.app.entity.community.article.BestArticleSummary;
+import com.remember.app.entity.community.article.Comment;
 import com.remember.app.entity.community.article.CommentDetail;
 import com.remember.app.entity.community.article.CommentLike;
 import com.remember.app.entity.community.article.Tag;
@@ -23,6 +24,8 @@ import com.remember.app.entity.community.category.SubCategoryDetail;
 import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.requestDto.AddArticleCommentReqDto;
 import com.remember.app.requestDto.AddArticleReqDto;
+import com.remember.app.requestDto.UpdateArticleCommentReqDto;
+import com.remember.app.requestDto.UpdateArticleReqDto;
 import com.remember.app.responseDto.ArticleDetailResDto;
 import com.remember.app.responseDto.CategoryDetailResDto;
 import com.remember.app.service.CommunityService;
@@ -143,6 +146,22 @@ public class CommunityRestController {
 		return communityService.insertArticle(addArticleReqDto);
 	}
 	
+	@PutMapping("/article/{articleId}")
+	public boolean updateArticle(@PathVariable int articleId,
+															  UpdateArticleReqDto updateArticleReqDto,
+															  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		updateArticleReqDto.setId(articleId);
+		updateArticleReqDto.setUser_id(principalDetails.getId());
+		System.out.println(updateArticleReqDto);
+		return false;
+	}
+	
+	@DeleteMapping("/article/{articleId}")
+	public boolean deleteArticle(@PathVariable int articleId,
+															@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		return communityService.deleteArticle(articleId, principalDetails.getId());
+	}
+	
 	@PutMapping("/article/{articleId}/view")
 	public boolean updateArticleViewCount(@PathVariable int articleId) {
 		return communityService.updateArticleViewCount(articleId);
@@ -189,6 +208,27 @@ public class CommunityRestController {
 		addArticleCommentReqDto.setArticle_id(articleId);
 		addArticleCommentReqDto.setUser_id(principalDetails.getId());
 		return communityService.insertArticleComment(addArticleCommentReqDto);
+	}
+	
+	@PutMapping("/article/{articleId}/comment")
+	public boolean updateArticleComment(@PathVariable int articleId,
+																				 UpdateArticleCommentReqDto updateArticleCommentReqDto,
+																				 @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		updateArticleCommentReqDto.setArticle_id(articleId);
+		updateArticleCommentReqDto.setUser_id(principalDetails.getId());
+		System.out.println(updateArticleCommentReqDto);
+		return communityService.updateArticleComment(updateArticleCommentReqDto.toCommentEntity());
+	}
+	
+	@DeleteMapping("/article/{articleId}/comment/{commentId}")
+	public boolean deleteArticleComment(@PathVariable int articleId,
+																			  @PathVariable int commentId,
+																			  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		return communityService.deleteArticleComment(Comment.builder()
+																														  .id(commentId)
+																														  .article_id(articleId)
+																														  .user_id(principalDetails.getId())
+																														  .build());
 	}
 	
 	@PostMapping("/comment/{commentId}/like")
