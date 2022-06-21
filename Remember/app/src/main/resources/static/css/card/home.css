@@ -247,9 +247,13 @@ main {
 
 .main_contents {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+	align-items:flex-start;
+    
     width: 965px;
+}
+
+.info{
+	width: 630px;
 }
 
 .no_contents {
