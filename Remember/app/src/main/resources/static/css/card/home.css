@@ -290,6 +290,7 @@ main {
 }
 
 .card_list_top {
+	padding: 8.5px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -298,23 +299,23 @@ main {
 }
 
 .btn_left_box {
-    padding-left: 8px;
+    height: 100%;
 }
 
 
 .top_btn_left {
     display: flex;
     align-items: center;
-
+    height: 32px;
 }
 
 .top_list_btn {
     padding: 5.5px;
+    display: flex;
+    align-items: center;
+    height:100%;
     border: 1px solid #d9d9d9;
     border-right: none;
-    color: rgba(0, 0, 0, 0.65);
-    text-align: center;
-    ;
 }
 
 .top_btn.more {
@@ -323,7 +324,8 @@ main {
     align-items: center;
     border: 1px solid #d9d9d9;
     color: rgba(0, 0, 0, 0.65);
-    height: 32px;
+    height: 100%;
+    cursor: pointer;
 }
 
 
@@ -341,7 +343,12 @@ main {
 }
 
 .top_right {
-    padding-right: 8px;
+	display:flex;
+	align-items:center;
+}
+
+.top_right.hide{
+	display: none;
 }
 
 .top_select {
@@ -353,6 +360,21 @@ main {
     outline: none;
     font-size: 13px;
     background-color: #fff;
+}
+
+.list_select{
+	width: 100%;
+	height: 30px;
+	font-size: 14px;
+	color: rgba(0,0,0,0.65);
+	text-align: center;
+	line-height:29px;
+	border-bottom: 1px solid #cdcdcd;
+	background-color: #feffce;
+}
+
+.list_select.hide{
+	display: none;
 }
 
 .list_group {}
@@ -377,6 +399,10 @@ main {
     cursor: pointer;
 }
 
+.card_list_con.color {
+	background-color: #feffce;
+}
+
 .card_list_con.active {
     border-left: 3px solid #333;
 }
@@ -398,6 +424,21 @@ main {
     height: 100%
 }
 
+.check_btn {
+	appearance:none;
+	background: url('/static/images/signup_unchecked_checkbox.png');
+	width: 16px;
+	height: 16px;
+	transition: 300ms;
+}
+
+.check_btn.not_max {
+	background: url('/static/images/card_not_max_checkbox.png') !important;
+}
+
+.check_btn:checked {
+	background: url('/static/images/signup_checked_checkbox.png');
+}
 
 .list_con_info {
     display: flex;

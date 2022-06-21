@@ -59,12 +59,39 @@ function getAllCards() {
             } else {
                 const groupList = groupListTag();
                 main_contents.appendChild(groupList);
+                showCardListInfoTag(card_list);
+                
                 const all_checkbox = groupList.querySelector(".top_list_btn > input");
                 all_checkbox.onclick = (event) => {
+					if(event.target.className.includes("not_max")) {
+						event.target.checked = false;
+						event.target.classList.remove("not_max");
+					}
                     const cards = list_group.querySelectorAll(".card_list_con");
                     cards.forEach(item => item.querySelector(".check_btn").checked = event.target.checked);
+                    
+                    const right = groupList.querySelectorAll('.top_right');
+                    const selcet = groupList.querySelector('.list_select');
+                    const count = countChecked(checkBoxes);
+
+                    if(event.target.checked == true) {
+						console.log("클릭");
+						right[0].classList.add('hide');
+						right[1].classList.remove('hide');
+						selcet.classList.remove('hide');
+						selcet.innerText =`이 페이지의 명함 ${count}장이 모두 선택되었습니다.`;	
+						for(let i =0; i<cards.length; i++){
+							cards[i].classList.add("color");
+						}
+					}else {
+						right[0].classList.remove('hide');
+						right[1].classList.add('hide');
+						selcet.classList.add('hide');
+						for(let i =0; i<cards.length; i++){
+							cards[i].classList.remove("color");
+						}
+					}
                 }
-                cardListInfoTag(card_list);
                 const list_group = document.querySelector(".list_group");
                 const cards = list_group.querySelectorAll(".card_list_con");
 
@@ -88,6 +115,44 @@ function getAllCards() {
                 if (cards.length > 0) {
                     cards[0].click();
                 }
+                
+                const checkBoxes = list_group.querySelectorAll(".check_btn");
+                const right = groupList.querySelectorAll('.top_right');
+                const selcet = groupList.querySelector('.list_select');
+                for(let i = 0; i < checkBoxes.length; i++){
+					checkBoxes[i].onclick = (event) => {
+						if(event.target.checked) {
+							cards[i].classList.add("color");
+						}else {
+							cards[i].classList.remove("color");
+						}
+						const count = countChecked(checkBoxes);
+						if(count == 0) {
+							console.log("0");
+							all_checkbox.classList.remove("not_max");
+							all_checkbox.checked = false;
+							right[0].classList.remove('hide');
+							right[1].classList.add('hide');
+							selcet.classList.add('hide');	
+							
+						} else if(count == checkBoxes.length) {
+							console.log("max");
+							all_checkbox.classList.remove("not_max");
+							all_checkbox.checked = true;
+							selcet.innerText =`이 페이지의 명함 ${count}장이 모두 선택되었습니다.`;	
+							/*num.innerText = count;*/
+						} else if(count > 0 && count < checkBoxes.length) {
+							console.log("중간");
+							all_checkbox.checked = false;
+							all_checkbox.classList.add("not_max");
+							right[0].classList.add('hide');
+							right[1].classList.remove('hide');
+							selcet.classList.remove('hide');	
+							selcet.innerText = `명함 ${count}장이 선택되었습니다.`;			
+						}
+						
+					}
+				}
             }
         },
         error: function (xhr, status) {
@@ -97,7 +162,13 @@ function getAllCards() {
     })
 }
 
-
+function countChecked(checkBoxes) {
+	let count = 0;
+	checkBoxes.forEach(checkBox => {
+		if(checkBox.checked) count++;
+	});
+	return count;
+}
 
 function getGroup(group_id) {
     $.ajax({
@@ -117,8 +188,9 @@ function getGroup(group_id) {
                 all_checkbox.onclick = (event) => {
                     const cards = list_group.querySelectorAll(".card_list_con");
                     cards.forEach(item => item.querySelector(".check_btn").checked = event.target.checked);
+                  	
                 }
-                cardListInfoTag(group_detail.card_list);
+                showCardListInfoTag(group_detail.card_list);
                 const list_group = document.querySelector(".list_group");
                 const cards = list_group.querySelectorAll(".card_list_con");
 
@@ -184,7 +256,20 @@ function groupListTag() {
 					<option label="회사명순" value="">회사명순</option>
 				</select>
 			</div>
+			<div class="top_right hide">
+				<button class="t_btn edit">팀 명함첩으로 복제</button>
+				<div class="t_btn_box">
+				<button class="t_btn send">그룹설정</button>
+				<button class="t_btn send">
+					<span class="btn_more"></span>
+				</button>
+				</div>
+			</div>
 		</div>
+		<div class="list_select hide">
+			이 페이지의 명함 3장이 모두 선택되었습니다.
+		</div>
+
 		<div class="list_group">
 			
 		</div>
@@ -198,7 +283,7 @@ function groupListTag() {
     return div;
 }
 
-function cardListInfoTag(card_list) {
+function showCardListInfoTag(card_list) {
     const list_group = document.querySelector(".list_group");
     let prev_date;
     for (let i = 0; i < card_list.length; i++) {
