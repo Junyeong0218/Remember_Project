@@ -18,6 +18,7 @@ import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.requestDto.AddGroupReqDto;
+import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.responseDto.GroupRespDto;
@@ -151,6 +152,16 @@ public class CardRestController {
 	}
 	
 	
+	// ------------------------------------------------------------------------------
+	// team 관련 rest methods
 	
+	@PostMapping("/team")
+	public boolean insertTeam(AddTeamReqDto addTeamReqDto,
+														@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		addTeamReqDto.setMade_user_id(principalDetails.getId());
+		System.out.println(addTeamReqDto);
+//		return cardService.insertTeam(addTeamReqDto);
+		return false;
+	}
 	
 }

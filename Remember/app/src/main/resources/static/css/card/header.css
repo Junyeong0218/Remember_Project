@@ -163,7 +163,7 @@ header {
 
 
 .menu_box  li:nth-child(2),
-			 :nth-child(6) {
+.menu_box  li:nth-child(6) {
 	border-bottom: 1px solid #ccc;
 }
 

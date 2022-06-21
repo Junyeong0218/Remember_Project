@@ -30,4 +30,15 @@ public interface CardRepository {
 	public int addUserGroup(AddGroup addGroup);
 	
 	public List<Card> getCardSummaryList(int user_id);
+	
+	// -------------------------------------------------
+	// team 관련 repository methods
+	
+	public int insertTeam(Team team);
+	
+	public int joinTeam(TeamJoinUser teamJoinUser);
+	
+	public int insertTeamGroup(TeamGroup teamGroup);
+	
+	public int insertTeamUserProfile(TeamUserProfile teamUserProfile);
 }

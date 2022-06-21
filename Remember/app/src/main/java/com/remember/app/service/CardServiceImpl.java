@@ -11,8 +11,9 @@ import com.remember.app.entity.card.CardRepository;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupCard;
 import com.remember.app.entity.card.GroupSummary;
+import com.remember.app.entity.card.Team;
 import com.remember.app.requestDto.AddGroupReqDto;
-import com.remember.app.requestDto.CardInsertReqDto;
+import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.responseDto.GroupRespDto;
 
@@ -103,5 +104,24 @@ public class CardServiceImpl implements CardService {
 	@Override
 	public List<Card> getCardSummaryList(int user_id) {
 		return cardRepository.getCardSummaryList(user_id);
+	}
+	
+	// -------------------------------------------------
+	// team 관련 services
+	
+	@Override
+	public boolean insertTeam(AddTeamReqDto addTeamReqDto) {
+		Team team = addTeamReqDto.toTeamEntity();
+		if(cardRepository.insertTeam(team) == 1) {
+			addTeamReqDto.setId(team.getId());
+			int result = cardRepository.joinTeam(addTeamReqDto.toJoinEntity());
+			result += cardRepository.insertTeamGroup(addTeamReqDto.toTeamGroupEntity());
+			result += cardRepository.insertTeamUserProfile(addTeamReqDto.toProfileEntity());
+			System.out.println(result);
+			if(result == 3) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

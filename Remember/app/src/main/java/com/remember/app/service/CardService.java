@@ -7,6 +7,7 @@ import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupCard;
 import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.requestDto.AddGroupReqDto;
+import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.responseDto.GroupRespDto;
@@ -38,4 +39,10 @@ public interface CardService {
 	
 	public List<Card> getCardSummaryList(int user_id);
 	
+	
+	
+	// -------------------------------------------------
+	// team 관련 services
+	
+	public boolean insertTeam(AddTeamReqDto addTeamReqDto);
 }

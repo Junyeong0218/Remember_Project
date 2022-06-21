@@ -175,4 +175,54 @@
   		card.create_date desc;
   </select>
   
+		<insert id="insertTeam" parameterType="com.remember.app.entity.card.Team">
+			insert into
+				team_mst
+			values(
+				0,
+				#{made_user_id},
+				#{title},
+				now(),
+				now(),
+				false,
+				null
+			);
+		</insert>
+		
+		<insert id="joinTeam" parameterType="com.remember.app.entity.card.TeamJoinUser">
+			insert into
+				team_join_user
+			values(
+				0,
+				#{team_id},
+				#{joined_user_id},
+				now(),
+				now()
+			);
+		</insert>
+		
+		<insert id="insertTeamGroup" parameterType="com.remember.app.entity.card.TeamGroup">
+			insert into
+				team_group
+			values(
+				0,
+				#{team_id},
+				#{group_name},
+				now(),
+				now()
+			);
+		</insert>
+		
+		<insert id="insertTeamUserProfile" parameterType="com.remember.app.entity.card.TeamUserProfile">
+			insert into
+				team_mst
+			values(
+				0,
+				#{user_id},
+				#{nickname},
+				now(),
+				now()
+			);
+		</insert>
+  
   </mapper>
