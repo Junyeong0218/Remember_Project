@@ -110,6 +110,8 @@
 	  	LEFT OUTER JOIN card_group_mst cgm ON(cgm.id = cbg.group_id)
 	where
 	  	group_id = #{groupId}
+	order by
+  		cm.create_date desc;
 	  	
   </select>
   
