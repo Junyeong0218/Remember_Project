@@ -165,7 +165,8 @@
   		left outer join card_belong_group belong on(belong.group_id = `group`.id)
   		left outer join card_mst card on(card.id=belong.card_id)
   	where
-  		`group`.user_id = #{user_id}
+  		`group`.user_id = #{user_id} and
+  		belong.id is not null
   	group by
   		belong.card_id
   	order by
