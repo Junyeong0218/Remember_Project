@@ -1,13 +1,18 @@
 package com.remember.app.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 import org.springframework.stereotype.Service;
 
+import com.remember.app.entity.community.article.Article;
+import com.remember.app.entity.community.article.ArticleImage;
 import com.remember.app.entity.now.NowArticle;
 import com.remember.app.entity.now.NowArticleRelated;
 import com.remember.app.entity.now.NowArticleRepository;
+import com.remember.app.requestDto.AddArticleReqDto;
+import com.remember.app.requestDto.UploadArticleReqDto;
 import com.remember.app.responseDto.NowArticleDetailRespDto;
 
 import lombok.RequiredArgsConstructor;
@@ -55,11 +60,9 @@ public class NowServiceImpl implements NowService{
 		return nowArticleRepository.getNowArticleRelated(articleId);
 	}
 
-
 	@Override
-	public void uploadNowArticle(NowArticle nowArticle) {
-		nowArticleRepository.uploadNowArticle(nowArticle);;
+	public boolean uploadArticle(UploadArticleReqDto uploadArticleReqDto) {
+		return false;
 		
 	}
-
 }

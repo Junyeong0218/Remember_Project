@@ -20,7 +20,6 @@ public class NowArticle {
 	private int category_id;
 	private String title;
 	private String contents;
-	private String file_name;
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
 	

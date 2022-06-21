@@ -2,7 +2,6 @@ package com.remember.app.restController;
 
 import java.util.List;
 
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,10 +50,10 @@ public class NowRestController {
 	public List<NowArticleRelated> getRelatedArticle(@PathVariable int articleId) {
 		return nowService.getNowArticleRelated(articleId);
 	}
+
+		
+
 	
-	@GetMapping("/article/upload")
-	public void uploadNowArticle(NowArticle nowArticle) {
-		nowService.uploadNowArticle(nowArticle);
-	}
+	
 	
 }

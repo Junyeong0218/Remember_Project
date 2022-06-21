@@ -32,14 +32,6 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 	public Map<String, Object> getAttributes() {
 		return attributes;
 	}
-	
-	public UserDetail getUser() {
-		return userDetail;
-	}
-	
-	public int getId() {
-		return userDetail.getId();
-	}
 
 	@Override
 	public String getName() {

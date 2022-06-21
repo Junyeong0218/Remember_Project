@@ -25,21 +25,38 @@
 				NOW()
 			)
 			
-			into now_title_image ti(
-				ti.file_name
-			)
-			VALUES(
-				#{file_name}
-			)
-			
-			into now_contents_image ci(
-				ci.file_name
-			)
-			VALUES(
-				#{file_name}
-			)
-			
-			
+	</insert>
+	
+	<insert id="insertTitleImages" parameterType="List">
+			insert into
+				now_title_image
+			values
+		<foreach collection="list" index="index" item="item" separator=",">
+		(
+			0,
+			#{item.article_id},
+			#{item.file_name},
+			now(),
+			now()
+		)
+		</foreach>
+		;
+	</insert>
+	
+	<insert id="insertContentsImages" parameterType="List">
+			insert into
+				now_contents_image
+			values
+		<foreach collection="list" index="index" item="item" separator=",">
+		(
+			0,
+			#{item.article_id},
+			#{item.file_name},
+			now(),
+			now()
+		)
+		</foreach>
+		;
 	</insert>
   	
   	<select id = "getNowArticleList" resultType="com.remember.app.entity.now.NowArticle">
