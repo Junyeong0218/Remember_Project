@@ -234,7 +234,8 @@
 			am.id,
 			
 			am.user_id,
-			um.nickname,
+			am.use_nickname,
+			if(am.use_nickname = true, um.nickname, um.name) as nickname,
 			ud.department_name,
 			ud.profile_img,
 			
@@ -293,7 +294,8 @@
 			am.id,
 			
 			am.user_id,
-			um.nickname,
+			am.use_nickname,
+			if(am.use_nickname = true, um.nickname, um.name) as nickname,
 			ud.department_name,
 			ud.profile_img,
 			
@@ -627,12 +629,13 @@
 			article_mst
 		set
 			sub_category_id = #{sub_category_id},
+			article_tag_id = #{article_tag_id},
 			title = #{title},
 			contents = #{contents},
 			use_nickname = #{use_nickname},
 			update_date = now()
 		where
-			id = #{id},
+			id = #{id} and
 			user_id = #{user_id};
 	</update>
 	

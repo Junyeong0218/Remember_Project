@@ -153,7 +153,7 @@ public class CommunityRestController {
 		updateArticleReqDto.setId(articleId);
 		updateArticleReqDto.setUser_id(principalDetails.getId());
 		System.out.println(updateArticleReqDto);
-		return false;
+		return communityService.updateArticle(updateArticleReqDto);
 	}
 	
 	@DeleteMapping("/article/{articleId}")

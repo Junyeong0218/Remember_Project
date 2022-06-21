@@ -151,7 +151,7 @@ public class CommunityServiceImpl implements CommunityService {
 																												  .imageList(articleImages)
 																												  .commentList(orderedCommentList)
 																												  .build();
-																
+		System.out.println(dto);
 		return dto;
 	}
 	
@@ -312,9 +312,8 @@ public class CommunityServiceImpl implements CommunityService {
 	public boolean updateArticle(UpdateArticleReqDto updateArticleReqDto) {
 		int deleteCount = 0;
 		boolean deleteFlag = false;
-		if(updateArticleReqDto.getDelete_file_names().size() > 0) {
+		if(updateArticleReqDto.getDelete_file_names() != null) {
 			deleteCount = communityRepository.deleteArticleImages(updateArticleReqDto.toArticleImages());
-			System.out.println(deleteCount);
 			if(deleteCount > 0) {
 				deleteFlag = deleteArticleImageFiles(updateArticleReqDto.getDelete_file_names());
 			}
@@ -323,7 +322,7 @@ public class CommunityServiceImpl implements CommunityService {
 		}
 		if(deleteFlag) {
 			List<String> fileNames = downloadArticleImageFiles(updateArticleReqDto.getFiles());
-			if(fileNames.size() > 0) {
+			if(fileNames != null && fileNames.size() > 0) {
 				List<ArticleImage> articleImages = new ArrayList<ArticleImage>();
 				for(String imageName : fileNames) {
 					articleImages.add(ArticleImage.builder()

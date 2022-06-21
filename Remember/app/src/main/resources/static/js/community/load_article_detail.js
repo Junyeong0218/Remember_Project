@@ -831,9 +831,10 @@ function setArticleDetailTag(article_data, article_images) {
 					article_images.forEach(e => origin_images.push(e));
 					for(let i = 0; i < origin_images.length; i++) {
 						const image_tag = makeImageTag("/image/article_images/" + origin_images[i]);
+						const image_name = origin_images[i];
 						modal.querySelector(".modal_image_wrapper").appendChild(image_tag);
 						image_tag.querySelector(".delete_image_button").onclick = () => {
-							origin_images.splice(origin_images.findIndex(e => e == origin_images[i]), 1);
+							origin_images.splice(origin_images.findIndex(e => e == image_name), 1);
 							image_tag.remove();
 							
 							console.log(origin_images);
@@ -1082,7 +1083,7 @@ function makeAmentArticleModal(article_data) {
 				<div class="modal_image_wrapper"></div>
 				<div class="buttons">
 					<div class="checkbox_wrapper">
-						<input type="checkbox" class="use_nickname" checked="${article_data.use_nickname}">
+						<input type="checkbox" class="use_nickname" ${article_data.use_nickname == true ? 'checked' : ''}>
 						<span class="text">닉네임으로 등록</span>
 					</div>
 					<div class="button_wrapper">

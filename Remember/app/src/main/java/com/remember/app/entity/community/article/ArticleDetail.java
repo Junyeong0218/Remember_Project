@@ -18,6 +18,7 @@ public class ArticleDetail {
 	private int id;
 	
 	private int user_id;
+	private boolean use_nickname;
 	private String nickname;
 	private String department_name;
 	private String profile_img;
