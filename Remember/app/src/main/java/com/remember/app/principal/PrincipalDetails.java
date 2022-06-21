@@ -42,6 +42,14 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return null;
 	}
+	
+	public UserDetail getUser() {
+		return userDetail;
+	}
+	
+	public int getId() {
+		return userDetail.getId();
+	}
 
 	@Override
 	public String getPassword() {
@@ -52,8 +60,6 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 	public String getUsername() {
 		return userDetail.getEmail();
 	}
-	
-	
 
 	@Override
 	public boolean isAccountNonExpired() {
