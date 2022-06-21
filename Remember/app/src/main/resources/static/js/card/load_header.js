@@ -105,7 +105,6 @@ function addMenu(){
 	buttons[buttons.length-1].onclick = () => {
 		const addCardForm = makeAddCardForm();
 		const main_contents = document.querySelector(".main_contents");
-		const cardInput = addCardForm.querySelectorAll('.input_con');
 		
 		main_contents.innerHTML = '';
 		main_contents.appendChild(addCardForm);
@@ -124,55 +123,61 @@ function addMenu(){
 		location.reload();
 		}
 		addCardForm.querySelector('.save').onclick = () => {
+			const data = makeCardData(addCardForm);
 			console.log('저장');
-			
-			$.ajax({
-				type:'post',
-				url:'/api/v1/card',
-				data:{
-					'name': cardInput[0].value,
-					'position_name': cardInput[1].value,
-					'department_name':cardInput[2].value,
-					'company_name':cardInput[3].value,
-					'email':cardInput[4].value,
-					'phone':cardInput[5].value,
-					'landline_phone':cardInput[6].value,
-					'fax':cardInput[7].value,
-					'address':cardInput[8].value,
-					'sub_address':cardInput[9].value,
-					},
-				dataType:'json',
-				success:function(card_id){
-					console.log(card_id);
-					if(card_id > 0){
-						const cardDetail = cardDetailTag(getUserCard(card_id));
-						addCardForm.remove();
-						main_contents.innerHTML = '';
-						main_contents.appendChild(cardDetail);
-						document.querySelector('.my_business_card').classList.remove("hidden");
-						const editBtn =cardDetail.querySelector('.edit');
-						editBtn.onclick = () => {
-							const editForm = makeEditTag();
-							console.log("클릭");
-							cardDetail.remove();
-							main_contents.innerHTML='';
-							main_contents.appendChild(editForm);
+			console.log(data);
+			if(data.name == null) {
+				alert("이름은 필수로 입력하셔야합니다.");
+			} else {
+				$.ajax({
+					type:'post',
+					url:'/api/v1/card',
+					data: data,
+					dataType:'json',
+					success:function(card_id){
+						console.log(card_id);
+						if(card_id > 0){
+							const cardDetail = cardDetailTag(getUserCard(card_id));
+							addCardForm.remove();
+							main_contents.innerHTML = '';
+							main_contents.appendChild(cardDetail);
+							document.querySelector('.my_business_card').classList.remove("hidden");
+							const editBtn =cardDetail.querySelector('.edit');
+							editBtn.onclick = () => {
+								const editForm = makeEditTag();
+								console.log("클릭");
+								cardDetail.remove();
+								main_contents.innerHTML='';
+								main_contents.appendChild(editForm);
+							}
+							
+							// 미분류명함 card_count select
+							
+						}else {
+							alert('명함 추가 실패')
 						}
-						
-						// 미분류명함 card_count select
-						
-					}else {
-						alert('명함 추가 실패')
+					},
+					error: function (xhr, stauts) {
+					console.log(xhr);
+					console.log(stauts);
 					}
-				},
-				error: function (xhr, stauts) {
-				console.log(xhr);
-				console.log(stauts);
-				}
-			})
+				});
+			}
 		}
 	}
 
+}
+
+function makeCardData(cardForm) {
+	const cardInputs = cardForm.querySelectorAll('.input_con');
+	const data = {};
+	for(let i = 0; i < cardInputs.length; i++) {
+		if(cardInputs[i].value != "" && cardInputs[i].value != null && typeof cardInputs[i].value != "undefined") {
+			data[''+cardInputs[i].name] = cardInputs[i].value; 
+		}
+	}
+	console.log(data);
+	return data;
 }
 
 function getUserCard(card_id){
@@ -291,8 +296,9 @@ function AddProfileImg(event, imgTag){
 }
 
 function cardDetailTag(card_data){
-	const position_text = card_data.position_name != "" && card_data.department_name != "" ? card_data.position_name + " / " + card_data.department_name :
-						  card_data.position_name == "" ? card_data.department_name : card_data.position_name;
+	const position_text = card_data.position_name != null && card_data.department_name != null ? card_data.position_name + " / " + card_data.department_name :
+											 card_data.position_name == null && card_data.department_name == null ? null : 
+											 card_data.position_name == null ? card_data.department_name : card_data.position_name;
 	const div = document.createElement('div');
 	div.className ='detail_box';
 	div.innerHTML = `
@@ -315,8 +321,8 @@ function cardDetailTag(card_data){
                 </span>
                 <div class="profile_info">
                     <div class="profile_name">${card_data.name}</div>
-                    <div class="profile_position">${position_text}</div>
-                    <div class="profile_company">${card_data.company_name}</div>
+${position_text == null ? '' : '<div class="profile_position">' + position_text + '</div>'} 
+${card_data.company_name == null ? '' : '<div class="profile_company">' + card_data.company_name + '</div>'}
                 </div>
             </div>
         </div>
@@ -325,28 +331,28 @@ function cardDetailTag(card_data){
                 <div class="info_box">
                     <div class="info_title">이메일</div>
                     <div class="info_con_box">
- ${card_data.email == '' ? '<div class="info_no_value">이메일 없음</div>' : 
+ ${card_data.email == null ? '<div class="info_no_value">이메일 없음</div>' : 
 						   '<div class="info_con  link">' + card_data.email + '</div>'}  
                     </div>
                 </div>
                 <div class="info_box">
                     <div class="info_title">휴대폰</div>
                     <div class="info_con_box">
- ${card_data.phone == '' ? '<div class="info_no_value">휴대폰 번호 없음</div>' : 
+ ${card_data.phone == null ? '<div class="info_no_value">휴대폰 번호 없음</div>' : 
 						   '<div class="info_con">' + card_data.phone + '</div>'}                       
                     </div>
                 </div>
                 <div class="info_box">
                     <div class="info_title">유선전화</div>
                     <div class="info_con_box">
- ${card_data.landline_phone == '' ? '<div class="info_no_value">유선전화 번호 없음</div>' : 
+ ${card_data.landline_phone == null ? '<div class="info_no_value">유선전화 번호 없음</div>' : 
 						   '<div class="info_con">' + card_data.landline_phone + '</div>'}  
                     </div>
                 </div>
                 <div class="info_box">
                     <div class="info_title">팩스</div>
                     <div class="info_con_box">
- ${card_data.fax == '' ? '<div class="info_no_value">팩스 번호 없음</div>' : 
+ ${card_data.fax == null ? '<div class="info_no_value">팩스 번호 없음</div>' : 
 						   '<div class="info_con">' + card_data.fax + '</div>'}  
                     </div>
                 </div>
@@ -362,7 +368,7 @@ function cardDetailTag(card_data){
                 <div class="info_box">
                     <div class="info_title">주소</div>
                     <div class="info_con_box">    
- ${card_data.address == '' ? '<div class="info_no_value">주소 없음</div>' : 
+ ${card_data.address == null ? '<div class="info_no_value">주소 없음</div>' : 
 						   '<div class="info_con link">' + card_data.address +  card_data.sub_address +'</div>'}  
                 	</div>
                 </div>

@@ -53,7 +53,7 @@ function getAllCards() {
 		success:function(card_list){
 			console.log(card_list);
 			main_contents.innerHTML = "";
-			if(card_list.length ==1 && card_list[0] == null){
+			if(card_list.length == 0){
 				const no_contents_tag = makeNoContentsTag();
 				main_contents.appendChild(no_contents_tag);
 			}else{
@@ -68,9 +68,8 @@ function getAllCards() {
 				const list_group = document.querySelector(".list_group");
 				const cards = list_group.querySelectorAll(".card_list_con");
 				
-				
 				for(let i =0; i < cards.length; i++){
-						cards[i].onclick = () => {
+					cards[i].onclick = () => {
 						console.log(card_list[i]);
 						cards.forEach((item, index) => {
 							if(index != i) item.classList.remove("active");
@@ -82,17 +81,17 @@ function getAllCards() {
 						if(cardInfoForm != null) {
 							cardInfoForm.remove();
 						}
-						cardInfoForm = makeCardInfoForm();
+						cardInfoForm = makeCardInfoForm(card_list[i]);
 						main_contents.appendChild(cardInfoForm);
-						const dd = dfd(card_list[i]);
+/*						const dd = dfd(card_list[i]);
 						const sf = cardInfoForm.querySelector('.detail_body');
-						sf.appendChild(dd);
+						sf.appendChild(dd);*/
 					}
 				}
-						cards[0].click();
-				
+				if(cards.length > 0) {
+					cards[0].click();
+				}
 			}
-			
 		},
 		error:function(xhr,status){
 			console.log(xhr);
@@ -185,7 +184,6 @@ function cardListInfoTag(card_list) {
 			const div = groups[groups.length - 1];
 			div.innerHTML += `
 				<div class="card_list_con">
-
 					<div class="list_con_check">
 						<input type="checkbox" id="check" class="check_btn">
 						<label for="check"></label>
@@ -194,8 +192,8 @@ function cardListInfoTag(card_list) {
 						<div class="list_info_name">
 							<span>${card_list[i].name}</span>
 						</div>
-		${department_text == "" ? '' : '<div class="list_info position">' + department_text + '</div>'}
-		${card_list[i].company_name == null || card_list[i].company_name == "" ? '' : '<div class="list_info company">' + card_list[i].company_name + '</div>'}
+		${department_text == null ? '' : '<div class="list_info position">' + department_text + '</div>'}
+		${card_list[i].company_name == null ? '' : '<div class="list_info company">' + card_list[i].company_name + '</div>'}
 					</div>
 				</div>
 			`;
@@ -206,7 +204,6 @@ function cardListInfoTag(card_list) {
 			div.innerHTML = `
 				<div class="card_list_title">${create_date}</div>
 				<div class="card_list_con">
-
 					<div class="list_con_check">
 						<input type="checkbox" id="check" class="check_btn">
 						<label for="check"></label>
@@ -215,8 +212,8 @@ function cardListInfoTag(card_list) {
 						<div class="list_info_name">
 							<span>${card_list[i].name}</span>
 						</div>
-		${department_text == "" ? '' : '<div class="list_info position">' + department_text + '</div>'}
-		${card_list[i].company_name == null || card_list[i].company_name == "" ? '' : '<div class="list_info company">' + card_list[i].company_name + '</div>'}
+		${department_text == null ? '' : '<div class="list_info position">' + department_text + '</div>'}
+		${card_list[i].company_name == null ? '' : '<div class="list_info company">' + card_list[i].company_name + '</div>'}
 					</div>
 				</div>
 			`;
@@ -227,9 +224,9 @@ function cardListInfoTag(card_list) {
 }
 
 function makeDepartmentText(department_name, position_name) {
-	return department_name != "" && position_name != "" ? position_name + " / " + department_name :
-		   position_name != "" ? position_name :
-		   department_name != "" ? department_name : "";
+	return position_name != null && department_name != null ? position_name + " / " + department_name :
+				  position_name == null && department_name == null ? null : 
+				  position_name == null ? department_name : position_name;
 }
 
 function makeCardCreateDate(create_date) {
@@ -239,7 +236,9 @@ function makeCardCreateDate(create_date) {
 	return `${date.getFullYear()}-${month}-${day}`;
 }
 
-function makeCardInfoForm(card_list){
+function makeCardInfoForm(card_data){
+	console.log(card_data);
+	const position_text = makeDepartmentText(card_data.department_name, card_data.position_name);
 	const div = document.createElement('div');
 	div.className = "detail_box";
 	div.innerHTML = `
@@ -255,8 +254,73 @@ function makeCardInfoForm(card_list){
 			</div>
 		</div>
 		<div class = "detail_body">
-			
-   	 </div>
+			<div class="detail_profile">
+	            <div class="profile_box">
+	                <span class="detail_profile_img">
+	                    <img src="/static/images/card_profile_user.png" alt="프로필 기본">
+	                </span>
+	                <div class="profile_info">
+	                    <div class="profile_name">${card_data.name}</div>
+${position_text == null ? '' : '<div class="profile_position">' + position_text + '</div>'} 
+${card_data.company_name == null ? '' : '<div class="profile_company">' + card_data.company_name + '</div>'}
+	                </div>
+	            </div>
+	        </div>
+	        <div class="profile_detail">
+	            <div class="profile_detail_info">
+	                <div class="info_box">
+	                    <div class="info_title">이메일</div>
+	                    <div class="info_con_box">
+	 ${card_data.email == null ? '<div class="info_no_value">이메일 없음</div>' : 
+							   '<div class="info_con  link">' + card_data.email + '</div>'}  
+	                    </div>
+	                </div>
+	                <div class="info_box">
+	                    <div class="info_title">휴대폰</div>
+	                    <div class="info_con_box">
+	 ${card_data.phone == null ? '<div class="info_no_value">휴대폰 번호 없음</div>' : 
+							   '<div class="info_con">' + card_data.phone + '</div>'}                       
+	                    </div>
+	                </div>
+	                <div class="info_box">
+	                    <div class="info_title">유선전화</div>
+	                    <div class="info_con_box">
+	 ${card_data.landline_phone == null ? '<div class="info_no_value">유선전화 번호 없음</div>' : 
+							   '<div class="info_con">' + card_data.landline_phone + '</div>'}  
+	                    </div>
+	                </div>
+	                <div class="info_box">
+	                    <div class="info_title">팩스</div>
+	                    <div class="info_con_box">
+	 ${card_data.fax == null ? '<div class="info_no_value">팩스 번호 없음</div>' : 
+							   '<div class="info_con">' + card_data.fax + '</div>'}  
+	                    </div>
+	                </div>
+	                <div class="info_box">
+	                    <div class="info_title">그룹</div>
+	                    <div class="info_con_box">
+	                        <div class="info_con"></div>
+	                        <div class="info_no_value">미지정</div>
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="profile_detail_info">
+	                <div class="info_box">
+	                    <div class="info_title">주소</div>
+	                    <div class="info_con_box">    
+	 ${card_data.address == null ? '<div class="info_no_value">주소 없음</div>' : 
+							   '<div class="info_con link">' + card_data.address +  card_data.sub_address +'</div>'}  
+	                	</div>
+	                </div>
+	                <div class="info_box">
+	                    <div class="info_title">등록일</div>
+	                    <div class="info_con_box">
+	                        <div class="info_con">${makeCardDate(card_data.create_date)}</div>
+	                    </div>
+	                </div>
+	        	</div>  
+	        </div>
+   	 	</div>
          <div class="profile_memo">
             <div class="info_title">메모</div>
                 <div class="info_con_box">
@@ -274,98 +338,6 @@ function makeCardInfoForm(card_list){
 	return div;
 }
 
-function dfd(card_data){
-	const div = document.createElement('div');
-	div.className="ss";
-	div.innerHTML=`
-	
-<div class="detail_profile">
-            <div class="profile_box">
-                <span class="detail_profile_img">
-                    <img src="/static/images/card_profile_user.png" alt="프로필 기본">
-                </span>
-                <div class="profile_info">
-                    <div class="profile_name">${card_data.name}</div>
-                    <div class="profile_position">${card_data.position_name}</div>
-                    <div class="profile_company">${card_data.company_name}</div>
-                </div>
-            </div>
-        </div>
-        <div class="profile_detail">
-            <div class="profile_detail_info">
-                <div class="info_box">
-                    <div class="info_title">이메일</div>
-                    <div class="info_con_box">
- ${card_data.email == '' ? '<div class="info_no_value">이메일 없음</div>' : 
-						   '<div class="info_con  link">' + card_data.email + '</div>'}  
-                    </div>
-                </div>
-                <div class="info_box">
-                    <div class="info_title">휴대폰</div>
-                    <div class="info_con_box">
- ${card_data.phone == '' ? '<div class="info_no_value">휴대폰 번호 없음</div>' : 
-						   '<div class="info_con">' + card_data.phone + '</div>'}                       
-                    </div>
-                </div>
-                <div class="info_box">
-                    <div class="info_title">유선전화</div>
-                    <div class="info_con_box">
- ${card_data.landline_phone == '' ? '<div class="info_no_value">유선전화 번호 없음</div>' : 
-						   '<div class="info_con">' + card_data.landline_phone + '</div>'}  
-                    </div>
-                </div>
-                <div class="info_box">
-                    <div class="info_title">팩스</div>
-                    <div class="info_con_box">
- ${card_data.fax == '' ? '<div class="info_no_value">팩스 번호 없음</div>' : 
-						   '<div class="info_con">' + card_data.fax + '</div>'}  
-                    </div>
-                </div>
-                <div class="info_box">
-                    <div class="info_title">그룹</div>
-                    <div class="info_con_box">
-                        <div class="info_con"></div>
-                        <div class="info_no_value">미지정</div>
-                    </div>
-                </div>
-            </div>
-            <div class="profile_detail_info">
-                <div class="info_box">
-                    <div class="info_title">주소</div>
-                    <div class="info_con_box">    
- ${card_data.address == '' ? '<div class="info_no_value">주소 없음</div>' : 
-						   '<div class="info_con link">' + card_data.address +  card_data.sub_address +'</div>'}  
-                	</div>
-                </div>
-                <div class="info_box">
-                    <div class="info_title">등록일</div>
-                    <div class="info_con_box">
-                        <div class="info_con">${makeCardDate(card_data.create_date)}</div>
-                    </div>
-                </div>
-        	</div>  
-        </div>
-
-	`;
-	
-	return div;
-}
-/*<div class="card_list_con">
-			<div class ="list_mark"></div>
-			<div class="list_con_check">
-				<input type="checkbox" id="check" class="check_btn">
-				<label for="check"></label>
-			</div>
-			<div class="list_con_info">
-				<div class="list_info_name">
-					<span>${card_list.name}</span>
-				</div>
-				<div class="list_info position">dd</div>
-				<div class="list_info company">d</div>
-			</div>
-		</div>*/
-
-
 function makeGroupTag(group_data) {
 	const button = document.createElement("button");
 	button.type = "button";
@@ -376,8 +348,6 @@ function makeGroupTag(group_data) {
 	`;
      return button;                      
 }
-
-
 
 function toggleAddGroupTag(){
 	const addGroupBox = addGroup.querySelector('.add_group_box');
