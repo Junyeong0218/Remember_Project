@@ -9,13 +9,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/now")
 public class NowController {
 	
-	@GetMapping(value = {"", "/{categoryId}"})
+	@GetMapping("")
+	public String home() {
+		return "/now/home";
+	}
+	
+	@GetMapping("/{categoryId}")
 	public String nowList(@PathVariable(required = false) Integer categoryId) {
-		return "/now/Home";
+		return "now/category";
 	}
 	
 	
-	@GetMapping(value = {"/detail/{articleId}", "/{categoryId}/detail/{articleId}"})
+	@GetMapping(value = {"/{articleId}", "/{categoryId}/{articleId}"})
 	public String nowDetail(@PathVariable(required = false) Integer categoryId,@PathVariable(required = false) Integer articleId) {
 		return "/now/article_detail";
 	}

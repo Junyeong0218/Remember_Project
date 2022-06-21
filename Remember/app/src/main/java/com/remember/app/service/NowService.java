@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.remember.app.entity.now.NowArticle;
 import com.remember.app.entity.now.NowArticleRelated;
+import com.remember.app.requestDto.UploadArticleReqDto;
 import com.remember.app.responseDto.NowArticleDetailRespDto;
 
 public interface NowService {
@@ -20,6 +21,6 @@ public interface NowService {
 	
 	public List<NowArticleRelated> getNowArticleRelated(int articleId);
 	
-	public void uploadNowArticle(NowArticle nowArticle);
+	public boolean uploadArticle(UploadArticleReqDto uploadArticleReqDto);
 
 }

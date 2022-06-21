@@ -49,15 +49,7 @@ public class AuthRestController {
 			return new UserLoginFlagsResDto();
 		}
 	}
-	
-	@GetMapping("/principal")
-	public UserDetail getPrincipal(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-		try {
-			return principalDetails.getUser();
-		} catch (NullPointerException e) {
-			return null;
-		}
-	}
+
 	
 	@PostMapping("/signup/phone/certificate")
 	public String sendPhoneMessage(String phone) {
