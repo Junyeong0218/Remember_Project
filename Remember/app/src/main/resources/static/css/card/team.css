@@ -1,0 +1,632 @@
+.container {
+	min-height: 100vh;
+}
+
+main {
+	margin-top: 72px;
+	display: flex;
+	justify-content: center;
+	flex-grow: 1;
+	width: 100%;
+	background-color: rgba(51, 51, 51, 0.08);
+}
+
+.main_wrapper {
+	display: flex;
+	min-width: 1200px;
+}
+
+.menus {
+	margin: 10px 5px 5px 5px;
+	display: flex;
+	flex-direction: column;
+	width: 230px;
+}
+
+.menus > .team_menu {
+	margin-bottom: 10px;
+	padding: 12px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border: 1px solid #CDCDCD;
+	background-color: white;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.menus > .team_menu > .title {
+	font-size: 11px;
+	color: #999;
+}
+
+.menus > .team_menu > .team_info {
+	display: flex;
+	align-items: center;
+}
+
+.menus > .team_menu > .team_info > .team_name {
+	max-width: 150px;
+	font-size: 13px;
+	color: #666;
+	white-space: no-wrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.menus > .team_menu > .team_info > .team_grade {
+	margin-left: 5px;
+	padding: 0 3px;
+	height: 18px;
+	border: 1px solid #333;
+	border-radius: 3px;
+	font-size: 11px;
+	line-height: 18px;
+}
+
+.menus > .team_menu > .team_info > .team_grade.basic {
+	border-color: #979797;
+	color: #979797;
+}
+
+.menus > .team_menu > hr {
+	margin: 18px 0;
+	border: none;
+	border-top: 1px solid #EEE;
+}
+
+.menus > .team_menu > .buttons {
+	margin-bottom: 5px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.menus > .team_menu > .buttons > button {
+	margin-bottom: 3px;
+	padding: 6px 12px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	border: 1px solid #D9D9D9;
+	cursor: pointer;
+	transition: 300ms;
+}
+
+.menus > .team_menu > .buttons > button:hover {
+	border: 1px solid #333; 
+}
+
+.menus > .team_menu > .buttons > button > * {
+	pointer-events: none;
+}
+
+.menus > .team_menu > .buttons > button > span {
+	margin-left: 3px;
+	font-size: 13px;
+	font-weight: 400;
+	color: rgb(0, 0, 0, 0.65);
+}
+
+.menus > .upgrade_goods {
+	margin-bottom: 10px;
+	padding: 8px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	height: 48px;
+	border: 1px solid #CDCDCD;
+	background-color: #6AA0E0;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.05);
+	cursor: pointer;
+}
+
+.menus > .upgrade_goods > .text {
+	font-size: 11px;
+	opacity: 0.7;
+	color: white;
+}
+
+.menus > .upgrade_goods > .text.big {
+	font-size: 15px;
+	opacity: 1;
+}
+
+.menus > .team_description {
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border: 1px solid #CDCDCD;
+	background-color: white;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.menus > .team_description > .card_books {
+	padding: 12px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border-bottom: 1px solid #CDCDCD;
+}
+
+.menus > .team_description > .card_books > .title {
+	margin-bottom: 5px;
+	font-size: 11px;
+	color: #999;
+}
+
+.menus > .team_description > .card_books > .card_book {
+	position: relative;
+	padding: 7px 8px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	cursor: pointer;
+}
+
+.menus > .team_description > .card_books > .card_book:hover {
+	background-color: #333;
+}
+
+.menus > .team_description > .card_books > .card_book + .card_book {
+	border-top: 1px solid #E5E5E5; 
+}
+
+.menus > .team_description > .card_books > .card_book.active {
+	background-color: #FEFFCE;
+}
+
+.menus > .team_description > .card_books > .card_book.active::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: 8px;
+	margin-top: -7.5px;
+	width: 15px;
+	height: 15px;
+	background: url("/static/images/team_empty_circle_checked.png");
+}
+
+.menus > .team_description > .card_books > .card_book > .card_book_name {
+	max-width: 70%;
+	font-size: 13px;
+	color: #666;
+	line-height: 19.5px;
+	overflow: hidden;
+	text-overflow: ellipsis; 
+}
+
+.menus > .team_description > .card_books > .card_book > .card_book_info {
+	max-width: 70%;
+	font-size: 11px;
+	color: #999;
+	line-height: 16.5px;
+	overflow: hidden;
+	text-overflow: ellipsis; 
+}
+
+.menus > .team_description > .card_books > .card_book > .card_book_info > span {
+	font-size: 11px;
+	color: #999;
+	line-height: 16.5px;
+}
+
+.menus > .team_description > .card_books > .add_new_card_book {
+	padding: 10px 8px;
+	width: 100%;
+	border-top: 1px solid #E5E5E5;
+	font-size: 13px;
+	color: #333;
+	text-align: left;
+	cursor: pointer;
+}
+
+.menus > .team_description > .groups {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.menus > .team_description > .groups > .add_new_group,
+.menus > .team_description > .groups > .group {
+	padding: 0 5px 0 12px;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 36px;
+	cursor: pointer;
+}
+
+.menus > .team_description > .groups > .add_new_group:hover,
+.menus > .team_description > .groups > .group:hover {
+	background-color: #EEE;
+}
+
+.menus > .team_description > .groups > .add_new_group > span {
+	font-size: 11px;
+	font-weight: normal;
+	color: #999;
+	pointer-events: none;
+}
+
+.menus > .team_description > .groups > .add_new_group > img {
+	margin-left: auto;
+	pointer-events: none;
+}
+
+.menus > .team_description > .groups > .add_new_group:hover > span {
+	color: #333;
+}
+
+.menus > .team_description > .groups > .group > .group_text,
+.menus > .team_description > .groups > .group > .group_text > span {
+	font-size: 13px;
+	color: #666;
+}
+
+.menus > .team_description > .groups > .group > .sub_group_arrow {
+    margin-right: 10px;
+    width: 6px;
+    height: 6px;
+    border-left: 1px solid #999;
+    border-bottom: 1px solid #999;
+}
+
+.menus > .buttons {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border: 1px solid #CDCDCD;
+	background-color: white;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.menus > .buttons > button {
+	padding: 14px 12px;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 47.5px;
+	cursor: pointer;
+}
+
+.menus > .buttons > button:first-child {
+	height: 48.5px;
+	border-bottom: 1px solid #E5E5E5;
+}
+
+.menus > .buttons > button > * {
+	pointer-events: none;
+	opacity: 0.9;
+}
+
+.menus > .buttons > button:hover > * {
+	opacity: 1;
+}
+
+.menus > .buttons > button > span {
+	margin-left: 10px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #666;
+}
+
+.menus > .storage {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 42px;
+	font-size: 13px;
+	color: #666;
+}
+
+.menus > .storage > span {
+	font: inherit;
+}
+
+.main_contents {
+	margin: 10px 5px 5px 5px;
+	width: 965px;
+}
+
+.main_contents > .no_member {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+}
+
+.main_contents > .no_member > span {
+	font-size: 16px;
+	color: black;
+	line-height: 21px;
+}
+
+.main_contents > .no_member > .invite_member {
+	margin-top: 20px;
+	padding: 6px 12px;
+	background-color: #333;
+	font-size: 13px;
+	font-weight: 400;
+	color: white;
+	cursor: pointer;
+}
+
+.main_contents > .how_to_use {
+	margin-bottom: 50px;
+	padding-top: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+}
+
+.main_contents > .how_to_use > .row {
+	margin: 10px;
+	display: flex;
+	flex-direction: column;
+	width: 600px;
+}
+
+.main_contents > .how_to_use > .row > .title {
+	font-size: 13px;
+	color: #666;
+}
+
+.main_contents > .how_to_use > .row > .title > b {
+	font: inherit;
+	font-weight: 600;
+}
+
+.main_contents > .how_to_use > .row > .description {
+	font-size: 13px;
+	color: #999;
+}
+
+.main_contents > .how_to_use > .row > img {
+	margin-top: 20px;
+	width: 100%;
+}
+
+.main_contents > .manage_team,
+.main_contents > .card_book_settings {
+	display: flex;
+	flex-direction: column;
+	width: 448px;
+	border: 1px solid #CDCDCD;
+	background-color: white;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.main_contents > .manage_team > section,
+.main_contents > .card_book_settings > section {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border-bottom: 1px solid #CDCDCD;
+}
+
+.main_contents > .manage_team > section > .row,
+.main_contents > .card_book_settings > section > .row {
+	padding: 12px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+
+.main_contents > .manage_team > section > .row > .title,
+.main_contents > .card_book_settings > section > .row > .title {
+	display: flex;
+	flex-direction: column;
+}
+
+.main_contents > .manage_team > section .text,
+.main_contents > .card_book_settings > section .text {
+	font-size: 14px;
+	color: #666;
+	line-height: 27px;
+}
+
+.main_contents > .manage_team > section .text.small,
+.main_contents > .card_book_settings > section .text.small {
+	font-size: 11px;
+	color: #999;
+	line-height: normal;
+}
+
+.main_contents > .manage_team > section .text.disabled,
+.main_contents > .card_book_settings > section .text.disabled {
+	color: #CCC;
+}
+
+.main_contents > .manage_team > section button,
+.main_contents > .card_book_settings > section button {
+	font-size: 11px;
+	color: #999;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.main_contents > .card_book_settings > section button:disabled {
+	text-decoration: none;
+}
+
+.main_contents > .manage_team > section button.red,
+.main_contents > .card_book_settings > section button.red {
+	color: rgb(255, 82, 82);
+}
+
+.main_contents > .join_users {
+	display: flex;
+	flex-direction: column;
+	width: 310px;
+	border: 1px solid CDCDCD;
+	background-color: white;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.05); 
+}
+
+.main_contents > .join_users > .title {
+	padding: 0 10px 0 15px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	height: 50px;
+	border-bottom: 1px solid #CDCDCD;
+}
+
+.main_contents > .join_users > .title > span {
+	font-size: 13px;
+	font-weight: 500;
+	color: #666;
+}
+
+.main_contents > .join_users > .title > .add_team_user {
+	padding: 6px 12px;
+	border: 1px solid #D9D9D9;
+	font-size: 13px;
+	font-weight: 400;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: normal;
+	cursor: pointer;
+	transition: 400ms;
+}
+
+.main_contents > .join_users > .title > .add_team_user:hover {
+	border: 1px solid #333;
+}
+
+.main_contents > .join_users > .contents {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border-bottom: 1px solid #CDCDCD;
+}
+
+.main_contents > .join_users > .contents > .user {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 82px;
+	border-left: 3px solid transparent;
+	cursor: pointer;
+}
+
+.main_contents > .join_users > .contents > .user * {
+	pointer-events: none;
+}
+
+.main_contents > .join_users > .contents > .user.selected {
+	border-color: #333;
+	background-color: #F9F9F9;
+}
+
+.main_contents > .join_users > .contents > .user > .profile_image {
+	margin: 0 21px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.main_contents > .join_users > .contents > .user > .profile_image > img {
+	width: 100%;
+}
+
+.main_contents > .join_users > .contents > .user > .description {
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	flex-grow: 1;
+	height: 100%;
+}
+
+.main_contents > .join_users > .contents > .user > .description > .name_tag {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.main_contents > .join_users > .contents > .user > .description > .name_tag > .nickname {
+	font-size: 13px;
+	font-weight: bold;
+	color: rgba(0, 0, 0, 0.65);
+}
+
+.main_contents > .join_users > .contents > .user > .description > .name_tag > .admin {
+	margin-left: 5px;
+	padding: 1px 4px 1px;
+	background-color: #333;
+	border-radius: 2px;
+	font-size: 13px;
+	color: white;
+}
+
+.main_contents > .join_users > .contents > .user > .description > .phone_number {
+    max-width: 140px;
+	font-size: 11px;
+	color: #999;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.main_contents > .join_users > .pager_wrapper {
+	padding: 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	height: 54px;
+}
+
+.main_contents > .join_users > .pager_wrapper > button {
+	width: 34px;
+	height: 100%;
+	border: 1px solid #DDD;
+	font-size: 13px;
+	color: #333;
+	line-height: 34px;
+}
+
+.main_contents > .join_users > .pager_wrapper > .pager {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.main_contents > .join_users > .pager_wrapper > .pager > .page {
+	width: 34px;
+	height: 100%;
+	border: 1px solid #DDD;
+	font-size: 13px;
+	color: #333;
+	line-height: 34px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.main_contents > .join_users > .pager_wrapper > .pager > .page.current {
+	border: none;
+	background-color: #333;
+	color: white;
+	pointer-events: none;
+}
+
+.main_contents > .join_users > .pager_wrapper > .pager > .page.blank {
+	height: 1px;
+	border: none;
+	background: none;
+	pointer-events: none;
+}

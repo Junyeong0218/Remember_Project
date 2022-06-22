@@ -17,4 +17,9 @@ public class CardController {
 	public String teamEmpty() {
 		return "/card/team_empty";
 	}
+	
+	@GetMapping("/team")
+	public String team() {
+		return "/card/team";
+	}
 }

@@ -4,11 +4,11 @@ import java.util.List;
 
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.Group;
-import com.remember.app.entity.card.GroupCard;
 import com.remember.app.entity.card.GroupSummary;
+import com.remember.app.entity.card.Team;
+import com.remember.app.entity.card.TeamCardBookSummary;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
-import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.responseDto.GroupRespDto;
 
@@ -45,4 +45,8 @@ public interface CardService {
 	// team 관련 services
 	
 	public boolean insertTeam(AddTeamReqDto addTeamReqDto);
+	
+	public List<Team> getTeamList(int userId);
+	
+	public List<TeamCardBookSummary> getCardBookList(int teamId);
 }

@@ -37,8 +37,14 @@ public interface CardRepository {
 	public int insertTeam(Team team);
 	
 	public int joinTeam(TeamJoinUser teamJoinUser);
+
+	public int insertTeamCardBook(TeamCardBook teamCardBook);
+	
+	public int insertTeamUserProfile(TeamUserProfile teamUserProfile);
 	
 	public int insertTeamGroup(TeamGroup teamGroup);
 	
-	public int insertTeamUserProfile(TeamUserProfile teamUserProfile);
+	public List<Team> getTeamList(int userId);
+	
+	public List<TeamCardBookSummary> getCardBookList(int teamId);
 }

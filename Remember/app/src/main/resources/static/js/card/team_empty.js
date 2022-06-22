@@ -51,7 +51,7 @@ start_free_button.onclick = () => {
 				url: "/api/v1/card/team",
 				data: {"title": input_wrappers[0].querySelector("input").value,
 							 "nickname": input_wrappers[1].querySelector("input").value,
-							 "group_name": input_wrappers[2].querySelector("input").value},
+							 "card_book_name": input_wrappers[2].querySelector("input").value},
 				dataType: "json",
 				success: function (data) {
 					if(data == true) {

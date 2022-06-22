@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리멤버 - 직장인 필수 앱</title>
+    <link rel="stylesheet" href="/static/css/container.css">
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/card/header.css">
+    <link rel="stylesheet" href="/static/css/card/footer.css">
+    <link rel="stylesheet" href="/static/css/card/team.css">
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="/static/js/get_principal.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header_wrapper">
+                <a href="/card" class="logo">
+                    <img src="/static/images/mypage_company_logo.png" alt="로고">
+                </a>
+                <div class="business_card_searcher">
+                    <input type="text" name="keyword" class="keyword_input" placeholder="명함을 검색">
+                    <span class="search_icon">
+                        <img src="/static/images/mypage_searcher_icon.png" alt="">
+                    </span>
+                    <div class="search_results">
+
+                    </div>
+                </div>
+                <div class="card_tabs">
+                    <a href="/card" class="tab">내 명함첩</a>
+                    <a href="/card/team-empty" class="tab selected">팀 명함첩</a>
+                    <button type="button" class="add_business_card">
+                        <img src="/static/images/mypage_add_business_card.png" alt="명함 추가">
+                    </button>
+                    <button type="button" class="alert_modal_button">
+                        <img src="/static/images/show_alert_modal_button.png" alt="알림 보기">
+                    </button>
+                    <button type="button" class="mypage_button">
+                        <span class="email"></span>
+                        <span class="arrow"></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="main_wrapper">
+            	<aside class="menus">
+            		<div class="team_menu">
+            			<span class="title">조직</span>
+            			<div class="team_info">
+            				<span class="team_name">text</span>
+            				<span class="team_grade basic">베이직</span>
+            			</div>
+            			<hr>
+            			<div class="buttons">
+	            			<button type="button" class="members">
+	            				<img src="/static/images/card_team_members.png">
+	            				<span>조직 구성원</span>
+	            			</button>
+	            			<button type="button" class="team_manage">
+	            				<img src="/static/images/card_team_manage.png">
+	            				<span>조직 관리</span>
+	            			</button>
+	            			<button type="button" class="change_team">
+	            				<img src="/static/images/card_team_change_team.png">
+	            				<span>다른 조직 선택</span>
+	            			</button>
+            			</div>
+            		</div>
+            		<div class="upgrade_goods">
+            			<span class="text big">상품 업그레이드 하기</span>
+            			<span class="text">더 많은 기능을 알아보세요</span>
+            		</div>
+            		<div class="team_description">
+            			<div class="card_books">
+	            			<span class="title">명함첩</span>
+	            			<button type="button" class="card_book">
+	            				<span class="card_book_name">asfdads</span>
+	            				<div class="card_book_info">
+	            					참여자 <span class="join_count">0</span>명 · 명함 <span class="card_count">0</span>장
+	            				</div>
+	            			</button>
+	            			<button type="button" class="add_new_card_book">+ 명함첩 추가</button>
+            			</div>
+            			<div class="groups">
+            				<button type="button" class="add_new_group">
+            					<span>그룹</span>
+            					<img src="/static/images/add_card_group_icon.png">
+            				</button>
+            				<button type="button" class="group">
+	                            <span class="group_text">모든 명함 (<span class="whole_count">0</span>)</span>
+	                        </button>
+            			</div>
+            		</div>
+            		<div class="buttons">
+            			<button type="button" class="card_book_members_button">
+            				<img src="/static/images/card_book_members.png">
+            				<span>명함첩 참여자</span>
+            			</button>
+            			<button type="button" class="card_book_settings_button">
+            				<img src="/static/images/card_book_settings.png">
+            				<span>명함첩 설정</span>
+            			</button>
+            		</div>
+            		<div class="storage"><span class="team_card_count">0</span>&nbsp;/ 100장 이용 중</div>
+            	</aside>
+            	
+				<div class="main_contents">
+            	
+					<div class="how_to_use">
+						<div class="row">
+							<span class="title">1. <b>내 명함첩에 있는 명함</b>을 팀 명함첩에 공유하려면?</span>
+							<span class="description">‘내 명함첩’에서 명함을 선택하고, ‘팀 명함첩으로 복제’를 클릭하여 공유할 수 있습니다.</span>
+							<img src="/static/images/card_team_how_to_use_1.jpg">
+						</div>
+						<div class="row">
+							<span class="title">2. <b>엑셀이나 이미지</b>로 관리하던 연락처를 팀 명함첩에 등록하려면?</span>
+							<span class="description">화면 우측 상단의 + 버튼(명함 추가하기)을 클릭하면, 엑셀 또는 이미지를 등록할 수 있습니다.</span>
+							<img src="/static/images/card_team_how_to_use_2.jpg">
+						</div>
+					</div>
+				</div>
+            	
+            </div>
+        </main>
+        <footer>
+            <div class="footer_wrapper">
+                <div class="links">
+                    <a href="#">회사소개</a>
+                    <a href="#">이용약관</a>
+                    <a href="#">개인정보처리방침</a>
+                    <a href="#">도움말</a>
+                    <a href="#">광고상품</a>
+                    <a href="#">언론보도</a>
+                    <button type="button" class="relate_service_modal">
+                        <span class="text">관련 서비스</span>
+                        <span class="arrow"></span>
+                    </button>
+                </div>
+                <div class="copyrights">
+                    <span class="row">대표전화 : 02-556-4202</span>
+                    <span class="row">06158 서울시 강남구 테헤란로79길 6, 6층 (삼성동, 제이에스타워) (대표자:최재호) 사업자등록번호 : 211-88-81111</span>
+                    <div class="row">
+                        <a href="#" class="company_number">통신판매업 신고번호: 2016-서울강남-03104호</a>
+                        <span class="company_number">직업정보제공사업 신고번호: 서울강남 제2019-11호</span>
+                        <span class="company_number">유료직업소개사업 신고번호: 2020-3220237-14-5-00003</span>
+                    </div>
+                    <span class="row">Copyright 2019. Drama & Company All rights reserved.</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="/static/js/card/load_header.js"></script>
+    <script src="/static/js/card/team.js"></script>
+</body>
+
+</html>

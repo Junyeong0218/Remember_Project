@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
+import com.remember.app.entity.card.Team;
+import com.remember.app.entity.card.TeamCardBookSummary;
 import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
@@ -160,8 +162,17 @@ public class CardRestController {
 														@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		addTeamReqDto.setMade_user_id(principalDetails.getId());
 		System.out.println(addTeamReqDto);
-//		return cardService.insertTeam(addTeamReqDto);
-		return false;
+		return cardService.insertTeam(addTeamReqDto);
+	}
+	
+	@GetMapping("/team/list")
+	public List<Team> getTeamList(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		return cardService.getTeamList(principalDetails.getId());
+	}
+	
+	@GetMapping("/team/{teamId}/book/list")
+	public List<TeamCardBookSummary> getCardBookList(@PathVariable int teamId) {
+		return cardService.getCardBookList(teamId);
 	}
 	
 }

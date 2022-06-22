@@ -187,6 +187,10 @@
 				false,
 				null
 			);
+			
+			<selectKey keyProperty="id" resultType="Integer" order="AFTER">
+				select id from team_mst where made_user_id = #{made_user_id} order by create_date desc limit 1;
+			</selectKey>
 		</insert>
 		
 		<insert id="joinTeam" parameterType="com.remember.app.entity.card.TeamJoinUser">
@@ -200,7 +204,31 @@
 				now()
 			);
 		</insert>
+
+		<insert id="insertTeamCardBook" parameterType="com.remember.app.entity.card.TeamCardBook">
+			insert into
+				team_card_book
+			values(
+				0,
+				#{team_id},
+				#{card_book_name},
+				now(),
+				now()
+			);
+		</insert>		
 		
+		<insert id="insertTeamUserProfile" parameterType="com.remember.app.entity.card.TeamUserProfile">
+			insert into
+				team_user_profile
+			values(
+				0,
+				#{user_id},
+				#{nickname},
+				now(),
+				now()
+			);
+		</insert>
+  
 		<insert id="insertTeamGroup" parameterType="com.remember.app.entity.card.TeamGroup">
 			insert into
 				team_group
@@ -213,16 +241,7 @@
 			);
 		</insert>
 		
-		<insert id="insertTeamUserProfile" parameterType="com.remember.app.entity.card.TeamUserProfile">
-			insert into
-				team_mst
-			values(
-				0,
-				#{user_id},
-				#{nickname},
-				now(),
-				now()
-			);
-		</insert>
-  
+		<select id="getCardBookList" parameterType="Integer" resultType="com.remember.app.entity.card.TeamCardBookSummary">
+			
+		</select>
   </mapper>

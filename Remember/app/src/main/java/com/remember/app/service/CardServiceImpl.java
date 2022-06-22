@@ -12,6 +12,7 @@ import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupCard;
 import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
+import com.remember.app.entity.card.TeamCardBookSummary;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
@@ -115,7 +116,7 @@ public class CardServiceImpl implements CardService {
 		if(cardRepository.insertTeam(team) == 1) {
 			addTeamReqDto.setId(team.getId());
 			int result = cardRepository.joinTeam(addTeamReqDto.toJoinEntity());
-			result += cardRepository.insertTeamGroup(addTeamReqDto.toTeamGroupEntity());
+			result += cardRepository.insertTeamCardBook(addTeamReqDto.toTeamCardBookEntity());
 			result += cardRepository.insertTeamUserProfile(addTeamReqDto.toProfileEntity());
 			System.out.println(result);
 			if(result == 3) {
@@ -123,5 +124,15 @@ public class CardServiceImpl implements CardService {
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public List<Team> getTeamList(int userId) {
+		return cardRepository.getTeamList(userId);
+	}
+	
+	@Override
+	public List<TeamCardBookSummary> getCardBookList(int teamId) {
+		return cardRepository.getCardBookList(teamId);
 	}
 }
