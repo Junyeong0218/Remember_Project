@@ -12,7 +12,9 @@ import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupCard;
 import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
+import com.remember.app.entity.card.TeamCardBook;
 import com.remember.app.entity.card.TeamCardBookSummary;
+import com.remember.app.entity.card.TeamGroupSummary;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
@@ -116,10 +118,17 @@ public class CardServiceImpl implements CardService {
 		if(cardRepository.insertTeam(team) == 1) {
 			addTeamReqDto.setId(team.getId());
 			int result = cardRepository.joinTeam(addTeamReqDto.toJoinEntity());
-			result += cardRepository.insertTeamCardBook(addTeamReqDto.toTeamCardBookEntity());
 			result += cardRepository.insertTeamUserProfile(addTeamReqDto.toProfileEntity());
+			
+			TeamCardBook cardBook = addTeamReqDto.toTeamCardBookEntity();
+			result += cardRepository.insertTeamCardBook(cardBook);
+			
+			addTeamReqDto.setCard_book_id(cardBook.getId());
+			System.out.println(addTeamReqDto);
+			System.out.println(addTeamReqDto.toTeamCardBookJoinUserEntity());
+			result += cardRepository.insertTeamCardBookJoinUser(addTeamReqDto.toTeamCardBookJoinUserEntity());
 			System.out.println(result);
-			if(result == 3) {
+			if(result == 4) {
 				return true;
 			}
 		}
@@ -135,4 +144,20 @@ public class CardServiceImpl implements CardService {
 	public List<TeamCardBookSummary> getCardBookList(int teamId) {
 		return cardRepository.getCardBookList(teamId);
 	}
+	
+	@Override
+	public List<TeamGroupSummary> getTeamGroupList(int cardBookId) {
+		return cardRepository.getTeamGroupList(cardBookId);
+	}
+	
+	@Override
+	public List<Card> getAllCardListInCardBook(int cardBookId, int page) {
+		return cardRepository.getAllCardListInCardBook(cardBookId, page * 10);
+	}
+	
+	@Override
+	public List<Card> getCardListInSpecificGroup(int groupId, int page) {
+		return cardRepository.getCardListInSpecificGroup(groupId, page * 10);
+	}
+	
 }

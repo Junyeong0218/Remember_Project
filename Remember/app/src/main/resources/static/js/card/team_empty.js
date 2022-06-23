@@ -55,7 +55,7 @@ start_free_button.onclick = () => {
 				dataType: "json",
 				success: function (data) {
 					if(data == true) {
-						alert("팀 생성 성공");
+						location.replace("/card/team");
 					} else {
 						alert("팀 생성 실패");
 					}

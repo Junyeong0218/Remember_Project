@@ -18,12 +18,14 @@ import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
 import com.remember.app.entity.card.TeamCardBookSummary;
+import com.remember.app.entity.card.TeamGroupSummary;
 import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.responseDto.GroupRespDto;
+import com.remember.app.responseDto.TeamCardDetailResDto;
 import com.remember.app.service.CardService;
 
 import lombok.RequiredArgsConstructor;
@@ -173,6 +175,26 @@ public class CardRestController {
 	@GetMapping("/team/{teamId}/book/list")
 	public List<TeamCardBookSummary> getCardBookList(@PathVariable int teamId) {
 		return cardService.getCardBookList(teamId);
+	}
+	
+	@GetMapping("/team/book/{cardBookId}/group/list")
+	public List<TeamGroupSummary> getTeamGroupList(@PathVariable int cardBookId) {
+		return cardService.getTeamGroupList(cardBookId);
+	}
+	
+	@GetMapping("/team/book/{cardBookId}/card/list")
+	public List<Card> getAllCardListInCardBook(@PathVariable int cardBookId, int page) {
+		return cardService.getAllCardListInCardBook(cardBookId, page);
+	}
+	
+	@GetMapping("/team/group/{groupId}/card/list")
+	public List<Card> getCardListInSpecificGroup(@PathVariable int groupId, int page) {
+		return cardService.getCardListInSpecificGroup(groupId, page);
+	}
+	
+	@GetMapping("/team/card/{cardId}")
+	public TeamCardDetailResDto getTeamCardDetail(@PathVariable int cardId) {
+		
 	}
 	
 }

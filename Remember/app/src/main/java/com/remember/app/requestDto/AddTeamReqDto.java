@@ -2,7 +2,7 @@ package com.remember.app.requestDto;
 
 import com.remember.app.entity.card.Team;
 import com.remember.app.entity.card.TeamCardBook;
-import com.remember.app.entity.card.TeamGroup;
+import com.remember.app.entity.card.TeamCardBookJoinUser;
 import com.remember.app.entity.card.TeamJoinUser;
 import com.remember.app.entity.card.TeamUserProfile;
 
@@ -25,6 +25,7 @@ public class AddTeamReqDto {
 	private int made_user_id;
 	private String title;
 	private String nickname;
+	private int card_book_id;
 	private String card_book_name;
 	
 	public Team toTeamEntity() {
@@ -46,6 +47,13 @@ public class AddTeamReqDto {
 													.team_id(id)
 													.card_book_name(card_book_name)
 													.build();
+	}
+	
+	public TeamCardBookJoinUser toTeamCardBookJoinUserEntity() {
+		return TeamCardBookJoinUser.builder()
+																	.team_card_book_id(card_book_id)
+																	.joined_user_id(made_user_id)
+																	.build();
 	}
 	
 	public TeamUserProfile toProfileEntity() {

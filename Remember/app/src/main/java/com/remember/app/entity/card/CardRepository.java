@@ -40,6 +40,8 @@ public interface CardRepository {
 
 	public int insertTeamCardBook(TeamCardBook teamCardBook);
 	
+	public int insertTeamCardBookJoinUser(TeamCardBookJoinUser teamCardBookJoinUser);
+	
 	public int insertTeamUserProfile(TeamUserProfile teamUserProfile);
 	
 	public int insertTeamGroup(TeamGroup teamGroup);
@@ -47,4 +49,11 @@ public interface CardRepository {
 	public List<Team> getTeamList(int userId);
 	
 	public List<TeamCardBookSummary> getCardBookList(int teamId);
+	
+	public List<TeamGroupSummary> getTeamGroupList(int cardBookId);
+	
+	public List<Card> getAllCardListInCardBook(int cardBookId, int page);
+	
+	public List<Card> getCardListInSpecificGroup(int groupId, int page);
+	
 }
