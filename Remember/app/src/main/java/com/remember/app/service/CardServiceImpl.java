@@ -101,7 +101,7 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public List<Card> getCardSummaryList(int user_id) {
-		return cardRepository.getCardSummaryList(user_id);
+	public List<Card> getCardSummaryList(int user_id, int page) {
+		return cardRepository.getCardSummaryList(user_id, page * 10);
 	}
 }

@@ -100,8 +100,8 @@ public class CardRestController {
 	
 	//
 	@GetMapping("/list")
-	public ResponseEntity<?> getCardSummaryList(@AuthenticationPrincipal PrincipalDetails principalDetails){
-		List<Card> cards= cardService.getCardSummaryList(principalDetails.getId());
+	public ResponseEntity<?> getCardSummaryList(int page, @AuthenticationPrincipal PrincipalDetails principalDetails){
+		List<Card> cards= cardService.getCardSummaryList(principalDetails.getId(), page);
 		return new ResponseEntity<>(cards,HttpStatus.OK); 
 	}
 	

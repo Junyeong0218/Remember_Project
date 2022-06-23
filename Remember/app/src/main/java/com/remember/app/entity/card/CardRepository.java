@@ -29,5 +29,5 @@ public interface CardRepository {
 	
 	public int addUserGroup(AddGroup addGroup);
 	
-	public List<Card> getCardSummaryList(int user_id);
+	public List<Card> getCardSummaryList(int user_id, int page);
 }

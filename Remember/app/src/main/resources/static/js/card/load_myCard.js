@@ -14,6 +14,9 @@ const addGroupBtn = document.querySelector('.add_group_button');
 const addGroup = document.querySelector('.add_group');
 const myCard = document.querySelector('.my_card_book');
 
+let page = 0;
+let total_page_check_flag = false;
+
 getAllGroups();
 
 addGroupBtn.onclick = toggleAddGroupTag;
@@ -26,7 +29,9 @@ function getAllGroups() {
         success: function (group_list) {
             console.log(group_list);
             wholeCount.innerText = group_list[0].total_count;
-            whole_cards.onclick = getAllCards;
+            whole_cards.onclick = () => {
+				getAllCards(page);
+			}
             let total_count = 0;
             const wrapper = document.querySelector(".my_card_book");
             for (let i = 0; i < group_list.length; i++) {
@@ -45,59 +50,116 @@ function getAllGroups() {
     });
 }
 
-function getAllCards() {
+function getAllCards(page) {
     $.ajax({
         type: "get",
         url: "/api/v1/card/list",
+        data: {"page" : page},
         dataType: 'json',
         success: function (card_list) {
             console.log(card_list);
             main_contents.innerHTML = "";
+            total_page_check_flag = false;
             if (card_list.length == 0) {
                 const no_contents_tag = makeNoContentsTag();
                 main_contents.appendChild(no_contents_tag);
             } else {
+				const total_card_count = card_list[0].total_count;
                 const groupList = groupListTag();
                 main_contents.appendChild(groupList);
                 showCardListInfoTag(card_list);
-                
+              	
+              	const list_page = groupList.querySelector(".list_page");
+              	const pager = groupList.querySelector(".list_page > .pager");
                 const all_checkbox = groupList.querySelector(".top_list_btn > input");
+                const checkMore = groupList.querySelector('.more');
+                const right = groupList.querySelectorAll('.top_right');
+                const sendMore = groupList.querySelectorAll('.send');
+                const selcet = groupList.querySelector('.list_select');
+                const list_group = document.querySelector(".list_group");
+                const cards = list_group.querySelectorAll(".card_list_con");
+                const checkBoxes = list_group.querySelectorAll(".check_btn");
+                
+                makePageTag(total_card_count, pager.children);
+                
+                let count = 0;
+                
                 all_checkbox.onclick = (event) => {
 					if(event.target.className.includes("not_max")) {
 						event.target.checked = false;
 						event.target.classList.remove("not_max");
 					}
-                    const cards = list_group.querySelectorAll(".card_list_con");
                     cards.forEach(item => item.querySelector(".check_btn").checked = event.target.checked);
                     
-                    const right = groupList.querySelectorAll('.top_right');
-                    const selcet = groupList.querySelector('.list_select');
-                    const count = countChecked(checkBoxes);
+					count = countChecked(checkBoxes);
 
                     if(event.target.checked == true) {
-						console.log("클릭");
-						right[0].classList.add('hide');
-						right[1].classList.remove('hide');
 						selcet.classList.remove('hide');
-						selcet.innerText =`이 페이지의 명함 ${count}장이 모두 선택되었습니다.`;	
-						for(let i =0; i<cards.length; i++){
-							cards[i].classList.add("color");
-						}
+						selcet.innerText = total_page_check_flag ? `전체 페이지의 명함 ${total_card_count}장이 모두 선택되었습니다.` : `이 페이지의 명함 ${count}장이 모두 선택되었습니다.`;
+						toggleCardListTitleRight(right, true);
+						toggleClassColorToCards(cards, true);
 					}else {
-						right[0].classList.remove('hide');
-						right[1].classList.add('hide');
 						selcet.classList.add('hide');
-						for(let i =0; i<cards.length; i++){
-							cards[i].classList.remove("color");
-						}
+						toggleCardListTitleRight(right, false);
+						toggleClassColorToCards(cards, false);
 					}
                 }
-                const list_group = document.querySelector(".list_group");
-                const cards = list_group.querySelectorAll(".card_list_con");
+				
+				if(total_page_check_flag) all_checkbox.click();
+				
+				const dropDown = groupList.querySelector('.drop_menu');
+				checkMore.onclick = () => {
+					console.log("클릭");
+					dropDown.classList.toggle("hidden");				
+				}	
 
+				const pageSelect = dropDown.querySelectorAll('.drop_menu li');
+				pageSelect[0].onclick = () => {
+					for(let i = 0; i < checkBoxes.length; i++){
+						if(checkBoxes[i].checked == false) {
+							total_page_check_flag = false;
+							all_checkbox.click();
+						}
+					}
+					dropDown.classList.add("hidden");
+				}
+
+				pageSelect[1].onclick = () => {
+					for(let i = 0; i < checkBoxes.length; i++){
+						if(checkBoxes[i].checked == false) {
+							total_page_check_flag = true;
+							all_checkbox.click();
+						}
+					}
+					dropDown.classList.add("hidden");
+				}
+				
+				pageSelect[2].onclick = () => {
+					console.log("선택안함");
+					for(let i = 0; i < checkBoxes.length; i++){
+						if(checkBoxes[i].checked == true) {
+							all_checkbox.click();
+						}
+						dropDown.classList.add("hidden");
+					}
+				}
+				
+				const teamCardCopy = groupList.querySelector('.t_btn.edit');
+				teamCardCopy.onclick = () => {
+					console.log('복제');
+					copyTeamCrardModal();
+				}
+				
+								
+				const dropDownGroup = groupList.querySelector('.drop_menu.group');
+				sendMore[1].onclick = () => {
+					console.log("클릭");
+					dropDownGroup.classList.toggle("hidden");				
+				}	
+
+				
                 for (let i = 0; i < cards.length; i++) {
                     cards[i].onclick = () => {
-                        console.log(card_list[i]);
                         cards.forEach((item, index) => {
                             if (index != i) item.classList.remove("active");
                             else item.classList.add("active");
@@ -110,56 +172,113 @@ function getAllCards() {
                         }
                         cardInfoForm = makeCardInfoForm(card_list[i]);
                         main_contents.appendChild(cardInfoForm);
+                        
+                        const rightSend = cardInfoForm.querySelectorAll('.send');
+                        const sendDropDown = cardInfoForm.querySelector('.send_drop_menu');
+						rightSend[1].onclick = () => {
+							sendDropDown.classList.toggle("hidden");	
+						}	
+                        const editBtn = cardInfoForm.querySelector(".t_btn.edit");
+                       
+                        editBtn.onclick = () => {
+							console.log("편집");
+							cardInfoForm.classList.add('hidden');
+							groupList.classList.add('hidden');
+							const edit = editCardForm();
+							main_contents.appendChild(edit);
+							const edit_cancel = edit.querySelector('.edit_cancel');
+							edit_cancel.onclick = () => {
+								location.reload();
+							}
+						}
+						
+						const addMemoBtn = cardInfoForm.querySelector('.t_btn.memo');
+						addMemoBtn.onclick = () => {
+							console.log("메모");
+							addMemo();
+						}
                     }
                 }
+               
                 if (cards.length > 0) {
                     cards[0].click();
                 }
                 
-                const checkBoxes = list_group.querySelectorAll(".check_btn");
-                const right = groupList.querySelectorAll('.top_right');
-                const selcet = groupList.querySelector('.list_select');
                 for(let i = 0; i < checkBoxes.length; i++){
 					checkBoxes[i].onclick = (event) => {
-						if(event.target.checked) {
+						if(event.target.checked) {	
 							cards[i].classList.add("color");
 						}else {
 							cards[i].classList.remove("color");
 						}
-						const count = countChecked(checkBoxes);
+						count = countChecked(checkBoxes);
+						const unchecked_count = checkBoxes.length - count;
 						if(count == 0) {
-							console.log("0");
 							all_checkbox.classList.remove("not_max");
 							all_checkbox.checked = false;
-							right[0].classList.remove('hide');
-							right[1].classList.add('hide');
+							toggleCardListTitleRight(right, false);
 							selcet.classList.add('hide');	
-							
 						} else if(count == checkBoxes.length) {
 							console.log("max");
 							all_checkbox.classList.remove("not_max");
 							all_checkbox.checked = true;
-							selcet.innerText =`이 페이지의 명함 ${count}장이 모두 선택되었습니다.`;	
-							/*num.innerText = count;*/
+							selcet.innerText = total_page_check_flag ? `전체 페이지의 명함 ${total_card_count - unchecked_count}장이 모두 선택되었습니다.` : `이 페이지의 명함 ${count}장이 모두 선택되었습니다.`;	
 						} else if(count > 0 && count < checkBoxes.length) {
-							console.log("중간");
 							all_checkbox.checked = false;
 							all_checkbox.classList.add("not_max");
-							right[0].classList.add('hide');
-							right[1].classList.remove('hide');
+							toggleCardListTitleRight(right, true);
 							selcet.classList.remove('hide');	
-							selcet.innerText = `명함 ${count}장이 선택되었습니다.`;			
+							selcet.innerText = total_page_check_flag ? `전체 페이지의 명함 ${total_card_count - unchecked_count}장이 모두 선택되었습니다.` : `명함 ${count}장이 선택되었습니다.`;		
 						}
-						
 					}
 				}
             }
+            
         },
         error: function (xhr, status) {
             console.log(xhr);
             console.log(status);
         }
-    })
+    });
+}
+
+function makePageTag(total_card_count, pager) {
+	let page_number = page - 1;
+	const last_page = total_card_count % 10 == 0 ? Math.floor(total_card_count / 10) : Math.floor(total_card_count / 10) + 1;
+	console.log("current : " + page_number);
+	console.log("last : " + last_page);
+	for(let i = 0; i < pager.length; i++) {
+		if(page_number < 1 || page_number > last_page) {
+			pager[i].classList.add("blank");
+		} else {
+			pager[i].innerText = page_number;
+			const page_for_event = page_number;
+			pager[i].onclick = () => {
+				console.log(page_for_event + " 번 페이지 로드하기");
+				page = page_for_event - 1;
+				main_contents.innerHTML = "";
+				getAllCards(page);
+			}
+		}
+		page_number++;
+	}
+}
+
+function toggleCardListTitleRight(right, checked) {
+	if(checked) {
+		right[0].classList.add('hide');
+		right[1].classList.remove('hide');
+	} else {
+		right[0].classList.remove('hide');
+		right[1].classList.add('hide');
+	}
+}
+
+function toggleClassColorToCards(cards, add_flag) {
+	for(let i =0; i < cards.length; i++){
+		if(add_flag) cards[i].classList.add("color");
+		else 		 cards[i].classList.remove("color");
+	}
 }
 
 function countChecked(checkBoxes) {
@@ -190,6 +309,7 @@ function getGroup(group_id) {
                     cards.forEach(item => item.querySelector(".check_btn").checked = event.target.checked);
                   	
                 }
+
                 showCardListInfoTag(group_detail.card_list);
                 const list_group = document.querySelector(".list_group");
                 const cards = list_group.querySelectorAll(".card_list_con");
@@ -199,7 +319,7 @@ function getGroup(group_id) {
                     cards[i].onclick = () => {
                         console.log(group_detail.card_list[i]);
                         cards.forEach((item, index) => {
-                            if (index != i) item.classList.remove("active");
+                            if (index != i) item.classList.remove("active");	
                             else item.classList.add("active");
                         });
 
@@ -210,7 +330,6 @@ function getGroup(group_id) {
                         }
                         cardInfoForm = makeCardInfoForm(group_detail.card_list[i]);
                         main_contents.appendChild(cardInfoForm);
-
                     }
                 }
                 if (cards.length > 0) {
@@ -224,6 +343,98 @@ function getGroup(group_id) {
             console.log(status);
         }
     });
+}
+
+function editCardForm() {
+	const div = document.createElement("div");
+	div.className= "edit_contents";
+	div.innerHTML = `
+		<div class="edit_form">
+			<div class="edit_top">
+				<span class="edit_title">명함 편집</span>
+				<span class="buttons">
+					<button class="btn edit_cancel">취소</button>
+					<button class="btn edit_save">저장</button>
+				</span>
+			</div>
+			<div class="edit_con">
+				<div class="edit_img_add">
+					<div class="edit_img_upload">+</div>
+					<div class="edit_img_text">명함 이미지 추가</div>
+				<input type="file" name="file" class="profile_img_input" accept="image/*">
+				</div>
+			</div>
+			<div class="edit_write">
+				<div class="card_profile">
+					<img class="proflie_img" src="/static/images/card_profile_user.png" alt="프로필 기본">
+					<input type="file" name="file" class="profile_img_input" accept="image/*">
+					<button type="button" class="btn save">프로필 사진 설정</button>
+				</div>
+				<div class="card_inputs">
+					<div class="input_item top">
+						<div class="item_box">
+							<div>
+								<div class="input_title">
+									이름
+								</div>
+								<input type="text" class="input_con" name="name" placeholder="이름 입력">
+							</div>
+							<div>
+								<div class="input_title">
+									직책
+								</div>
+								<input type="text" class="input_con" name="position_name" placeholder="직책 입력">
+							</div>
+						</div>
+						<div class="item_box">
+							<div>
+								<div class="input_title">
+									부서
+								</div>
+								<input type="text" class="input_con" name="department_name" placeholder="부서명 입력">
+							</div>
+							<div>
+								<div class="input_title">
+									회사
+								</div>
+								<input type="text" class="input_con" name="company_name" placeholder="회사명 입력">
+							</div>
+						</div>
+						
+					</div>
+					<div class="input_item">
+						<div class="item_box">
+							<div class="input_title">
+								이메일
+							</div>
+							<input type="text" class="input_con" name="email" placeholder="이메일 주소 입력">
+							<div class="input_title">
+								휴대폰
+							</div>
+							<input type="text" class="input_con" name="phone" placeholder="휴대폰 번호 입력">
+							<div class="input_title">
+								유선전화
+							</div>
+							<input type="text" class="input_con" name="landline_phone" placeholder="유선전화 번호 입력">
+							<div class="input_title">
+								팩스
+							</div>
+							<input type="text" class="input_con" name="fax" placeholder="팩스 번호 입력">
+						</div>
+						<div class="item_box">
+							<div class="input_title">
+								주소
+							</div>
+							<input type="text" class="input_con" name="address" placeholder="주소 입력">
+							<input type="text" class="input_con" name="sub_address" placeholder="상세 주소 입력">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	`;
+	return div;
 }
 
 function makeNoContentsTag() {
@@ -248,6 +459,13 @@ function groupListTag() {
 						<span></span>
 					</button>
 				</div>
+				<div class="drop_menu hidden">
+					<ul>
+						<li>현재 페이지 선택</li>
+						<li>전체 페이지 선택</li>
+						<li>선택 안함</li>
+					</ul>
+				</div>
 			</div>
 			<div class="top_right">
 				<select class="top_select">
@@ -259,10 +477,17 @@ function groupListTag() {
 			<div class="top_right hide">
 				<button class="t_btn edit">팀 명함첩으로 복제</button>
 				<div class="t_btn_box">
-				<button class="t_btn send">그룹설정</button>
-				<button class="t_btn send">
-					<span class="btn_more"></span>
-				</button>
+					<button class="t_btn send">그룹설정</button>
+					<button class="t_btn send">
+						<span class="btn_more"></span>
+					</button>
+				<div class="drop_menu group hidden">
+					<ul>
+						<li>단체메일</li>
+						<li>내보내기</li>
+						<li>삭제</li>
+					</ul>
+				</div>
 				</div>
 			</div>
 		</div>
@@ -275,11 +500,18 @@ function groupListTag() {
 		</div>
 		<div class="list_page">
 			<button class="page btn left">«</button>
-			<div class="page num"> 1 </div>
+			<div class="pager">
+				<div class="page"></div>
+				<div class="page"></div>
+				<div class="page current"></div>
+				<div class="page"></div>
+				<div class="page"></div>
+			</div>
 			<button class="page btn right">»</button>
 		</div>
 
 	`;
+	
     return div;
 }
 
@@ -335,6 +567,55 @@ function showCardListInfoTag(card_list) {
     }
 }
 
+function copyTeamCrardModal() {
+	const modal = document.createElement("div");
+	modal.className = "note_modal";
+	modal.innerHTML= `
+		<div class="note_modal_content ">
+			<div class="note_content card">
+				<button class="close_btn copy_close">
+					<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+				</button>
+				<div class="modal_header">
+					팀 명함첩으로 복제
+				</div>
+				<div class="modal_body">
+					<ul>
+						<li>
+							<div class="group_name">test</div>
+							<div class="group_item">
+								<input type="checkbox" id="check" class="check_btn">
+								<div class="item_con">
+									<div class="item_title">그룹이름</div>
+									<div class="item_info">0/100장 등록</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="modal_footer">
+					<div class="footer_con">
+						<label for="memo_check" class="memo_msg">	
+							<input type="checkbox" id="memo_check" class="check_btn">
+							<span>메모 정보를 포함</span>
+						</label>
+						<button class="team_card_btn copy_close">취소</button>
+						<button class="team_card_btn ok">확인</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	`;
+	
+	container.appendChild(modal);
+	const closeBtn = modal.querySelectorAll('.copy_close');
+	for(let i = 0; i < closeBtn.length; i++ ){
+		closeBtn[i].onclick = () => {
+			modal.remove();
+		}		
+	}
+}
+
 function makeDepartmentText(department_name, position_name) {
     return position_name != null && department_name != null ? position_name + " / " + department_name :
         position_name == null && department_name == null ? null :
@@ -368,10 +649,17 @@ function makeCardInfoForm(card_data) {
 			<div class="top_btn">
 				<button class="t_btn edit">편집</button>
 				<div class="t_btn_box">
-				<button class="t_btn send">전달</button>
-				<button class="t_btn send">
-					<span class="btn_more"></span>
-				</button>
+					<button class="t_btn send">전달</button>
+					<button class="t_btn send">
+						<span class="btn_more"></span>
+					</button>
+				 <div class="send_drop_menu hidden">
+					<ul>
+						<li><a href="">입력오타 신고</a></li>
+						<li><a href="">팀 명함첩으로 복제</a></li>
+						<li><a href="">명함 삭제</a></li>
+					</ul>
+				</div>
 				</div>
 			</div>
 		</div>
@@ -453,11 +741,50 @@ ${card_data.company_name == null ? '' : '<div class="profile_company">' + card_d
         </div>
         <div class="add_memo">
             메모를 추가하세요 
-            <button class="t_btn">+ 메모추가</button>
+            <button class="t_btn memo">+ 메모추가</button>
         </div>
 	`;
 
     return div;
+}
+
+function addMemo(){
+	const div = document.createElement('div');
+	div.className = "note_modal";
+	div.innerHTML =`
+		<div class="note_modal_content ">
+			<div class="note_content memo">
+				<div class="memo_header">
+					<button class="close_btn memo_close">
+						<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+					</button>
+					<h1>메모 추가</h1>
+				</div>
+				<div class="memo_body">
+					<div class="memo_write">
+						<textarea class="memo_text" rows="4" placeholder="내용을 입력해 주세요."max-length="1000"></textarea>
+				<div class="memo_buttons">
+					<div class="memo_btn memo_close"><button>취소</button></div>
+					<div class="memo_btn save"><button>저장</button></div>
+				</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	`;
+	container.appendChild(div);
+	setTimeout(() => {
+		div.querySelector('.memo_text').focus();
+	}, 150);
+	
+	const closeBtn = div.querySelectorAll('.memo_close');
+	for(let i = 0; i < closeBtn.length; i++){
+		closeBtn[i].onclick = () => {
+			div.remove();
+		}
+		
+	}
+	
 }
 
 function makeGroupTag(group_data) {
@@ -496,6 +823,10 @@ function toggleAddGroupTag() {
 
         };
     }
+}
+
+function makeLeftBtnTab () {
+	
 }
 
 function inputAddGroup(group_name) {

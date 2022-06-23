@@ -26,4 +26,6 @@ public class Card {
 	private String sub_address;
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
+	
+	private int total_count;
 }

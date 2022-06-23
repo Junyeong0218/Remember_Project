@@ -24,7 +24,7 @@ function tabMenu(){
                 		<li><a href="">도움말</a></li>
                 		<li><a href="">1:1 문의</a></li>
                 		<li><a href="">설정</a></li>
-                		<li><a href="">로그아웃</a></li>
+                		<li><a href="/logout">로그아웃</a></li>
                 	</ul>
                 </div>
 	`;

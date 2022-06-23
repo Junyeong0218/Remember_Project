@@ -289,6 +289,10 @@ main {
     border: 1px solid #cdcdcd;
 }
 
+.card_list_box.hidden {
+	display: none;
+}
+
 .card_list_top {
 	padding: 8.5px;
     display: flex;
@@ -302,8 +306,48 @@ main {
     height: 100%;
 }
 
+.drop_menu {
+	position: absolute;
+}
+
+.drop_menu ul {
+	margin-top: 2px;
+	min-width: 160px;
+	border: 1px solid rgba(0,0,0,0.15);
+	background-color: #fff;
+	z-index: 2;
+	box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+}
+
+.drop_menu li{
+	padding: 10px 20px;
+	font-weight: 400;
+	color: #333;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+.drop_menu li:hover {
+	color:#fff;
+	background-color: #333;
+	transition: all 0.3s;
+}
+
+.drop_menu li:last-child {
+	border-top: 1px solid rgba(0,0,0,0.15);
+}
+
+.drop_menu.hidden {
+	display: none;
+}
+
+.drop_menu.group{
+	top:100%;
+	right:0;
+}
 
 .top_btn_left {
+	position: relative;
     display: flex;
     align-items: center;
     height: 32px;
@@ -377,7 +421,7 @@ main {
 	display: none;
 }
 
-.list_group {}
+
 
 .card_list_title {
     width: 100%;
@@ -395,21 +439,19 @@ main {
     height: 83px;
     border-left: 3px solid transparent;
     border-bottom: 1px solid #cdcdcd;
-    background-color: #F9F9F9;
+
     cursor: pointer;
 }
 
 .card_list_con.color {
-	background-color: #feffce;
+
+	background-color: #feffce !important;
 }
 
 .card_list_con.active {
     border-left: 3px solid #333;
+	background-color: #f9f9f9;
 }
-
-/*.card_list_con * {
-	pointer-events: none;
-}*/
 
 .list_mark {
     width: 3px;
@@ -477,18 +519,33 @@ main {
     height: 54px;
 }
 
+.pager {
+	display: flex;
+	gap: 10px;
+}
+
 .page {
     padding: 6px 12px;
     color: #333;
     background-color: #fff;
     border: 1px solid #ddd;
     font-size: 13px;
+    cursor: pointer;
 }
 
-.page.num {
+.page.current {
     background-color: #333;
     border-color: #333;
     color: #fff;
+    pointer-events: none;
+}
+
+.page.blank {
+	padding: 0;
+	width: 26px;
+	height: 1px;
+	border: none;
+	pointer-events: none;
 }
 
 .page.btn.left {
@@ -498,3 +555,94 @@ main {
 .page.btn.right {
     margin-right: 10px;
 }
+
+.card_modal_con {
+	position: relative;
+	background-color: #fff;
+	box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+}
+
+.card_modal_header {
+	padding: 16px 24px;
+	border-bottom: 1px solid #e8e8e8;
+}
+
+.edit_form {
+	margin: 10px 5px 20px 5px;
+	width: 950px;
+	background-color: #fff;
+	border: 1px solid #cdcdcd;
+}
+
+.edit_top{
+	display: flex;
+	justify-content: space-between;
+	border-bottom: 1px solid #cdcdcd;
+	height: 50px;
+}
+
+.edit_title {
+	padding: 10px 15px;
+	font-size: 20px;
+	line-height: 1.4;
+}
+
+.buttons {
+	padding: 8px;
+}
+
+.btn.edit_save,
+.btn.edit_cancel,
+.edit_title {
+	color: rgba(0,0,0,.65);
+}
+
+.btn.edit_save {
+	border: 1px solid #d9d9d9;	
+}
+
+.edit_con {
+	display: flex;
+	justify-content: center;
+	padding: 10px;
+	width: 100%;
+	border-bottom: 1px solid #cdcdcd;
+}
+
+.edit_img_add {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	
+	padding: 10px;
+	width: 430px;
+	height: 240px;
+	border: dotted 3px #ccc;
+	background-color: #f5f5f5;
+	color: #999;
+}
+
+.edit_img_upload {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	
+	margin-bottom: 8px;
+	width: 50px;
+	height: 32px;
+	border: 1px solid #ccc;
+	font-size: 20px;
+}
+
+.edit_img_text {
+	font-size: 14px;
+}
+
+.edit_write {
+	display: flex;
+	
+	padding: 11px;
+	max-height: 731px;
+}
+

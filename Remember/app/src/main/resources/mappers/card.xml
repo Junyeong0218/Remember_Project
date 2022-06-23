@@ -161,18 +161,22 @@
   		card.company_name,
   		card.department_name,
   		card.position_name,
-  		card.create_date
+  		card.create_date,
+  		
+  		count(distinct card2.id) as total_count
   	from
   		card_group_mst `group`
   		left outer join card_belong_group belong on(belong.group_id = `group`.id)
   		left outer join card_mst card on(card.id=belong.card_id)
+  		left outer join card_mst card2 on(card2.user_id = #{user_id})
   	where
   		`group`.user_id = #{user_id} and
   		belong.id is not null
   	group by
   		belong.card_id
   	order by
-  		card.create_date desc;
+  		card.create_date desc
+  	limit #{page}, 10;
   </select>
   
   </mapper>

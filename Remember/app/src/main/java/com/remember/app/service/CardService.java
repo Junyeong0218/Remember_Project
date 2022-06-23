@@ -36,6 +36,6 @@ public interface CardService {
 	
 	public int addGroupUser(AddGroupReqDto addGroupReqDto);
 	
-	public List<Card> getCardSummaryList(int user_id);
+	public List<Card> getCardSummaryList(int user_id, int page);
 	
 }
