@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.remember.app.entity.card.AddGroup;
 import com.remember.app.entity.card.Card;
+import com.remember.app.entity.card.CardMemoDetail;
 import com.remember.app.entity.card.CardRepository;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupCard;
@@ -14,11 +15,15 @@ import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
 import com.remember.app.entity.card.TeamCardBook;
 import com.remember.app.entity.card.TeamCardBookSummary;
+import com.remember.app.entity.card.TeamCardDetail;
+import com.remember.app.entity.card.TeamGroup;
 import com.remember.app.entity.card.TeamGroupSummary;
+import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.responseDto.GroupRespDto;
+import com.remember.app.responseDto.TeamCardDetailResDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -158,6 +163,43 @@ public class CardServiceImpl implements CardService {
 	@Override
 	public List<Card> getCardListInSpecificGroup(int groupId, int page) {
 		return cardRepository.getCardListInSpecificGroup(groupId, page * 10);
+	}
+	
+	@Override
+	public TeamCardDetailResDto getTeamCardDetail(int cardId) {
+		List<TeamCardDetail> details = cardRepository.getTeamCardDetail(cardId);
+		System.out.println(details);
+		
+		TeamCardDetailResDto dto = new TeamCardDetailResDto();
+		List<TeamGroup> groupList = new ArrayList<TeamGroup>();
+		List<CardMemoDetail> memoList = new ArrayList<CardMemoDetail>();
+		
+		for(int i = 0; i < details.size(); i++) {
+			TeamCardDetail detail = details.get(i);
+			if(i == 0) {
+				dto.setCard(detail.toCardEntity());
+				dto.setReg_user_nickname(detail.getReg_user_nickname());
+			}
+			TeamGroup group = detail.toTeamGroupEntity();
+			if(group != null && ! groupList.contains(group)) groupList.add(group);
+			
+			CardMemoDetail memo = detail.toMemoDetailEntity();
+			if(memo != null && ! memoList.contains(memo)) memoList.add(memo);
+		}
+		dto.setGroup_list(groupList);
+		dto.setMemo_list(memoList);
+		
+		return dto;
+	}
+	
+	@Override
+	public List<TeamUserProfile> getTeamJoinUsers(int teamId) {
+		return null;
+	}
+	
+	@Override
+	public List<TeamUserProfile> getCardBookJoinUsers(int cardBookId) {
+		return null;
 	}
 	
 }

@@ -19,6 +19,7 @@ import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
 import com.remember.app.entity.card.TeamCardBookSummary;
 import com.remember.app.entity.card.TeamGroupSummary;
+import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
@@ -177,9 +178,19 @@ public class CardRestController {
 		return cardService.getCardBookList(teamId);
 	}
 	
+	@GetMapping("/team/{teamId}/member/list")
+	public List<TeamUserProfile> getTeamJoinUsers(@PathVariable int teamId) {
+		
+	}
+	
 	@GetMapping("/team/book/{cardBookId}/group/list")
 	public List<TeamGroupSummary> getTeamGroupList(@PathVariable int cardBookId) {
 		return cardService.getTeamGroupList(cardBookId);
+	}
+	
+	@GetMapping("/team/book/{cardBookId}/member/list")
+	public List<TeamUserProfile> getCardBookJoinUsers(@PathVariable int cardBookId) {
+		
 	}
 	
 	@GetMapping("/team/book/{cardBookId}/card/list")
@@ -194,7 +205,7 @@ public class CardRestController {
 	
 	@GetMapping("/team/card/{cardId}")
 	public TeamCardDetailResDto getTeamCardDetail(@PathVariable int cardId) {
-		
+		return cardService.getTeamCardDetail(cardId);
 	}
 	
 }

@@ -15,6 +15,7 @@ public class Card {
 	private int id;
 	private int user_id;
 	private String name;
+	private String profile_img;
 	private String phone;
 	private String email;
 	private String company_name;
@@ -26,4 +27,6 @@ public class Card {
 	private String sub_address;
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
+	
+	private int total_count;
 }

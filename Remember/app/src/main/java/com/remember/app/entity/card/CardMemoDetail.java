@@ -15,23 +15,23 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TeamGroup {
+public class CardMemoDetail {
 
 	private int id;
-	private int team_id;
-	private String group_name;
+	private int card_id;
+	private int user_id;
+	private String nickname;
+	private String contents;
 	private LocalDateTime create_date;
-	private LocalDateTime update_date;
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof TeamGroup) {
-			TeamGroup target = (TeamGroup) obj;
+		if(obj instanceof CardMemoDetail) {
+			CardMemoDetail target = (CardMemoDetail) obj;
 			if(this.id == target.id) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
 }

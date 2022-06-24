@@ -56,4 +56,9 @@ public interface CardRepository {
 	
 	public List<Card> getCardListInSpecificGroup(int groupId, int page);
 	
+	public List<TeamCardDetail> getTeamCardDetail(int cardId);
+
+	public List<TeamUserProfile> getTeamJoinUsers(int teamId);
+
+	public List<TeamUserProfile> getCardBookJoinUsers(int cardBookId);
 }

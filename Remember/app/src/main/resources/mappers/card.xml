@@ -308,14 +308,20 @@
 				card.company_name,
 				card.department_name,
 				card.position_name,
-				card.create_date
+				card.create_date,
+				
+				count(distinct belong2.id) as total_count
 			from
 				team_group `group`
 				left outer join card_belong_team_group belong on(belong.team_group_id = `group`.id)
 				left outer join card_mst card on(card.id = belong.card_id)
+				left outer join team_group `group2` on(`group2`.card_book_id = 6)
+				left outer join card_belong_team_group belong2 on(belong2.team_group_id = `group2`.id and belong2.card_id is not null)
 			where
 				`group`.card_book_id = #{cardBookId} and
 				card.id is not null
+			group by
+				`group2`.card_book_id
 			order by
 				card.create_date desc
 			limit #{page}, 10;
@@ -328,7 +334,9 @@
 				card.company_name,
 				card.department_name,
 				card.position_name,
-				card.create_date
+				card.create_date,
+				
+				count(distinct card.id) as total_count
 			from
 				team_group `group`
 				left outer join card_belong_team_group belong on(belong.team_group_id = `group`.id)
@@ -339,6 +347,40 @@
 			order by
 				card.create_date desc
 			limit #{page}, 10;
+		</select>
+		
+		<select id="getTeamCardDetail" parameterType="Integer" resultType="com.remember.app.entity.card.TeamCardDetail">
+			select
+				card.*,
+				`profile`.nickname as reg_user_nickname,
+				belong.team_group_id as group_id,
+				`group`.group_name,
+				belong.create_date as join_date,
+				memo.id as memo_id,
+				memo.user_id as memo_user_id,
+				`profile2`.nickname as memo_nickname,
+				memo.`contents`,
+				memo.create_date as memo_create_date
+			from
+				card_mst card
+				left outer join team_user_profile `profile` on(`profile`.user_id = card.user_id)
+				left outer join card_belong_team_group belong on(belong.card_id = card.id)
+				left outer join team_group `group` on(`group`.id = belong.team_group_id)
+				left outer join card_memo memo on(memo.card_id = card.id and memo.is_team = true)
+				left outer join team_user_profile `profile2` on(`profile2`.user_id = memo.user_id)
+			where
+				card.id = #{cardId};
+		</select>
+		
+		<select id="getTeamJoinUsers" parameterType="Integer" resultType="com.remember.app.entity.card.TeamUserProfile">
+			select
+				*
+			from
+				team_nn
+		</select>
+		
+		<select id="getCardBookJoinUsers" parameterType="Integer" resultType="com.remember.app.entity.card.TeamUserProfile">
+		
 		</select>
 		
   </mapper>

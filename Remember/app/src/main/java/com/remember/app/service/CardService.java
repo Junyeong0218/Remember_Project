@@ -8,10 +8,12 @@ import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
 import com.remember.app.entity.card.TeamCardBookSummary;
 import com.remember.app.entity.card.TeamGroupSummary;
+import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.responseDto.GroupRespDto;
+import com.remember.app.responseDto.TeamCardDetailResDto;
 
 
 public interface CardService {
@@ -56,5 +58,11 @@ public interface CardService {
 	public List<Card> getAllCardListInCardBook(int cardBookId, int page);
 	
 	public List<Card> getCardListInSpecificGroup(int groupId, int page);
+	
+	public TeamCardDetailResDto getTeamCardDetail(int cardId);
+	
+	public List<TeamUserProfile> getTeamJoinUsers(int teamId);
+
+	public List<TeamUserProfile> getCardBookJoinUsers(int cardBookId);
 	
 }

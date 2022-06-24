@@ -60,6 +60,7 @@ function loadTeam() {
 	$.ajax({
 		type: "get",
 		url: "/api/v1/card/team/list",
+		async: false,
 		dataType: "json",
 		success: function (team_list) {
 			selected_team = pickTeamOrderByCreateDate(team_list);
@@ -77,6 +78,7 @@ function loadBookList(team_id) {
 	$.ajax({
 		type: "get",
 		url: "/api/v1/card/team/" + team_id + "/book/list",
+		async: false,
 		dataType: "json",
 		success: function (card_book_list) {
 			console.log(card_book_list);
@@ -111,6 +113,9 @@ function loadGroupList(card_book_id) {
 		success: function (group_list) {
 			console.log(group_list);
 			setWholeGroup(group_list[0].total_count);
+			group_wrapper.querySelectorAll(".group").forEach(e => {
+				if(e.id != "whole_cards") e.remove();
+			});
 			for(let i = 0; i < group_list.length; i++) {
 				const group_button = makeCardGroupTag(group_list[i]);
 				group_wrapper.appendChild(group_button);
@@ -118,6 +123,7 @@ function loadGroupList(card_book_id) {
 					console.log(group_list[i].group_name + " is pressed");
 					page = 0;
 					selected_group = group_list[i];
+					console.log(selected_group);
 					loadSpecificGroupCardList();
 				}
 			}
@@ -134,6 +140,7 @@ function loadAllCardList() {
 	$.ajax({
 		type: "get",
 		url: "/api/v1/card/team/book/" + selected_card_book.id + "/card/list",
+		async: false,
 		data: {"page":page},
 		dataType: "json",
 		success: function (card_list) {
@@ -144,6 +151,7 @@ function loadAllCardList() {
 			} else {
 				const card_list_wrapper_tag = makeCardListTag();
 				replaceTagInMainContents(card_list_wrapper_tag);
+				setCardListPager(card_list[0].total_count);
 				
 				const card_list_tag = card_list_wrapper_tag.querySelector(".card_list");
 				for(let i = 0; i < card_list.length; i++) {
@@ -152,6 +160,7 @@ function loadAllCardList() {
 					
 					card_tag.onclick = () => {
 						loadCardDetail(card_list[i].id);
+						addClassClickedToCard(i);
 					}
 				}
 				
@@ -179,7 +188,24 @@ function loadSpecificGroupCardList() {
 				const how_to_use_tag = makeHowToUseTag();
 				replaceTagInMainContents(how_to_use_tag);
 			} else {
+				const card_list_wrapper_tag = makeCardListTag();
+				replaceTagInMainContents(card_list_wrapper_tag);
+				setCardListPager(card_list[0].total_count);
 				
+				const card_list_tag = card_list_wrapper_tag.querySelector(".card_list");
+				for(let i = 0; i < card_list.length; i++) {
+					const card_tag = makeCardTag(card_list[i]);
+					card_list_tag.appendChild(card_tag);
+					
+					card_tag.onclick = () => {
+						loadCardDetail(card_list[i].id);
+						addClassClickedToCard(i);
+					}
+				}
+				
+				const cards = card_list_tag.querySelectorAll(".card");
+				console.log(cards);
+				cards[0].click();
 			}
 		},
 		error: function (xhr, status) {
@@ -189,6 +215,30 @@ function loadSpecificGroupCardList() {
 	});
 }
 
+function setCardListPager(total_count) {
+	const max_page = total_count % 10 == 0 ? Math.floor(total_count / 10) : Math.floor(total_count / 10) + 1;
+	let min_page = page -1;
+	const pager_tags = document.querySelector(".pager").children;
+	console.log(pager_tags);
+	for(let i = 0; i < pager_tags.length; i++) {
+		if(min_page < 1 || min_page > max_page) pager_tags[i].classList.add("blank");
+		else {
+			pager_tags[i].classList.add("current");
+			pager_tags[i].innerText = min_page;
+		}
+		min_page++;
+	}
+}
+
+function addClassClickedToCard(index) {
+	const cards = document.querySelectorAll(".card_list > .card");
+	console.log(cards);
+	for(let i = 0; i < cards.length; i++) {
+		if(i == index) cards[i].classList.add("clicked");
+		else					cards[i].classList.remove("clicked");
+	}
+}
+
 function loadCardDetail(card_id) {
 	$.ajax({
 		type: "get",
@@ -196,14 +246,68 @@ function loadCardDetail(card_id) {
 		dataType: "json",
 		success: function (card) {
 			console.log(card);
-			const card_detail_tag = makeCardDetailTag(card);
+			let card_detail_tag = document.querySelector(".card_detail");
+			if(card_detail_tag != null) {
+				card_detail_tag.remove();
+			}
+			card_detail_tag = makeCardDetailTag(card);
 			appendTagToMainContents(card_detail_tag);
+			
+			const group_wrapper = card_detail_tag.querySelector(".group_info");
+			for(let i = 0; i < card.group_list.length; i++) {
+				if(card.group_list[i].group_name == "미분류") continue;
+				const group_button = makeGroupNameTagInCardDetail(card.group_list[i]);
+				group_wrapper.appendChild(group_button);
+				group_button.onclick; 
+				// show group select modal
+			}
+			
+			const memo_wrapper = card_detail_tag.querySelector(".memo_list");
+			for(let i = 0; i < card.memo_list.length; i++) {
+				const memo = makeMemoTag(card.memo_list[i]);
+				memo_wrapper.appendChild(memo);
+				// 
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
 			console.log(status);
 		}
 	});
+}
+
+function loadTeamMembers() {
+	let team_members;
+	$.ajax({
+		type: "get",
+		url: "",
+		dataType: "json",
+		success: function (data) {
+			team_members = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return team_members;
+}
+
+function loadCardBookJoinMembers() {
+	let card_book_members;
+	$.ajax({
+		type: "get",
+		url: "",
+		dataType: "json",
+		success: function (data) {
+			card_book_members = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return card_book_members;
 }
 
 function setWholeGroup(whole_count) {
@@ -226,6 +330,24 @@ function pickTeamOrderByCreateDate(team_list) {
 	return team_list.sort((a, b) => new Date(b.create_date) - new Date(a.create_date))[0];
 }
 
+function makeRegDateText(create_date) {
+	const date = new Date(create_date);
+	const month = date.getMonth() + 1;
+	const day = String(date.getDate()).padStart(2, "0");
+	
+	return `${date.getFullYear()}년 ${month}월 ${day}일`;
+}
+
+function makeAddressText(address, sub_address) {
+	if(address != null && sub_address != null) {
+		return `${address} ${sub_address}`;
+	} else if(address != null && sub_address == null) {
+		return address;
+	} else {
+		return null;
+	}
+}
+
 function appendTagToMainContents(tag) {
 	main_contents.appendChild(tag);
 }
@@ -233,6 +355,31 @@ function appendTagToMainContents(tag) {
 function replaceTagInMainContents(tag) {
 	main_contents.innerHTML = "";
 	appendTagToMainContents(tag);
+}
+
+function makeGroupNameTagInCardDetail(group) {
+	const span = document.createElement("span");
+	span.className = "text group";
+	span.innerHTML = `${group.group_name}<img src="/static/images/card_team_edit_group" class="show_edit_group_modal">`;
+	return span;
+}
+
+function makeMemoTag(memo) {
+	const div = document.createElement("div");
+	div.className = "memo";
+	div.innerHTML = `
+		<div class="title">
+			<span class="text">${memo.create_date.replace('T', ' ')} by ${memo.nickname}</span>
+			<button type="button" class="show_edit_memo_modal">
+				<img src="/static/images/card_team_edit_memo.png">
+			</button>
+			<button type="button" class="show_remove_memo_modal">
+				<img src="/static/images/card_team_remove_memo.png">
+			</button>
+		</div>
+		<div class="contents">${memo.contents}</div>
+	`;
+	return div;
 }
 
 function makeCardGroupTag(group) {
@@ -449,7 +596,7 @@ function makeCardBookJoinUserListTag() {
 			<div class="pager">
 				<button type="button" class="page"></button>
 				<button type="button" class="page"></button>
-				<button type="button" class="page current"></button>
+				<button type="button" class="page"></button>
 				<button type="button" class="page"></button>
 				<button type="button" class="page"></button>
 			</div>
@@ -502,11 +649,11 @@ function makeCardListTag() {
 		<div class="pager_wrapper">
 			<button type="button" class="prev_page">«</button>
 			<div class="pager">
-				<button type="button" class="page blank"></button>
-				<button type="button" class="page blank"></button>
-				<button type="button" class="page current">1</button>
-				<button type="button" class="page blank"></button>
-				<button type="button" class="page blank"></button>
+				<button type="button" class="page"></button>
+				<button type="button" class="page"></button>
+				<button type="button" class="page"></button>
+				<button type="button" class="page"></button>
+				<button type="button" class="page"></button>
 			</div>
 			<button type="button" class="next_page">»</button>
 		</div>
@@ -514,12 +661,14 @@ function makeCardListTag() {
 	return div;
 }
 
-function makeCardDetailTag() {
+function makeCardDetailTag(card_detail) {
+	const reg_date = makeRegDateText(card_detail.card.create_date);
+	const address_text = makeAddressText(card_detail.card.address, card_detail.card.sub_address);
 	const div = document.createElement("div");
 	div.className = "card_detail";
 	div.innerHTML = `
 		<div class="detail_header">
-			<span class="reg_user_name">등록자 : jyp</span>
+			<span class="reg_user_name">등록자 : ${card_detail.reg_user_nickname}</span>
 			<div class="detail_menu">
 				<button type="button" class="edit_card">편집</button>
 				<div class="right">
@@ -533,51 +682,58 @@ function makeCardDetailTag() {
 		<div class="card_info">
 			<div class="card_summary">
 				<div class="profile_image">
-					<img src="/static/images/default_profile_image.png">
+					<img src="${card_detail.card.profile_img == null ? '/static/images/default_profile_image.png' : '/images/profile_images/' + card_detail.card.profile_img}">
 				</div>
 				<div class="texts">
-					<span class="name">ㅁㄴㄹㅇ</span>
-					<span class="department_text">ㅁㄴㅇㄻㄴㅇㄹ</span>
-					<span class="company_name">ㅁㄴㅇㄻㄴㅇㄹ</span>
+					<span class="name">${card_detail.card.name}</span>
+${card_detail.card.department_name == null ? '' : '<span class="department_text">' + card_detail.card.department_name + '</span>'}
+${card_detail.card.company_name == null ? '' : '<span class="company_name">' + card_detail.card.company_name + '</span>'}
 				</div>
 			</div>
 			<div class="card_description">
 				<div class="left">
 					<div class="row">
 						<span class="title">이메일</span>
-						<span class="description">asf</span>
+${card_detail.card.email == null ? '<span class="description blank">이메일 없음</span>' : 
+																'<span class="description">' + card_detail.card.email + '</span>'}
+						
 					</div>
 					<div class="row">
 						<span class="title">휴대폰</span>
-						<span class="description">asf</span>
+${card_detail.card.phone == null ? '<span class="description blank">휴대폰 번호 없음</span>' : 
+																  '<span class="description">' + card_detail.card.phone + '</span>'}
 					</div>
 					<div class="row">
 						<span class="title">유선전화</span>
-						<span class="description">asf</span>
+${card_detail.card.landline_phone == null ? '<span class="description blank">유선전화 번호 없음</span>' : 
+																				  '<span class="description">' + card_detail.card.landline_phone + '</span>'}
 					</div>
 					<div class="row">
 						<span class="title">팩스</span>
-						<span class="description">asf</span>
+${card_detail.card.fax == null ? '<span class="description blank">팩스번호 없음</span>' : 
+															 '<span class="description">' + card_detail.card.fax + '</span>'}
 					</div>
 				</div>
 				<div class="right">
 					<div class="row">
 						<span class="title">등록일</span>
-						<span class="description">asf</span>
+						<span class="description">${reg_date}</span>
 					</div>
 					<div class="row">
 						<span class="title">주소</span>
-						<span class="description">asf</span>
+${address_text == null ? '<span class="description blank">주소 없음</span>' : 
+											   '<span class="description">' + address_text + '</span>'}
 					</div>
 				</div>
 			</div>
 			<div class="group_info">
 				<span class="title">그룹</span>
-				<span class="text no_content">미지정</span>
+${card_detail.group_list.length == 1 && card_detail.group_list[0].group_name == "미분류" ? 
+				'<span class="text no_content">미지정<img src="/static/images/card_team_edit_group.png" class="show_edit_group_modal"></span>' : ''}
 			</div>
-			<div class="memos">
+			<div class="memo_list_wrapper">
 				<span class="title">메모</span>
-				<span class="text no_content">메모 없음</span>
+${card_detail.memo_list.length == 0 ? '<span class="text no_content">메모 없음</span>' : '<div class="memo_list"></div>'}
 			</div>
 		</div>
 		<div class="memo_input">
