@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class CardInsertReqDto {
+	private int card_id;
 	private int user_id;
 	private String name;
 	private String phone;
@@ -28,6 +29,7 @@ public class CardInsertReqDto {
 	
 	public Card cardMstToEntity() {
 		return Card.builder()
+				.id(card_id)
 				.user_id(user_id)
 				.name(name)
 				.phone(phone)

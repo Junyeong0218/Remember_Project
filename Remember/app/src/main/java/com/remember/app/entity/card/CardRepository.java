@@ -9,13 +9,15 @@ public interface CardRepository {
 	
 	public List<Card> getCards(int user_id);
 	
+	public CardDetail getCardDetail(int card_id);
+	
 	public int insertCard(Card card);
 	
 	public int insertGroup(Group group);
 	
 	public int updateCard(Card card);
 	
-	public int deleteCard(int user_id);
+	public int deleteCard(int card_id);
 	
 	public List<GroupSummary> getGroup(int user_id);
 	

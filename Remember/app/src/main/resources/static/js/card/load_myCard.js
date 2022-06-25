@@ -156,21 +156,25 @@ function getAllCards(page) {
 					console.log("클릭");
 					dropDownGroup.classList.toggle("hidden");				
 				}	
+				
+				const deleteCheckCard = dropDownGroup.querySelectorAll('.drop_menu_group li');
+				deleteCheckCard[2].onclick = () => {
+					console.log("삭 제");
+				}
 
 				
                 for (let i = 0; i < cards.length; i++) {
                     cards[i].onclick = () => {
-                        cards.forEach((item, index) => {
-                            if (index != i) item.classList.remove("active");
-                            else item.classList.add("active");
-                        });
-
+						const card_detail = loadCardDetail(card_list[i].id);
+						
+						toggleClassActiveCards(cards, i);
+						
                         //있으면 지우고 
                         let cardInfoForm = main_contents.querySelector('.detail_box');
                         if (cardInfoForm != null) {
                             cardInfoForm.remove();
                         }
-                        cardInfoForm = makeCardInfoForm(card_list[i]);
+                        cardInfoForm = makeCardInfoForm(card_detail);
                         main_contents.appendChild(cardInfoForm);
                         
                         const rightSend = cardInfoForm.querySelectorAll('.send');
@@ -178,24 +182,89 @@ function getAllCards(page) {
 						rightSend[1].onclick = () => {
 							sendDropDown.classList.toggle("hidden");	
 						}	
+						const cardSend = sendDropDown.querySelectorAll('.send_drop_menu li');
+							cardSend[2].onclick =() => {
+								deleteCard(card_list[i].id)
+								
+								
+							}
                         const editBtn = cardInfoForm.querySelector(".t_btn.edit");
                        
                         editBtn.onclick = () => {
 							console.log("편집");
 							cardInfoForm.classList.add('hidden');
 							groupList.classList.add('hidden');
-							const edit = editCardForm();
+							const edit = editCardForm(card_detail);
 							main_contents.appendChild(edit);
 							const edit_cancel = edit.querySelector('.edit_cancel');
 							edit_cancel.onclick = () => {
 								location.reload();
 							}
+							
+							let is_img_changed = false;
+							const addProfileImgBtn = edit.querySelector('.card_profile > button');
+							const imgInput = edit.querySelector('.profile_img_input');
+							const imgTag = edit.querySelector('.proflie_img');
+							addProfileImgBtn.onclick = () => imgInput.click();
+							imgInput.onchange = (event) => {
+								AddProfileImg(event,imgTag);
+								is_img_changed = true;
+							}
+							
+							const edit_save = edit.querySelector('.edit_save');
+
+							edit_save.onclick = () => {
+								const cardInputs = edit.querySelectorAll('.input_con');
+								if(cardInputs[0].value == "") {
+									alert("이름은 필수로 입력해야합니다.");
+									return;
+								}							
+								const formData = new FormData();
+								if(is_img_changed) {
+									formData.append('profile_img',imgInput.files[0]);								
+								} else {
+									formData.append('origin_profile_img', card_detail.profile_img);
+								}
+								formData.append('name',cardInputs[0].value);
+								if(cardInputs[1].value != "") formData.append('position_name', cardInputs[1].value);
+								if(cardInputs[2].value != "") formData.append('department_name', cardInputs[2].value);
+								if(cardInputs[3].value != "") formData.append('company_name', cardInputs[3].value);
+								if(cardInputs[4].value != "") formData.append('email', cardInputs[4].value);
+								if(cardInputs[5].value != "") formData.append('phone', cardInputs[5].value);
+								if(cardInputs[6].value != "") formData.append('landline_phone', cardInputs[6].value);
+								if(cardInputs[7].value != "") formData.append('fax', cardInputs[7].value);
+								if(cardInputs[8].value != "") formData.append('address', cardInputs[8].value);
+								if(cardInputs[9].value != "") formData.append('sub_address', cardInputs[9].value);
+
+								$.ajax({
+									type:'put',
+									url:'/api/v1/card/'+card_list[i].id,
+									data: formData,
+									encType: "multipart/form-data",
+									processData: false,
+									contentType: false,
+									dataType:'json',
+									success:function(data){
+										groupList.classList.remove('hidden');
+										edit.remove();
+										  if (cards.length > 0) {
+						                    cards[0].click();
+						                }
+										
+									},
+									error: function (xhr, stauts) {
+									console.log(xhr);
+									console.log(stauts);
+									}
+								});								
+							}	
 						}
 						
 						const addMemoBtn = cardInfoForm.querySelector('.t_btn.memo');
 						addMemoBtn.onclick = () => {
 							console.log("메모");
 							addMemo();
+							
 						}
                     }
                 }
@@ -307,7 +376,6 @@ function getGroup(group_id) {
                 all_checkbox.onclick = (event) => {
                     const cards = list_group.querySelectorAll(".card_list_con");
                     cards.forEach(item => item.querySelector(".check_btn").checked = event.target.checked);
-                  	
                 }
 
                 showCardListInfoTag(group_detail.card_list);
@@ -317,18 +385,16 @@ function getGroup(group_id) {
 
                 for (let i = 0; i < cards.length; i++) {
                     cards[i].onclick = () => {
-                        console.log(group_detail.card_list[i]);
-                        cards.forEach((item, index) => {
-                            if (index != i) item.classList.remove("active");	
-                            else item.classList.add("active");
-                        });
-
+                        const card_detail = loadCardDetail(group_detail.card_list[i].id);
+						
+						toggleClassActiveCards(cards, i);
+						
                         //있으면 지우고 
                         let cardInfoForm = main_contents.querySelector('.detail_box');
                         if (cardInfoForm != null) {
                             cardInfoForm.remove();
                         }
-                        cardInfoForm = makeCardInfoForm(group_detail.card_list[i]);
+                        cardInfoForm = makeCardInfoForm(card_detail);
                         main_contents.appendChild(cardInfoForm);
                     }
                 }
@@ -345,7 +411,59 @@ function getGroup(group_id) {
     });
 }
 
-function editCardForm() {
+function toggleClassActiveCards(cards, current_index) {
+	cards.forEach((item, index) => {
+	    if (index != current_index) item.classList.remove("active");	
+    else 							item.classList.add("active");
+	});
+}
+
+function deleteCard(card_list) {
+	const deleteCard =deleteCardTag();
+	container.appendChild(deleteCard);	
+	const deleteBtn = deleteCard.querySelector('.footer_btn button');
+	const deleteCloseBtn = deleteCard.querySelector('.add_close_btn');
+	deleteCloseBtn.onclick = () => {
+		console.log("삭제닫기");
+		deleteCard.remove();
+	}
+	deleteBtn.onclick = () => {
+		console.log("삭제");
+		$.ajax({
+			type:"delete",
+			url:"/api/v1/card/" + card_list,
+			dataType:"json",
+			success:function(data){
+				location.reload();
+
+			},
+			error: function (xhr, stauts) {
+				console.log(xhr);
+				console.log(stauts);
+			}
+		});
+	}
+}
+
+function loadCardDetail(card_id) {
+	let card_detail;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/" + card_id,
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			card_detail = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return card_detail;
+}
+
+function editCardForm(originCardData) {
 	const div = document.createElement("div");
 	div.className= "edit_contents";
 	div.innerHTML = `
@@ -366,7 +484,7 @@ function editCardForm() {
 			</div>
 			<div class="edit_write">
 				<div class="card_profile">
-					<img class="proflie_img" src="/static/images/card_profile_user.png" alt="프로필 기본">
+					<img class="proflie_img" src="${originCardData.profile_img == null ? '/static/images/default_profile_image.png' : '/image/profile_images/' + originCardData.profile_img}" alt="프로필 기본">
 					<input type="file" name="file" class="profile_img_input" accept="image/*">
 					<button type="button" class="btn save">프로필 사진 설정</button>
 				</div>
@@ -377,13 +495,14 @@ function editCardForm() {
 								<div class="input_title">
 									이름
 								</div>
-								<input type="text" class="input_con" name="name" placeholder="이름 입력">
+								<input type="text" class="input_con" name="name" placeholder="이름 입력" value="${originCardData.name}">
 							</div>
 							<div>
 								<div class="input_title">
 									직책
 								</div>
-								<input type="text" class="input_con" name="position_name" placeholder="직책 입력">
+								<input type="text" class="input_con" name="position_name" placeholder="직책 입력" 
+									value =${originCardData.position_name == null ? '' : originCardData.position_name}>
 							</div>
 						</div>
 						<div class="item_box">
@@ -391,13 +510,15 @@ function editCardForm() {
 								<div class="input_title">
 									부서
 								</div>
-								<input type="text" class="input_con" name="department_name" placeholder="부서명 입력">
+								<input type="text" class="input_con" name="department_name" placeholder="부서명 입력"
+									value =${originCardData.department_name == null ? '' : originCardData.department_name}>
 							</div>
 							<div>
 								<div class="input_title">
 									회사
 								</div>
-								<input type="text" class="input_con" name="company_name" placeholder="회사명 입력">
+								<input type="text" class="input_con" name="company_name" placeholder="회사명 입력"
+									value =${originCardData.company_name == null ? '' : originCardData.company_name}>
 							</div>
 						</div>
 						
@@ -407,26 +528,32 @@ function editCardForm() {
 							<div class="input_title">
 								이메일
 							</div>
-							<input type="text" class="input_con" name="email" placeholder="이메일 주소 입력">
+							<input type="text" class="input_con" name="email" placeholder="이메일 주소 입력"
+									vlaue =${originCardData.email == null ? '' : originCardData.email}>
 							<div class="input_title">
 								휴대폰
 							</div>
-							<input type="text" class="input_con" name="phone" placeholder="휴대폰 번호 입력">
+							<input type="text" class="input_con" name="phone" placeholder="휴대폰 번호 입력"
+									value =${originCardData.phone == null ? '' : originCardData.phone}>
 							<div class="input_title">
 								유선전화
 							</div>
-							<input type="text" class="input_con" name="landline_phone" placeholder="유선전화 번호 입력">
+							<input type="text" class="input_con" name="landline_phone" placeholder="유선전화 번호 입력"
+									value =${originCardData.landline_phone == null ? '' : originCardData.landline_phone}>
 							<div class="input_title">
 								팩스
 							</div>
-							<input type="text" class="input_con" name="fax" placeholder="팩스 번호 입력">
+							<input type="text" class="input_con" name="fax" placeholder="팩스 번호 입력"
+									value =${originCardData.fax == null ? '' : originCardData.fax}>
 						</div>
 						<div class="item_box">
 							<div class="input_title">
 								주소
 							</div>
-							<input type="text" class="input_con" name="address" placeholder="주소 입력">
-							<input type="text" class="input_con" name="sub_address" placeholder="상세 주소 입력">
+							<input type="text" class="input_con" name="address" placeholder="주소 입력"
+									value =${originCardData.address == null ? '' : originCardData.address}>
+							<input type="text" class="input_con" name="sub_address" placeholder="상세 주소 입력"
+									value =${originCardData.sub_address == null ? '' : originCardData.sub_address}>
 							
 						</div>
 					</div>
@@ -435,6 +562,50 @@ function editCardForm() {
 		</div>
 	`;
 	return div;
+}
+
+function deleteCardTag() {
+	const closeModal = document.createElement('div');
+	closeModal.className ="note_modal";
+	closeModal.innerHTML = `
+	<div class="note_modal_content delete">
+		<div class="note_content delete">
+			<div class="add_header delete">
+				<h1>명함 삭제</h1>
+				<button class="add_close_btn">
+					<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+				</button>
+			</div>
+			<div class="add_body delete">
+				<div class="delete_text">
+					<span>명함을 삭제하시겠습니까?<br>삭제한 후에는 복구가 되지 않습니다.</span>
+					<span></span>
+				</div>
+			</div>
+			<div class="delete_footer">
+				<div class="footer_btn">
+					<button>삭제</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	`;
+	
+	return closeModal;
+	
+}
+
+function changeCardImg(event,imgTag) {
+	const reader = new FileReader();
+	reader.onloadend = (e) => {
+		imgTag.src = e.target.result;
+	}
+	reader.readAsDataURL(event.target.files[0]);
+}
+
+function changeProfileImg(){
+	const formData = new FormData();
+	formData.append('profile_img',imgInput.files[0]);
 }
 
 function makeNoContentsTag() {
@@ -637,10 +808,10 @@ function makeCardDate(create_date) {
     return `${date.getFullYear()}년 ${month}월 ${day}일 `;
 }
 
-function makeCardInfoForm(card_data) {
-    console.log(card_data);
-    const position_text = makeDepartmentText(card_data.department_name, card_data.position_name);
-    const cardDate = makeCardDate(card_data.create_date);
+function makeCardInfoForm(card_detail) {
+    console.log(card_detail);
+    const position_text = makeDepartmentText(card_detail.department_name, card_detail.position_name);
+    const cardDate = makeCardDate(card_detail.create_date);
     console.log(cardDate);
     const div = document.createElement('div');
     div.className = "detail_box";
@@ -655,9 +826,9 @@ function makeCardInfoForm(card_data) {
 					</button>
 				 <div class="send_drop_menu hidden">
 					<ul>
-						<li><a href="">입력오타 신고</a></li>
-						<li><a href="">팀 명함첩으로 복제</a></li>
-						<li><a href="">명함 삭제</a></li>
+						<li>입력오타 신고</li>
+						<li>팀 명함첩으로 복제</li>
+						<li>명함 삭제</li>
 					</ul>
 				</div>
 				</div>
@@ -667,12 +838,12 @@ function makeCardInfoForm(card_data) {
 			<div class="detail_profile">
 	            <div class="profile_box">
 	                <span class="detail_profile_img">
-	                    <img src="/static/images/card_profile_user.png" alt="프로필 기본">
+	                    <img src=${card_detail.profile_img == null ? '/static/images/default_profile_image.png' : '/image/profile_images/' + card_detail.profile_img} alt="프로필 기본">
 	                </span>
 	                <div class="profile_info">
-	                    <div class="profile_name">${card_data.name}</div>
+	                    <div class="profile_name">${card_detail.name}</div>
 ${position_text == null ? '' : '<div class="profile_position">' + position_text + '</div>'} 
-${card_data.company_name == null ? '' : '<div class="profile_company">' + card_data.company_name + '</div>'}
+${card_detail.company_name == null ? '' : '<div class="profile_company">' + card_detail.company_name + '</div>'}
 	                </div>
 	            </div>
 	        </div>
@@ -681,29 +852,29 @@ ${card_data.company_name == null ? '' : '<div class="profile_company">' + card_d
 	                <div class="info_box">
 	                    <div class="info_title">이메일</div>
 	                    <div class="info_con_box">
-	 ${card_data.email == null ? '<div class="info_no_value">이메일 없음</div>' :
-            '<div class="info_con  link">' + card_data.email + '</div>'}  
+	 ${card_detail.email == null ? '<div class="info_no_value">이메일 없음</div>' :
+            '<div class="info_con  link">' + card_detail.email + '</div>'}  
 	                    </div>
 	                </div>
 	                <div class="info_box">
 	                    <div class="info_title">휴대폰</div>
 	                    <div class="info_con_box">
-	 ${card_data.phone == null ? '<div class="info_no_value">휴대폰 번호 없음</div>' :
-            '<div class="info_con">' + card_data.phone + '</div>'}                       
+	 ${card_detail.phone == null ? '<div class="info_no_value">휴대폰 번호 없음</div>' :
+            '<div class="info_con">' + card_detail.phone + '</div>'}                       
 	                    </div>
 	                </div>
 	                <div class="info_box">
 	                    <div class="info_title">유선전화</div>
 	                    <div class="info_con_box">
-	 ${card_data.landline_phone == null ? '<div class="info_no_value">유선전화 번호 없음</div>' :
-            '<div class="info_con">' + card_data.landline_phone + '</div>'}  
+	 ${card_detail.landline_phone == null ? '<div class="info_no_value">유선전화 번호 없음</div>' :
+            '<div class="info_con">' + card_detail.landline_phone + '</div>'}  
 	                    </div>
 	                </div>
 	                <div class="info_box">
 	                    <div class="info_title">팩스</div>
 	                    <div class="info_con_box">
-	 ${card_data.fax == null ? '<div class="info_no_value">팩스 번호 없음</div>' :
-            '<div class="info_con">' + card_data.fax + '</div>'}  
+	 ${card_detail.fax == null ? '<div class="info_no_value">팩스 번호 없음</div>' :
+            '<div class="info_con">' + card_detail.fax + '</div>'}  
 	                    </div>
 	                </div>
 	                <div class="info_box">
@@ -718,14 +889,14 @@ ${card_data.company_name == null ? '' : '<div class="profile_company">' + card_d
 	                <div class="info_box">
 	                    <div class="info_title">주소</div>
 	                    <div class="info_con_box">    
-	 ${card_data.address == null ? '<div class="info_no_value">주소 없음</div>' :
-            '<div class="info_con link">' + card_data.address + card_data.sub_address + '</div>'}  
+	 ${card_detail.address == null ? '<div class="info_no_value">주소 없음</div>' :
+            '<div class="info_con link">' + card_detail.address + card_detail.sub_address + '</div>'}  
 	                	</div>
 	                </div>
 	                <div class="info_box">
 	                    <div class="info_title">등록일</div>
 	                    <div class="info_con_box">
-	                        <div class="info_con">${makeCardDate(card_data.create_date)}</div>
+	                        <div class="info_con">${makeCardDate(card_detail.create_date)}</div>
 	                    </div>
 	                </div>
 	        	</div>  

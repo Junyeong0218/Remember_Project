@@ -13,6 +13,15 @@
   	user_id = #{user_id}
   </select>
   
+    <select id="getCardDetail" parameterType="Integer" resultType="com.remember.app.entity.card.CardDetail">
+  select
+  	*
+  from
+  	card_mst
+  where
+  	id = #{id}
+  </select>
+  
   <insert id="insertCard" parameterType="com.remember.app.entity.card.Card">
   	insert into
   		card_mst
@@ -20,6 +29,7 @@
   		0,
   		#{user_id},
   		#{name},
+  		null,
   		#{phone},
   		#{email},
   		#{company_name},
@@ -43,6 +53,7 @@
   		card_mst
   	set
   		name = #{name},
+  		profile_img = #{profile_img},
   		phone = #{phone},
   		email = #{email},
   		company_name = #{company_name},
@@ -62,7 +73,7 @@
   	from
   		card_mst
   	where
-  		user_id = #{user_id}
+  		id = #{id}
   </delete>
   
   <insert id="insertGroup" parameterType="com.remember.app.entity.card.Group">

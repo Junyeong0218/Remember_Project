@@ -80,11 +80,17 @@
 	display:flex;
 	justify-content:space-between;
 	padding: 15px 15px;
-	min-height: 16.43px
+	min-height: 16.43px;
+	background-color: #fff;
 }
 
 .add_header h1{
 	font-size: 17px;
+}
+
+.add_header.delete h1 {
+	font-size: 20px;
+	font-weight: 300;
 }
 
 .add_close_btn{
@@ -292,3 +298,52 @@ textarea::placeholder {
 	background-color: #000000A6;
 	color: #fff;
 }
+
+.note_content.delete {
+	box-shadow: 0 5px 15px rgb(0 0 0 / 50%);
+}
+
+.add_body.delete {
+	display: flex;
+	justify-content: center;
+}
+
+.note_content.delete {
+	width: 450px;
+}
+
+.delete_text,
+.footer_btn {
+	width: 85%;
+}
+
+.delete_text {
+	padding: 15px 0;
+    color: rgba(0,0,0,.65);
+}
+
+.delete_footer {
+	display: flex;
+    justify-content: center;
+	padding: 0 15px 30px 15px;
+}
+
+
+.footer_btn button {
+	padding: 6px 12px;
+	width: 100%;
+	text-align: center;
+	color: #fff;
+	background-color: #ff5252;
+	cursor: pointer;
+}
+
+.footer_btn button:hover {
+	background-color: #ff1f1f;
+}
+
+.note_modal_content.delete {
+	margin-top: 40px;
+}
+
+

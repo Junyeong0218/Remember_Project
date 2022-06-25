@@ -3,17 +3,15 @@ package com.remember.app.entity.card;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
-@Builder
-public class Card {
+public class CardDetail {
+
 	private int id;
-	private int user_id;
 	private String name;
 	private String profile_img;
 	private String phone;
@@ -26,7 +24,5 @@ public class Card {
 	private String address;
 	private String sub_address;
 	private LocalDateTime create_date;
-	private LocalDateTime update_date;
 	
-	private int total_count;
 }
