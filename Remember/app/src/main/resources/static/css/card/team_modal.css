@@ -1,0 +1,152 @@
+.modal {
+	position: fixed;
+	top: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.6);
+	z-index: 1;
+}
+
+.modal > .window {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border-radius: 8px;
+	background-color: white;
+}
+
+.modal > .change_info {
+	width: 320px;
+}
+
+.modal > .change_info > .title {
+	position: relative;
+	padding: 16px 24px;
+	width: 100%;
+	height: 55px;
+	border-bottom: 1px solid #E8E8E8;
+}
+
+.modal > .change_info > .title > span {
+	font-size: 14px;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: normal;
+}
+
+.modal > .change_info > .title > .close_modal {
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 54px;
+	height: 54px;
+	cursor: pointer;
+}
+
+.modal > .change_info > .title > .close_button > img {
+	pointer-events: none;
+}
+
+.modal > .change_info > .input_wrapper {
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.modal > .change_info > .input_wrapper > input {
+	padding: 6px 11px;
+	width: 100%;
+	height: 40px;
+	border: 1px solid #D9D9D9;
+	background-color: #FAFAFA;
+	font-size: 16px;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 1.5;
+	transition: 300ms;
+	outline: none;
+}
+
+.modal > .change_info > .input_wrapper > input:hover,
+.modal > .change_info > .input_wrapper > input:active {
+	border-color: #0D0C0C;
+}
+
+.modal > .change_info > .input_wrapper > span {
+	margin-top: 10px;
+	font-size: 12px;
+	color: #999;
+}
+
+.modal > .change_info > .buttons {
+	padding: 10px 16px;
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	width: 100%;
+	height: 61px;
+	border-top: 1px solid #E8E8E8;
+}
+
+.modal > .change_info > .buttons > button,
+.modal > .leave_team > .buttons > button {
+	padding: 0 15px;
+	height: 100%;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 40px;
+	cursor: pointer;
+	transition: 300ms;
+}
+
+.modal > .leave_team > .buttons > button {
+	line-height: 32px;
+}
+
+.modal > .change_info > .buttons > .cancel_button,
+.modal > .leave_team > .buttons > .cancel_button {
+	border: 1px solid #D9D9D9;
+	color: rgba(0, 0, 0, 0.65);
+}
+
+.modal > .change_info > .buttons > .cancel_button:hover,
+.modal > .leave_team > .buttons > .cancel_button:hover {
+	border-color: #403C3C;
+}
+
+.modal > .change_info > .buttons > .submit_button,
+.modal > .leave_team > .buttons > .confirm_button {
+	background-color: #403C3C;
+	color: white;
+}
+
+.modal > .leave_team > .buttons > .submit_button {
+	background-color: #FF5252;
+	color:white;
+}
+
+.modal > .leave_team {
+	padding: 15px 20px;
+	width: 400px;
+}
+
+.modal > .leave_team > .message {
+	margin-top: 8px;
+	width: 100%;
+	font-size: 15px;
+	color: #666;
+}
+
+.modal > .leave_team > .buttons {
+	margin-top: 24px;
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	width: 100%;
+	height: 32px;
+}

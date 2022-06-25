@@ -1,7 +1,5 @@
 package com.remember.app.entity.card;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,16 +13,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TeamUserProfile {
+public class TeamGrade {
 
 	private int id;
-	private int user_id;
-	private String nickname;
-	private String phone;
-	private String role;
-	private LocalDateTime create_date;
-	private LocalDateTime update_date;
-	
-	private int total_count;
+	private String grade;
+	private int max_card_book_count;
+	private int max_card_count;
 	
 }

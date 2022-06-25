@@ -16,8 +16,10 @@ import com.remember.app.entity.card.Team;
 import com.remember.app.entity.card.TeamCardBook;
 import com.remember.app.entity.card.TeamCardBookSummary;
 import com.remember.app.entity.card.TeamCardDetail;
+import com.remember.app.entity.card.TeamDetail;
 import com.remember.app.entity.card.TeamGroup;
 import com.remember.app.entity.card.TeamGroupSummary;
+import com.remember.app.entity.card.TeamJoinUser;
 import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
@@ -141,7 +143,40 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public List<Team> getTeamList(int userId) {
+	public boolean deleteTeam(Team team) {
+		return cardRepository.updateTeamToDelete(team) == 1;
+	}
+	
+	@Override
+	public boolean updateTeamName(Team team) {
+		return cardRepository.updateTeamName(team);
+	}
+	
+	@Override
+	public TeamUserProfile getTeamUserProfile(int userId) {
+		return cardRepository.getTeamUserProfile(userId);
+	}
+	
+	@Override
+	public boolean updateProfileNickname(TeamUserProfile teamUserProfile) {
+		return cardRepository.updateProfileNickname(teamUserProfile);
+	}
+	
+	@Override
+	public boolean leaveTeam(TeamJoinUser teamJoinUser) {
+		if(cardRepository.getAdmincCountInTeam(teamJoinUser) > 0) {
+			return cardRepository.leaveTeam(teamJoinUser) == 1;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean updateCardBookName(TeamCardBook teamCardBook) {
+		return cardRepository.updateTeamCardBookName(teamCardBook) == 1;
+	}
+	
+	@Override
+	public List<TeamDetail> getTeamList(int userId) {
 		return cardRepository.getTeamList(userId);
 	}
 	
@@ -193,13 +228,13 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public List<TeamUserProfile> getTeamJoinUsers(int teamId) {
-		return null;
+	public List<TeamUserProfile> getTeamJoinUsers(int teamId, int userId, int page) {
+		return cardRepository.getTeamJoinUsers(teamId, userId, page * 10);
 	}
 	
 	@Override
-	public List<TeamUserProfile> getCardBookJoinUsers(int cardBookId) {
-		return null;
+	public List<TeamUserProfile> getCardBookJoinUsers(int cardBookId, int page) {
+		return cardRepository.getCardBookJoinUsers(cardBookId, page * 10);
 	}
 	
 }

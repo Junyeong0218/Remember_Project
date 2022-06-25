@@ -17,8 +17,11 @@ import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
+import com.remember.app.entity.card.TeamCardBook;
 import com.remember.app.entity.card.TeamCardBookSummary;
+import com.remember.app.entity.card.TeamDetail;
 import com.remember.app.entity.card.TeamGroupSummary;
+import com.remember.app.entity.card.TeamJoinUser;
 import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.requestDto.AddGroupReqDto;
@@ -168,9 +171,48 @@ public class CardRestController {
 		return cardService.insertTeam(addTeamReqDto);
 	}
 	
+	@GetMapping("/team/profile")
+	public TeamUserProfile getTeamUserProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		return cardService.getTeamUserProfile(principalDetails.getId());
+	}
+	
+	@PutMapping("/team/profile/{profileId}")
+	public boolean updateProfileNickname(@PathVariable int profileId,
+																				TeamUserProfile teamUserProfile) {
+		teamUserProfile.setId(profileId);
+		return cardService.updateProfileNickname(teamUserProfile);
+	}
+	
 	@GetMapping("/team/list")
-	public List<Team> getTeamList(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+	public List<TeamDetail> getTeamList(@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		return cardService.getTeamList(principalDetails.getId());
+	}
+	
+	@PutMapping("/team/{teamId}")
+	public boolean updateTeamName(@PathVariable int teamId,
+																	 Team team) {
+		team.setId(teamId);
+		return cardService.updateTeamName(team);
+	}
+	
+	@DeleteMapping("/team/{teamId}")
+	public boolean deleteTeam(@PathVariable int teamId,
+														 @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		Team team = Team.builder()
+											.id(teamId)
+											.made_user_id(principalDetails.getId())
+											.build();
+		return cardService.deleteTeam(team);
+	}
+	
+	@DeleteMapping("/team/{teamId}/entry")
+	public boolean leaveTeam(@PathVariable int teamId,
+													   @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		TeamJoinUser join = TeamJoinUser.builder()
+																		 .team_id(teamId)
+																		 .joined_user_id(principalDetails.getId())
+																		 .build();
+		return cardService.leaveTeam(join);
 	}
 	
 	@GetMapping("/team/{teamId}/book/list")
@@ -179,8 +221,16 @@ public class CardRestController {
 	}
 	
 	@GetMapping("/team/{teamId}/member/list")
-	public List<TeamUserProfile> getTeamJoinUsers(@PathVariable int teamId) {
-		
+	public List<TeamUserProfile> getTeamJoinUsers(@PathVariable int teamId, int page,
+																								 @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		return cardService.getTeamJoinUsers(teamId, principalDetails.getId(), page);
+	}
+	
+	@PutMapping("/team/book/{cardBookId}")
+	public boolean updateCardBookName(@PathVariable int cardBookId,
+																				TeamCardBook teamCardBook) {
+		teamCardBook.setId(cardBookId);
+		return cardService.updateCardBookName(teamCardBook);
 	}
 	
 	@GetMapping("/team/book/{cardBookId}/group/list")
@@ -189,8 +239,8 @@ public class CardRestController {
 	}
 	
 	@GetMapping("/team/book/{cardBookId}/member/list")
-	public List<TeamUserProfile> getCardBookJoinUsers(@PathVariable int cardBookId) {
-		
+	public List<TeamUserProfile> getCardBookJoinUsers(@PathVariable int cardBookId, int page) {
+		return cardService.getCardBookJoinUsers(cardBookId, page);
 	}
 	
 	@GetMapping("/team/book/{cardBookId}/card/list")

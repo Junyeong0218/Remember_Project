@@ -36,17 +36,31 @@ public interface CardRepository {
 	
 	public int insertTeam(Team team);
 	
+	public int updateTeamToDelete(Team team);
+	
 	public int joinTeam(TeamJoinUser teamJoinUser);
+	
+	public int leaveTeam(TeamJoinUser teamJoinUser);
+	
+	public int getAdmincCountInTeam(TeamJoinUser teamJoinUser);
 
 	public int insertTeamCardBook(TeamCardBook teamCardBook);
+	
+	public int updateTeamCardBookName(TeamCardBook teamCardBook);
 	
 	public int insertTeamCardBookJoinUser(TeamCardBookJoinUser teamCardBookJoinUser);
 	
 	public int insertTeamUserProfile(TeamUserProfile teamUserProfile);
 	
+	public boolean updateProfileNickname(TeamUserProfile teamUserProfile);
+	
 	public int insertTeamGroup(TeamGroup teamGroup);
 	
-	public List<Team> getTeamList(int userId);
+	public boolean updateTeamName(Team team);
+
+	public TeamUserProfile getTeamUserProfile(int userId);
+	
+	public List<TeamDetail> getTeamList(int userId);
 	
 	public List<TeamCardBookSummary> getCardBookList(int teamId);
 	
@@ -58,7 +72,7 @@ public interface CardRepository {
 	
 	public List<TeamCardDetail> getTeamCardDetail(int cardId);
 
-	public List<TeamUserProfile> getTeamJoinUsers(int teamId);
+	public List<TeamUserProfile> getTeamJoinUsers(int teamId, int userId, int page);
 
-	public List<TeamUserProfile> getCardBookJoinUsers(int cardBookId);
+	public List<TeamUserProfile> getCardBookJoinUsers(int teamCardBookId, int page);
 }

@@ -31,6 +31,7 @@ public class AddTeamReqDto {
 	public Team toTeamEntity() {
 		return Team.builder()
 								.made_user_id(made_user_id)
+								.grade_id(1)
 								.title(title)
 								.build();
 	}
@@ -39,6 +40,7 @@ public class AddTeamReqDto {
 		return TeamJoinUser.builder()
 												 .team_id(id)
 												 .joined_user_id(made_user_id)
+												 .role("ADMIN")
 												 .build();
 	}
 	
@@ -53,6 +55,7 @@ public class AddTeamReqDto {
 		return TeamCardBookJoinUser.builder()
 																	.team_card_book_id(card_book_id)
 																	.joined_user_id(made_user_id)
+																	.role("ADMIN")
 																	.build();
 	}
 	

@@ -68,6 +68,16 @@ main {
 	color: #979797;
 }
 
+.menus > .team_menu > .team_info > .team_grade.premium {
+	border-color: #3288D0;
+	color: #3288D0;
+}
+
+.menus > .team_menu > .team_info > .team_grade.enterprise {
+	border-color: #D08132;
+	color: #D08132;
+}
+
 .menus > .team_menu > hr {
 	margin: 18px 0;
 	border: none;
@@ -261,6 +271,39 @@ main {
 	color: #333;
 }
 
+.menus > .team_description > .groups > .input_wrapper {
+	position: relative;
+	padding: 0 5px 0 12px;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 36px;
+	background-color: white;
+}
+
+.menus > .team_description > .groups > .input_wrapper > input {
+	flex-grow: 1;
+	height: 100%;
+	border: none;
+	font-size: 13px;
+	color: #555;
+	line-height: 32px;
+	outline: none;
+}
+
+.menus > .team_description > .groups > .input_wrapper > button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-width: 18px;
+	height: 100%;
+	cursor: pointer;
+}
+
+.menus > .team_description > .groups > .input_wrapper > button > img {
+	pointer-events: none;
+}
+
 .menus > .team_description > .groups > .group > .group_text,
 .menus > .team_description > .groups > .group > .group_text > span {
 	font-size: 13px;
@@ -424,6 +467,114 @@ main {
 	width: 100%;
 }
 
+.main_contents > .manage_team > section > .column {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+}
+
+.main_contents > .manage_team > section > .column.payment {
+	padding: 12px;
+}
+
+.main_contents > .manage_team > section > .column > .warning_title {
+	padding: 16px;
+	width: 100%;
+	font-size: 15px;
+	color: #666;
+	line-height: 1.5;
+	text-align: center;	
+}
+
+.main_contents > .manage_team > section > .column > .warning_description {
+	margin: 0 12px;
+	padding: 16px 20px;
+	width: calc(100% - 24px);
+	background-color: #FAFAFA;
+	font-size: 15px;
+	color: #999;
+	white-space: pre-line;
+}
+
+.main_contents > .manage_team > section > .column > .input_wrapper {
+	margin: 30px 0;
+	padding: 0 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	gap: 8px;
+	cursor: pointer;
+}
+
+.main_contents > .manage_team > section > .column > .input_wrapper > .confirm {
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	background: url("/static/images/signup_unchecked_checkbox.png");
+	transition: 300ms;
+	pointer-events: none;
+}
+
+.main_contents > .manage_team > section > .column > .input_wrapper:hover > .confirm {
+	background: url("/static/images/signup_hover_checkbox.png");
+}
+
+.main_contents > .manage_team > section > .column > .input_wrapper > .confirm:checked {
+	background: url("/static/images/signup_checked_checkbox.png");
+}
+
+.main_contents > .manage_team > section > .column > .input_wrapper > .text {
+	font-size: 15px;
+	font-weight: 400;
+	color: rgba(0, 0, 0, 0.65);
+	pointer-events: none;
+}
+
+.main_contents > .manage_team > section > .column > .delete_button,
+.main_contents > .manage_team > section > .column > .leave_button {
+	margin-bottom: 16px;
+	width: 300px;
+	height: 40px;
+	background-color: #FF5252;
+	font-size: 16px;
+	font-weight: 400;
+	color: white;
+	line-height: 1.5;
+	text-decoration: none;
+	cursor: pointer;;
+	transition: 300ms;
+}
+
+.main_contents > .manage_team > section > .column > .delete_button:disabled,
+.main_contents > .manage_team > section > .column > .leave_button:disabled {
+	opacity: 0.3;
+	cursor: default;
+}
+
+.main_contents > .manage_team > section > .column.payment > .row {
+	padding: 12px 8px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+
+.main_contents > .manage_team > section > .column.payment > .row:not(:last-child) {
+	border-bottom: 1px solid #CDCDCD;
+}
+
+.main_contents > .manage_team > section > .column.payment > .no_contents {
+	margin: 80px 0;
+	width: 100%;
+	font-size: 13px;
+	font-weight: 700;
+	color: #CCC;
+	text-align: center;
+}
+
 .main_contents > .manage_team > section > .row > .title,
 .main_contents > .card_book_settings > section > .row > .title {
 	display: flex;
@@ -444,6 +595,12 @@ main {
 	line-height: normal;
 }
 
+.main_contents > .manage_team > section .text.blue {
+	font-size: 11px;
+	color: #6AA0E0;
+	line-height: normal;
+}
+
 .main_contents > .manage_team > section .text.disabled,
 .main_contents > .card_book_settings > section .text.disabled {
 	color: #CCC;
@@ -459,6 +616,7 @@ main {
 
 .main_contents > .card_book_settings > section button:disabled {
 	text-decoration: none;
+	cursor: default;
 }
 
 .main_contents > .manage_team > section button.red,

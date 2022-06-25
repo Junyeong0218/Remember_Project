@@ -181,6 +181,7 @@
 			values(
 				0,
 				#{made_user_id},
+				#{grade_id},
 				#{title},
 				now(),
 				now(),
@@ -193,6 +194,16 @@
 			</selectKey>
 		</insert>
 		
+		<update id="updateTeamToDelete" parameterType="com.remember.app.entity.card.Team">
+			update
+				team_mst
+			set
+				deleted = true,
+				deleted_date = now()
+			where
+				id = #{id} and made_user_id = #{made_user_id};
+		</update>
+		
 		<insert id="joinTeam" parameterType="com.remember.app.entity.card.TeamJoinUser">
 			insert into
 				team_join_user
@@ -200,10 +211,30 @@
 				0,
 				#{team_id},
 				#{joined_user_id},
+				#{role},
 				now(),
 				now()
 			);
 		</insert>
+		
+		<delete id="leaveTeam" parameterType="com.remember.app.entity.card.TeamJoinUser">
+			delete from
+				team_join_user
+			where
+				team_id = #{team_id} and
+				user_id = #{joined_user_id};
+		</delete>
+		
+		<select id="getAdmincCountInTeam" parameterType="com.remember.app.entity.card.TeamJoinUser" resultType="Integer">
+			select
+				count(distinct id)
+			from
+				team_join_user
+			where
+				role = "ROLE" and
+				team_id = #{team_id} and
+				joined_user_id != #{joined_user_id};
+		</select>
 
 		<insert id="insertTeamCardBook" parameterType="com.remember.app.entity.card.TeamCardBook">
 			insert into
@@ -221,6 +252,15 @@
 			</selectKey>
 		</insert>
 		
+		<update id="updateTeamCardBookName" parameterType="com.remember.app.entity.card.TeamCardBook">
+			update
+				team_card_book
+			set
+				card_book_name = #{card_book_name}
+			where
+				id = #{id};
+		</update>
+		
 		<insert id="insertTeamCardBookJoinUser" parameterType="com.remember.app.entity.card.TeamCardBookJoinUser">
 			insert into
 				team_card_book_join_user
@@ -228,6 +268,7 @@
 				0,
 				#{team_card_book_id},
 				#{joined_user_id},
+				#{role},
 				now(),
 				now()
 			);
@@ -244,6 +285,15 @@
 				now()
 			);
 		</insert>
+		
+		<update id="updateProfileNickname" parameterType="com.remember.app.entity.card.TeamUserProfile">
+			update
+				team_user_profile
+			set
+				nickname = #{nickname}
+			where
+				id = #{id};
+		</update>
   
 		<insert id="insertTeamGroup" parameterType="com.remember.app.entity.card.TeamGroup">
 			insert into
@@ -257,14 +307,51 @@
 			);
 		</insert>
 		
-		<select id="getTeamList" parameterType="Integer" resultType="com.remember.app.entity.card.Team">
+		<update id="updateTeamName" parameterType="com.remember.app.entity.card.Team">
+			update
+				team_mst
+			set
+				title = #{title}
+			where
+				id = #{id};
+		</update>
+		
+		<select id="getTeamUserProfile" parameterType="Integer" resultType="com.remember.app.entity.card.TeamUserProfile">
 			select
-				team.*
+				*
+			from
+				team_user_profile
+			where
+				user_id = #{userId};
+		</select>
+		
+		<select id="getTeamList" parameterType="Integer" resultType="com.remember.app.entity.card.TeamDetail">
+			select
+				team.id,
+				team.made_user_id,
+				
+				team.grade_id,
+				grade.grade,
+				grade.max_card_book_count,
+				grade.max_card_count,
+			
+				team.title,	
+				team.create_date,
+				
+				count(distinct `join2`.id) as total_join_user_count,
+				count(distinct belong.id) as total_card_count
 			from
 				team_join_user `join`
-				left outer join team_mst team on(team.id = `join`.team_id)
+				left outer join team_mst team on(team.id = `join`.team_id and team.deleted = false)
+				left outer join team_grade_mst grade on(grade.id = team.grade_id)
+				left outer join team_join_user `join2` on(`join2`.team_id = team.id)
+				left outer join team_card_book card_book on(card_book.team_id = team.id)
+				left outer join team_group `group` on(`group`.card_book_id = card_book.id)
+				left outer join card_belong_team_group belong on(belong.team_group_id = `group`.id)
 			where
-				`join`.joined_user_id = #{userId};
+				`join`.joined_user_id = #{userId}
+			group by
+				team.id;
 		</select>
 		
 		<select id="getCardBookList" parameterType="Integer" resultType="com.remember.app.entity.card.TeamCardBookSummary">
@@ -374,13 +461,34 @@
 		
 		<select id="getTeamJoinUsers" parameterType="Integer" resultType="com.remember.app.entity.card.TeamUserProfile">
 			select
-				*
+				`profile`.*,
+				`join`.role,
+				um.phone,
+				
+				count(distinct `join`.id) as total_count
 			from
-				team_nn
+				team_join_user `join`
+				left outer join team_user_profile `profile` on(`profile`.user_id = `join`.joined_user_id)
+				left outer join user_mst um on(um.id = `join`.joined_user_id)
+			where
+				`join`.team_id = #{teamId} and `join`.joined_user_id != #{userId}
+			limit #{page}, 10;
 		</select>
 		
 		<select id="getCardBookJoinUsers" parameterType="Integer" resultType="com.remember.app.entity.card.TeamUserProfile">
-		
+			select
+				`profile`.*,
+				`join`.role,
+				um.phone,
+				
+				count(distinct `join`.id) as total_count
+			from
+				team_card_book_join_user `join`
+				left outer join team_user_profile `profile` on(`profile`.user_id = `join`.joined_user_id)
+				left outer join user_mst um on(um.id = `join`.joined_user_id)
+			where
+				`join`.team_card_book_id = #{teamCardBookId}
+			limit #{page}, 10;
 		</select>
 		
   </mapper>

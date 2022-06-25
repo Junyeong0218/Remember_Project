@@ -4,6 +4,9 @@ const change_team_button = document.querySelector(".menus .change_team");
 
 const card_book_wrapper = document.querySelector(".menus .card_books");
 const add_new_card_book_button = document.querySelector(".menus .add_new_card_book");
+
+const groups = document.querySelector(".menus .groups");
+const add_new_group_button = document.querySelector(".menus .add_new_group");
 const whole_card_button = document.querySelector("#whole_cards");
 
 const group_wrapper = document.querySelector(".menus .groups");
@@ -16,25 +19,210 @@ let selected_team;
 let selected_card_book;
 let selected_group;
 
+let principal_profile;
+
 let page = 0;
 
+loadPrincipalProfile();
 loadTeam();
 
 team_members_button.onclick = () => {
 	// 본인을 제외한 팀 멤버 검색
-	// join_count == 0 -> append no_member tag
-	// join_count > 0 -> append member_list tag
-	const no_member_tag = makeNoMembersTag();
-	replaceTagInMainContents(no_member_tag);
-	no_member_tag.querySelector(".invite_member").onclick = () => {
-		// 링크 생성 및 모달 출력
-		console.log("링크 생성 및 모달 출력");
+	page = 0;
+	
+	const team_member_list = loadTeamMembers();
+	if(team_member_list.length == 1 && team_member_list[0].total_count == 0) {
+		const no_member_tag = makeNoMembersTag();
+		replaceTagInMainContents(no_member_tag);
+		no_member_tag.querySelector(".invite_member").onclick = () => {
+			// 링크 생성 및 모달 출력
+			console.log("링크 생성 및 모달 출력");
+		}
+	} else {
+		console.log(team_member_list);
 	}
 }
 
 team_manage_button.onclick = () => {
 	const team_manage_tag = makeTeamManageTag();
 	replaceTagInMainContents(team_manage_tag);
+	
+	const show_product_description = document.querySelector("#show_product_description");
+	show_product_description.onclick = () => {
+		// 상품 상세 페이지 출력
+	}
+	
+	const show_history = document.querySelector("#show_history");
+	show_history.onclick = () => {
+		// 팀 명함 수 등 상세 페이지 readOnly
+		const team_history = makeShowHistoryTag();
+		replaceTagInMainContents(team_history);
+	}
+	
+	const manage_payment = document.querySelector("#manage_payment");
+	manage_payment.onclick = () => {
+		// 결제 수단 및 내역으로 이동가능 한 페이지
+		const manage_payment_tag = makeManagePaymentTag();
+		replaceTagInMainContents(manage_payment_tag);
+		
+		const show_my_payment_process = manage_payment_tag.querySelector("#show_my_payment_process");
+		show_my_payment_process.onclick = () => {
+			// 결제 수단 태그
+			const my_payment_process_tag = makeMyPaymentProcess();
+			replaceTagInMainContents(my_payment_process_tag);
+		}
+		
+		const show_my_payment_history = manage_payment_tag.querySelector("#show_my_payment_history");
+		show_my_payment_history.onclick = () => {
+			// 결제 내역 태그
+			const my_payment_history_tag = makeMyPaymentHistory();
+			replaceTagInMainContents(my_payment_history_tag);
+		}
+	}
+	
+	const change_team_name = document.querySelector("#change_team_name");
+	change_team_name.onclick = () => {
+		// 조직명 변경 모달 출력
+		const change_team_name_modal = makeChangeTeamNameModal();
+		appendModalToContainer(change_team_name_modal);
+		
+		change_team_name_modal.querySelector(".close_modal").onclick = () => {
+			removeModal(change_team_name_modal);
+		}
+		
+		change_team_name_modal.querySelector(".cancel_button").onclick = () => {
+			removeModal(change_team_name_modal);
+		}
+		
+		change_team_name_modal.querySelector(".submit_button").onclick = () => {
+			// update team name
+			const team_name_input = change_team_name_modal.querySelector("input[name='title']");
+			if(team_name_input.value == "") {
+				alert("팀 이름을 정확히 입력해주세요.");
+			} else if(team_name_input.value == selected_team.title) {
+				alert("현재 조직명과 같은 이름을 사용할 수 없습니다.");
+			} else {
+				updateTeamName(team_name_input.value);
+			}
+		}
+	}
+	
+	const change_profile = document.querySelector("#change_profile");
+	change_profile.onclick = () => {
+		// 프로필 명 변경 모달 출력
+		const change_nickname_modal = makeChangeProfileNameModal();
+		appendModalToContainer(change_nickname_modal);
+		
+		change_nickname_modal.querySelector(".close_modal").onclick = () => {
+			removeModal(change_nickname_modal);
+		}
+		
+		change_nickname_modal.querySelector(".cancel_button").onclick = () => {
+			removeModal(change_nickname_modal);
+		}
+		
+		change_nickname_modal.querySelector(".submit_button").onclick = () => {
+			const nickname_input = change_nickname_modal.querySelector("input[name='nickname']");
+			if(nickname_input.value == "") {
+				alert("닉네임을 정확히 입력해주세요.");
+			} else if(nickname_input.value == principal_profile.nickname) {
+				alert("현재 닉네임과 같은 이름을 사용할 수 없습니다.");
+			} else {
+				updateProfileNickname(nickname_input.value);
+			}
+		}
+	}
+	
+	const invite_member = document.querySelector("#invite_member");
+	invite_member.onclick = () => {
+		// 구성원 초대 가능한 링크있는 모달 출력
+	}
+	
+	const leave_team = document.querySelector("#leave_team");
+	leave_team.onclick = () => {
+		// 조직 나가기 설명 페이지 이동
+		const leave_team_form = makeLeaveTeamDescriptionTag();
+		replaceTagInMainContents(leave_team_form);
+		
+		const input_wrapper = leave_team_form.querySelector(".input_wrapper");
+		const confirm = input_wrapper.querySelector(".confirm");
+		const leave_button = leave_team_form.querySelector(".leave_button");
+		input_wrapper.onclick = () => {
+			confirm.toggleAttribute("checked");
+			if(confirm.checked) {
+				leave_button.disabled = false;
+			} else {
+				leave_button.disabled = true;
+			}
+		}
+		leave_button.onclick = () => {
+			const leave_confirm_modal = makeConfirmLeaveTeamModal();
+			appendModalToContainer(leave_confirm_modal);
+			
+			leave_confirm_modal.querySelector(".cancel_button").onclick = () => {
+				removeModal(leave_confirm_modal);
+			}
+			
+			leave_confirm_modal.querySelector(".submit_button").onclick = () => {
+				// 조직 내 ADMIN 검사 후 본인 이외에 ADMIN이 없으면 퇴장 불가
+				const leave_flag = leaveTeam();
+				if(leave_flag) {
+					location.reload();
+				} else {
+					removeModal(leave_confirm_modal);
+					const leave_error_modal = makeErrorToLeaveTeamModal();
+					appendModalToContainer(leave_error_modal);
+					
+					leave_error_modal.querySelector(".confirm_button").onclick = () => {
+						removeModal(leave_error_modal);
+					}
+				}
+			}
+		}
+	}
+	
+	const delete_team = document.querySelector("#delete_team");
+	delete_team.onclick = () => {
+		// 조직 삭제 설명 페리지 이동
+		const delete_team_form = makeDeleteTeamDescriptionTag();
+		replaceTagInMainContents(delete_team_form);
+		
+		const input_wrapper = delete_team_form.querySelector(".input_wrapper");
+		const confirm = input_wrapper.querySelector(".confirm");
+		const delete_button = delete_team_form.querySelector(".delete_button");
+		input_wrapper.onclick = () => {
+			confirm.toggleAttribute("checked");
+			if(confirm.checked) {
+				delete_button.disabled = false;
+			} else {
+				delete_button.disabled = true;
+			}
+		}
+		
+		delete_button.onclick = () => {
+			const delete_confirm_modal = makeConfirmDeleteTeamModal();
+			appendModalToContainer(delete_confirm_modal);
+			
+			delete_confirm_modal.querySelector(".cancel_button").onclick = () => {
+				removeModal(delete_confirm_modal);
+			}
+			
+			delete_confirm_modal.querySelector(".submit_button").onclick = () => {
+				const delete_flag = deleteTeam();
+				if(delete_flag) {
+					location.reload();
+				} else {
+					removeModal(delete_confirm_modal);
+					const leave_error_modal = makeErrorToLeaveTeamModal();
+					appendModalToContainer(leave_error_modal);
+					
+					leave_error_modal.querySelector(".confirm_button").onclick = () => {
+						removeModal(leave_error_modal);
+					}
+				}
+			}
+		}
+	}
 }
 
 change_team_button.onclick = () => {
@@ -42,19 +230,89 @@ change_team_button.onclick = () => {
 	// 모달에서 새로운 팀 생성 가능
 }
 
+add_new_group_button.onclick = () => {
+	let add_new_group_input_wrapper = document.querySelector("#add_new_group");
+	if(add_new_group_input_wrapper != null) return;
+	
+	add_new_group_input_wrapper = makeAddNewGroupTag();
+	groups.insertBefore(add_new_group_input_wrapper, groups.children[1]);
+	
+	const group_name_input = add_new_group_input_wrapper.querySelector("input");
+	const remove_button = add_new_group_input_wrapper.querySelector("button");
+	
+	remove_button.onclick = () => add_new_group_input_wrapper.remove();
+	group_name_input.oninput = (event) => {
+		console.log(event);
+	}
+}
+
 card_book_members_button.onclick = () => {
 	// 명함첩 참여 유저 리스트 출력
+	page = 0;
+	
+	const card_book_member_list = loadCardBookJoinMembers();
 	const card_book_member_list_tag = makeCardBookJoinUserListTag();
 	replaceTagInMainContents(card_book_member_list_tag);
+	console.log(card_book_member_list);
+	const member_list_wrapper = card_book_member_list_tag.querySelector(".contents");
+	for(let i = 0; i < card_book_member_list.length; i++) {
+		const member_tag = makeCardBookJoinUserTag(card_book_member_list[i]);
+		member_list_wrapper.appendChild(member_tag);
+		// personal card select
+	}
+	
+	setListPager(card_book_member_list[0].total_count);
 }
 
 card_book_settings_button.onclick = () => {
 	// 명함첩 설정 태그 출력
 	const card_book_settings_tag = makeCardBookSettingsTag();
 	replaceTagInMainContents(card_book_settings_tag);
+	
+	const change_card_book_name = card_book_settings_tag.querySelector("#change_card_book_name");
+	change_card_book_name.onclick= () => {
+		const change_card_book_name_modal = makeChangeCardBookNameModal();
+		appendModalToContainer(change_card_book_name_modal);
+		
+		change_card_book_name_modal.querySelector(".close_modal").onclick = () => {
+			removeModal(change_card_book_name_modal);
+		}
+		
+		change_card_book_name_modal.querySelector(".cancel_button").onclick = () => {
+			removeModal(change_card_book_name_modal);
+		}
+		
+		change_card_book_name_modal.querySelector(".submit_button").onclick = () => {
+			const card_book_name_input = change_card_book_name_modal.querySelector("input[name='card_book_name']");
+			if(card_book_name_input.value == "") {
+				alert("명함첩 이름을 정확히 입력해주세요.");
+			} else if(card_book_name_input.value == selected_card_book.card_book_name) {
+				alert("현재 명함첩 이름과 같은 이름을 사용할 수 없습니다.");
+			} else {
+				updateCardBookName(card_book_name_input.value);
+			}
+		}
+	}
 }
 
-whole_card_button.onclick = loadAllCardList; 
+whole_card_button.onclick = loadAllCardList;
+
+function loadPrincipalProfile() {
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/team/profile",
+		async: false,
+		dataType: "json",
+		success: function (profile) {
+			console.log(profile);
+			principal_profile = profile;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+}
 
 function loadTeam() {
 	$.ajax({
@@ -63,6 +321,7 @@ function loadTeam() {
 		async: false,
 		dataType: "json",
 		success: function (team_list) {
+			console.log(team_list);
 			selected_team = pickTeamOrderByCreateDate(team_list);
 			loadBookList(selected_team.id);
 			setTeamInfo();
@@ -151,7 +410,7 @@ function loadAllCardList() {
 			} else {
 				const card_list_wrapper_tag = makeCardListTag();
 				replaceTagInMainContents(card_list_wrapper_tag);
-				setCardListPager(card_list[0].total_count);
+				setListPager(card_list[0].total_count);
 				
 				const card_list_tag = card_list_wrapper_tag.querySelector(".card_list");
 				for(let i = 0; i < card_list.length; i++) {
@@ -190,7 +449,7 @@ function loadSpecificGroupCardList() {
 			} else {
 				const card_list_wrapper_tag = makeCardListTag();
 				replaceTagInMainContents(card_list_wrapper_tag);
-				setCardListPager(card_list[0].total_count);
+				setListPager(card_list[0].total_count);
 				
 				const card_list_tag = card_list_wrapper_tag.querySelector(".card_list");
 				for(let i = 0; i < card_list.length; i++) {
@@ -215,7 +474,7 @@ function loadSpecificGroupCardList() {
 	});
 }
 
-function setCardListPager(total_count) {
+function setListPager(total_count) {
 	const max_page = total_count % 10 == 0 ? Math.floor(total_count / 10) : Math.floor(total_count / 10) + 1;
 	let min_page = page -1;
 	const pager_tags = document.querySelector(".pager").children;
@@ -280,7 +539,9 @@ function loadTeamMembers() {
 	let team_members;
 	$.ajax({
 		type: "get",
-		url: "",
+		url: "/api/v1/card/team/" + selected_team.id + "/member/list",
+		async: false,
+		data: {"page":page},
 		dataType: "json",
 		success: function (data) {
 			team_members = data;
@@ -297,7 +558,9 @@ function loadCardBookJoinMembers() {
 	let card_book_members;
 	$.ajax({
 		type: "get",
-		url: "",
+		url: "/api/v1/card/team/book/" + selected_card_book.id + "/member/list",
+		async: false,
+		data: {"page":page},
 		dataType: "json",
 		success: function (data) {
 			card_book_members = data;
@@ -308,6 +571,102 @@ function loadCardBookJoinMembers() {
 		}
 	});
 	return card_book_members;
+}
+
+function updateTeamName(title) {
+	$.ajax({
+		type: "put",
+		url: "/api/v1/card/team/" + selected_team.id,
+		data: {"title":title},
+		dataType: "json",
+		success: function (data) {
+			if(data == true) {
+				location.reload();
+			} else {
+				alert("조직명 변경 실패");
+			}
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+}
+
+function updateProfileNickname(nickname) {
+	$.ajax({
+		type: "put",
+		url: "/api/v1/card/team/profile/" + principal_profile.id,
+		data: {"nickname":nickname},
+		dataType: "json",
+		success: function (data) {
+			if(data == true) {
+				location.reload();
+			} else {
+				alert("닉네임 변경 실패");
+			}
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+}
+
+function updateCardBookName(card_book_name) {
+	$.ajax({
+		type: "put",
+		url: "/api/v1/card/team/book/" + selected_card_book.id,
+		data: {"card_book_name":card_book_name},
+		dataType: "json",
+		success: function (data) {
+			if(data == true) {
+				location.reload();
+			} else {
+				alert("명함첩 이름 변경 실패");
+			}
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+}
+
+function leaveTeam() {
+	let flag = false;
+	$.ajax({
+		type: "delete",
+		url: "/api/v1/card/team/" + selected_team.id + "/entry",
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function deleteTeam() {
+	let flag = false;
+	$.ajax({
+		type: "delete",
+		url: "/api/v1/card/team/" + selected_team.id,
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
 }
 
 function setWholeGroup(whole_count) {
@@ -322,8 +681,15 @@ function addClassActiveToGroup(card_books, index) {
 }
 
 function setTeamInfo() {
-	const team_title = document.querySelector(".menus .team_name");
-	team_title.innerText = selected_team.title;
+	const team_info = document.querySelector(".menus .team_info");
+	team_info.querySelector(".team_name").innerText = selected_team.title;
+	
+	const grade_text = selected_team.grade_id == 1 ? "베이직" : selected_team.grade_id == 2 ? "프리미엄" : "엔터프라이즈";
+	team_info.innerHTML += `<span class="team_grade ${selected_team.grade}">${grade_text}</span>`;
+	
+	const max_card_count_text = selected_team.grade_id == 1 ? "100장" : "∞";
+	const storage = document.querySelector(".menus .storage");
+	storage.innerHTML = `<span class="team_card_count">${selected_team.total_card_count}</span>&nbsp;/ ${max_card_count_text} 이용 중`;
 }
 
 function pickTeamOrderByCreateDate(team_list) {
@@ -338,6 +704,14 @@ function makeRegDateText(create_date) {
 	return `${date.getFullYear()}년 ${month}월 ${day}일`;
 }
 
+function makeTeamCreateDateText(create_date) {
+	const date = new Date(create_date);
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+	
+	return `${date.getFullYear()}-${month}-${day}`;
+}
+
 function makeAddressText(address, sub_address) {
 	if(address != null && sub_address != null) {
 		return `${address} ${sub_address}`;
@@ -348,6 +722,20 @@ function makeAddressText(address, sub_address) {
 	}
 }
 
+function makePhoneNumberText(phone) {
+	return `${phone.substring(0, 3)}-${phone.substring(3, 7)}-${phone.substring(7, 11)}`;
+}
+
+function appendModalToContainer(tag) {
+	document.querySelector(".container").appendChild(tag);
+	document.body.style = "overflow: hidden;";
+}
+
+function removeModal(tag) {
+	tag.remove();
+	document.body.style = "";
+}
+
 function appendTagToMainContents(tag) {
 	main_contents.appendChild(tag);
 }
@@ -355,6 +743,19 @@ function appendTagToMainContents(tag) {
 function replaceTagInMainContents(tag) {
 	main_contents.innerHTML = "";
 	appendTagToMainContents(tag);
+}
+
+function makeAddNewGroupTag() {
+	const div = document.createElement("div");
+	div.className = "input_wrapper";
+	div.id = "add_new_group";
+	div.innerHTML = `
+		<input type="text" name="group_name" placeholder="그룹명 입력">
+		<button type="button">
+			<img src="/static/images/card_team_add_card_wrapper_closer.png">
+		</button>
+	`;
+	return div;
 }
 
 function makeGroupNameTagInCardDetail(group) {
@@ -436,6 +837,7 @@ function makeHowToUseTag() {
 }
 
 function makeTeamManageTag() {
+	const grade_text = selected_team.grade_id == 1 ? "베이직(무료)" : selected_team.grade_id == 2 ? "프리미엄" : "엔터프라이즈";
 	const div = document.createElement("div");
 	div.className = "manage_team";
 	div.innerHTML = `
@@ -451,7 +853,7 @@ function makeTeamManageTag() {
 			<div class="row">
 				<div class="title">
 					<span class="text small">이용 중인 상품</span>
-					<span class="text">베이직(무료)</span>
+					<span class="text">${grade_text}</span>
 				</div>
 				<button type="button" id="show_product_description">자세히 보기</button>
 			</div>
@@ -473,7 +875,7 @@ function makeTeamManageTag() {
 			<div class="row">
 				<div class="title">
 					<span class="text small">조직명</span>
-					<span class="text">test</span>
+					<span class="text">${selected_team.title}</span>
 				</div>
 				<button type="button" id="change_team_name">변경</button>
 			</div>
@@ -482,7 +884,7 @@ function makeTeamManageTag() {
 			<div class="row">
 				<div class="title">
 					<span class="text small">사용자 이름</span>
-					<span class="text">jyp</span>
+					<span class="text">${principal_profile.nickname}</span>
 				</div>
 				<button type="button" id="change_profile">변경</button>
 			</div>
@@ -527,7 +929,7 @@ function makeCardBookSettingsTag() {
 			<div class="row">
 				<div class="title">
 					<span class="text small">명함첩 이름</span>
-					<span class="text">ㅁㄴㅇㅎㄻㄴㅇ</span>
+					<span class="text">${selected_card_book.card_book_name}</span>
 				</div>
 				<button type="button" id="change_card_book_name">변경</button>
 			</div>
@@ -578,18 +980,7 @@ function makeCardBookJoinUserListTag() {
 			<button type="button" class="add_team_user">+ 추가하기</button>
 		</div>
 		<div class="contents">
-			<div class="user">
-				<div class="profile_image">
-					<img src="/static/images/default_profile_image.png">
-				</div>
-				<div class="description">
-					<div class="name_tag">
-						<span class="nickname">jyp</span>
-						<span class="admin">관리자</span>
-					</div>
-					<span class="phone_number">010-3594-7111</span>
-				</div>
-			</div>
+			
 		</div>
 		<div class="pager_wrapper">
 			<button type="button" class="prev_page">«</button>
@@ -601,6 +992,25 @@ function makeCardBookJoinUserListTag() {
 				<button type="button" class="page"></button>
 			</div>
 			<button type="button" class="next_page">»</button>
+		</div>
+	`;
+	return div;
+}
+
+function makeCardBookJoinUserTag(user) {
+	const phone_number = makePhoneNumberText(user.phone);
+	const div = document.createElement("div");
+	div.className = "user";
+	div.innerHTML = `
+		<div class="profile_image">
+			<img src="/static/images/default_profile_image.png">
+		</div>
+		<div class="description">
+			<div class="name_tag">
+				<span class="nickname">${user.nickname}</span>
+${user.role == "ADMIN" ? '<span class="admin">관리자</span>' : ''}
+			</div>
+			<span class="phone_number">${phone_number}</span>
 		</div>
 	`;
 	return div;
@@ -739,6 +1149,286 @@ ${card_detail.memo_list.length == 0 ? '<span class="text no_content">메모 없�
 		<div class="memo_input">
 			<span class="text no_content">메모를 추가하세요</span>
 			<span class="add_memo_button">+ 메모 추가</span>
+		</div>
+	`;
+	return div;
+}
+
+function makeDeleteTeamDescriptionTag() {
+	const div = document.createElement("div");
+	div.className = "manage_team";
+	div.innerHTML = `
+		<section>
+			<div class="row">
+				<div class="title">
+					<span class="text blue">조직 관리 &gt; 조직 삭제</span>
+					<span class="text">조직 삭제</span>
+				</div>
+			</div>
+		</section>
+		<section>
+			<div class="column">
+				<span class="warning_title">삭제 전 아래 내용을 확인하세요</span>
+				<div class="warning_description">조직을 삭제하면 모든 구성원에게 삭제되었다는 알림이 발송되고, 조직 내의 모든 명함첩이 삭제되어 조회할 수 없게 됩니다.
+&#10;명함첩에 등록된 명함과 메모 등 모든 정보가 삭제되므로, 필요 시 미리 내 명함첩에 저장하거나 파일로 백업해두시기 바랍니다.
+				</div>
+				<div class="input_wrapper">
+					<input type="checkbox" class="confirm">
+					<span class="text">위 내용을 확인하였습니다.</span>
+				</div>
+				<button type="button" class="delete_button" disabled>삭제하기</button>
+			</div>
+		</section>
+	`;
+	return div;
+}
+
+function makeLeaveTeamDescriptionTag() {
+	const div = document.createElement("div");
+	div.className = "manage_team";
+	div.innerHTML = `
+		<section>
+			<div class="row">
+				<div class="title">
+					<span class="text blue">조직 관리 &gt; 나가기</span>
+					<span class="text">나가기</span>
+				</div>
+			</div>
+		</section>
+		<section>
+			<div class="column">
+				<span class="warning_title">나가기 전 아래 내용을 확인하세요</span>
+				<div class="warning_description">조직에서 나가더라도 명함첩에 회원님이 공유한 명함과 기록한 메모 등은 그대로 남게 됩니다.
+&#10;조직에 다시 참여하기 위해서는 조직 운영자의 초대가 필요합니다.
+				</div>
+				<div class="input_wrapper">
+					<input type="checkbox" class="confirm">
+					<span class="text">위 내용을 확인하였습니다.</span>
+				</div>
+				<button type="button" class="leave_button" disabled>나가기</button>
+			</div>
+		</section>
+	`;
+	return div;
+}
+
+function makeShowHistoryTag() {
+	const create_date = makeTeamCreateDateText(selected_team.create_date);
+	const div = document.createElement("div");
+	div.className = "manage_team";
+	div.innerHTML = `
+		<section>
+			<div class="row">
+				<div class="title">
+					<span class="text blue">조직 관리 &gt; 이용현황</span>
+					<span class="text">이용현황</span>
+				</div>
+			</div>
+		</section>
+		<section>
+			<div class="column payment">
+				<div class="row">
+					<span class="text">생성일</span>
+					<span class="text small">${create_date}</span>
+				</div>
+				<div class="row">
+					<span class="text">구성원</span>
+					<span class="text small">${selected_team.total_join_user_count}명</span>
+				</div>
+				<div class="row">
+					<span class="text">명함첩</span>
+					<span class="text small">${document.querySelectorAll(".menus .card_book").length}개</span>
+				</div>
+				<div class="row">
+					<span class="text">명함</span>
+					<span class="text small">${selected_team.total_card_count}장</span>
+				</div>
+			</div>
+		</section>
+	`;
+	return div;
+}
+
+function makeManagePaymentTag() {
+	const div = document.createElement("div");
+	div.className = "manage_team";
+	div.innerHTML = `
+		<section>
+			<div class="row">
+				<div class="title">
+					<span class="text blue">조직 관리 &gt; 결제 관리</span>
+					<span class="text">결제 관리</span>
+				</div>
+			</div>
+		</section>
+		<section>
+			<div class="column payment">
+				<div class="row">
+					<span class="text">결제 수단</span>
+					<button type="button" id="show_my_payment_process">관리하기</button>
+				</div>
+				<div class="row">
+					<span class="text">결제 내역</span>
+					<button type="button" id="show_my_payment_history">확인하기</button>
+				</div>
+			</div>
+		</section>
+	`;
+	return div;
+}
+
+function makeMyPaymentProcess() {
+	const div = document.createElement("div");
+	div.className = "manage_team";
+	div.innerHTML = `
+		<section>
+			<div class="row">
+				<div class="title">
+					<span class="text blue">조직 관리 &gt; 결제 관리 &gt; 결제 수단</span>
+					<span class="text">결제 수단</span>
+				</div>
+			</div>
+		</section>
+		<section>
+			<div class="column payment">
+				<span class="no_contents">등록된 결제 수단이 없습니다</span>
+			</div>
+		</section>
+	`;
+	return div;
+}
+
+function makeMyPaymentHistory() {
+	const div = document.createElement("div");
+	div.className = "manage_team";
+	div.innerHTML = `
+		<section>
+			<div class="row">
+				<div class="title">
+					<span class="text blue">조직 관리 &gt; 결제 관리 &gt; 결제 내역</span>
+					<span class="text">결제 내역</span>
+				</div>
+			</div>
+		</section>
+		<section>
+			<div class="column payment">
+				<span class="no_contents">결제 내역이 없습니다</span>
+			</div>
+		</section>
+	`;
+	return div;
+}
+
+function makeChangeTeamNameModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window change_info">
+			<div class="title">
+				<span>조직명 변경</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="input_wrapper">
+				<input type="text" name="title" value="${selected_team.title}">
+				<span>조직의 명칭은 조직 관리에서 변경할 수 있습니다.<span>
+			</div>
+			<div class="buttons">
+				<button type="button" class="cancel_button">취소</button>
+				<button type="button" class="submit_button">완료</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeChangeProfileNameModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window change_info">
+			<div class="title">
+				<span>사용자 이름 변경</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="input_wrapper">
+				<input type="text" name="nickname" value="${principal_profile.nickname}">
+				<span>조직의 명칭은 조직 관리에서 변경할 수 있습니다.<span>
+			</div>
+			<div class="buttons">
+				<button type="button" class="cancel_button">취소</button>
+				<button type="button" class="submit_button">완료</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeChangeCardBookNameModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window change_info">
+			<div class="title">
+				<span>명함첩 이름 변경</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="input_wrapper">
+				<input type="text" name="card_book_name" value="${selected_card_book.card_book_name}">
+			</div>
+			<div class="buttons">
+				<button type="button" class="cancel_button">취소</button>
+				<button type="button" class="submit_button">완료</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeConfirmLeaveTeamModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window leave_team">
+			<span class="message">조직에서 나가시겠습니까?</span>
+			<div class="buttons">
+				<button type="button" class="cancel_button">취소</button>
+				<button type="button" class="submit_button">나가기</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeErrorToLeaveTeamModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window leave_team">
+			<span class="message">탈퇴하기 전에 조직 운영자를 위임해주세요</span>
+			<div class="buttons">
+				<button type="button" class="confirm_button">확인</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeConfirmDeleteTeamModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window leave_team">
+			<span class="message">팀을 삭제하시겠습니까?</span>
+			<div class="buttons">
+				<button type="button" class="cancel_button">취소</button>
+				<button type="button" class="submit_button">삭제</button>
+			</div>
 		</div>
 	`;
 	return div;

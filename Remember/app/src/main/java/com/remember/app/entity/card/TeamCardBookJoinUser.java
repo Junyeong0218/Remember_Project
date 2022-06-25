@@ -20,6 +20,7 @@ public class TeamCardBookJoinUser {
 	private int id;
 	private int team_card_book_id;
 	private int joined_user_id;
+	private String role;
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
 	
