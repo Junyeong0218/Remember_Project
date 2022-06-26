@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.remember.app.entity.card.Card;
+import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
 import com.remember.app.entity.card.TeamCardBook;
 import com.remember.app.entity.card.TeamCardBookSummary;
 import com.remember.app.entity.card.TeamDetail;
+import com.remember.app.entity.card.TeamGroup;
 import com.remember.app.entity.card.TeamGroupSummary;
 import com.remember.app.entity.card.TeamJoinUser;
 import com.remember.app.entity.card.TeamUserProfile;
@@ -195,6 +197,13 @@ public class CardRestController {
 		return cardService.updateTeamName(team);
 	}
 	
+	@PostMapping("/team/book/{cardBookId}")
+	public boolean insertTeamGroup(@PathVariable int cardBookId,
+																	TeamGroup teamGroup) {
+		teamGroup.setCard_book_id(cardBookId);
+		return cardService.insertTeamGroup(teamGroup);
+	}
+	
 	@DeleteMapping("/team/{teamId}")
 	public boolean deleteTeam(@PathVariable int teamId,
 														 @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -256,6 +265,27 @@ public class CardRestController {
 	@GetMapping("/team/card/{cardId}")
 	public TeamCardDetailResDto getTeamCardDetail(@PathVariable int cardId) {
 		return cardService.getTeamCardDetail(cardId);
+	}
+	
+	@PostMapping("/team/card/{cardId}/memo")
+	public boolean insertTeamCardMemo(@PathVariable int cardId,
+																			  CardMemo cardMemo,
+																			  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		cardMemo.setCard_id(cardId);
+		cardMemo.setUser_id(principalDetails.getId());
+		return cardService.insertTeamCardMemo(cardMemo);
+	}
+	
+	@PutMapping("/team/memo/{cardMemoId}")
+	public boolean updateTeamCardMemo(@PathVariable int cardMemoId,
+																				CardMemo cardMemo) {
+		cardMemo.setId(cardMemoId);
+		return cardService.updateTeamCardMemo(cardMemo);
+	}
+	
+	@DeleteMapping("/team/memo/{cardMemoId}")
+	public boolean deleteTeamCardMemo(@PathVariable int cardMemoId) {
+		return cardService.deleteTeamCardMemo(cardMemoId);
 	}
 	
 }

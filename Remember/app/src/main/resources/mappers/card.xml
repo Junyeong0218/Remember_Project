@@ -256,7 +256,8 @@
 			update
 				team_card_book
 			set
-				card_book_name = #{card_book_name}
+				card_book_name = #{card_book_name},
+				update_date = now()
 			where
 				id = #{id};
 		</update>
@@ -290,7 +291,8 @@
 			update
 				team_user_profile
 			set
-				nickname = #{nickname}
+				nickname = #{nickname},
+				update_date = now()
 			where
 				id = #{id};
 		</update>
@@ -300,7 +302,7 @@
 				team_group
 			values(
 				0,
-				#{team_id},
+				#{card_book_id},
 				#{group_name},
 				now(),
 				now()
@@ -311,7 +313,8 @@
 			update
 				team_mst
 			set
-				title = #{title}
+				title = #{title},
+				update_date = now()
 			where
 				id = #{id};
 		</update>
@@ -369,8 +372,7 @@
 			where
 				book.team_id = #{teamId}
 			group by
-				book.id,
-				`group`.id;
+				book.id;
 		</select>
 		
 		<select id="getTeamGroupList" parameterType="Integer" resultType="com.remember.app.entity.card.TeamGroupSummary">
@@ -447,7 +449,8 @@
 				memo.user_id as memo_user_id,
 				`profile2`.nickname as memo_nickname,
 				memo.`contents`,
-				memo.create_date as memo_create_date
+				memo.create_date as memo_create_date,
+				memo.update_date as memo_update_date
 			from
 				card_mst card
 				left outer join team_user_profile `profile` on(`profile`.user_id = card.user_id)
@@ -490,5 +493,36 @@
 				`join`.team_card_book_id = #{teamCardBookId}
 			limit #{page}, 10;
 		</select>
+		
+		<insert id="insertTeamCardMemo" parameterType="com.remember.app.entity.card.CardMemo">
+			insert into
+				card_memo
+			values(
+				0,
+				#{card_id},
+				#{user_id},
+				#{contents},
+				true,
+				now(),
+				now()
+			);
+		</insert>
+		
+		<update id="updateTeamCardMemo" parameterType="com.remember.app.entity.card.CardMemo">
+			update
+				card_memo
+			set
+				contents = #{contents},
+				update_date = now()
+			where
+				id = #{id};
+		</update>
+		
+		<delete id="deleteTeamCardMemo" parameterType="Integer">
+			delete from
+				card_memo
+			where
+				id = #{cardMemoId};
+		</delete>
 		
   </mapper>

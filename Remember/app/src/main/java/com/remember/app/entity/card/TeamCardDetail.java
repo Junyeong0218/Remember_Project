@@ -43,6 +43,7 @@ public class TeamCardDetail {
 	private String memo_nickname;
 	private String contents;
 	private LocalDateTime memo_create_date;
+	private LocalDateTime memo_update_date;
 	
 	public Card toCardEntity() {
 		return Card.builder()
@@ -82,6 +83,7 @@ public class TeamCardDetail {
 													   .nickname(memo_nickname)
 													   .contents(contents)
 													   .create_date(memo_create_date)
+													   .update_date(memo_update_date)
 													   .build();
 	}
 }

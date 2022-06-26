@@ -3,12 +3,14 @@ package com.remember.app.service;
 import java.util.List;
 
 import com.remember.app.entity.card.Card;
+import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
 import com.remember.app.entity.card.TeamCardBook;
 import com.remember.app.entity.card.TeamCardBookSummary;
 import com.remember.app.entity.card.TeamDetail;
+import com.remember.app.entity.card.TeamGroup;
 import com.remember.app.entity.card.TeamGroupSummary;
 import com.remember.app.entity.card.TeamJoinUser;
 import com.remember.app.entity.card.TeamUserProfile;
@@ -64,6 +66,8 @@ public interface CardService {
 	
 	public boolean updateCardBookName(TeamCardBook teamCardBook);
 	
+	public boolean insertTeamGroup(TeamGroup teamGroup);
+	
 	public List<TeamDetail> getTeamList(int userId);
 	
 	public List<TeamCardBookSummary> getCardBookList(int teamId);
@@ -79,5 +83,11 @@ public interface CardService {
 	public List<TeamUserProfile> getTeamJoinUsers(int teamId, int userId, int page);
 
 	public List<TeamUserProfile> getCardBookJoinUsers(int cardBookId, int page);
+	
+	public boolean insertTeamCardMemo(CardMemo cardMemo);
+	
+	public boolean updateTeamCardMemo(CardMemo cardMemo);
+	
+	public boolean deleteTeamCardMemo(int cardMemoId);
 	
 }

@@ -240,9 +240,18 @@ add_new_group_button.onclick = () => {
 	const group_name_input = add_new_group_input_wrapper.querySelector("input");
 	const remove_button = add_new_group_input_wrapper.querySelector("button");
 	
+	group_name_input.focus();
+	
 	remove_button.onclick = () => add_new_group_input_wrapper.remove();
-	group_name_input.oninput = (event) => {
-		console.log(event);
+	group_name_input.onkeypress = (event) => {
+		if(event.keyCode == 13) {
+			if(group_name_input.value == "") {
+				alert("그룹명을 다시 입력해주세요.");
+				return;
+			}
+			group_name_input.onkeypress = null;
+			insertGroup(group_name_input.value);
+		}
 	}
 }
 
@@ -404,7 +413,7 @@ function loadAllCardList() {
 		dataType: "json",
 		success: function (card_list) {
 			console.log(card_list);
-			if(card_list.length == 0) {
+			if(card_list.length == 1 && card_list[0].total_count == 0) {
 				const how_to_use_tag = makeHowToUseTag();
 				replaceTagInMainContents(how_to_use_tag);
 			} else {
@@ -443,7 +452,7 @@ function loadSpecificGroupCardList() {
 		dataType: "json",
 		success: function (card_list) {
 			console.log(card_list);
-			if(card_list.length == 0) {
+			if(card_list.length == 1 && card_list[0].total_count == 0) {
 				const how_to_use_tag = makeHowToUseTag();
 				replaceTagInMainContents(how_to_use_tag);
 			} else {
@@ -525,7 +534,93 @@ function loadCardDetail(card_id) {
 			for(let i = 0; i < card.memo_list.length; i++) {
 				const memo = makeMemoTag(card.memo_list[i]);
 				memo_wrapper.appendChild(memo);
-				// 
+
+				memo.querySelector(".show_edit_memo_modal").onclick = () => {
+					const update_memo_modal = makeUpdateTeamCardMemoModal(card.memo_list[i]);
+					const contents = update_memo_modal.querySelector("textarea[name='contents']");
+					const submit_button = update_memo_modal.querySelector(".submit_button");
+					
+					appendModalToContainer(update_memo_modal);
+					setTimeout(() => contents.focus(), 150);
+					
+					update_memo_modal.querySelector(".close_modal").onclick = () => {
+						removeModal(update_memo_modal);
+					}
+					
+					update_memo_modal.querySelector(".cancel_button").onclick = () => {
+						removeModal(update_memo_modal);
+					}
+					
+					contents.oninput = (event) => {
+						if(event.target.value == "") {
+							submit_button.disabled = true;
+						} else {
+							submit_button.disabled = false;
+						}
+					}
+					
+					submit_button.onclick = () => {
+						if(updateMemo(card.memo_list[i].id, contents.value)) {
+							reloadCardDetail();
+						} else {
+							alert("메모 수정 실패");
+						}
+						removeModal(update_memo_modal);
+					}
+				}
+
+				memo.querySelector(".show_remove_memo_modal").onclick = () => {
+					const remove_memo_modal = makeDeleteConfirmTeamCardMemoModal(card.memo_list[i]);
+					appendModalToContainer(remove_memo_modal);
+					
+					remove_memo_modal.querySelector(".close_modal").onclick = () => {
+						removeModal(remove_memo_modal);
+					}
+					
+					remove_memo_modal.querySelector(".remove_button").onclick = () => {
+						if(deleteMemo(card.memo_list[i].id)) {
+							reloadCardDetail();
+						} else {
+							alert("메모 삭제 실패");
+						}
+						removeModal(remove_memo_modal);
+					}
+				}
+			}
+			
+			const memo_input_wrapper = card_detail_tag.querySelector(".memo_input");
+			memo_input_wrapper.onclick = () => {
+				const memo_input_modal = makeAddTeamCardMemoModal();
+				const contents = memo_input_modal.querySelector("textarea[name='contents']");
+				const submit_button = memo_input_modal.querySelector(".submit_button");
+				
+				appendModalToContainer(memo_input_modal);
+				setTimeout(() => contents.focus(), 150);
+				
+				memo_input_modal.querySelector(".close_modal").onclick = () => {
+					removeModal(memo_input_modal);
+				}
+				
+				memo_input_modal.querySelector(".cancel_button").onclick = () => {
+					removeModal(memo_input_modal);
+				}
+				
+				contents.oninput = (event) => {
+					if(event.target.value == "") {
+						submit_button.disabled = true;
+					} else {
+						submit_button.disabled = false;
+					}
+				}
+				
+				submit_button.onclick = () => {
+					if(insertMemo(card.card.id, contents.value)) {
+						reloadCardDetail();
+					} else {
+						alert("메모 인서트 실패");
+					}
+					removeModal(memo_input_modal);
+				}
 			}
 		},
 		error: function (xhr, status) {
@@ -667,6 +762,93 @@ function deleteTeam() {
 		}
 	});
 	return flag;
+}
+
+function insertGroup(group_name) {
+	$.ajax({
+		type: "post",
+		url: "/api/v1/card/team/book/" + selected_card_book.id,
+		data: {"group_name":group_name},
+		dataType: "json",
+		success: function (data) {
+			console.log(data);
+			if(data == true) {
+				location.reload();
+			} else {
+				alert("그룹 생성에 실패했습니다");
+			}
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+}
+
+function insertMemo(card_id, contents) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/card/team/card/" + card_id + "/memo",
+		async: false,
+		data: {"contents":contents},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function updateMemo(card_memo_id, contents) {
+	let flag = false;
+	$.ajax({
+		type: "put",
+		url: "/api/v1/card/team/memo/" + card_memo_id,
+		async: false,
+		data: {"contents":contents},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function deleteMemo(card_memo_id) {
+	let flag = false;
+	$.ajax({
+		type: "delete",
+		url: "/api/v1/card/team/memo/" + card_memo_id,
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function reloadCardDetail() {
+	const cards = document.querySelector(".card_list_wrapper .card_list").children;
+	for(let i = 0; i < cards.length; i++) {
+		if(cards[i].className.includes("clicked")) {
+			cards[i].click();
+			break;
+		}
+	}
 }
 
 function setWholeGroup(whole_count) {
@@ -1428,6 +1610,81 @@ function makeConfirmDeleteTeamModal() {
 			<div class="buttons">
 				<button type="button" class="cancel_button">취소</button>
 				<button type="button" class="submit_button">삭제</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeAddTeamCardMemoModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window change_memo">
+			<div class="title">
+				<span>메모 추가</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="input_wrapper">
+				<textarea name="contents" placeholder="내용을 입력하세요" rows="4"></textarea>
+				<div class="buttons">
+					<button type="button" class="cancel_button">취소</button>
+					<button type="button" class="submit_button" disabled>추가</button>
+				</div>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeUpdateTeamCardMemoModal(memo) {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window change_memo">
+			<div class="title">
+				<span>메모 수정</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="input_wrapper">
+				<span>${memo.update_date.replace("T", " ")}에 마지막 수정</span>
+				<span>작성자 : ${memo.nickname}</span>
+				<textarea name="contents" placeholder="내용을 입력하세요" rows="4">${memo.contents}</textarea>
+				<div class="buttons">
+					<button type="button" class="cancel_button">취소</button>
+					<button type="button" class="submit_button" disabled>수정</button>
+				</div>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeDeleteConfirmTeamCardMemoModal(memo) {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window change_memo">
+			<div class="title">
+				<span>메모 삭제</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="input_wrapper">
+				<h4>메모를 삭제하시겠습니까?</h4>
+				<div class="texts">
+					<span>${memo.update_date.replace("T", " ")}에 마지막 수정</span>
+					<span>작성자 : ${memo.nickname}</span>
+				</div>
+				<textarea class="disabled" name="contents" placeholder="내용을 입력하세요" rows="4" readonly>${memo.contents}</textarea>
+				<div class="buttons">
+					<button type="button" class="remove_button">삭제</button>
+				</div>
 			</div>
 		</div>
 	`;

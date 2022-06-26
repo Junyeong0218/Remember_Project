@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.remember.app.entity.card.AddGroup;
 import com.remember.app.entity.card.Card;
+import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.CardMemoDetail;
 import com.remember.app.entity.card.CardRepository;
 import com.remember.app.entity.card.Group;
@@ -149,7 +150,7 @@ public class CardServiceImpl implements CardService {
 	
 	@Override
 	public boolean updateTeamName(Team team) {
-		return cardRepository.updateTeamName(team);
+		return cardRepository.updateTeamName(team) == 1;
 	}
 	
 	@Override
@@ -159,7 +160,7 @@ public class CardServiceImpl implements CardService {
 	
 	@Override
 	public boolean updateProfileNickname(TeamUserProfile teamUserProfile) {
-		return cardRepository.updateProfileNickname(teamUserProfile);
+		return cardRepository.updateProfileNickname(teamUserProfile) == 1;
 	}
 	
 	@Override
@@ -168,6 +169,11 @@ public class CardServiceImpl implements CardService {
 			return cardRepository.leaveTeam(teamJoinUser) == 1;
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean insertTeamGroup(TeamGroup teamGroup) {
+		return cardRepository.insertTeamGroup(teamGroup) == 1;
 	}
 	
 	@Override
@@ -235,6 +241,21 @@ public class CardServiceImpl implements CardService {
 	@Override
 	public List<TeamUserProfile> getCardBookJoinUsers(int cardBookId, int page) {
 		return cardRepository.getCardBookJoinUsers(cardBookId, page * 10);
+	}
+	
+	@Override
+	public boolean insertTeamCardMemo(CardMemo cardMemo) {
+		return cardRepository.insertTeamCardMemo(cardMemo) == 1;
+	}
+	
+	@Override
+	public boolean updateTeamCardMemo(CardMemo cardMemo) {
+		return cardRepository.updateTeamCardMemo(cardMemo) == 1;
+	}
+	
+	@Override
+	public boolean deleteTeamCardMemo(int cardMemoId) {
+		return cardRepository.deleteTeamCardMemo(cardMemoId) == 1;
 	}
 	
 }

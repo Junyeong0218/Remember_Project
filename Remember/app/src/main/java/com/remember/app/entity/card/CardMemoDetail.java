@@ -23,6 +23,7 @@ public class CardMemoDetail {
 	private String nickname;
 	private String contents;
 	private LocalDateTime create_date;
+	private LocalDateTime update_date;
 	
 	@Override
 	public boolean equals(Object obj) {

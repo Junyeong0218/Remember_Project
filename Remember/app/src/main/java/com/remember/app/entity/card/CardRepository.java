@@ -52,11 +52,11 @@ public interface CardRepository {
 	
 	public int insertTeamUserProfile(TeamUserProfile teamUserProfile);
 	
-	public boolean updateProfileNickname(TeamUserProfile teamUserProfile);
+	public int updateProfileNickname(TeamUserProfile teamUserProfile);
 	
 	public int insertTeamGroup(TeamGroup teamGroup);
 	
-	public boolean updateTeamName(Team team);
+	public int updateTeamName(Team team);
 
 	public TeamUserProfile getTeamUserProfile(int userId);
 	
@@ -75,4 +75,10 @@ public interface CardRepository {
 	public List<TeamUserProfile> getTeamJoinUsers(int teamId, int userId, int page);
 
 	public List<TeamUserProfile> getCardBookJoinUsers(int teamCardBookId, int page);
+	
+	public int insertTeamCardMemo(CardMemo cardMemo);
+	
+	public int updateTeamCardMemo(CardMemo cardMemo);
+	
+	public int deleteTeamCardMemo(int cardMemoId);
 }

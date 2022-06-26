@@ -18,7 +18,7 @@ import lombok.ToString;
 public class TeamGroup {
 
 	private int id;
-	private int team_id;
+	private int card_book_id;
 	private String group_name;
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
