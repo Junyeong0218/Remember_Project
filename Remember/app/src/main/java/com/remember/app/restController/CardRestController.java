@@ -30,6 +30,7 @@ import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
+import com.remember.app.requestDto.CardDeleteReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.responseDto.GroupRespDto;
@@ -94,6 +95,14 @@ public class CardRestController {
 	@DeleteMapping("{cardId}")
 	public ResponseEntity<?> deleteCard(@PathVariable int cardId){
 		int result =cardService.deleteCard(cardId);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+	
+	//명함 여러개 삭제
+	@DeleteMapping("/list")
+	public ResponseEntity<?> deleteCards(CardDeleteReqDto cardDeleteReqDto){
+		System.out.println(cardDeleteReqDto);
+		int result = cardService.deleteCards(cardDeleteReqDto);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	

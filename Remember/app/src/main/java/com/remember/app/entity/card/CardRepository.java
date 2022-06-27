@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.remember.app.requestDto.CardDeleteReqDto;
+
 @Mapper
 public interface CardRepository {
 	
@@ -18,6 +20,8 @@ public interface CardRepository {
 	public int updateCard(Card card);
 	
 	public int deleteCard(int card_id);
+	
+	public int deleteCards(CardDeleteReqDto cardDeleteReqDto);
 	
 	public List<GroupSummary> getGroup(int user_id);
 	

@@ -76,6 +76,18 @@
   		id = #{id}
   </delete>
   
+  <delete id="deleteCards" parameterType="com.remember.app.requestDto.CardDeleteReqDto">
+  delete
+  from
+  	card_mst
+  where
+  	id in (
+  		<foreach collection="card_id_list" item="item" index="index" separator=",">
+  			#{item}
+  		</foreach>
+  	);
+  </delete>
+  
   <insert id="insertGroup" parameterType="com.remember.app.entity.card.Group">
   	insert into
   		card_group_mst

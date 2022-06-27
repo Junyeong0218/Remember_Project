@@ -34,6 +34,7 @@ import com.remember.app.entity.card.TeamJoinUser;
 import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
+import com.remember.app.requestDto.CardDeleteReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
@@ -153,6 +154,12 @@ public class CardServiceImpl implements CardService {
 	public int deleteCard(int card_id) {
 		
 		return cardRepository.deleteCard(card_id);
+	}
+	
+	@Override
+	public int deleteCards(CardDeleteReqDto cardDeleteReqDto) {
+		
+		return cardRepository.deleteCards(cardDeleteReqDto);
 	}
 	
 	@Override
