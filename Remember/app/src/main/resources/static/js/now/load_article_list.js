@@ -6,8 +6,7 @@ function loadArticleList() {
 	const url = category_id == 0 ? "/api/v1/now/list" : "/api/v1/now/" + category_id + "/list";
 	const page_param = page > 0 ? page - 1 : page;
 	const data = category_id == 0 ? {"page":page_param} :
-
-	{"page":page_param};
+																  {"page":page_param};
 	
 	$.ajax({
 		type: "get",

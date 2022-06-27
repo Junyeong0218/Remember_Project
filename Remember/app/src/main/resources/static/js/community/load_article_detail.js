@@ -285,6 +285,8 @@ function setComments(comment_list) {
 							const input_wrapper = amend_form.querySelector(".input_wrapper");
 							const amend_comment_contents = amend_form.querySelector(".comment_contents");
 							const amend_comment_submit_button = amend_form.querySelector(".submit_comment");
+							
+							amend_comment_contents.innerText = comment_list[i].contents;
 							input_wrapper.children[0].onclick = (event) => {
 								if(event.target.checked == true) {
 									amend_comment_contents.placeholder = principal.nickname + "(으)로 댓글 달기...";
