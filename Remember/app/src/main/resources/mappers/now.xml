@@ -3,15 +3,122 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.remember.app.entity.now.NowArticleRepository">
+  
+  	<select id="getNowCategories" resultType="com.remember.app.entity.now.NowCategory">
+  		select
+  			*
+  		from
+  			now_category_mst;
+  	</select>
+  	
+  	<select id="getNowArticleSummaryList" resultType="com.remember.app.entity.now.NowArticleSummary">
+  		select
+  			nam.id,
+  			
+  			nam.create_date,
+  			
+  			nam.category_id,
+  			ncm.name,
+  			
+  			nam.title,
+  			nam.summary,
+  			
+  			nti.file_name
+  			
+  		from
+  			now_article_mst nam
+  			left outer join now_category_mst ncm on(ncm.id = nam.category_id)
+  			left outer join now_title_image nti on(nti.article_id = nam.id)
+  			
+  		group by
+  			nam.id
+  		
+  		order by 
+  			nam.create_date DESC
+  		
+  		limit #{page}, 10;
+  			
+  	</select>
+  	
+  	<select id="getNowArticleSummaryListAboutCategory" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticleSummary">
+  		select
+  			nam.id,
+  			
+  			nam.create_date,
+  			
+  			nam.category_id,
+  			ncm.name,
+  			
+  			nam.title,
+  			nam.summary,
+  			
+  			nti.file_name
+  			
+  		from
+  			now_article_mst nam
+  			left outer join now_category_mst ncm on(ncm.id = nam.category_id)
+  			left outer join now_title_image nti on(nti.article_id = nam.id)
+  		
+  		where
+  			nam.category_id = #{categoryId}
+  			
+  		group by
+  			nam.id
+  		
+  		order by 
+  			nam.create_date DESC
+  		
+  		limit #{page}, 10;
+  		
+  	</select>
+  	
+  	<select id="getTotalArticleCount" parameterType="Integer" resultType="Integer">
+  		select 
+  			count(id)
+  		from 
+  			now_article_mst 
+  			
+		limit #{page}, 10;  		
+  	
+  	</select>
+  	
+  	<select id="getTotalArticleCountAboutCategory" parameterType="Integer" resultType="Integer">
+  		select
+  			count(id)
+  		from
+  			now_article_mst
+  		where
+  			nam.category_id = #{categoryId}
+  		
+  		limit #{page}, 10; 
+  		
+  	</select>
+  	
+  	<select id="getArticleDetail" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticleDetail">
+  		select
+  			nam.id,
+  			nam.user_id,
+  			nam.category_id,
+  			nam.title,
+  			nam.contents,
+  			nam.create_date,
+  			
+  			nci.file_name
+  		from 
+			now_article_mst nam
+			left outer join now_contents_image nci ON(nci.article_id = nam.id)
+		where
+			nam.id = {article_id}
+  	</select>
    	
-  	<insert id="uploadNowArticle" parameterType="com.remember.app.entity.now.NowArticle">
-			insert all
+  <!-- 	<insert id="uploadNowArticle" parameterType="com.remember.app.entity.now.NowArticle">
+			insert
 			
 			into now_article_mst am(
 				am.user_id,
 				am.category_id,
 				am.title,
-				am.contents, 
+				am.contents,  
 				am.create_date,
 				am.update_date
 			)
@@ -114,11 +221,12 @@
 			am.id= #{articleId}		
   	</select>
   	
-  	<select id="getNowArticleTotalCount" resultType="Integer">
+  	<select id="getNowArticleTotalCount" parameterType="Integer" resultType="Integer">
   		select
   			count(am.id)
   		from
   			now_article_mst
+		limit #{page}, 10;
   	</select>
   	
   	<select id="getNowArticleTotalCountWithCategory" parameterType="Integer" resultType="Integer">
@@ -129,6 +237,7 @@
   			left outer join now_category_mst category ON(category.id = am.category_id)
   		where
 			am.category_id= #{categoryId}	
+		limit #{page}, 10;
   	</select>
   	
   	<select id = "getNowArticleRelated" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticleRelated">
@@ -144,8 +253,7 @@
   		where
   			am.id != {articleId}
   		order_by
-  			am.create_date DESC
-  		limit 3;
+			
   	</select> 
-  	
+  	 -->
   </mapper>

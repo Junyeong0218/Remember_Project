@@ -2,18 +2,20 @@ const pager = document.querySelector(".pager");
 const before_page_button = pager.querySelector(".before");
 const after_page_button = pager.querySelector(".after");
 
-loadNowTotalArticleCount();
+loadTotalArticleCount();
 
-function loadNowTotalArticleCount() {
-	const url = category_id == 0 ? "/api/v1/now/article/count" : "/api/v1/now/" + category_id + "/article/count"; 
+function loadTotalArticleCount() {
+	const url = category_id == 0 ? "/api/v1/now/count" : "/api/v1/now/" + category_id + "/count";
+	const page_param = page > 0 ? page - 1 : page;
+	const data = category_id == 0 ? {"page":page_param} :
+																  {"page":page_param};
 	$.ajax({
 		type: "get",
 		url: url,
+		data: data,
 		dataType: "json",
 		success: function (count) {
-			count = Number(count);
-			console.log(count);
-			appendPageLinks(count);
+			appendPageLinks(Number(count));
 		},
 		error: function (xhr, error) {
 			console.log(xhr);
@@ -23,12 +25,9 @@ function loadNowTotalArticleCount() {
 }
 
 function appendPageLinks(count) {
-	let current = location.search == "" ? 1 : Number(location.search.replace("?page=", ""));
-	console.log(current);
-	const last_page = count == 0 ? 1 : count%10 == 0 ? count/10 : count/10 + 1;
-	console.log(last_page);
-	const min_page_number = Math.floor(current/10) + 1;
-	const max_page_number = (Math.floor(current/10) + 1) * 10 < last_page ? (Math.floor(current/10) + 1) * 10 : last_page;
+	const last_page = count == 0 ? 1 : count%10 == 0 ? Math.floor(count/10) : Math.floor(count/10) + 1;
+	const min_page_number = Math.floor(page/10) + 1;
+	const max_page_number = (Math.floor(page/10) + 1) * 10 < last_page ? (Math.floor(page/10) + 1) * 10 : last_page;
 	console.log("min : " + min_page_number);
 	console.log("max : " + max_page_number);
 	if(min_page_number == max_page_number) {
@@ -45,13 +44,12 @@ function appendPageLinks(count) {
 			}
 		}
 	}
-	
 	if(max_page_number < last_page) {
 		after_page_button.disabled = false;
 	} else {
 		after_page_button.disabled = true;
 	}
-	if(current > 1) {
+	if(page > 1) {
 		before_page_button.disabled = false;
 	} else {
 		before_page_button.disabled = true;
@@ -67,7 +65,9 @@ function makeCurrentPageTag(number) {
 
 function makePageLinkTag(number) {
 	const a = document.createElement("a");
-	a.href = "?page=" + number;
+	a.href = location.search == "" ? "?page=" + number : 
+					location.search == "?" ? location.pathname + "?page=" + number : 
+					location.search.includes("tag=") ? location.pathname + "tag_id=" + tag_id +",page=" + number : "";
 	a.className = "page_link";
 	a.innerText = number;
 	return a;
