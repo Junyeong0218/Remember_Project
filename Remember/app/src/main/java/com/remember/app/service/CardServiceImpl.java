@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.remember.app.entity.card.AddGroup;
 import com.remember.app.entity.card.Card;
+import com.remember.app.entity.card.CardBelongTeamGroup;
 import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.CardMemoDetail;
 import com.remember.app.entity.card.CardRepository;
@@ -256,6 +257,11 @@ public class CardServiceImpl implements CardService {
 	@Override
 	public boolean deleteTeamCardMemo(int cardMemoId) {
 		return cardRepository.deleteTeamCardMemo(cardMemoId) == 1;
+	}
+	
+	@Override
+	public List<CardBelongTeamGroup> getGroupBelongFlags(int cardId) {
+		return cardRepository.getGroupBelongFlags(cardId);
 	}
 	
 }

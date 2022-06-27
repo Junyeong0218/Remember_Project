@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.remember.app.entity.card.Card;
+import com.remember.app.entity.card.CardBelongTeamGroup;
 import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
@@ -286,6 +287,11 @@ public class CardRestController {
 	@DeleteMapping("/team/memo/{cardMemoId}")
 	public boolean deleteTeamCardMemo(@PathVariable int cardMemoId) {
 		return cardService.deleteTeamCardMemo(cardMemoId);
+	}
+	
+	@GetMapping("/team/card/{cardId}/belong")
+	public List<CardBelongTeamGroup> getGroupBelongFlags(@PathVariable int cardId) {
+		return cardService.getGroupBelongFlags(cardId);
 	}
 	
 }

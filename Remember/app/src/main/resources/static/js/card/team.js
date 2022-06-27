@@ -15,16 +15,47 @@ const card_book_members_button = document.querySelector(".card_book_members_butt
 const card_book_settings_button = document.querySelector(".card_book_settings_button");
 const main_contents = document.querySelector(".main_contents");
 
+let principal_profile;
+
+let team_list;
+let card_book_list;
+let group_list;
+let card_list;
+
 let selected_team;
 let selected_card_book;
 let selected_group;
-
-let principal_profile;
+let selected_card;
+let selected_card_detail;
 
 let page = 0;
 
-loadPrincipalProfile();
-loadTeam();
+main();
+
+whole_card_button.onclick = () => {
+	card_list = loadAllCardList();
+	console.log(card_list);
+	setCardList();
+}
+
+async function main() {
+	principal_profile =loadPrincipalProfile();
+	
+	// load team and set team info
+	team_list = loadTeam();
+	selected_team = pickTeamOrderByCreateDate(team_list);
+	setTeamInfo();
+	
+	// load card book about selected team and set card book list
+	card_book_list = await loadBookList();
+	setCardBookList();
+
+	// load group list about selected card book and set group list
+	card_book_wrapper.querySelectorAll(".card_book")[0].click();
+	
+	// load card list about selected group and page 0 and set card list
+	whole_card_button.click();
+}
 
 team_members_button.onclick = () => {
 	// 본인을 제외한 팀 멤버 검색
@@ -304,183 +335,120 @@ card_book_settings_button.onclick = () => {
 	}
 }
 
-whole_card_button.onclick = loadAllCardList;
-
 function loadPrincipalProfile() {
+	let profile;
 	$.ajax({
 		type: "get",
 		url: "/api/v1/card/team/profile",
 		async: false,
 		dataType: "json",
-		success: function (profile) {
-			console.log(profile);
-			principal_profile = profile;
+		success: function (data) {
+			console.log(data);
+			profile = data;
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
 			console.log(status);
 		}
 	});
+	return profile;
 }
 
 function loadTeam() {
+	let team_list;
 	$.ajax({
 		type: "get",
 		url: "/api/v1/card/team/list",
 		async: false,
 		dataType: "json",
-		success: function (team_list) {
-			console.log(team_list);
-			selected_team = pickTeamOrderByCreateDate(team_list);
-			loadBookList(selected_team.id);
-			setTeamInfo();
+		success: function (data) {
+			console.log(data);
+			team_list = data;
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
 			console.log(status);
 		}
 	});
+	return team_list;
 }
 
-function loadBookList(team_id) {
+function loadBookList() {
+	let book_list;
 	$.ajax({
 		type: "get",
-		url: "/api/v1/card/team/" + team_id + "/book/list",
+		url: "/api/v1/card/team/" + selected_team.id + "/book/list",
 		async: false,
 		dataType: "json",
-		success: function (card_book_list) {
-			console.log(card_book_list);
-			let card_books = card_book_wrapper.querySelectorAll(".card_book");
-			card_books.forEach(e => e.remove());
-			
-			for(let i = 0; i < card_book_list.length; i++) {
-				const card_book_button = makeCardBookTag(card_book_list[i]);
-				card_book_wrapper.insertBefore(card_book_button, add_new_card_book_button);
-				card_book_button.onclick = () => {
-					card_books = card_book_wrapper.querySelectorAll(".card_book");
-					loadGroupList(card_book_list[i].id);
-					addClassActiveToGroup(card_books, i);
-					selected_card_book = card_book_list[i];
-				}
-			}
-			card_book_wrapper.querySelectorAll(".card_book")[0].click();
-			selected_card_book = card_book_list[0];
+		success: function (data) {
+			console.log(data);
+			book_list = data;
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
 			console.log(status);
 		}
 	});
+	return book_list;
 }
 
-function loadGroupList(card_book_id) {
+function loadGroupList() {
+	let groups;
 	$.ajax({
 		type: "get",
-		url: "/api/v1/card/team/book/" + card_book_id + "/group/list",
+		url: "/api/v1/card/team/book/" + selected_card_book.id + "/group/list",
+		async: false,
 		dataType: "json",
-		success: function (group_list) {
-			console.log(group_list);
-			setWholeGroup(group_list[0].total_count);
-			group_wrapper.querySelectorAll(".group").forEach(e => {
-				if(e.id != "whole_cards") e.remove();
-			});
-			for(let i = 0; i < group_list.length; i++) {
-				const group_button = makeCardGroupTag(group_list[i]);
-				group_wrapper.appendChild(group_button);
-				group_button.onclick = () => {
-					console.log(group_list[i].group_name + " is pressed");
-					page = 0;
-					selected_group = group_list[i];
-					console.log(selected_group);
-					loadSpecificGroupCardList();
-				}
-			}
-			whole_card_button.click();
+		success: function (data) {
+			console.log(data);
+			groups = data;
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
 			console.log(status);
 		}
 	});
+	return groups;
 }
 
 function loadAllCardList() {
+	let cards;
 	$.ajax({
 		type: "get",
 		url: "/api/v1/card/team/book/" + selected_card_book.id + "/card/list",
 		async: false,
 		data: {"page":page},
 		dataType: "json",
-		success: function (card_list) {
-			console.log(card_list);
-			if(card_list.length == 1 && card_list[0].total_count == 0) {
-				const how_to_use_tag = makeHowToUseTag();
-				replaceTagInMainContents(how_to_use_tag);
-			} else {
-				const card_list_wrapper_tag = makeCardListTag();
-				replaceTagInMainContents(card_list_wrapper_tag);
-				setListPager(card_list[0].total_count);
-				
-				const card_list_tag = card_list_wrapper_tag.querySelector(".card_list");
-				for(let i = 0; i < card_list.length; i++) {
-					const card_tag = makeCardTag(card_list[i]);
-					card_list_tag.appendChild(card_tag);
-					
-					card_tag.onclick = () => {
-						loadCardDetail(card_list[i].id);
-						addClassClickedToCard(i);
-					}
-				}
-				
-				const cards = card_list_tag.querySelectorAll(".card");
-				console.log(cards);
-				cards[0].click();
-			}
+		success: function (data) {
+			console.log(data);
+			cards = data;
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
 			console.log(status);
 		}
 	});
+	return cards;
 }
 
 function loadSpecificGroupCardList() {
+	let cards;
 	$.ajax({
 		type: "get",
 		url: "/api/v1/card/team/group/" + selected_group.id + "/card/list",
+		async: false,
 		data: {"page":page},
 		dataType: "json",
-		success: function (card_list) {
-			console.log(card_list);
-			if(card_list.length == 1 && card_list[0].total_count == 0) {
-				const how_to_use_tag = makeHowToUseTag();
-				replaceTagInMainContents(how_to_use_tag);
-			} else {
-				const card_list_wrapper_tag = makeCardListTag();
-				replaceTagInMainContents(card_list_wrapper_tag);
-				setListPager(card_list[0].total_count);
-				
-				const card_list_tag = card_list_wrapper_tag.querySelector(".card_list");
-				for(let i = 0; i < card_list.length; i++) {
-					const card_tag = makeCardTag(card_list[i]);
-					card_list_tag.appendChild(card_tag);
-					
-					card_tag.onclick = () => {
-						loadCardDetail(card_list[i].id);
-						addClassClickedToCard(i);
-					}
-				}
-				
-				const cards = card_list_tag.querySelectorAll(".card");
-				console.log(cards);
-				cards[0].click();
-			}
+		success: function (data) {
+			console.log(data);
+			cards = data;
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
 			console.log(status);
 		}
 	});
+	return cards;
 }
 
 function setListPager(total_count) {
@@ -507,127 +475,23 @@ function addClassClickedToCard(index) {
 	}
 }
 
-function loadCardDetail(card_id) {
+function loadCardDetail() {
+	let detail;
 	$.ajax({
 		type: "get",
-		url: "/api/v1/card/team/card/" + card_id,
+		url: "/api/v1/card/team/card/" + selected_card.id,
+		async: false,
 		dataType: "json",
-		success: function (card) {
-			console.log(card);
-			let card_detail_tag = document.querySelector(".card_detail");
-			if(card_detail_tag != null) {
-				card_detail_tag.remove();
-			}
-			card_detail_tag = makeCardDetailTag(card);
-			appendTagToMainContents(card_detail_tag);
-			
-			const group_wrapper = card_detail_tag.querySelector(".group_info");
-			for(let i = 0; i < card.group_list.length; i++) {
-				if(card.group_list[i].group_name == "미분류") continue;
-				const group_button = makeGroupNameTagInCardDetail(card.group_list[i]);
-				group_wrapper.appendChild(group_button);
-				group_button.onclick; 
-				// show group select modal
-			}
-			
-			const memo_wrapper = card_detail_tag.querySelector(".memo_list");
-			for(let i = 0; i < card.memo_list.length; i++) {
-				const memo = makeMemoTag(card.memo_list[i]);
-				memo_wrapper.appendChild(memo);
-
-				memo.querySelector(".show_edit_memo_modal").onclick = () => {
-					const update_memo_modal = makeUpdateTeamCardMemoModal(card.memo_list[i]);
-					const contents = update_memo_modal.querySelector("textarea[name='contents']");
-					const submit_button = update_memo_modal.querySelector(".submit_button");
-					
-					appendModalToContainer(update_memo_modal);
-					setTimeout(() => contents.focus(), 150);
-					
-					update_memo_modal.querySelector(".close_modal").onclick = () => {
-						removeModal(update_memo_modal);
-					}
-					
-					update_memo_modal.querySelector(".cancel_button").onclick = () => {
-						removeModal(update_memo_modal);
-					}
-					
-					contents.oninput = (event) => {
-						if(event.target.value == "") {
-							submit_button.disabled = true;
-						} else {
-							submit_button.disabled = false;
-						}
-					}
-					
-					submit_button.onclick = () => {
-						if(updateMemo(card.memo_list[i].id, contents.value)) {
-							reloadCardDetail();
-						} else {
-							alert("메모 수정 실패");
-						}
-						removeModal(update_memo_modal);
-					}
-				}
-
-				memo.querySelector(".show_remove_memo_modal").onclick = () => {
-					const remove_memo_modal = makeDeleteConfirmTeamCardMemoModal(card.memo_list[i]);
-					appendModalToContainer(remove_memo_modal);
-					
-					remove_memo_modal.querySelector(".close_modal").onclick = () => {
-						removeModal(remove_memo_modal);
-					}
-					
-					remove_memo_modal.querySelector(".remove_button").onclick = () => {
-						if(deleteMemo(card.memo_list[i].id)) {
-							reloadCardDetail();
-						} else {
-							alert("메모 삭제 실패");
-						}
-						removeModal(remove_memo_modal);
-					}
-				}
-			}
-			
-			const memo_input_wrapper = card_detail_tag.querySelector(".memo_input");
-			memo_input_wrapper.onclick = () => {
-				const memo_input_modal = makeAddTeamCardMemoModal();
-				const contents = memo_input_modal.querySelector("textarea[name='contents']");
-				const submit_button = memo_input_modal.querySelector(".submit_button");
-				
-				appendModalToContainer(memo_input_modal);
-				setTimeout(() => contents.focus(), 150);
-				
-				memo_input_modal.querySelector(".close_modal").onclick = () => {
-					removeModal(memo_input_modal);
-				}
-				
-				memo_input_modal.querySelector(".cancel_button").onclick = () => {
-					removeModal(memo_input_modal);
-				}
-				
-				contents.oninput = (event) => {
-					if(event.target.value == "") {
-						submit_button.disabled = true;
-					} else {
-						submit_button.disabled = false;
-					}
-				}
-				
-				submit_button.onclick = () => {
-					if(insertMemo(card.card.id, contents.value)) {
-						reloadCardDetail();
-					} else {
-						alert("메모 인서트 실패");
-					}
-					removeModal(memo_input_modal);
-				}
-			}
+		success: function (data) {
+			console.log(data);
+			detail = data;
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
 			console.log(status);
 		}
 	});
+	return detail;
 }
 
 function loadTeamMembers() {
@@ -841,6 +705,24 @@ function deleteMemo(card_memo_id) {
 	return flag;
 }
 
+function getGroupBelongFlags(card_id) {
+	let group_belong_flags;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/team/card/" + card_id + "/belong",
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			group_belong_flags = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return group_belong_flags;
+}
+
 function reloadCardDetail() {
 	const cards = document.querySelector(".card_list_wrapper .card_list").children;
 	for(let i = 0; i < cards.length; i++) {
@@ -872,6 +754,205 @@ function setTeamInfo() {
 	const max_card_count_text = selected_team.grade_id == 1 ? "100장" : "∞";
 	const storage = document.querySelector(".menus .storage");
 	storage.innerHTML = `<span class="team_card_count">${selected_team.total_card_count}</span>&nbsp;/ ${max_card_count_text} 이용 중`;
+}
+
+function setCardBookList() {
+	let card_books = card_book_wrapper.querySelectorAll(".card_book");
+	card_books.forEach(e => e.remove());
+	
+	for(let i = 0; i < card_book_list.length; i++) {
+		const card_book_button = makeCardBookTag(card_book_list[i]);
+		card_book_wrapper.insertBefore(card_book_button, add_new_card_book_button);
+		card_book_button.onclick = () => {
+			card_books = card_book_wrapper.querySelectorAll(".card_book");
+			selected_card_book = card_book_list[i];
+			addClassActiveToGroup(card_books, i);
+			group_list = loadGroupList();
+			setGroupList();
+			console.log("set group");
+		}
+	}
+}
+
+function setGroupList() {
+	setWholeGroup(selected_card_book.card_count);
+	group_wrapper.querySelectorAll(".group").forEach(e => {
+		if(e.id != "whole_cards") e.remove();
+	});
+	for(let i = 0; i < group_list.length; i++) {
+		const group_button = makeCardGroupTag(group_list[i]);
+		group_wrapper.appendChild(group_button);
+		console.log(group_list[i].group_name + " is pressed");
+		group_button.onclick = () => {
+			page = 0;
+			selected_group = group_list[i];
+			console.log(selected_group);
+			card_list = loadSpecificGroupCardList();
+			setCardList();
+		}
+	}
+	whole_card_button.click();
+}
+
+function setCardList() {
+	if(card_list.length == 1 && card_list[0].total_count == 0) {
+		const how_to_use_tag = makeHowToUseTag();
+		replaceTagInMainContents(how_to_use_tag);
+	} else {
+		const card_list_wrapper_tag = makeCardListTag();
+		replaceTagInMainContents(card_list_wrapper_tag);
+		setListPager(card_list[0].total_count);
+		
+		const card_list_tag = card_list_wrapper_tag.querySelector(".card_list");
+		for(let i = 0; i < card_list.length; i++) {
+			const card_tag = makeCardTag(card_list[i]);
+			card_list_tag.appendChild(card_tag);
+			selected_card = card_list[i];
+			addClassClickedToCard(i);
+			
+			card_tag.onclick = () => {
+				selected_card_detail = loadCardDetail();
+				setCardDetail();
+			}
+		}
+		if(card_list.length > 0) {
+			card_list_tag.querySelectorAll(".card")[0].click();
+		}
+	}
+}
+
+function setCardDetail() {
+	let card_detail_tag = document.querySelector(".card_detail");
+	if(card_detail_tag != null) {
+		card_detail_tag.remove();
+	}
+	card_detail_tag = makeCardDetailTag(selected_card_detail);
+	appendTagToMainContents(card_detail_tag);
+	
+	const group_wrapper = card_detail_tag.querySelector(".group_info");
+	for(let i = 0; i < selected_card_detail.group_list.length; i++) {
+		const group_button = makeGroupNameTagInCardDetail(selected_card_detail.group_list[i]);
+		group_wrapper.appendChild(group_button);
+		group_button.onclick = () => {
+			// show group select modal
+			const group_belong_flags = getGroupBelongFlags(selected_card_detail.card.id);
+			console.log(group_belong_flags);
+			const change_group_modal = makeChangeGroupModal(1);
+			const group_list_tag = change_group_modal.querySelector(".group_list");
+			const add_new_group_in_modal = change_group_modal.querySelector(".add_new_group");
+			for(let i = 0; i < group_belong_flags.length; i++) {
+				if(group_belong_flags[i].group_name == "미분류") continue;
+				const group_tag = makeGroupTagForModal(group_belong_flags[i]);
+				group_list_tag.insertBefore(group_tag, add_new_group_in_modal);
+			}
+			appendModalToContainer(change_group_modal);
+			
+			change_group_modal.querySelector(".close_modal").onclick = () => {
+				removeModal(change_group_modal);
+			}
+			
+			add_new_group_in_modal.onclick = () => {
+				// add new group
+			}
+			
+			change_group_modal.querySelector(".set_group_button").onclick = () => {
+				// update card group join user
+			}
+		}
+	}
+	
+	const memo_wrapper = card_detail_tag.querySelector(".memo_list");
+	for(let i = 0; i < selected_card_detail.memo_list.length; i++) {
+		const memo = makeMemoTag(selected_card_detail.memo_list[i]);
+		memo_wrapper.appendChild(memo);
+
+		memo.querySelector(".show_edit_memo_modal").onclick = () => {
+			const update_memo_modal = makeUpdateTeamCardMemoModal(selected_card_detail.memo_list[i]);
+			const contents = update_memo_modal.querySelector("textarea[name='contents']");
+			const submit_button = update_memo_modal.querySelector(".submit_button");
+			
+			appendModalToContainer(update_memo_modal);
+			setTimeout(() => contents.focus(), 150);
+			
+			update_memo_modal.querySelector(".close_modal").onclick = () => {
+				removeModal(update_memo_modal);
+			}
+			
+			update_memo_modal.querySelector(".cancel_button").onclick = () => {
+				removeModal(update_memo_modal);
+			}
+			
+			contents.oninput = (event) => {
+				if(event.target.value == "") {
+					submit_button.disabled = true;
+				} else {
+					submit_button.disabled = false;
+				}
+			}
+			
+			submit_button.onclick = () => {
+				if(updateMemo(selected_card_detail.memo_list[i].id, contents.value)) {
+					reloadCardDetail();
+				} else {
+					alert("메모 수정 실패");
+				}
+				removeModal(update_memo_modal);
+			}
+		}
+
+		memo.querySelector(".show_remove_memo_modal").onclick = () => {
+			const remove_memo_modal = makeDeleteConfirmTeamCardMemoModal(selected_card_detail.memo_list[i]);
+			appendModalToContainer(remove_memo_modal);
+			
+			remove_memo_modal.querySelector(".close_modal").onclick = () => {
+				removeModal(remove_memo_modal);
+			}
+			
+			remove_memo_modal.querySelector(".remove_button").onclick = () => {
+				if(deleteMemo(card.memo_list[i].id)) {
+					reloadCardDetail();
+				} else {
+					alert("메모 삭제 실패");
+				}
+				removeModal(remove_memo_modal);
+			}
+		}
+	}
+	
+	const memo_input_wrapper = card_detail_tag.querySelector(".memo_input");
+	memo_input_wrapper.onclick = () => {
+		const memo_input_modal = makeAddTeamCardMemoModal();
+		const contents = memo_input_modal.querySelector("textarea[name='contents']");
+		const submit_button = memo_input_modal.querySelector(".submit_button");
+		
+		appendModalToContainer(memo_input_modal);
+		setTimeout(() => contents.focus(), 150);
+		
+		memo_input_modal.querySelector(".close_modal").onclick = () => {
+			removeModal(memo_input_modal);
+		}
+		
+		memo_input_modal.querySelector(".cancel_button").onclick = () => {
+			removeModal(memo_input_modal);
+		}
+		
+		contents.oninput = (event) => {
+			if(event.target.value == "") {
+				submit_button.disabled = true;
+			} else {
+				submit_button.disabled = false;
+			}
+		}
+		
+		submit_button.onclick = () => {
+			if(insertMemo(selected_card_detail.card.id, contents.value)) {
+				reloadCardDetail();
+			} else {
+				alert("메모 인서트 실패");
+			}
+			removeModal(memo_input_modal);
+		}
+	}
 }
 
 function pickTeamOrderByCreateDate(team_list) {
@@ -942,8 +1023,8 @@ function makeAddNewGroupTag() {
 
 function makeGroupNameTagInCardDetail(group) {
 	const span = document.createElement("span");
-	span.className = "text group";
-	span.innerHTML = `${group.group_name}<img src="/static/images/card_team_edit_group" class="show_edit_group_modal">`;
+	span.className = group.group_name == "미분류" ? "text no_content" : "text group";
+	span.innerHTML = `${group.group_name}<img src="/static/images/card_team_edit_group.png" class="show_edit_group_modal">`;
 	return span;
 }
 
@@ -1320,8 +1401,6 @@ ${address_text == null ? '<span class="description blank">주소 없음</span>' 
 			</div>
 			<div class="group_info">
 				<span class="title">그룹</span>
-${card_detail.group_list.length == 1 && card_detail.group_list[0].group_name == "미분류" ? 
-				'<span class="text no_content">미지정<img src="/static/images/card_team_edit_group.png" class="show_edit_group_modal"></span>' : ''}
 			</div>
 			<div class="memo_list_wrapper">
 				<span class="title">메모</span>
@@ -1687,6 +1766,42 @@ function makeDeleteConfirmTeamCardMemoModal(memo) {
 				</div>
 			</div>
 		</div>
+	`;
+	return div;
+}
+
+function makeChangeGroupModal(selected_card_count) {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window change_group">
+			<div class="title">
+				<span>그룹 설정</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="group_wrapper">
+				<span>선택한 <span class="card_count">${selected_card_count}</span>개의 명함을 아래의 그룹에 추가합니다.</span>
+				<div class="group_list">
+					
+					<button type="button" class="add_new_group">+ 그룹 추가하기</button>
+				</div>
+			</div>
+			<div class="buttons">
+				<button type="button" class="set_group_button">완료</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeGroupTagForModal(group_belong_flag) {
+	const div = document.createElement("div");
+	div.className = "group";
+	div.innerHTML = `
+		<input type="checkbox" class="group_selector" name="is_checked" ${group_belong_flag.belong_flag ? 'checked' : ''}>
+		<span>${group_belong_flag.group_name}</span>
 	`;
 	return div;
 }

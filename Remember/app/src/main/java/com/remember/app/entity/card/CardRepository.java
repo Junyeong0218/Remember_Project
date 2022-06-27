@@ -81,4 +81,6 @@ public interface CardRepository {
 	public int updateTeamCardMemo(CardMemo cardMemo);
 	
 	public int deleteTeamCardMemo(int cardMemoId);
+	
+	public List<CardBelongTeamGroup> getGroupBelongFlags(int cardId);
 }

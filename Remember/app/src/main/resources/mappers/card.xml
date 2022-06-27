@@ -525,4 +525,20 @@
 				id = #{cardMemoId};
 		</delete>
 		
+		<select id="getGroupBelongFlags" parameterType="Integer" resultType="com.remember.app.entity.card.CardBelongTeamGroup">
+			select
+				`group2`.id,
+				`group2`.group_name,
+				
+				if(belong2.card_id = #{cardId}, true, false) as belong_flag
+			from
+				card_belong_team_group belong
+				left outer join team_group `group` on(`group`.id = belong.team_group_id)
+				left outer join team_card_book book on(book.id = `group`.card_book_id)
+				left outer join team_group `group2` on(`group2`.card_book_id = book.id)
+				left outer join card_belong_team_group belong2 on(belong2.team_group_id = `group2`.id)
+			where
+				belong.card_id = #{cardId};
+		</select>
+		
   </mapper>

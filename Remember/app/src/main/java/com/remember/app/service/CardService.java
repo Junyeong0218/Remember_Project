@@ -3,6 +3,7 @@ package com.remember.app.service;
 import java.util.List;
 
 import com.remember.app.entity.card.Card;
+import com.remember.app.entity.card.CardBelongTeamGroup;
 import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
@@ -89,5 +90,7 @@ public interface CardService {
 	public boolean updateTeamCardMemo(CardMemo cardMemo);
 	
 	public boolean deleteTeamCardMemo(int cardMemoId);
+	
+	public List<CardBelongTeamGroup> getGroupBelongFlags(int cardId);
 	
 }

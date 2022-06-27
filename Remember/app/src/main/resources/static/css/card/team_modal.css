@@ -151,25 +151,29 @@
 	height: 32px;
 }
 
-.modal > .change_memo {
+.modal > .change_memo,
+.modal > .change_group {
 	width: 450px;
 	border: 1px solid rgba(0, 0, 0, 0.1);
 	background-color: white;
 	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
-.modal > .change_memo > .title {
+.modal > .change_memo > .title,
+.modal > .change_group > .title {
 	position: relative;
 	padding: 15px;
 	width: 100%;
 }
 
-.modal > .change_memo > .title > span {
+.modal > .change_memo > .title > span,
+.modal > .change_group > .title > span {
 	font-size: 17px;
 	font-weight: 500;
 }
 
-.modal > .change_memo > .title > button {
+.modal > .change_memo > .title > button,
+.modal > .change_group > .title > button {
     position: absolute;
     top: 0;
     right: 0;
@@ -178,7 +182,8 @@
     cursor: pointer;
 }
 
-.modal > .change_memo > .title > button > img {
+.modal > .change_memo > .title > button > img,
+.modal > .change_group > .title > button > img {
 	pointer-events: none;
 }
 
@@ -280,4 +285,90 @@
 .modal > .change_memo > .input_wrapper > .buttons > .remove_button {
 	background-color: #FF5252;
 	color: white;
+}
+
+.modal > .change_group > .group_wrapper {
+	padding: 15px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+}
+
+.modal > .change_group > .group_wrapper > span {
+	padding: 15px 0;
+	font-size: 14px;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 1.5;
+}
+
+.modal > .change_group > .group_wrapper > span > .card_count {
+	font: inherit;
+	font-weight: bold;
+	color: #00BD5D;
+}
+
+.modal > .change_group > .group_wrapper > .group_list {
+	padding: 5px 15px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 355px;
+	border-top: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+	background-color: #F5F5F5;
+}
+
+.modal > .change_group > .group_wrapper > .group_list > .group {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 24px;
+	cursor: pointer;
+	gap: 10px;
+}
+
+.modal > .change_group > .group_wrapper > .group_list > .group > input,
+.modal > .change_group > .group_wrapper > .group_list > .group > span {
+	pointer-events: none;
+}
+
+.modal > .change_group > .group_wrapper > .group_list > .group > span {
+	font-size: 13px;
+	color: rgba(0, 0, 0, 0.65);
+}
+
+.modal > .change_group > .group_wrapper > .group_list > .add_new_group {
+	margin: 6px 0;
+	padding:5px 10px;
+	height: 30px;
+	border: 1px solid #D9D9D9;
+	background-color: white;
+	font-size: 12px;
+	font-weight: 400;
+	color: #333;
+	line-height: 1.5;
+	cursor: pointer;
+}
+
+.modal > .change_group > .group_wrapper > .group_list > .add_new_group.hidden {
+	display: none;
+}
+
+.modal > .change_group > .buttons {
+	padding: 0 15px 30px;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+
+.modal > .change_group > .buttons > button {
+	padding: 6px 12px;
+	width: 355px;
+	background-color: #1A1A1A;
+	font-size: 14px;
+	font-weight: 400;
+	color: white;
+	cursor: pointer;
+	
 }

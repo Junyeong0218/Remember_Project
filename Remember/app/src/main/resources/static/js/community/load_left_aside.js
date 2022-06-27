@@ -45,13 +45,10 @@ function addLiTags(category_list) {
 	} else if(has_profile == false) {
 		for(let i = 0; i < category_list.length; i++) {
 			const category = category_list[i];
-			if(category.main_category_id == 1) {
+			if(category.main_category_id != 2) {
 				const li = makeLiTag(category);
-				insight_section.appendChild(li);
-				li.onclick = () => location.href = "/community/" + category.id;
-			}else if(category.main_category_id == 3) {
-				const li = makeLiTag(category);
-				subject_section.appendChild(li);
+				if(category.main_category_id == 1) insight_section.appendChild(li);
+				else																subject_section.appendChild(li);
 				li.onclick = (event) => {
 					if(event.target.className == "join_button") {
 						const modal = makeSubmitProfileModal();
