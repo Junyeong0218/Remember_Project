@@ -38,7 +38,23 @@ function getAllGroups() {
                 total_count += group_list[i].card_count;
                 const group_tag = makeGroupTag(group_list[i]);
                 wrapper.appendChild(group_tag);
-                group_tag.onclick = () => getGroup(group_list[i].id);
+                group_tag.onclick = (event) => {
+					if(event.target.className == "group_btn") {
+						console.log('그룹');
+						const groupDrop = group_tag.querySelector('.drop_menu');
+						groupDrop.classList.toggle('hidden');
+						const groupNameChange = groupDrop.querySelectorAll('.drop_menu ul li');
+						groupNameChange[0].onclick = () => {
+							console.log("변경");
+							const groupBox = group_tag.querySelector('.group_box');
+							const changeName = changeGroupNameTag();
+								group_tag.innerHTML= '';
+								group_tag.appendChild(changeName);
+						}
+					} else {
+						getGroup(group_list[i].id);
+					}
+				}
             }
             wholeCount.innerText = total_count;
             whole_cards.click();
@@ -64,6 +80,7 @@ function getAllCards(page) {
                 const no_contents_tag = makeNoContentsTag();
                 main_contents.appendChild(no_contents_tag);
             } else {
+		
 				const total_card_count = card_list[0].total_count;
                 const groupList = groupListTag();
                 main_contents.appendChild(groupList);
@@ -157,9 +174,15 @@ function getAllCards(page) {
 					dropDownGroup.classList.toggle("hidden");				
 				}	
 				
-				const deleteCheckCard = dropDownGroup.querySelectorAll('.drop_menu_group li');
+				const deleteCheckCard = dropDownGroup.querySelectorAll('.drop_menu.group li');
 				deleteCheckCard[2].onclick = () => {
 					console.log("삭 제");
+						for(let i = 0; i < checkBoxes.length; i++){
+							if(checkBoxes[i].checked ==true) {
+								const card_lists = card_list
+								deleteCard(card_list[i].id)
+						}
+					}
 				}
 
 				
@@ -963,10 +986,30 @@ function makeGroupTag(group_data) {
     button.type = "button";
     button.className = "card_group";
     button.innerHTML = `
-		<span class="sub_group_arrow"></span>
-    	<span class="group_text">${group_data.group_name} (<span class="group_count">${group_data.card_count}</span>)</span>
+    	<div class="group_box">
+			<span class="sub_group_arrow"></span>
+    		<span class="group_text">${group_data.group_name} (<span class="group_count">${group_data.card_count}</span>)</span>
+    	</div>
+    	<div class="group_more">
+    		<button class="group_btn"><span class="group_btn_arrow"></span></button>
+    		<div class="drop_menu group hidden">
+					<ul>
+						<li>그룹명 변경</li>
+						<li>그룹 삭제</li>
+					</ul>
+				</div>
+    	</div>
 	`;
     return button;
+}
+
+function changeGroupNameTag() {
+	const div = document.createElement('div');
+	div.className = "change_input";
+	div.innerHTML =`
+		<input>ㅇㄹㅇ	
+	`;
+	return div;
 }
 
 function toggleAddGroupTag() {
@@ -1016,7 +1059,25 @@ function inputAddGroup(group_name) {
                 const groupTag = makeGroupTag({ "group_name": group_name, "card_count": 0 });
                 myCard.insertBefore(groupTag, beforeElement);
                 addGroup.querySelector('.add_group_box').remove();
-                groupTag.onclick = () => getGroup(group_id);
+                groupTag.onclick = (event) => {
+					if(event.target.className == "group_btn") {
+						console.log('그룹');
+						const groupDrop = group_tag.querySelector('.drop_menu');
+						groupDrop.classList.toggle('hidden');
+						groupNameChange[0].onclick = () => {
+							console.log("변경");
+							const changeName = changeGroupNameTag();
+							for(let i = 0; i< whole_cards.length; i ++) {
+								whole_cards[i].innerHTML= '';
+								whole_cards[i].appendChild(changeName);
+								
+							}
+							
+						}
+					} else {
+						getGroup(group_list[i].id);
+					}
+				}
             } else {
                 alert("그룹 생성 실패");
             }
