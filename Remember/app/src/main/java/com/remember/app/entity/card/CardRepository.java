@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
+
 @Mapper
 public interface CardRepository {
 	
@@ -85,4 +87,13 @@ public interface CardRepository {
 	public int deleteTeamCardMemo(int cardMemoId);
 	
 	public List<CardBelongTeamGroup> getGroupBelongFlags(int cardId);
+	
+	public int insertCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto);
+
+	public int insertCardBelongDefaultTeamGroup(int cardId, int defaultTeamGroupId);
+
+	public int deleteCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto);
+
+	public int deleteCardBelongDefaultTeamGroup(int cardId, int defaultTeamGroupId);
+
 }

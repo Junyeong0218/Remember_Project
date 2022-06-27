@@ -1,7 +1,6 @@
 package com.remember.app.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,9 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.remember.app.entity.card.AddGroup;
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.CardBelongTeamGroup;
+import com.remember.app.entity.card.CardDetail;
 import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.CardMemoDetail;
-import com.remember.app.entity.card.CardDetail;
 import com.remember.app.entity.card.CardRepository;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupCard;
@@ -35,6 +34,7 @@ import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
+import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 
@@ -329,6 +329,24 @@ public class CardServiceImpl implements CardService {
 	@Override
 	public List<CardBelongTeamGroup> getGroupBelongFlags(int cardId) {
 		return cardRepository.getGroupBelongFlags(cardId);
+	}
+	
+	@Override
+	public boolean updateCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto) {
+		int result = 0;
+		if(updateCardBelongTeamGroupReqDto.getRemove_id_list() != null) {
+			result += cardRepository.deleteCardBelongTeamGroup(updateCardBelongTeamGroupReqDto);
+		}
+		if(updateCardBelongTeamGroupReqDto.getAdd_id_list() != null) {
+			result += cardRepository.insertCardBelongTeamGroup(updateCardBelongTeamGroupReqDto);
+		}
+		if(updateCardBelongTeamGroupReqDto.isRemove_all_flag()) {
+			result += cardRepository.insertCardBelongDefaultTeamGroup(updateCardBelongTeamGroupReqDto.getCard_id(), updateCardBelongTeamGroupReqDto.getDefault_team_group_id());
+		} else {
+			result += cardRepository.deleteCardBelongDefaultTeamGroup(updateCardBelongTeamGroupReqDto.getCard_id(), updateCardBelongTeamGroupReqDto.getDefault_team_group_id());
+		}
+		System.out.println(result);
+		return result > 0;
 	}
 	
 }

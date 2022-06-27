@@ -32,6 +32,7 @@ import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
+import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 import com.remember.app.service.CardService;
@@ -302,6 +303,14 @@ public class CardRestController {
 	@GetMapping("/team/card/{cardId}/belong")
 	public List<CardBelongTeamGroup> getGroupBelongFlags(@PathVariable int cardId) {
 		return cardService.getGroupBelongFlags(cardId);
+	}
+	
+	@PutMapping("/team/card/{cardId}/belong")
+	public boolean updateCardBelongTeamGroup(@PathVariable int cardId,
+																							 UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto) {
+		updateCardBelongTeamGroupReqDto.setCard_id(cardId);
+		System.out.println(updateCardBelongTeamGroupReqDto);
+		return cardService.updateCardBelongTeamGroup(updateCardBelongTeamGroupReqDto);
 	}
 	
 }

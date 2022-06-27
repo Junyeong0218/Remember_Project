@@ -355,6 +355,46 @@
 	display: none;
 }
 
+.modal > .change_group > .group_wrapper > .group_list > .insert_group_form {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	height: 32px;
+}
+
+.modal > .change_group > .group_wrapper > .group_list > .insert_group_form.hidden {
+	display: none;
+}
+
+.modal > .change_group > .group_wrapper > .group_list > .insert_group_form > input {
+	padding: 6px 12px;
+	width: 200px;
+	height: 100%;
+	border: none;
+	font-size: 13px;
+	font-weight: 400;
+	color: #555;
+	line-height: 20px;
+	outline: none;
+}
+
+.modal > .change_group > .group_wrapper > .group_list > .insert_group_form > button {
+	padding: 0 5px;
+	width: 36px;
+	height: 100%;
+	font-size: 12px;
+	line-height: 32px;
+	cursor: pointer;
+}
+
+.modal > .change_group > .group_wrapper > .group_list > .insert_group_form > .confirm {
+	color: #333;
+}
+
+.modal > .change_group > .group_wrapper > .group_list > .insert_group_form > .cancel {
+	color: #999;
+}
+
 .modal > .change_group > .buttons {
 	padding: 0 15px 30px;
 	display: flex;

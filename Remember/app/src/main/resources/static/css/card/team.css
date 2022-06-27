@@ -1282,3 +1282,134 @@ main {
 	border-color: #080808;
 	background-color: #1A1A1A;
 }
+
+.main_contents > .edit_card_form {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border: 1px solid #CDCDCD;
+	background-color: white;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.main_contents > .edit_card_form > .title {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 50px;
+	border-bottom: 1px solid #CDCDCD;
+}
+
+.main_contents > .edit_card_form > .title > .text {
+	font-size: 20px;
+	color: rgba(0, 0, 0, 0.65);
+}
+
+.main_contents > .edit_card_form > .title > .buttons {
+	display: flex;
+	gap: 8px;
+}
+
+.main_contents > .edit_card_form > .title > .buttons > button {
+	padding: 6px 12px;
+	font-size: 13px;
+	color: #333;
+	cursor: pointer;
+}
+
+.main_contents > .edit_card_form > .title > .buttons > .submit_button {
+	border: 1px solid #333;
+}
+
+.main_contents > .edit_card_form > .card_image_wrapper {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	border-bottom: 1px solid #CDCDCD;
+}
+
+.main_contents > .edit_card_form > .card_image_wrapper > .front, 
+.main_contents > .edit_card_form > .card_image_wrapper > .back,
+.main_contents > .edit_card_form > .card_image_wrapper > .input_wrapper {
+	padding: 10px;
+	width: 450px;
+	height: 260px;
+}
+
+.main_contents > .edit_card_form > .card_image_wrapper > .front > img, 
+.main_contents > .edit_card_form > .card_image_wrapper > .back > img {
+	max-width: 100%;
+}
+
+.main_contents > .edit_card_form > .card_image_wrapper > .input_wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	border: dotted 3px #CCC;
+	background-color: #F5F5F5;
+	cursor: pointer;
+}
+
+.main_contents > .edit_card_form > .card_image_wrapper > .input_wrapper.hidden {
+	display: none;
+}
+
+.main_contents > .edit_card_form > .card_image_wrapper > .input_wrapper > .plus {
+	width: 50px;
+	height: 32px;
+	border: 1px solid #CCC;
+	font-size: 20px;
+	color: #999;
+	line-height: 32px;
+	text-align: center;
+}
+
+.main_contents > .edit_card_form > .card_image_wrapper > .input_wrapper > .text {
+	font-size: 13px;
+	color: #999;
+	line-height: 1.5;
+}
+
+.main_contents > .edit_card_form > .card_image_wrapper > .input_wrapper > input,
+.main_contents > .edit_card_form > .card_data > .profile_image > input {
+	display: none
+}
+
+.main_contents > .edit_card_form > .card_data {
+	padding: 11px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	width: 100%;
+}
+
+.main_contents > .edit_card_form > .card_data > .profile_image {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 240px;
+}
+
+.main_contents > .edit_card_form > .card_data > .profile_image > img {
+	margin: 20px;
+	width:100px;
+	height: 100px;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.main_contents > .edit_card_form > .card_data > .profile_image > button {
+	padding: 6px 12px;
+	border: 1px solid #D9D9D9;
+	font-size: 13px;
+	font-weight: 400;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: normal;
+}
+
+.main_contents > .edit_card_form > .card_data > .top,
+.main_contents > .edit_card_form > .card_data > .bottom {
+	padding: 5px;
+	width: 655px;
+}
