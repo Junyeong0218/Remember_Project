@@ -2,27 +2,28 @@ package com.remember.app.entity.now;
 
 import java.time.LocalDateTime;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-
-@Builder
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class NowArticle {
+@Builder
+public class NowArticleSummary {
 	private int id;
-	private int user_id;
+	
+	private LocalDateTime create_date;
+	
 	private int category_id;
+	
 	private String title;
 	private String summary;
-	private String contents;
-	private LocalDateTime create_date;
-	private LocalDateTime update_date;
 	
-	
+	private String file_name;
 }

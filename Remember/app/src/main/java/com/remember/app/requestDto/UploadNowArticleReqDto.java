@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class UploadArticleReqDto {
+public class UploadNowArticleReqDto {
 	private int user_id;
 	private int category_id;
 	private String title;
