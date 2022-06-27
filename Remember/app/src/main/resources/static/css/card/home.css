@@ -223,12 +223,22 @@ main {
 .card_group {
     padding: 0 5px 0 12px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     height: 36px;
     border-left: 1px solid #cdcdcd;
     border-right: 1px solid #cdcdcd;
     cursor: pointer;
+}
+
+.card_group:hover {
+	background-color: #eee;
+}
+
+.group_box {
+	display: flex;
+	align-items: center;
 }
 
 .group_text {
@@ -248,6 +258,49 @@ main {
 .group_count {
     font: inherit;
 }
+
+.group_more {
+	display: none;
+}
+
+.card_group:hover .group_more {
+	display: block;
+}
+
+.card_group:last-child:hover .group_more {
+	display: none;
+}
+
+
+.group_btn {
+	position: relative;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	width: 14px;
+	height: 14px;
+	border: 1px solid #d9d9d9;
+	color: rgba(0,0,0,0.65);
+	cursor: pointer;
+}
+
+.group_btn:hover {
+	border-color: #333333;
+	transition : all 0.3s;
+}
+
+.group_btn_arrow {
+	
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+    border-top: 4px solid;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    pointer-events :none;
+}
+
 
 .main_contents {
     display: flex;
@@ -289,7 +342,12 @@ main {
     border: 1px solid #cdcdcd;
 }
 
+.card_list_box.hidden {
+	display: none;
+}
+
 .card_list_top {
+	padding: 8.5px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -298,23 +356,66 @@ main {
 }
 
 .btn_left_box {
-    padding-left: 8px;
+    height: 100%;
 }
 
+.drop_menu {
+	position: absolute;
+}
+
+.drop_menu ul {
+	margin-top: 2px;
+	min-width: 160px;
+	border: 1px solid rgba(0,0,0,0.15);
+	background-color: #fff;
+	z-index: 2;
+	box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+}
+
+.drop_menu li{
+	padding: 10px 20px;
+	font-weight: 400;
+	color: #333;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+.drop_menu li:hover {
+	color:#fff;
+	background-color: #333;
+	transition: all 0.3s;
+}
+
+.drop_menu li:last-child {
+	border-top: 1px solid rgba(0,0,0,0.15);
+}
+
+.drop_menu.hidden {
+	display: none;
+}
+
+.drop_menu.group li {
+	text-align: left;
+}
+
+.drop_menu.group li:last-child {
+	border-top: none;
+}
 
 .top_btn_left {
+	position: relative;
     display: flex;
     align-items: center;
-
+    height: 32px;
 }
 
 .top_list_btn {
     padding: 5.5px;
+    display: flex;
+    align-items: center;
+    height:100%;
     border: 1px solid #d9d9d9;
     border-right: none;
-    color: rgba(0, 0, 0, 0.65);
-    text-align: center;
-    ;
 }
 
 .top_btn.more {
@@ -323,7 +424,8 @@ main {
     align-items: center;
     border: 1px solid #d9d9d9;
     color: rgba(0, 0, 0, 0.65);
-    height: 32px;
+    height: 100%;
+    cursor: pointer;
 }
 
 
@@ -341,7 +443,12 @@ main {
 }
 
 .top_right {
-    padding-right: 8px;
+	display:flex;
+	align-items:center;
+}
+
+.top_right.hide{
+	display: none;
 }
 
 .top_select {
@@ -355,7 +462,22 @@ main {
     background-color: #fff;
 }
 
-.list_group {}
+.list_select{
+	width: 100%;
+	height: 30px;
+	font-size: 14px;
+	color: rgba(0,0,0,0.65);
+	text-align: center;
+	line-height:29px;
+	border-bottom: 1px solid #cdcdcd;
+	background-color: #feffce;
+}
+
+.list_select.hide{
+	display: none;
+}
+
+
 
 .card_list_title {
     width: 100%;
@@ -373,17 +495,19 @@ main {
     height: 83px;
     border-left: 3px solid transparent;
     border-bottom: 1px solid #cdcdcd;
-    background-color: #F9F9F9;
+
     cursor: pointer;
+}
+
+.card_list_con.color {
+
+	background-color: #feffce !important;
 }
 
 .card_list_con.active {
     border-left: 3px solid #333;
+	background-color: #f9f9f9;
 }
-
-/*.card_list_con * {
-	pointer-events: none;
-}*/
 
 .list_mark {
     width: 3px;
@@ -398,6 +522,21 @@ main {
     height: 100%
 }
 
+.check_btn {
+	appearance:none;
+	background: url('/static/images/signup_unchecked_checkbox.png');
+	width: 16px;
+	height: 16px;
+	transition: 300ms;
+}
+
+.check_btn.not_max {
+	background: url('/static/images/card_not_max_checkbox.png') !important;
+}
+
+.check_btn:checked {
+	background: url('/static/images/signup_checked_checkbox.png');
+}
 
 .list_con_info {
     display: flex;
@@ -436,18 +575,33 @@ main {
     height: 54px;
 }
 
+.pager {
+	display: flex;
+	gap: 10px;
+}
+
 .page {
     padding: 6px 12px;
     color: #333;
     background-color: #fff;
     border: 1px solid #ddd;
     font-size: 13px;
+    cursor: pointer;
 }
 
-.page.num {
+.page.current {
     background-color: #333;
     border-color: #333;
     color: #fff;
+    pointer-events: none;
+}
+
+.page.blank {
+	padding: 0;
+	width: 26px;
+	height: 1px;
+	border: none;
+	pointer-events: none;
 }
 
 .page.btn.left {
@@ -457,3 +611,111 @@ main {
 .page.btn.right {
     margin-right: 10px;
 }
+
+.card_modal_con {
+	position: relative;
+	background-color: #fff;
+	box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+}
+
+.card_modal_header {
+	padding: 16px 24px;
+	border-bottom: 1px solid #e8e8e8;
+}
+
+.edit_form {
+	margin: 10px 5px 20px 5px;
+	width: 950px;
+	background-color: #fff;
+	border: 1px solid #cdcdcd;
+}
+
+.edit_contents.hidden{
+	display: none;
+}
+
+.edit_top{
+	display: flex;
+	justify-content: space-between;
+	border-bottom: 1px solid #cdcdcd;
+	height: 50px;
+}
+
+.edit_title {
+	padding: 10px 15px;
+	font-size: 20px;
+	line-height: 1.4;
+}
+
+.buttons {
+	padding: 8px;
+}
+
+.btn.edit_save,
+.btn.edit_cancel,
+.edit_title {
+	color: rgba(0,0,0,.65);
+}
+
+.btn.edit_save {
+	border: 1px solid #d9d9d9;	
+}
+
+.btn.edit_cancel:hover {
+	text-decoration: underline;	
+}
+
+.btn.edit_save:hover {
+	border-color: #333333;
+	color: #333333;
+}
+
+.edit_con {
+	display: flex;
+	justify-content: center;
+	padding: 10px;
+	width: 100%;
+	border-bottom: 1px solid #cdcdcd;
+}
+
+.edit_img_add {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	
+	padding: 10px;
+	width: 430px;
+	height: 240px;
+	border: dotted 3px #ccc;
+	background-color: #f5f5f5;
+	color: #999;
+}
+
+.edit_img_add > input {
+	display: none;
+}
+
+.edit_img_upload {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	
+	margin-bottom: 8px;
+	width: 50px;
+	height: 32px;
+	border: 1px solid #ccc;
+	font-size: 20px;
+}
+
+.edit_img_text {
+	font-size: 14px;
+}
+
+.edit_write {
+	display: flex;
+	
+	padding: 11px;
+	max-height: 731px;
+}
+

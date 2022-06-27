@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.CardBelongTeamGroup;
 import com.remember.app.entity.card.CardMemo;
+import com.remember.app.entity.card.CardDetail;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
@@ -44,7 +45,7 @@ public class CardRestController {
 	
 	private final CardService cardService;
 	
-	//본인 명함 검색 ("") get
+	//명함 검색 ("") get
 	@GetMapping("")
 	public ResponseEntity<?> getCard(@AuthenticationPrincipal PrincipalDetails principalDetails){
 		
@@ -59,7 +60,14 @@ public class CardRestController {
 		return new ResponseEntity<>(groups,HttpStatus.OK);
 	}
 	
-	//본인 명함 등록 post
+	@GetMapping("/{cardId}")
+	public ResponseEntity<?> getCardDetail(@PathVariable int cardId) {
+		CardDetail cardDetail = cardService.getCardDetail(cardId);
+		System.out.println(cardDetail);
+		return new ResponseEntity<>(cardDetail, HttpStatus.OK); 
+	}
+	
+	//명함 등록 post
 	@PostMapping("")
 	public ResponseEntity<?> registerCard(@AuthenticationPrincipal PrincipalDetails principalDetails, CardInsertReqDto cardInsertReqDto){
 		cardInsertReqDto.setUser_id(principalDetails.getId());
@@ -73,17 +81,19 @@ public class CardRestController {
 		}
 	}
 	
-	//본인명함 수정 put
-	@PutMapping("")
-	public ResponseEntity<?> updateCard(CardUpdateReqDto cardUpdateReqDto){
+	//명함 수정 put
+	@PutMapping("/{cardId}")
+	public ResponseEntity<?> updateCard(@PathVariable int cardId,
+										CardUpdateReqDto cardUpdateReqDto) {
+		cardUpdateReqDto.setId(cardId);
 		int result = cardService.updateCard(cardUpdateReqDto);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	
-	//본인명함 삭제 delete
-	@DeleteMapping("")
-	public ResponseEntity<?> deleteCard(@AuthenticationPrincipal PrincipalDetails principalDetails){
-		int result =cardService.deleteCard(principalDetails.getId());
+	//명함 삭제 delete
+	@DeleteMapping("{cardId}")
+	public ResponseEntity<?> deleteCard(@PathVariable int cardId){
+		int result =cardService.deleteCard(cardId);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	
@@ -112,8 +122,8 @@ public class CardRestController {
 	
 	//
 	@GetMapping("/list")
-	public ResponseEntity<?> getCardSummaryList(@AuthenticationPrincipal PrincipalDetails principalDetails){
-		List<Card> cards= cardService.getCardSummaryList(principalDetails.getId());
+	public ResponseEntity<?> getCardSummaryList(int page, @AuthenticationPrincipal PrincipalDetails principalDetails){
+		List<Card> cards= cardService.getCardSummaryList(principalDetails.getId(), page);
 		return new ResponseEntity<>(cards,HttpStatus.OK); 
 	}
 	
@@ -145,13 +155,13 @@ public class CardRestController {
 	}
 		
 	//특정ID 타인명함 select
-	@GetMapping("/{cardId}")
+	/*@GetMapping("/{cardId}")
 	public ResponseEntity<?> getIdCard(@PathVariable int cardId){
 		System.out.println(cardId);
 		Card card = cardService.getUserCard(cardId);
 		
 		return new ResponseEntity<>(card,HttpStatus.OK);
-	}
+	}*/
 	
 	//특정ID 타인 명함 내 그룹 insert
 	@PostMapping("/{cardId}")

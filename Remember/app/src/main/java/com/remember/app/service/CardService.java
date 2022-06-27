@@ -2,9 +2,12 @@ package com.remember.app.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.CardBelongTeamGroup;
 import com.remember.app.entity.card.CardMemo;
+import com.remember.app.entity.card.CardDetail;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
@@ -28,9 +31,11 @@ public interface CardService {
 	
 	public int insertNewCard(Card card);
 	
+	public CardDetail getCardDetail(int card_id);
+	
 	public int insertGroup(Group group);
 	
-	public int deleteCard(int user_id);
+	public int deleteCard(int card_id);
 	
 	public int updateCard(CardUpdateReqDto cardUpdateReqDto);
 	
@@ -46,7 +51,7 @@ public interface CardService {
 	
 	public int addGroupUser(AddGroupReqDto addGroupReqDto);
 	
-	public List<Card> getCardSummaryList(int user_id);
+	public List<Card> getCardSummaryList(int user_id, int page);
 	
 	
 	
