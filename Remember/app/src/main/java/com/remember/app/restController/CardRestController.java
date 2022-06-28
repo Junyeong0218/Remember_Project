@@ -172,8 +172,7 @@ public class CardRestController {
 		return new ResponseEntity<>(card,HttpStatus.OK);
 	}*/
 	
-	//특정ID 타인 명함 내 그룹 insert
-	@PostMapping("/{cardId}")
+	@PutMapping("/belong")
 	public ResponseEntity<?> addUserGroup(@PathVariable int cardId,AddGroupReqDto addGroupReqDto){
 		System.out.println(addGroupReqDto);
 		System.out.println(cardId);

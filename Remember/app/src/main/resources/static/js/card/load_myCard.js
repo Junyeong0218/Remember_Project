@@ -14,6 +14,8 @@ const addGroupBtn = document.querySelector('.add_group_button');
 const addGroup = document.querySelector('.add_group');
 const myCard = document.querySelector('.my_card_book');
 
+console.log(principal);
+
 let page = 0;
 let total_page_check_flag = false;
 
@@ -176,47 +178,143 @@ function getAllCards(page) {
 					}
 				}
 				
-				const teamCardCopy = groupList.querySelector('.t_btn.edit');
-				teamCardCopy.onclick = () => {
+				const team_card_copy = groupList.querySelector('.t_btn.edit');
+				team_card_copy.onclick = () => {
 					console.log('복제');
 					copyTeamCrardModal();
 				}
 				
+				const set_group_btn =groupList.querySelector('.t_btn.send.group');
+				set_group_btn.onclick = () => {
+					console.log("그룹설정");
+					$.ajax({
+						type:'get',
+						url:'/api/v1/card/group',
+						dataType:'json',
+						success:function(group_list){
+							console.log(group_list);
+							const move_group = moveGroupTag(count, group_list);
+							container.appendChild(move_group);	
+							
+							const complete_btn = move_group.querySelector('.complete_btn');
+							complete_btn.onclick = () => {
+								console.log("완료");
+								const selected_group_id_list = new Array();
+								const group_tag_list = move_group.querySelectorAll(".group_list > ul > li > input");
+								for(let i = 0; i < group_tag_list.length; i++) {
+									if(group_tag_list[i].checked) {
+										selected_group_id_list.push(group_list[i].id);
+									}
+								}
+								console.log(selected_group_id_list);
 								
-				const dropDownGroup = groupList.querySelector('.drop_menu.group');
+								const checked_card_id_list = new Array();
+								for(let i = 0; i < checkBoxes.length; i++) {
+									if(checkBoxes[i].checked) {
+										checked_card_id_list.push(card_list[i].id);
+									}
+								}
+								console.log(checked_card_id_list);
+								
+								
+								$.ajax({
+									type:'put',
+									url:'/api/v1/card/belong',
+									data:{
+										"card_id_list":checked_card_id_list,
+										"group_id_list":selected_group_id_list
+									},
+									dataType:'json',
+									success:function(){
+										console.log("완료");
+										
+									},
+							        error: function (xhr, status) {
+							            console.log(xhr);
+							            console.log(status);
+							        }
+								}); 
+ 							}
+						},
+				        error: function (xhr, status) {
+				            console.log(xhr);
+				            console.log(status);
+				        }
+					})
+				}
+				
+								
+				const drop_down_group = groupList.querySelector('.drop_menu.group');
 				sendMore[1].onclick = () => {
 					console.log("클릭");
-					dropDownGroup.classList.toggle("hidden");				
+					drop_down_group.classList.toggle("hidden");				
 				}	
 				
-				const deleteCheckCard = dropDownGroup.querySelectorAll('.drop_menu.group li');
-				deleteCheckCard[2].onclick = () => {
-					console.log("삭 제");
-					const obj = {"card_id_list":new Array()};
-					cards.forEach((e, index) => {
-						if(e.querySelector('.check_btn').checked){
-							obj.card_id_list.push(card_list[index].id);
+				
+				
+				const group_set_menu = drop_down_group.querySelectorAll('.drop_menu.group li');
+				
+				group_set_menu[0].onclick = () => {
+					sendGroupMailTag();					
+				}
+				
+				group_set_menu[1].onclick = () => {
+					console.log(card_list);
+					const sendFile = sendFileTag(principal);
+					container.appendChild(sendFile);
+					const fileBtn = sendFile.querySelector('.file_btn');
+					const fileList = sendFile.querySelector('.file_list');
+					const fileCloseBtn = sendFile.querySelectorAll('.file_close');
+					for(let i = 0; i < fileCloseBtn.length; i++) {
+						fileCloseBtn[i].onclick = () => {
+							sendFile.remove();
 						}
-					});
-					console.log(obj);
-					//ajax해주기
-					$.ajax({
-						type:'delete',
-						url:'/api/v1/card/list',
-						data: obj,
-						dataType:'json',
-						success:function(data){
-							if(data > 0) {
-								location.reload();
-							} else {
-								alert("실패");
+					}
+					fileBtn.onclick = () => {
+						console.log("파일유형");
+						fileList.classList.toggle('hidden');
+					}
+				}
+				
+				group_set_menu[2].onclick = () => {
+					console.log("그룹체크삭제");
+					const deleteCards = deleteCardTag(count)
+					container.appendChild(deleteCards);
+					const deleteMsg = deleteCards.querySelector('.delete_ok_text');
+					const deleteCountMsg = deleteCards.querySelector('.delete_count_text');
+					deleteMsg.classList.add('hidden');
+					deleteCountMsg.classList.remove("hidden");
+					const closeBtn = deleteCards.querySelector('.add_close_btn');
+					const deleteBtn = deleteCards.querySelector('.footer_btn button');
+					closeBtn.onclick = () => deleteCards.remove();
+					deleteBtn.onclick = () => {
+						const obj = {"card_id_list":new Array()};
+						cards.forEach((e, index) => {
+							if(e.querySelector('.check_btn').checked){
+								obj.card_id_list.push(card_list[index].id);
 							}
-						},
-						error: function (xhr, stauts) {
-						console.log(xhr);
-						console.log(stauts);
-						}
-					});
+						});
+						console.log(obj);
+						//ajax해주기
+						$.ajax({
+							type:'delete',
+							url:'/api/v1/card/list',
+							data: obj,
+							dataType:'json',
+							success:function(data){
+								if(data > 0) {
+									location.reload();
+								} else {
+									alert("실패");
+								}
+							},
+							error: function (xhr, stauts) {
+							console.log(xhr);
+							console.log(stauts);
+							}
+						});
+					}
+						
 				}
 
 				
@@ -648,10 +746,134 @@ function editCardForm(originCardData) {
 	return div;
 }
 
-function deleteCardTag() {
-	const closeModal = document.createElement('div');
-	closeModal.className ="note_modal";
-	closeModal.innerHTML = `
+function moveGroupTag(card_count,group_list) {
+	const setGroupModal = document.createElement('div');
+	setGroupModal.className= "note_modal";
+	setGroupModal.innerHTML = `
+	<div class="note_modal_content mail">
+		<div class="note_content delete">
+			<div class="add_header mail">
+				<h1>그룹 설정</h1>
+				<button class="add_close_btn">
+					<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+				</button>
+			</div>
+			<div class="add_body mail">
+				<div class="send_box">
+					<div class="mail_text">선택한 ${card_count}개의 명함을 아래의 그룹에 추가합니다.</div>
+				<div class="group_list">
+					<ul>
+						<li class="group_list_add"><button>+ 그룹 추가하기</button></li>
+					</ul>
+				</div>
+				</div>
+			</div>
+			<div class="delete_footer">
+				<div class="footer_btn mail">
+					<button class="complete_btn">완료</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	`;
+	const ul = setGroupModal.querySelector('.group_list > ul');
+	const group_list_add = setGroupModal.querySelector('.group_list_add');
+	for(let i = 0; i < group_list.length; i++) {
+		if(group_list[i].group_name == "미분류 명함") continue;
+		const li = document.createElement('li');
+		li.innerHTML = `
+			<input type="checkbox" id="check" >
+			${group_list[i].group_name}
+		`;
+		ul.insertBefore(li, group_list_add);
+	}
+	return setGroupModal;
+}
+
+function sendGroupMailTag() {
+	const mailModal = document.createElement('div');
+	mailModal.className = "note_modal";
+	mailModal.innerHTML = `
+	<div class="note_modal_content mail">
+		<div class="note_content delete">
+			<div class="add_header mail">
+				<h1>단체 메일 보내기</h1>
+				<button class="add_close_btn">
+					<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+				</button>
+			</div>
+			<div class="add_body mail">
+				<div class="send_box">
+					<div class="mail_text">아래의 이메일 주소를 복사(Ctrl + C)하여 이용하시는 이
+메일 서비스의 "받는 사람"항목에 붙여넣기(Ctrl+V)하세요.</div>
+					<input type="text" class="mail_input">
+				</div>
+			</div>
+			<div class="delete_footer">
+				<div class="footer_btn mail">
+					<button class="add_close_btn">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	`;
+	container.appendChild(mailModal);
+	const closeBtn = document.querySelectorAll('.add_close_btn');
+	for(let i = 0; i < closeBtn.length; i++) {
+		closeBtn[i].onclick = () => {
+			mailModal.remove();
+		}		
+	}
+}
+
+function sendFileTag(user_data) {
+	const sendFileModal = document.createElement('div');
+	sendFileModal.className = "note_modal";
+	sendFileModal.innerHTML = `
+	<div class="note_modal_content ">
+			<div class="note_content card">
+				<button class="close_btn file_close">
+					<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+				</button>
+				<div class="modal_header">
+					파일로 내보내기
+				</div>
+				<div class="modal_body file">
+					<div class="mail_address">
+						<p>파일을 수신할 이메일 주소</p>
+						<input type="text" class="file_mail" placeholder ="이메일 주소 입력" value =${user_data.email}>
+					</div>
+					<div class="mail_address">
+						<p>파일 유형</p>
+						<button class="file_btn">
+							<span>엑셀 파일 (.xls)</span>
+							<img src="/static/images/card_file_list.png" alt="파일 유형">
+						</button>
+						<div class="file_list hidden">
+							<ul>
+								<li>엑셀 파일 (.xls)</li>
+								<li>아웃룩 주소록용 (.csv)</li>
+								<li>휴대폰 연락처용 (.vcf)</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="modal_footer">
+					<div>
+						<button class="team_card_btn file cancel file_close">취소</button>
+						<button class="team_card_btn file confirm">전송</button>				
+					</div>
+				</div>
+			</div>
+		</div>
+	`;
+	return sendFileModal;
+}
+
+function deleteCardTag(checked_count) {
+	const deleteModal = document.createElement('div');
+	deleteModal.className ="note_modal";
+	deleteModal.innerHTML = `
 	<div class="note_modal_content delete">
 		<div class="note_content delete">
 			<div class="add_header delete">
@@ -662,8 +884,8 @@ function deleteCardTag() {
 			</div>
 			<div class="add_body delete">
 				<div class="delete_text">
-					<span>명함을 삭제하시겠습니까?<br>삭제한 후에는 복구가 되지 않습니다.</span>
-					<span></span>
+					<span class="delete_ok_text">명함을 삭제하시겠습니까?<br>삭제한 후에는 복구가 되지 않습니다.</span>
+					<span class="delete_count_text hidden">선택한 ${checked_count}개의 명함을 삭제하시겠습니까?<br>삭제한 후에는 복구가 되지 않습니다.</span>
 				</div>
 			</div>
 			<div class="delete_footer">
@@ -675,7 +897,7 @@ function deleteCardTag() {
 	</div>
 	`;
 	
-	return closeModal;
+	return deleteModal;
 	
 }
 
@@ -763,7 +985,7 @@ function groupListTag() {
 			<div class="top_right hide">
 				<button class="t_btn edit">팀 명함첩으로 복제</button>
 				<div class="t_btn_box">
-					<button class="t_btn send">그룹설정</button>
+					<button class="t_btn send group">그룹설정</button>
 					<button class="t_btn send">
 						<span class="btn_more"></span>
 					</button>
@@ -866,7 +1088,7 @@ function copyTeamCrardModal() {
 					팀 명함첩으로 복제
 				</div>
 				<div class="modal_body">
-					<ul>
+					<ul class="team_group_con">
 						<li>
 							<div class="group_name">test</div>
 							<div class="group_item">
