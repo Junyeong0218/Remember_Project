@@ -34,6 +34,10 @@ public class TeamCardDetail {
 	private int user_id;
 	private String reg_user_nickname;
 	
+	private int card_image_id;
+	private String card_image;
+	private boolean is_front;
+	
 	private int group_id;
 	private String group_name;
 	private LocalDateTime join_date;
@@ -85,5 +89,14 @@ public class TeamCardDetail {
 													   .create_date(memo_create_date)
 													   .update_date(memo_update_date)
 													   .build();
+	}
+	
+	public CardImage toCardImageEntity() {
+		return CardImage.builder()
+											.id(card_image_id)
+											.card_id(id)
+											.card_image(card_image)
+											.is_front(is_front)
+											.build();
 	}
 }

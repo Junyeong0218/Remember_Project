@@ -16,6 +16,7 @@ import com.remember.app.entity.card.AddGroup;
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.CardBelongTeamGroup;
 import com.remember.app.entity.card.CardDetail;
+import com.remember.app.entity.card.CardImage;
 import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.CardMemoDetail;
 import com.remember.app.entity.card.CardRepository;
@@ -35,6 +36,7 @@ import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
+import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 
@@ -144,6 +146,44 @@ public class CardServiceImpl implements CardService {
 				imageNames.add(fileName);
 			}
 			return imageNames;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	private String downloadProfileImageFile(MultipartFile file) {
+		try {
+			Path path = Paths.get(filePath, "profile_images");
+			File fileForPathMake = new File(path.toString());
+			
+			if(! fileForPathMake.exists()) {
+				fileForPathMake.mkdirs();
+			}
+			
+			String fileName = UUID.randomUUID().toString().replace("-", "") + "_" + file.getOriginalFilename();
+			Path imagePath = Paths.get(filePath, "profile_images/" + fileName);
+			Files.write(imagePath, file.getBytes());
+				
+			return fileName;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	private String downloadCardImageFile(MultipartFile file) {
+		try {
+			Path path = Paths.get(filePath, "card_images");
+			File fileForPathMake = new File(path.toString());
+			
+			if(! fileForPathMake.exists()) {
+				fileForPathMake.mkdirs();
+			}
+			
+			String fileName = UUID.randomUUID().toString().replace("-", "") + "_" + file.getOriginalFilename();
+			Path imagePath = Paths.get(filePath, "card_images/" + fileName);
+			Files.write(imagePath, file.getBytes());
+				
+			return fileName;
 		} catch (Exception e) {
 			return null;
 		}
@@ -280,6 +320,7 @@ public class CardServiceImpl implements CardService {
 		System.out.println(details);
 		
 		TeamCardDetailResDto dto = new TeamCardDetailResDto();
+		List<CardImage> cardImageList = new ArrayList<CardImage>();
 		List<TeamGroup> groupList = new ArrayList<TeamGroup>();
 		List<CardMemoDetail> memoList = new ArrayList<CardMemoDetail>();
 		
@@ -289,16 +330,65 @@ public class CardServiceImpl implements CardService {
 				dto.setCard(detail.toCardEntity());
 				dto.setReg_user_nickname(detail.getReg_user_nickname());
 			}
+			CardImage cardImage = detail.toCardImageEntity();
+			if(cardImage != null && ! cardImageList.contains(cardImage)) cardImageList.add(cardImage);
+			
 			TeamGroup group = detail.toTeamGroupEntity();
 			if(group != null && ! groupList.contains(group)) groupList.add(group);
 			
 			CardMemoDetail memo = detail.toMemoDetailEntity();
 			if(memo != null && ! memoList.contains(memo)) memoList.add(memo);
 		}
+		dto.setCard_images(cardImageList);
 		dto.setGroup_list(groupList);
 		dto.setMemo_list(memoList);
 		
 		return dto;
+	}
+	
+	@Override
+	public boolean updateTeamCardDetail(UpdateCardDetailReqDto updateCardDetailReqDto) {
+		Card card = updateCardDetailReqDto.toCardEntity();
+		if(updateCardDetailReqDto.getProfile_image() != null) {
+			String profile_img = downloadProfileImageFile(updateCardDetailReqDto.getProfile_image());
+			card.setProfile_img(profile_img);
+		}
+		
+		int result = cardRepository.updateTeamCard(card);
+		
+		String frontCardImageName;
+		String backCardImageName;
+		if(updateCardDetailReqDto.getFront_card_image() != null) {
+			frontCardImageName = downloadCardImageFile(updateCardDetailReqDto.getFront_card_image());
+			CardImage cardImage = CardImage.builder()
+																				   .card_id(card.getId())
+																				   .card_image(frontCardImageName)
+																				   .is_front(true)
+																				   .build();
+			Integer idWrapper = cardRepository.getTeamCardImageId(card.getId(), 1);
+			if(idWrapper == null) {
+				result += cardRepository.insertTeamCardImage(cardImage);
+			} else {
+				cardImage.setId(idWrapper.intValue());
+				result += cardRepository.updateTeamCardImage(cardImage);
+			}
+		}
+		if(updateCardDetailReqDto.getBack_card_image() != null) {
+			backCardImageName = downloadCardImageFile(updateCardDetailReqDto.getBack_card_image());
+			CardImage cardImage = CardImage.builder()
+																				   .card_id(card.getId())
+																				   .card_image(backCardImageName)
+																				   .is_front(false)
+																				   .build();
+			Integer idWrapper = cardRepository.getTeamCardImageId(card.getId(), 0);
+			if(idWrapper == null) {
+				result += cardRepository.insertTeamCardImage(cardImage);
+			} else {
+				cardImage.setId(idWrapper.intValue());
+				result += cardRepository.updateTeamCardImage(cardImage);
+			}
+		}
+		return result > 0;
 	}
 	
 	@Override

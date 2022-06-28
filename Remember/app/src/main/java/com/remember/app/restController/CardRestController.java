@@ -33,6 +33,7 @@ import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
+import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 import com.remember.app.service.CardService;
@@ -277,6 +278,14 @@ public class CardRestController {
 	@GetMapping("/team/card/{cardId}")
 	public TeamCardDetailResDto getTeamCardDetail(@PathVariable int cardId) {
 		return cardService.getTeamCardDetail(cardId);
+	}
+	
+	@PutMapping("/team/card/{cardId}")
+	public boolean updateTeamCardDetail(@PathVariable int cardId,
+																				UpdateCardDetailReqDto updateCardDetailReqDto) {
+		updateCardDetailReqDto.setId(cardId);
+		System.out.println(updateCardDetailReqDto);
+		return cardService.updateTeamCardDetail(updateCardDetailReqDto);
 	}
 	
 	@PostMapping("/team/card/{cardId}/memo")

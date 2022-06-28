@@ -20,6 +20,7 @@ import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
+import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 
@@ -84,6 +85,8 @@ public interface CardService {
 	public List<Card> getCardListInSpecificGroup(int groupId, int page);
 	
 	public TeamCardDetailResDto getTeamCardDetail(int cardId);
+	
+	public boolean updateTeamCardDetail(UpdateCardDetailReqDto updateCardDetailReqDto);
 	
 	public List<TeamUserProfile> getTeamJoinUsers(int teamId, int userId, int page);
 

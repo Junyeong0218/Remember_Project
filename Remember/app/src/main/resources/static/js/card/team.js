@@ -751,6 +751,27 @@ function updateCardBelongTeamGroup(update_card_belong) {
 	return flag;
 }
 
+function updateCardDetail(formdata) {
+	let flag = false;
+	$.ajax({
+		type: "put",
+		url: "/api/v1/card/team/card/" + selected_card_detail.card.id,
+		data : formdata,
+		encType: "multipart/form-data",
+		processData: false,
+		contentType: false,
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
 function reloadCardDetail() {
 	const cards = document.querySelector(".card_list_wrapper .card_list").children;
 	for(let i = 0; i < cards.length; i++) {
@@ -855,6 +876,108 @@ function setCardDetail() {
 	}
 	card_detail_tag = makeCardDetailTag(selected_card_detail);
 	appendTagToMainContents(card_detail_tag);
+	
+	const card_list_wrapper = main_contents.querySelector(".card_list_wrapper");
+	
+	const edit_card_button = card_detail_tag.querySelector(".edit_card");
+	edit_card_button.onclick = () => {
+		const edit_card_form = makeEditCardForm();
+		card_list_wrapper.classList.add("hidden");
+		card_detail_tag.classList.add("hidden");
+		appendTagToMainContents(edit_card_form);
+		
+		let front_card_image_file;
+		let back_card_image_file;
+		const card_image_wrapper = edit_card_form.querySelector(".card_image_wrapper");
+		const card_image_input_wrapper = edit_card_form.querySelector(".card_image_wrapper > .input_wrapper");
+		const card_image_input = card_image_input_wrapper.querySelector("input");
+		
+		let clicked_card;
+		
+		card_image_input_wrapper.onclick = () => {
+			card_image_input.click();
+		}
+		
+		card_image_input.onchange = () => {
+			const file_reader = new FileReader();
+			
+			file_reader.onloadend = (event) => {
+				if(clicked_card == "front") {
+					clicked_card = null;
+					card_image_wrapper.querySelector(".front > img").src = event.target.result;
+					front_card_image_file = card_image_input.files[0];
+				} else if(clicked_card == "back") {
+					clicked_card = null;
+					card_image_wrapper.querySelector(".back > img").src = event.target.result;
+					back_card_image_file = card_image_input.files[0];
+				} else if(front_card_image_file == null) {
+					const card_image_tag = makeCardImageTag(event.target.result, true);
+					card_image_wrapper.insertBefore(card_image_tag, card_image_input_wrapper);
+					
+					card_image_tag.querySelector(".change_image").onclick = () => {
+						clicked_card = "front";
+						card_image_input.click();
+					}
+					front_card_image_file = card_image_input.files[0];
+					card_image_input_wrapper.querySelector(".text").innerText = "뒷면 추가";
+				} else {
+					const card_image_tag = makeCardImageTag(event.target.result, false);
+					card_image_wrapper.insertBefore(card_image_tag, card_image_input_wrapper);
+					
+					card_image_tag.querySelector(".change_image").onclick = () => {
+						clicked_card = "back";
+						card_image_input.click();
+					}
+					back_card_image_file = card_image_input.files[0];
+					card_image_input_wrapper.classList.add("hidden");
+				}
+				console.log(front_card_image_file);
+				console.log(back_card_image_file);
+			}
+			
+			file_reader.readAsDataURL(card_image_input.files[0]);
+		}
+		
+		let profile_image_file;
+		const profile_image_tag = edit_card_form.querySelector(".profile_image > img");
+		const profile_image_input = edit_card_form.querySelector(".profile_image > input");
+		
+		edit_card_form.querySelector(".set_profile_image").onclick = (event) => profile_image_input.click();
+		
+		profile_image_input.onchange = () => {
+			const file_reader = new FileReader();
+			
+			file_reader.onloadend = (event) => {
+				profile_image_tag.src = event.target.result;
+				profile_image_file = profile_image_input.files[0];
+			}
+			
+			file_reader.readAsDataURL(profile_image_input.files[0]);
+		}
+		
+		edit_card_form.querySelector(".cancel_button").onclick= () => {
+			edit_card_form.remove();
+			card_list_wrapper.classList.remove("hidden");
+			card_detail_tag.classList.remove("hidden");
+		}
+		
+		edit_card_form.querySelector(".submit_button").onclick = () => {
+			const card_inputs = edit_card_form.querySelectorAll(".row input");
+			if(card_inputs[0].value == "") {
+				alert("이름은 필수로 입력해야합니다");
+				return;
+			}
+			const formdata = makeFormDataForUpdateCard(card_inputs, front_card_image_file, back_card_image_file, profile_image_file);
+			if(updateCardDetail(formdata)) {
+				edit_card_form.remove();
+				card_list_wrapper.classList.remove("hidden");
+				card_detail_tag.classList.remove("hidden");
+				reloadCardDetail();
+			} else {
+				alert("명함 수정에 실패했습니다.");
+			}
+		}
+	}
 	
 	const modal_group_wrapper = card_detail_tag.querySelector(".group_info");
 	for(let i = 0; i < selected_card_detail.group_list.length; i++) {
@@ -1055,6 +1178,19 @@ function setCardDetail() {
 			removeModal(memo_input_modal);
 		}
 	}
+}
+
+function makeFormDataForUpdateCard(inputs, front_card_image, back_card_image, profile_image) {
+	const formdata = new FormData();
+	for(let i = 0; i < inputs.length; i++) {
+		if(inputs[i].value != "") formdata.append(inputs[i].name, inputs[i].value);
+	}
+	if(front_card_image != null) formdata.append("front_card_image", front_card_image);
+	if(back_card_image != null) formdata.append("back_card_image", back_card_image);
+	if(profile_image != null) formdata.append("profile_image", profile_image);
+	if(selected_card_detail.card.profile_img != null) formdata.append("profile_img", selected_card_detail.card.profile_img);
+	
+	return formdata;
 }
 
 function makeJSONObjForUpdateBelong(add_id_list, remove_id_list) {
@@ -1470,13 +1606,14 @@ function makeCardDetailTag(card_detail) {
 		<div class="card_info">
 			<div class="card_summary">
 				<div class="profile_image">
-					<img src="${card_detail.card.profile_img == null ? '/static/images/default_profile_image.png' : '/images/profile_images/' + card_detail.card.profile_img}">
+					<img src="${card_detail.card.profile_img == null ? '/static/images/default_profile_image.png' : '/image/profile_images/' + card_detail.card.profile_img}">
 				</div>
 				<div class="texts">
 					<span class="name">${card_detail.card.name}</span>
 ${card_detail.card.department_name == null ? '' : '<span class="department_text">' + card_detail.card.department_name + '</span>'}
 ${card_detail.card.company_name == null ? '' : '<span class="company_name">' + card_detail.card.company_name + '</span>'}
 				</div>
+${card_detail.card_images.length != 0 ? '<div class="card_image"><img src="/image/card_images/' + card_detail.card_images[0].card_image + '"></div>' : ''}
 			</div>
 			<div class="card_description">
 				<div class="left">
@@ -1717,57 +1854,78 @@ function makeEditCardForm() {
 			<div class="profile_image">
 				<img src="${selected_card_detail.card.profile_img == null ? '/static/images/default_profile_image.png' : '/image/profile_images/' + selected_card_detail.card.profile_img}">
 				<button type="button" class="set_profile_image">프로필 사진 설정</button>
-				<input type="file" name="profile_image">
+				<input type="file" name="profile_image" accept="image/*">
 			</div>
-			<div class="top">
-				<div class="column">
-					<div class="row">
-						<span class="title">이름</span>
-						<input type="text" name="name" value="${selected_card_detail.card.name}">
+			<div class="details">
+				<div class="top">
+					<div class="column">
+						<div class="row">
+							<span class="title">이름</span>
+							<input type="text" name="name" value="${selected_card_detail.card.name}" placeholder="이름 입력">
+						</div>
+						<div class="row">
+							<span class="title">직책</span>
+							<input type="text" name="position_name" value="${selected_card_detail.card.position_name == null ? '' : selected_card_detail.card.position_name}" placeholder="직책 입력">
+						</div>
 					</div>
-					<div class="row">
-						<span class="title">직책</span>
-						<input type="text" name="position_name" value="${selected_card_detail.card.position_name}">
+					<div class="column">
+						<div class="row">
+							<span class="title">부서</span>
+							<input type="text" name="department_name" value="${selected_card_detail.card.department_name == null ? '' : selected_card_detail.card.department_name}" placeholder="부서명 입력">
+						</div>
+						<div class="row">
+							<span class="title">회사</span>
+							<input type="text" name="company_name" value="${selected_card_detail.card.company_name == null ? '' : selected_card_detail.card.company_name}" placeholder="회사명 입력">
+						</div>
 					</div>
 				</div>
-				<div class="column">
-					<div class="row">
-						<span class="title">부서</span>
-						<input type="text" name="department_name" value="${selected_card_detail.card.department_name}">
+				<div class="bottom">
+					<div class="column">
+						<div class="row">
+							<span class="title">이메일</span>
+							<input type="text" name="email" value="${selected_card_detail.card.email == null ? '' : selected_card_detail.card.email}" placeholder="이메일 주소 입력">
+						</div>
+						<div class="row">
+							<span class="title">휴대폰</span>
+							<input type="text" name="phone" value="${selected_card_detail.card.phone == null ? '' : selected_card_detail.card.phone}" placeholder="휴대폰 번호 입력">
+						</div>
+						<div class="row">
+							<span class="title">유선전화</span>
+							<input type="text" name="landline_phone" value="${selected_card_detail.card.landline_phone == null ? '' : selected_card_detail.card.landline_phone}" placeholder="유선전화 번호 입력">
+						</div>
+						<div class="row">
+							<span class="title">팩스</span>
+							<input type="text" name="fax" value="${selected_card_detail.card.fax == null ? '' : selected_card_detail.card.fax}" placeholder="팩스 번호 입력">
+						</div>
 					</div>
-					<div class="row">
-						<span class="title">회사</span>
-						<input type="text" name="company_name" value="${selected_card_detail.card.company_name}">
+					<div class="column">
+						<div class="row">
+							<span class="title">주소</span>
+							<input type="text" name="address" value="${selected_card_detail.card.address == null ? '' : selected_card_detail.card.address}" placeholder="주소 입력">
+							<input type="text" name="sub_address" value="${selected_card_detail.card.sub_address == null ? '' : selected_card_detail.card.sub_address}" placeholder="상세 주소 입력">
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="bottom">
-				<div class="column">
-					<div class="row">
-						<span class="title">이메일</span>
-						<input type="text" name="email" value="${selected_card_detail.card.email}">
-					</div>
-					<div class="row">
-						<span class="title">휴대폰</span>
-						<input type="text" name="phone" value="${selected_card_detail.card.phone}">
-					</div>
-					<div class="row">
-						<span class="title">유선전화</span>
-						<input type="text" name="landline_phone" value="${selected_card_detail.card.landline_phone}">
-					</div>
-					<div class="row">
-						<span class="title">팩스</span>
-						<input type="text" name="fax" value="${selected_card_detail.card.fax}">
-					</div>
-				</div>
-				<div class="column">
-					<div class="row">
-						<span class="title">주소</span>
-						<input type="text" name="address" value="${selected_card_detail.card.address}">
-						<input type="text" name="sub_address" value="${selected_card_detail.card.sub_address}">
-					</div>
-				</div>
-			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeCardImageTag(img_src, is_front) {
+	const div = document.createElement("div");
+	div.className = is_front ? "front" : "back";
+	div.innerHTML = `
+		<img src="${img_src}">
+		<div class="buttons">
+			<button type="button" class="edit_image">
+				<img src="/static/images/card_team_edit_card_image_button.png">
+				<span>이미지 편집</span>
+			</button>
+			<button type="button" class="change_image">
+				<img src="/static/images/card_team_replace_card_image_button.png">
+				<span>이미지 변경</span>
+			</button>
 		</div>
 	`;
 	return div;

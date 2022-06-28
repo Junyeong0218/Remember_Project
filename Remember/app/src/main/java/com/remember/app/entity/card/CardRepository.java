@@ -75,6 +75,14 @@ public interface CardRepository {
 	public List<Card> getCardListInSpecificGroup(int groupId, int page);
 	
 	public List<TeamCardDetail> getTeamCardDetail(int cardId);
+	
+	public int updateTeamCard(Card card);
+	
+	public Integer getTeamCardImageId(int cardId, int is_front);
+	
+	public int insertTeamCardImage(CardImage cardImage);
+	
+	public int updateTeamCardImage(CardImage cardImage);
 
 	public List<TeamUserProfile> getTeamJoinUsers(int teamId, int userId, int page);
 
