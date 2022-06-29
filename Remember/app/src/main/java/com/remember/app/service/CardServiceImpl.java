@@ -1,7 +1,6 @@
 package com.remember.app.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,12 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.remember.app.entity.card.AddGroup;
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.CardBelongTeamGroup;
+import com.remember.app.entity.card.CardDetail;
 import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.CardMemoDetail;
-import com.remember.app.entity.card.CardDetail;
 import com.remember.app.entity.card.CardRepository;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupCard;
@@ -181,10 +179,16 @@ public class CardServiceImpl implements CardService {
 	
 	@Override
 	public int addGroupUser(AddGroupReqDto addGroupReqDto) {
-		
-		AddGroup addGroup = addGroupReqDto.toAddEntity();
-		
-		return cardRepository.addUserGroup(addGroup);
+		int result = cardRepository.deleteCardsBelongGroup(addGroupReqDto);
+		if(addGroupReqDto.getGroup_id_list() == null) {
+			result += cardRepository.addCardsBelongDefaultGroup(addGroupReqDto);
+		} else {
+			for(int card_id : addGroupReqDto.getCard_id_list()) {
+				addGroupReqDto.setCardId(card_id);
+				result += cardRepository.addCardBelongGroups(addGroupReqDto);
+			}
+		}
+		return result;
 	}
 	
 	@Override

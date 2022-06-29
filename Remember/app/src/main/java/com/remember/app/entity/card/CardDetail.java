@@ -25,4 +25,7 @@ public class CardDetail {
 	private String sub_address;
 	private LocalDateTime create_date;
 	
+	private int group_id;
+	private String group_name;
+	
 }

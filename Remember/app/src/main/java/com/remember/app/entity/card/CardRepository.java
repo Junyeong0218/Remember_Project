@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.CardDeleteReqDto;
 
 @Mapper
@@ -33,7 +34,11 @@ public interface CardRepository {
 	
 	public Card getUserCard(int cardId);
 	
-	public int addUserGroup(AddGroup addGroup);
+	public int addCardBelongGroups(AddGroupReqDto addGroupReqDto);
+	
+	public int addCardsBelongDefaultGroup(AddGroupReqDto addGroupReqDto);
+	
+	public int deleteCardsBelongGroup(AddGroupReqDto addGroupReqDto);
 	
 	public List<Card> getCardSummaryList(int user_id, int page);
 	

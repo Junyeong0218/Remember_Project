@@ -517,9 +517,24 @@ header {
 	color: rgba(0,0,0,.65);
 }
 
+.info_group_set {
+	width: 18px;
+	height: 18px;
+	cursor: pointer;
+}
+
 .info_no_value{
-	font-size: 12px;
+	font-size: 14px;
 	color: #999;	
+}
+
+.group_set_img{
+	display: none;
+}
+
+
+.info_con_box:hover .group_set_img {
+	display: block;
 }
 
 .profile_memo{

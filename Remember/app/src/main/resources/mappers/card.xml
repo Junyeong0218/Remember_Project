@@ -14,12 +14,15 @@
   </select>
   
     <select id="getCardDetail" parameterType="Integer" resultType="com.remember.app.entity.card.CardDetail">
-  select
-  	*
-  from
-  	card_mst
-  where
-  	id = #{id}
+select
+	cm.*,
+	cgm.group_name
+FROM 
+	card_mst cm
+	LEFT OUTER JOIN card_belong_group cbg ON(cbg.card_id = cm.id)
+	LEFT OUTER JOIN card_group_mst cgm ON(cgm.id = cbg.group_id)
+WHERE
+	card_id = 140;
   </select>
   
   <insert id="insertCard" parameterType="com.remember.app.entity.card.Card">
@@ -165,17 +168,47 @@
   		id = #{id}
   </select>
   
-  <insert id="addUserGroup" parameterType="com.remember.app.entity.card.AddGroup">
+  <insert id="addCardBelongGroups" parameterType="com.remember.app.requestDto.AddGroupReqDto">
   	insert into
   		card_belong_group
-  	values(
-  		0,
-  		#{group_id},
-  		#{card_id},
-  		now(),
-  		now()
-  	)
+  	values
+  	<foreach collection="group_id_list" index="index" item="item" separator=",">
+	  	(
+	  		0,
+	  		#{item},
+	  		#{cardId},
+	  		now(),
+	  		now()
+	  	)
+  	</foreach>
+  	;
   </insert>
+  
+  <insert id="addCardsBelongDefaultGroup" parameterType="com.remember.app.requestDto.AddGroupReqDto">
+  	insert into
+  		card_belong_group
+  	values
+  	<foreach collection="card_id_list" index="index" item="item" separator=",">
+	  	(
+	  		0,
+	  		#{default_card_group_id},
+	  		#{item},
+	  		now()
+	  	)
+  	</foreach>
+  	;
+  </insert>
+  
+  <delete id="deleteCardsBelongGroup" parameterType="com.remember.app.requestDto.AddGroupReqDto">
+  	delete from
+  		card_belong_group
+  	where
+  		card_id in (
+  			<foreach collection="card_id_list" index="index" item="item" separator=",">
+  				#{item}
+  			</foreach>
+  		);
+  </delete>
   
   <select id="getCardSummaryList" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
   	select

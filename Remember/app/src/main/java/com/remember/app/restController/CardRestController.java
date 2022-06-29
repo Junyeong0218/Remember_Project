@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.CardBelongTeamGroup;
-import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.CardDetail;
+import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
@@ -173,13 +173,14 @@ public class CardRestController {
 	}*/
 	
 	@PutMapping("/belong")
-	public ResponseEntity<?> addUserGroup(@PathVariable int cardId,AddGroupReqDto addGroupReqDto){
+	public ResponseEntity<?> addUserGroup(AddGroupReqDto addGroupReqDto){
 		System.out.println(addGroupReqDto);
-		System.out.println(cardId);
-		int result =cardService.addGroupUser(addGroupReqDto);
+		int result = cardService.addGroupUser(addGroupReqDto);
+		System.out.println(result);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	
+
 	
 	// ------------------------------------------------------------------------------
 	// team 관련 rest methods
