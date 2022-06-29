@@ -410,5 +410,182 @@
 	font-weight: 400;
 	color: white;
 	cursor: pointer;
-	
+}
+
+.modal > .card_images {
+	display: flex;
+	flex-direction: column;
+	width: 600px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	background-color: white;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.modal > .card_images > .title,
+.modal > .confirm_delete_card > .title,
+.modal > .save_to_personal > .title {
+	position: relative;
+	padding: 15px;
+	width: 100%;
+}
+
+.modal > .card_images > .title > span,
+.modal > .confirm_delete_card > .title > span,
+.modal > .save_to_personal > .title > span {
+	font-size: 17px;
+	font-weight: 500;
+	color: rgba(0, 0, 0, 0.85);
+	line-height: 1.5;
+}
+
+.modal > .card_images > .title > button,
+.modal > .confirm_delete_card > .title > button,
+.modal > .save_to_personal > .title > button {
+	position: absolute;
+	top: 50%;
+	right: 0;
+	margin-top: -27.5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 55px;
+	height: 55px;
+	cursor: pointer;
+}
+
+.modal > .card_images > .title > button > img,
+.modal > .confirm_delete_card > .title > button > img,
+.modal > .save_to_personal > .title > button > img {
+	pointer-events: none;
+}
+
+.modal > .card_images > .card_image_wrapper {
+	padding: 15px;
+	display: flex;
+	flex-direction: column;
+	width:100%;
+}
+
+.modal > .card_images > .card_image_wrapper > .front,
+.modal > .card_images > .card_image_wrapper > .back {
+	width: 100%;
+	height: 315px;
+	overflow: hidden;
+}
+
+.modal > .card_images > .card_image_wrapper > .front {
+	margin-bottom: 10px;
+}
+
+.modal > .card_images > .card_image_wrapper > .front > img,
+.modal > .card_images > .card_image_wrapper > .back > img {
+	max-width: 100%;
+}
+
+.modal > .confirm_delete_card {
+	display: flex;
+	flex-direction: column;
+	width: 450px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	background-color: white;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.modal > .confirm_delete_card > .texts {
+	padding: 30px 15px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width:100%;
+}
+
+.modal > .confirm_delete_card > .texts > span {
+	font-size: 14px;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 1.5;
+}
+
+.modal > .confirm_delete_card > .buttons,
+.modal > .save_to_personal > .buttons {
+	padding: 0 15px 30px;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+
+.modal > .confirm_delete_card > .buttons > button,
+.modal > .save_to_personal > .buttons > button {
+	padding: 6px 12px;
+	width: 355.3px;
+	background-color:#FF3838;
+	font-size: 13px;
+	font-weight: 400;
+	color: white;
+	line-height: 1.5;
+	cursor: pointer;
+}
+
+.modal > .confirm_delete_card > .buttons > button:hover {
+	background-color: #FF1F1F; 
+}
+
+.modal > .save_to_personal {
+	display: flex;
+	flex-direction: column;
+	width: 450px;
+}
+
+.modal > .save_to_personal > .save_info {
+	padding: 15px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.modal > .save_to_personal > .save_info > span {
+	padding: 15px 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	font-size: 14px;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 1.5;
+}
+
+.modal > .save_to_personal > .save_info > span > span {
+	font: inherit;
+	font-weight: bold;
+	color: #00BD5D;
+}
+
+.modal > .save_to_personal > .save_info > .input_wrapper {
+	display: flex;
+	align-items: center;
+	align-self: center;
+	width: 355.3px;
+	height: 30px;
+	gap: 5px;
+}
+
+.modal > .save_to_personal > .save_info > .input_wrapper > input {
+	width: 16px;
+	height: 16px;
+	appearance: none;
+	background: url("/static/images/signup_unchecked_checkbox.png");
+	transition: 300ms;
+}
+
+.modal > .save_to_personal > .save_info > .input_wrapper > input:checked {
+	background: url("/static/images/signup_checked_checkbox.png");
+}
+
+.modal > .save_to_personal > .save_info > .input_wrapper > span {
+	font-size: 14px;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 1.5;
+}
+
+.modal > .save_to_personal > .buttons > button {
+	background-color: #333;
 }

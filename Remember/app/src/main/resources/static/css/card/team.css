@@ -860,13 +860,14 @@ main {
 	background: url("/static/images/card_not_max_checkbox.png");
 }
 
-.main_contents > .card_list_wrapper > .card_list_menu > .left_menu > .input_wrapper > .card_selector:checked,
+.main_contents > .card_list_wrapper > .card_list_menu > .left_menu > .input_wrapper > .card_selector.checked,
 .main_contents > .card_list_wrapper > .card_list > .card > .input_wrapper > .card_check:checked {
 	background: url("/static/images/signup_checked_checkbox.png");
 }
 
 .main_contents > .card_list_wrapper > .card_list_menu > .left_menu > .down_menu,
 .main_contents > .card_detail > .detail_header > .detail_menu > .right > .down_menu {
+	position: relative;
 	margin-left: -1px;
 	display: flex;
 	justify-content: center;
@@ -885,8 +886,59 @@ main {
     border-left: 4px solid transparent;
 }
 
+.main_contents > .card_detail > .detail_header > .detail_menu > .right > .down_menu > .detail_menu,
+.main_contents > .card_list_wrapper > .card_list_menu > .left_menu > .down_menu > .menu_list,
+.main_contents > .card_list_wrapper > .card_list > .menu_box > .more_menu_list {
+	position: absolute;
+	top: 35px;
+	right: 0;
+	display: flex;
+	flex-direction: column;
+	width: 158px;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	background-color: white;
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
+}
+
+.main_contents > .card_list_wrapper > .card_list_menu > .left_menu > .down_menu > .menu_list {
+	left: -32px;
+	z-index: 100;
+}
+
+.main_contents > .card_list_wrapper > .card_list > .menu_box > .more_menu_list {
+	z-index: 100;
+}
+
+.main_contents > .card_detail > .detail_header > .detail_menu > .right > .down_menu > .detail_menu > .row,
+.main_contents > .card_list_wrapper > .card_list_menu > .left_menu > .down_menu > .menu_list > .row,
+.main_contents > .card_list_wrapper > .card_list > .menu_box > .more_menu_list > .row {
+	padding: 10px 20px;
+	font-size: 13px;
+	font-weight: 400;
+	color: #333;
+	line-height: 1.5;
+	text-align: left;
+	cursor: pointer;
+}
+
+.main_contents > .card_list_wrapper > .card_list_menu > .left_menu > .down_menu > .menu_list > .row:last-child,
+.main_contents > .card_list_wrapper > .card_list > .menu_box > .more_menu_list > .row:last-child {
+	border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.main_contents > .card_detail > .detail_header > .detail_menu > .right > .down_menu > .detail_menu > .row:hover,
+.main_contents > .card_list_wrapper > .card_list_menu > .left_menu > .down_menu > .menu_list > .row:hover,
+.main_contents > .card_list_wrapper > .card_list > .menu_box > .more_menu_list > .row:hover {
+	background-color: #333;
+	color: white;
+}
+
 .main_contents > .card_list_wrapper > .card_list_menu > .right_menu {
 	position: relative;
+}
+
+.main_contents > .card_list_wrapper > .card_list_menu > .right_menu.hidden {
+	display: none;
 }
 
 .main_contents > .card_list_wrapper > .card_list_menu > .right_menu > .card_ordering {
@@ -920,6 +972,68 @@ main {
 	border-bottom: 1px solid #CDCDCD;
 }
 
+.main_contents > .card_list_wrapper > .card_list > .menu_box {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 62px;
+	border-bottom: solid 1px #CDCDCD;
+}
+
+.main_contents > .card_list_wrapper > .card_list > .menu_box > .select_menu_list {
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: flex;
+	align-items: center;
+	height: 32px;
+	background-color: white;
+	border: 1px solid #CDCDCD;
+	border-top: none;
+}
+
+.main_contents > .card_list_wrapper > .card_list > .menu_box > .select_menu_list > .menu {
+	padding: 6px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	border-right: 1px solid #CDCDCD;
+	font-size: 13px;
+	font-weight: 400;
+	color: rgba(0, 0, 0, 0.65);
+	cursor: pointer;
+	gap: 3px;
+}
+
+.main_contents > .card_list_wrapper > .card_list > .menu_box > .select_menu_list > .menu:last-child {
+	border: none;
+}
+
+.main_contents > .card_list_wrapper > .card_list > .menu_box > .select_menu_list > .menu * {
+	pointer-events: none;
+}
+
+.main_contents > .card_list_wrapper > .card_list > .menu_box > .select_menu_list > .menu > span {
+	font: inherit;
+}
+
+.main_contents > .card_list_wrapper > .card_list > .menu_box > .select_menu_list > .menu > .more_menu_list {
+	z-index: 100;
+}
+
+.main_contents > .card_list_wrapper > .card_list > .menu_box > .select_message {
+	margin-top: 32px;
+	width: 100%;
+	height: 30px;
+	background-color: #FEFFCE;
+	font-size: 13px;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 30px;
+	text-align: center;
+}
+
 .main_contents > .card_list_wrapper > .card_list > .upload_date {
 	padding: 5px 10px;
 	width: 100%;
@@ -928,7 +1042,11 @@ main {
 	background-color: #FCFCFD;
 	font-size: 13px;
 	color: rgba(0, 0, 0, 0.65);
-	line-height: normal;
+	line-height: 20px;
+}
+
+.main_contents > .card_list_wrapper > .card_list > .card + .upload_date {
+	border-top: 1px solid #CDCDCD;
 }
 
 .main_contents > .card_list_wrapper > .card_list > .card {
@@ -1111,6 +1229,7 @@ main {
 
 .main_contents > .card_detail > .card_info > .card_summary > .card_image > img {
 	max-width: 100%;
+	pointer-events: none;
 }
 
 .main_contents > .card_detail > .card_info > .card_description {

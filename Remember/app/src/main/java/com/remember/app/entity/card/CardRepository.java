@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
+import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
 
 @Mapper
 public interface CardRepository {
@@ -14,6 +16,10 @@ public interface CardRepository {
 	public CardDetail getCardDetail(int card_id);
 	
 	public int insertCard(Card card);
+	
+	public int insertCardImage(CardImage cardImage);
+	
+	public int insertCardMemo(CardMemo cardMemo);
 	
 	public int insertGroup(Group group);
 	
@@ -71,12 +77,24 @@ public interface CardRepository {
 	public List<TeamGroupSummary> getTeamGroupList(int cardBookId);
 	
 	public List<Card> getAllCardListInCardBook(int cardBookId, int page);
+
+	public List<Card> getAllCardListInCardBookOrderNameAsc(int cardBookId, int page);
+
+	public List<Card> getAllCardListInCardBookOrderCompanyAsc(int cardBookId, int page);
 	
 	public List<Card> getCardListInSpecificGroup(int groupId, int page);
+	
+	public List<Card> getCardListInSpecificGroupOrderNameAsc(int groupId, int page);
+	
+	public List<Card> getCardListInSpecificGroupOrderCompanyAsc(int groupId, int page);
 	
 	public List<TeamCardDetail> getTeamCardDetail(int cardId);
 	
 	public int updateTeamCard(Card card);
+	
+	public int updateTeamCardToDeleted(int cardId);
+	
+	public int deleteTeamCardAllBelongs(int cardId);
 	
 	public Integer getTeamCardImageId(int cardId, int is_front);
 	
@@ -96,6 +114,8 @@ public interface CardRepository {
 	
 	public List<CardBelongTeamGroup> getGroupBelongFlags(int cardId);
 	
+	public List<CardBelongTeamGroup> getGroupBelongFlagsForMultipleId(GetBelongFlagsReqDto getBelongFlagsReqDto);
+	
 	public int insertCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto);
 
 	public int insertCardBelongDefaultTeamGroup(int cardId, int defaultTeamGroupId);
@@ -103,5 +123,11 @@ public interface CardRepository {
 	public int deleteCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto);
 
 	public int deleteCardBelongDefaultTeamGroup(int cardId, int defaultTeamGroupId);
+	
+	public int deleteCardsBelongTeamGroups(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto);
 
+	public int insertCardsBelongDefaultTeamGroup(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto);
+	
+	public int insertCardBelongTeamGroups(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto);
+	
 }

@@ -1,6 +1,10 @@
 package com.remember.app.entity.card;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,5 +29,15 @@ public class CardBelongTeamGroup {
 	
 	private String group_name;
 	private boolean belong_flag;
+	
+	public CardBelongTeamGroupsResDto toMultipleDto() {
+		List<CardBelongTeamGroup> groupList = new ArrayList<CardBelongTeamGroup>();
+		groupList.add(this);
+		
+		return CardBelongTeamGroupsResDto.builder()
+																				   .card_id(card_id)
+																				   .team_group_list(groupList)
+																				   .build();
+	}
 	
 }

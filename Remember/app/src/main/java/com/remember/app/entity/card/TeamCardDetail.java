@@ -92,6 +92,8 @@ public class TeamCardDetail {
 	}
 	
 	public CardImage toCardImageEntity() {
+		if(card_image_id == 0) return null;
+		
 		return CardImage.builder()
 											.id(card_image_id)
 											.card_id(id)

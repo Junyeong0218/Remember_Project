@@ -35,8 +35,11 @@ import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
+import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
+import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
+import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
 import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 
@@ -305,13 +308,27 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public List<Card> getAllCardListInCardBook(int cardBookId, int page) {
-		return cardRepository.getAllCardListInCardBook(cardBookId, page * 10);
+	public List<Card> getAllCardListInCardBook(int cardBookId, int page, String card_order_flag) {
+		if(card_order_flag.equals("reg_date")) {
+			return cardRepository.getAllCardListInCardBook(cardBookId, page * 10);
+		} else if(card_order_flag.equals("name")) {
+			return cardRepository.getAllCardListInCardBookOrderNameAsc(cardBookId, page * 10);
+		} else if(card_order_flag.equals("company_name")) {
+			return cardRepository.getAllCardListInCardBookOrderCompanyAsc(cardBookId, page * 10);
+		}
+		return null;
 	}
 	
 	@Override
-	public List<Card> getCardListInSpecificGroup(int groupId, int page) {
-		return cardRepository.getCardListInSpecificGroup(groupId, page * 10);
+	public List<Card> getCardListInSpecificGroup(int groupId, int page, String card_order_flag) {
+		if(card_order_flag.equals("reg_date")) {
+			return cardRepository.getCardListInSpecificGroup(groupId, page * 10);
+		} else if(card_order_flag.equals("name")) {
+			return cardRepository.getCardListInSpecificGroupOrderNameAsc(groupId, page * 10);
+		} else if(card_order_flag.equals("company_name")) {
+			return cardRepository.getCardListInSpecificGroupOrderCompanyAsc(groupId, page * 10);
+		}
+		return null;
 	}
 	
 	@Override
@@ -392,6 +409,37 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
+	public boolean deleteTeamCard(int cardId) {
+		int result = cardRepository.deleteTeamCardAllBelongs(cardId);
+		result += cardRepository.updateTeamCardToDeleted(cardId);
+		return result > 1;
+	}
+	
+	@Override
+	public boolean insertCardFromTeamCard(int userId, int cardId, boolean memo_include_flag) {
+		TeamCardDetailResDto cardData = getTeamCardDetail(cardId);
+		Card card = cardData.getCard();
+		card.setUser_id(userId);
+		int result = cardRepository.insertCard(card);
+		
+		for(CardImage cardImage : cardData.getCard_images()) {
+			cardImage.setCard_id(card.getId());
+			result += cardRepository.insertCardImage(cardImage);
+		}
+		
+		if(memo_include_flag) {
+			for(CardMemoDetail memo : cardData.getMemo_list()) {
+				memo.setCard_id(card.getId());
+				memo.setUser_id(userId);
+				result += cardRepository.insertCardMemo(memo.toCardMemoEntity());
+			}
+		}
+		
+		System.out.println(result);
+		return result > 0;
+	}
+	
+	@Override
 	public List<TeamUserProfile> getTeamJoinUsers(int teamId, int userId, int page) {
 		return cardRepository.getTeamJoinUsers(teamId, userId, page * 10);
 	}
@@ -422,6 +470,22 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
+	public List<CardBelongTeamGroupsResDto> getGroupBelongFlagsForMultipleId(GetBelongFlagsReqDto getBelongFlagsReqDto) {
+		List<CardBelongTeamGroup> belongList = cardRepository.getGroupBelongFlagsForMultipleId(getBelongFlagsReqDto);
+		List<CardBelongTeamGroupsResDto> dtoList = new ArrayList<CardBelongTeamGroupsResDto>();
+		
+		for(CardBelongTeamGroup belong : belongList) {
+			CardBelongTeamGroupsResDto cardId = CardBelongTeamGroupsResDto.builder().card_id(belong.getCard_id()).build();
+			if(dtoList.contains(cardId)) {
+				dtoList.get(dtoList.indexOf(cardId)).getTeam_group_list().add(belong);
+			} else {
+				dtoList.add(belong.toMultipleDto());
+			}
+		}
+		return dtoList;
+	}
+	
+	@Override
 	public boolean updateCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto) {
 		int result = 0;
 		if(updateCardBelongTeamGroupReqDto.getRemove_id_list() != null) {
@@ -437,6 +501,20 @@ public class CardServiceImpl implements CardService {
 		}
 		System.out.println(result);
 		return result > 0;
+	}
+	
+	@Override
+	public boolean updateCardsBelongTeamGroup(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto) {
+		int result = cardRepository.deleteCardsBelongTeamGroups(updateCardsBelongTeamGroupReqDto);
+		if(updateCardsBelongTeamGroupReqDto.getAdd_belong_id_list() == null) {
+			result += cardRepository.insertCardsBelongDefaultTeamGroup(updateCardsBelongTeamGroupReqDto);
+		} else {
+			for(int card_id : updateCardsBelongTeamGroupReqDto.getCard_id_list()) {
+				updateCardsBelongTeamGroupReqDto.setCardId(card_id);
+				result += cardRepository.insertCardBelongTeamGroups(updateCardsBelongTeamGroupReqDto); 
+			}
+		}
+		return result > 1;
 	}
 	
 }

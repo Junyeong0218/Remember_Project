@@ -19,8 +19,11 @@ import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
+import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
+import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
+import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
 import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 
@@ -80,13 +83,17 @@ public interface CardService {
 	
 	public List<TeamGroupSummary> getTeamGroupList(int cardBookId);
 	
-	public List<Card> getAllCardListInCardBook(int cardBookId, int page);
+	public List<Card> getAllCardListInCardBook(int cardBookId, int page, String card_order_flag);
 	
-	public List<Card> getCardListInSpecificGroup(int groupId, int page);
+	public List<Card> getCardListInSpecificGroup(int groupId, int page, String card_order_flag);
 	
 	public TeamCardDetailResDto getTeamCardDetail(int cardId);
 	
 	public boolean updateTeamCardDetail(UpdateCardDetailReqDto updateCardDetailReqDto);
+	
+	public boolean deleteTeamCard(int cardId);
+	
+	public boolean insertCardFromTeamCard(int userId, int cardId, boolean memo_include_flag);
 	
 	public List<TeamUserProfile> getTeamJoinUsers(int teamId, int userId, int page);
 
@@ -100,6 +107,10 @@ public interface CardService {
 	
 	public List<CardBelongTeamGroup> getGroupBelongFlags(int cardId);
 	
+	public List<CardBelongTeamGroupsResDto> getGroupBelongFlagsForMultipleId(GetBelongFlagsReqDto getBelongFlagsReqDto);
+	
 	public boolean updateCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto);
+	
+	public boolean updateCardsBelongTeamGroup(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto);
 	
 }

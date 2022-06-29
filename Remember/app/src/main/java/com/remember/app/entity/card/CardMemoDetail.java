@@ -35,4 +35,12 @@ public class CardMemoDetail {
 		}
 		return false;
 	}
+	
+	public CardMemo toCardMemoEntity() {
+		return CardMemo.builder()
+										   .card_id(card_id)
+										   .user_id(user_id)
+										   .contents(contents)
+										   .build();
+	}
 }

@@ -48,6 +48,32 @@
 
   </insert>
   
+  <insert id="insertCardImage" parameterType="com.remember.app.entity.card.CardImage">
+	  	insert into
+	  		card_image
+	  	values(
+	  		0,
+	  		#{card_id},
+	  		#{card_image},
+	  		#{is_front},
+	  		now(),
+	  		now()
+	  	);
+  </insert>
+  
+  <insert id="insertCardMemo" parameterType="com.remember.app.entity.card.CardMemo">
+	  	insert into
+	  		card_memo
+	  	values(
+	  		0,
+	  		#{card_id},
+	  		#{user_id},
+	  		#{contents},
+	  		now(),
+	  		now()
+	  	);
+  </insert>
+  
   <update id="updateCard" parameterType="com.remember.app.entity.card.Card">
   	update
   		card_mst
@@ -421,16 +447,71 @@
 			from
 				team_group `group`
 				left outer join team_card_belong_team_group belong on(belong.team_group_id = `group`.id)
-				left outer join team_card_mst card on(card.id = belong.team_card_id)
-				left outer join team_group `group2` on(`group2`.card_book_id = 6)
+				left outer join team_card_mst card on(card.id = belong.team_card_id and deleted = false)
+				left outer join team_group `group2` on(`group2`.card_book_id = #{cardBookId})
 				left outer join team_card_belong_team_group belong2 on(belong2.team_group_id = `group2`.id and belong2.team_card_id is not null)
 			where
 				`group`.card_book_id = #{cardBookId} and
 				card.id is not null
 			group by
-				`group2`.card_book_id
+				`group2`.card_book_id,
+				card.id
 			order by
 				card.create_date desc
+			limit #{page}, 10;
+		</select>
+		
+		<select id="getAllCardListInCardBookOrderNameAsc" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+			select
+				card.id,
+				card.`name`,
+				card.company_name,
+				card.department_name,
+				card.position_name,
+				card.create_date,
+				
+				count(distinct belong2.id) as total_count
+			from
+				team_group `group`
+				left outer join team_card_belong_team_group belong on(belong.team_group_id = `group`.id)
+				left outer join team_card_mst card on(card.id = belong.team_card_id and deleted = false)
+				left outer join team_group `group2` on(`group2`.card_book_id = #{cardBookId})
+				left outer join team_card_belong_team_group belong2 on(belong2.team_group_id = `group2`.id and belong2.team_card_id is not null)
+			where
+				`group`.card_book_id = #{cardBookId} and
+				card.id is not null
+			group by
+				`group2`.card_book_id,
+				card.id
+			order by
+				card.`name` asc
+			limit #{page}, 10;
+		</select>
+		
+		<select id="getAllCardListInCardBookOrderCompanyAsc" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+			select
+				card.id,
+				card.`name`,
+				card.company_name,
+				card.department_name,
+				card.position_name,
+				card.create_date,
+				
+				count(distinct belong2.id) as total_count
+			from
+				team_group `group`
+				left outer join team_card_belong_team_group belong on(belong.team_group_id = `group`.id)
+				left outer join team_card_mst card on(card.id = belong.team_card_id and deleted = false)
+				left outer join team_group `group2` on(`group2`.card_book_id = #{cardBookId})
+				left outer join team_card_belong_team_group belong2 on(belong2.team_group_id = `group2`.id and belong2.team_card_id is not null)
+			where
+				`group`.card_book_id = #{cardBookId} and
+				card.id is not null
+			group by
+				`group2`.card_book_id,
+				card.id
+			order by
+				card.company_name asc
 			limit #{page}, 10;
 		</select>
 		
@@ -443,16 +524,72 @@
 				card.position_name,
 				card.create_date,
 				
-				count(distinct card.id) as total_count
+				count(distinct belong2.team_card_id) as total_count
 			from
 				team_group `group`
 				left outer join team_card_belong_team_group belong on(belong.team_group_id = `group`.id)
-				left outer join team_card_mst card on(card.id = belong.team_card_id)
+				left outer join team_card_mst card on(card.id = belong.team_card_id and deleted = false)
+				left outer join team_card_belong_team_group belong2 on(belong2.team_group_id = `group`.id and belong2.team_card_id is not null)
 			where
 				`group`.id = #{groupId} and
 				card.id is not null
+			group by
+				`group`.id,
+				card.id
 			order by
 				card.create_date desc
+			limit #{page}, 10;
+		</select>
+		
+		<select id="getCardListInSpecificGroupOrderNameAsc" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+			select
+				card.id,
+				card.`name`,
+				card.company_name,
+				card.department_name,
+				card.position_name,
+				card.create_date,
+				
+				count(distinct belong2.team_card_id) as total_count
+			from
+				team_group `group`
+				left outer join team_card_belong_team_group belong on(belong.team_group_id = `group`.id)
+				left outer join team_card_mst card on(card.id = belong.team_card_id and deleted = false)
+				left outer join team_card_belong_team_group belong2 on(belong2.team_group_id = `group`.id and belong2.team_card_id is not null)
+			where
+				`group`.id = #{groupId} and
+				card.id is not null
+			group by
+				`group`.id,
+				card.id
+			order by
+				card.`name` asc
+			limit #{page}, 10;
+		</select>
+		
+		<select id="getCardListInSpecificGroupOrderCompanyAsc" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+			select
+				card.id,
+				card.`name`,
+				card.company_name,
+				card.department_name,
+				card.position_name,
+				card.create_date,
+				
+				count(distinct belong2.team_card_id) as total_count
+			from
+				team_group `group`
+				left outer join team_card_belong_team_group belong on(belong.team_group_id = `group`.id)
+				left outer join team_card_mst card on(card.id = belong.team_card_id and deleted = false)
+				left outer join team_card_belong_team_group belong2 on(belong2.team_group_id = `group`.id and belong2.team_card_id is not null)
+			where
+				`group`.id = #{groupId} and
+				card.id is not null
+			group by
+				`group`.id,
+				card.id
+			order by
+				card.company_name asc
 			limit #{page}, 10;
 		</select>
 		
@@ -505,6 +642,23 @@
 			where
 				id = #{id};
 		</update>
+		
+		<update id="updateTeamCardToDeleted" parameterType="Integer">
+			update
+				team_card_mst
+			set
+				deleted = true,
+				deleted_date = now()
+			where
+				id = #{cardId};
+		</update>
+		
+		<delete id="deleteTeamCardAllBelongs" parameterType="Integer">
+			delete from
+				team_card_belong_team_group
+			where
+				team_card_id = #{cardId};
+		</delete>
 		
 		<select id="getTeamCardImageId" parameterType="Integer" resultType="Integer">
 			select
@@ -621,6 +775,37 @@
 				`group2`.create_date desc;
 		</select>
 		
+		<select id="getGroupBelongFlagsForMultipleId" parameterType="com.remember.app.requestDto.GetBelongFlagsReqDto" resultType="com.remember.app.entity.card.CardBelongTeamGroup">
+			select
+				belong.team_card_id as card_id,
+				`group2`.id as team_group_id,
+				`group2`.group_name,
+				
+				if(belong2.team_card_id in(
+				<foreach collection="card_id_list" item="item" index="index" separator=",">
+					#{item}
+				</foreach>
+				), true, false) as belong_flag
+			from
+				team_card_belong_team_group belong
+				left outer join team_group `group` on(`group`.id = belong.team_group_id)
+				left outer join team_card_book book on(book.id = `group`.card_book_id)
+				left outer join team_group `group2` on(`group2`.card_book_id = book.id)
+				left outer join team_card_belong_team_group belong2 on(belong2.team_group_id = `group2`.id)
+			where
+				belong.team_card_id in(
+				<foreach collection="card_id_list" item="item" index="index" separator=",">
+					#{item}
+				</foreach>
+				)
+			group by
+				belong.team_card_id,
+				`group2`.id
+			order by
+				belong.team_card_id asc,
+				`group2`.create_date desc;
+		</select>
+		
 		<insert id="insertCardBelongTeamGroup" parameterType="com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto">
 			insert into
 				team_card_belong_team_group
@@ -668,5 +853,48 @@
 				team_card_id = #{cardId} and
 				team_group_id = #{defaultTeamGroupId};
 		</delete>
+		
+		<delete id="deleteCardsBelongTeamGroups" parameterType="com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto">
+			delete from
+				team_card_belong_team_group
+			where
+				team_card_id in(
+				<foreach collection="card_id_list" item="item" index="index" separator=",">
+					#{item}
+				</foreach>
+				);
+		</delete>
+		
+		<insert id="insertCardsBelongDefaultTeamGroup" parameterType="com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto">
+			insert into
+				team_card_belong_team_group
+			values
+			<foreach collection="card_id_list" item="item" index="index" separator=",">
+				(
+					0,
+					#{item},
+					#{default_group_id},
+					now(),
+					now()
+				)
+			</foreach>
+			;
+		</insert>
+		
+		<insert id="insertCardBelongTeamGroups" parameterType="com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto">
+			insert into
+				team_card_belong_team_group
+			values
+			<foreach collection="add_belong_id_list" item="item" index="index" separator=",">
+				(
+					0,
+					#{cardId},
+					#{item},
+					now(),
+					now()
+				)
+			</foreach>
+			;
+		</insert>
 		
   </mapper>

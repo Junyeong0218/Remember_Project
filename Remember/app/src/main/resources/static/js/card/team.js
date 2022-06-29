@@ -30,6 +30,12 @@ let selected_card_detail;
 
 let page = 0;
 
+let whole_button_clicked_flag = false;
+
+let page_check_flag = "current";
+
+let card_order_flag = "reg_date";
+
 main();
 
 function main() {
@@ -54,6 +60,7 @@ function main() {
 }
 
 whole_card_button.onclick = () => {
+	whole_button_clicked_flag = true;
 	card_list = loadAllCardList();
 	console.log(card_list);
 	setCardList();
@@ -427,7 +434,8 @@ function loadAllCardList() {
 		type: "get",
 		url: "/api/v1/card/team/book/" + selected_card_book.id + "/card/list",
 		async: false,
-		data: {"page":page},
+		data: {"page":page,
+					 "card_order_flag":card_order_flag},
 		dataType: "json",
 		success: function (data) {
 			console.log(data);
@@ -447,7 +455,8 @@ function loadSpecificGroupCardList() {
 		type: "get",
 		url: "/api/v1/card/team/group/" + selected_group.id + "/card/list",
 		async: false,
-		data: {"page":page},
+		data: {"page":page,
+					 "card_order_flag":card_order_flag},
 		dataType: "json",
 		success: function (data) {
 			console.log(data);
@@ -471,6 +480,7 @@ function setListPager(total_count) {
 		else {
 			pager_tags[i].classList.add("current");
 			pager_tags[i].innerText = min_page;
+			pager_tags.onclick = () => page++;
 		}
 		min_page++;
 	}
@@ -731,6 +741,25 @@ function getGroupBelongFlags(card_id) {
 	return group_belong_flags;
 }
 
+function getGroupBelongFlagsForMultipleId(card_id_list) {
+	let group_belong_flags;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/team/cards/belong",
+		async: false,
+		data: {"card_id_list":card_id_list},
+		dataType: "json",
+		success: function (data) {
+			group_belong_flags = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return group_belong_flags;
+}
+
 function updateCardBelongTeamGroup(update_card_belong) {
 	let flag = false;
 	$.ajax({
@@ -751,6 +780,25 @@ function updateCardBelongTeamGroup(update_card_belong) {
 	return flag;
 }
 
+function updateCardsBelongTeamGroup(update_cards_belong_data) {
+	let flag = false;
+	$.ajax({
+		type: "put",
+		url: "/api/v1/card/team/cards/belong",
+		async: false,
+		data: update_cards_belong_data,
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			consoe.log(xhr);
+			consoe.log(status);
+		}
+	});
+	return flag;
+}
+
 function updateCardDetail(formdata) {
 	let flag = false;
 	$.ajax({
@@ -760,6 +808,44 @@ function updateCardDetail(formdata) {
 		encType: "multipart/form-data",
 		processData: false,
 		contentType: false,
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function deleteCard() {
+	let flag = false;
+	$.ajax({
+		type: "delete",
+		url: "/api/v1/card/team/card/" + selected_card_detail.card.id,
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			console.log(data);
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function saveTeamCardToPersonalEach(memo_include_flag) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/card/team/card/" + selected_card_detail.card.id + "/to-personal",
+		async: false,
+		data: {"memo_include_flag":memo_include_flag},
 		dataType: "json",
 		success: function (data) {
 			flag = data;
@@ -836,6 +922,7 @@ function setGroupList() {
 			page = 0;
 			selected_group = group_list[i];
 			console.log(selected_group);
+			whole_button_clicked_flag = false;
 			card_list = loadSpecificGroupCardList();
 			setCardList();
 		}
@@ -851,18 +938,344 @@ function setCardList() {
 		replaceTagInMainContents(card_list_wrapper_tag);
 		setListPager(card_list[0].total_count);
 		
+		card_list_wrapper_tag.querySelectorAll(".pager > .page").forEach(e => {
+			if(! e.className.includes("current") && ! e.className.includes("blank")) {
+				e.onclick = () => {
+					page++;
+					card_list = whole_button_clicked_flag ? loadAllCardList() : loadSpecificGroupCardList();
+					setCardList();
+				}
+			}
+		});
+		
 		const card_list_tag = card_list_wrapper_tag.querySelector(".card_list");
+		let prev_upload_date;
+		let prev_first_character;
 		for(let i = 0; i < card_list.length; i++) {
+			if(card_order_flag == "reg_date") {
+				const upload_date = makeCardSummaryUploadDateText(card_list[i].create_date);
+				if(prev_upload_date != upload_date) {
+					const upload_date_tag = makeCardUploadDataTag(upload_date);
+					card_list_tag.appendChild(upload_date_tag);
+					prev_upload_date = upload_date;
+				}
+			} else if(card_order_flag == "name") {
+				const first_character = makeCardSummaryCharacterText(card_list[i].name);
+				if(prev_first_character != first_character) {
+					const upload_date_tag = makeCardUploadDataTag(first_character); 
+					card_list_tag.appendChild(upload_date_tag);
+					prev_first_character = first_character;
+				}
+			} else if(card_order_flag == "company_name") {
+				const first_character = makeCardSummaryCharacterText(card_list[i].company);
+				if(prev_first_character != first_character) {
+					const upload_date_tag = makeCardUploadDataTag(first_character); 
+					card_list_tag.appendChild(upload_date_tag);
+					prev_first_character = first_character;
+				}
+			}
 			const card_tag = makeCardTag(card_list[i]);
 			card_list_tag.appendChild(card_tag);
-			selected_card = card_list[i];
-			addClassClickedToCard(i);
 			
 			card_tag.onclick = () => {
+				selected_card = card_list[i];
+				addClassClickedToCard(i);
 				selected_card_detail = loadCardDetail();
 				setCardDetail();
 			}
 		}
+		
+		const all_checkbox = card_list_wrapper_tag.querySelector(".card_selector");
+		const cards = card_list_wrapper_tag.querySelectorAll(".card_list .card");
+		const each_card_checkboxes = card_list_wrapper_tag.querySelectorAll(".card_list .card_check");
+		const right_menu = card_list_wrapper_tag.querySelector(".right_menu");
+		const card_ordering = card_list_wrapper_tag.querySelector(".card_ordering");
+		
+		card_ordering.onchange = () => {
+			card_order_flag = card_ordering.options[card_ordering.selectedIndex].value;
+			page = 0;
+			card_list = whole_button_clicked_flag ? loadAllCardList() : loadSpecificGroupCardList();
+			setCardList();
+		}
+		
+		all_checkbox.onclick = (event) => {
+			// 현재 페이지 모든 명함 선택
+			event.preventDefault();
+			let menu_box_tag = card_list_tag.querySelector(".menu_box");
+			if(page_check_flag == null) {
+				if(menu_box_tag != null) {
+					menu_box_tag.remove();
+				}
+				all_checkbox.classList.remove("not_max");
+				all_checkbox.classList.remove("checked");
+				all_checkbox.checked = false;
+				each_card_checkboxes.forEach((e, index) => {
+					e.checked = all_checkbox.checked;
+					cards[index].classList.remove("selected");
+				});
+				page_check_flag = "current";
+				right_menu.classList.remove("hidden");
+				
+			} else if(page_check_flag == "current") {
+				if(menu_box_tag != null) {
+					menu_box_tag.remove();
+				}
+				const select_message = makeSelectMessage(each_card_checkboxes.length);
+				menu_box_tag = makeMenuBoxTag(select_message);
+				card_list_tag.insertBefore(menu_box_tag, card_list_tag.children[0]);
+				
+				all_checkbox.classList.remove("not_max");
+				all_checkbox.classList.add("checked");
+				all_checkbox.checked = true;
+				each_card_checkboxes.forEach((e, index) => {
+					e.checked = all_checkbox.checked;
+					cards[index].classList.add("selected");
+				});
+				page_check_flag = null;
+				right_menu.classList.add("hidden");
+				
+			} else if(page_check_flag == "not_max") {
+				if(menu_box_tag != null) {
+					menu_box_tag.remove();
+				}
+				
+				let selected_count = 0;
+				each_card_checkboxes.forEach((e, index) => {
+					if(e.checked) {
+						cards[index].classList.add("selected");
+						selected_count++;
+					} 
+					else cards[index].classList.remove("selected");
+				});
+				
+				const select_message = makeSelectMessage(selected_count);
+				
+				menu_box_tag = makeMenuBoxTag(select_message);
+				card_list_tag.insertBefore(menu_box_tag, card_list_tag.children[0]);
+				
+				all_checkbox.classList.add("not_max");
+				all_checkbox.classList.remove("checked");
+				page_check_flag = null;
+				right_menu.classList.add("hidden");
+				
+			} else if(page_check_flag == "whole") {
+				if(menu_box_tag != null) {
+					menu_box_tag.remove();
+				}
+				
+				all_checkbox.classList.remove("not_max");
+				all_checkbox.classList.add("checked");
+				all_checkbox.checked = true;
+				each_card_checkboxes.forEach((e, index) => {
+					e.checked = all_checkbox.checked
+					cards[index].classList.add("selected");
+				});
+				
+				const select_message = makeSelectMessage(selected_card_book.card_count);
+				menu_box_tag = makeMenuBoxTag(select_message);
+				card_list_tag.insertBefore(menu_box_tag, card_list_tag.children[0]);
+				right_menu.classList.add("hidden");
+			} else if(page_check_flag == "whole_after") {
+				let menu_box_tag = card_list_tag.querySelector(".menu_box");
+				if(menu_box_tag != null) {
+					menu_box_tag.remove();
+				}
+				
+				all_checkbox.classList.remove("not_max");
+				all_checkbox.classList.add("checked");
+
+				let not_selected_count = 0;
+				each_card_checkboxes.forEach((e, index) => {
+					if(e.checked) {
+						cards[index].classList.add("selected");
+					} else {
+						cards[index].classList.remove("selected");
+						not_selected_count++;
+					} 
+				});
+				
+				const select_message = makeSelectMessage(selected_card_book.card_count - not_selected_count);
+				menu_box_tag = makeMenuBoxTag(select_message);
+				card_list_tag.insertBefore(menu_box_tag, card_list_tag.children[0]);
+				right_menu.classList.add("hidden");
+			}
+			
+			if(menu_box_tag != null) {
+				menu_box_tag.querySelector("#set_group").onclick = () => {
+					const selected_id_list = new Array();
+					each_card_checkboxes.forEach((e, index) => {
+						if(e.checked) {
+							selected_id_list.push(card_list[index].id);
+						}
+					});
+					console.log(selected_id_list);
+					let group_belong_flags = getGroupBelongFlagsForMultipleId(selected_id_list);
+					const change_group_modal = makeChangeGroupModal(each_card_checkboxes.length);
+					const group_list_tag = change_group_modal.querySelector(".group_list");
+					const insert_group_form = change_group_modal.querySelector(".insert_group_form");
+					const add_new_group_in_modal = change_group_modal.querySelector(".add_new_group");
+					const new_group_name_input = insert_group_form.querySelector("input");
+					appendModalToContainer(change_group_modal);
+					for(let i = 0; i < group_belong_flags[0].team_group_list.length; i++) {
+						if(group_belong_flags[0].team_group_list[i].group_name == "미분류") break;
+						let false_count = 0;
+						group_belong_flags.forEach(e => {
+							if(e.team_group_list[i].belong_flag == false) false_count++;
+						});
+						
+						const group_tag = makeGroupTagForMultipleModal(false_count == 0, group_belong_flags[0].team_group_list[i].group_name);
+						group_list_tag.insertBefore(group_tag, add_new_group_in_modal);
+						
+						group_tag.onclick = () => group_tag.querySelector("input").click();
+					}
+					
+					console.log(group_belong_flags);
+					change_group_modal.querySelector(".close_modal").onclick = () => removeModal(change_group_modal);
+					
+					add_new_group_in_modal.onclick = () => {
+						add_new_group_in_modal.classList.add("hidden");
+						insert_group_form.classList.remove("hidden");
+					}
+					
+					insert_group_form.querySelector(".confirm").onclick = () => {
+						if(new_group_name_input.value == "") {
+							alert("그룹명을 확인해주세요.");
+						} else if(new_group_name_input.value == "미분류") {
+							alert("해당 그룹명은 사용할 수 없습니다.");
+						} else {
+							// insert new group
+							if(insertGroup(new_group_name_input.value)) {
+								group_list_tag.querySelectorAll(".group").forEach(e => e.remove());
+								group_belong_flags = getGroupBelongFlagsForMultipleId(selected_id_list);
+								for(let i = 0; i < group_belong_flags[0].team_group_list.length; i++) {
+									if(group_belong_flags[0].team_group_list[i].group_name == "미분류") return;
+									let false_count = 0;
+									group_belong_flags.forEach(e => {
+										if(e.team_group_list[i].belong_flag == false) false_count++;
+									});
+									
+									const group_tag = makeGroupTagForMultipleModal(false_count == 0, group_belong_flags[0].team_group_list[i].group_name);
+									group_list_tag.insertBefore(group_tag, add_new_group_in_modal);
+									
+									group_tag.onclick = () => group_tag.querySelector("input").click();
+								}
+								new_group_name_input.value = "";
+								add_new_group_in_modal.classList.remove("hidden");
+								insert_group_form.classList.add("hidden");
+								card_book_wrapper.querySelectorAll(".card_book").forEach((e, index) => {
+									if(card_book_list[index].id == selected_card_book.id) {
+										e.click();
+									}
+								});
+							} else {
+								alert("그룹 인서트 실패");
+							}
+						}
+					}
+					
+					insert_group_form.querySelector(".cancel").onclick = () => {
+						new_group_name_input.value = "";
+						add_new_group_in_modal.classList.remove("hidden");
+						insert_group_form.classList.add("hidden");
+					}
+					
+					change_group_modal.querySelector(".set_group_button").onclick = () => {
+						const add_belong_id_list = new Array();
+						change_group_modal.querySelectorAll(".group_list .group_selector").forEach((e, index) => {
+							if(e.checked) {
+								add_belong_id_list.push(group_belong_flags[0].team_group_list[index].team_group_id);
+							}
+						});
+						console.log(add_belong_id_list);
+						
+						const data = {"card_id_list":selected_id_list,
+												   "add_belong_id_list":add_belong_id_list,
+												   "default_group_id":group_belong_flags[0].team_group_list[group_belong_flags[0].team_group_list.length - 1].team_group_id};
+												   
+						if(updateCardsBelongTeamGroup(data)) {
+							location.reload();
+						} else {
+							alert("그룹 소속 인서트 실패");
+						}
+					}
+				}
+			
+				const more_menus = menu_box_tag.querySelector("#more_menus");
+				more_menus.onclick = () => {
+					let more_menu_list = menu_box_tag.querySelector(".more_menu_list");
+					if(more_menu_list == null) {
+						more_menu_list = makeMoreMenuListTag();
+						menu_box_tag.appendChild(more_menu_list);
+						
+						more_menu_list.querySelector("#delete_cards").onclick = () => {
+							// 선택 카드 삭제
+						}
+						
+						more_menu_list.querySelector("#save_to_personal").onclick = () => {
+							// 선택 카드 내 명함첩에 저장
+						}
+						
+						more_menu_list.querySelector("#get_address_list").onclick = () => {
+							// 선택 카드 이메일 리스트 모달
+						}
+					} else {
+						more_menu_list.remove();
+					}
+				}
+			}
+		}
+		
+		each_card_checkboxes.forEach((e, index) => {
+			// 각 명함 체크
+			e.onclick = () => {
+				let checked_count = 0;
+				each_card_checkboxes.forEach(e1 => {
+					if(e1.checked) checked_count++;
+				});
+				
+				if(checked_count == 0) {
+					page_check_flag = null;
+				} else if(page_check_flag == "whole") {
+					page_check_flag = "whole_after";
+				} else if(checked_count < each_card_checkboxes.length) {
+					page_check_flag = "not_max";
+				} else {
+					page_check_flag = "current";
+				}
+				all_checkbox.click();
+			}
+		});
+		
+		const down_menu = card_list_wrapper_tag.querySelector(".down_menu");
+		down_menu.onclick = (event) => {
+			let card_list_menu = down_menu.querySelector(".menu_list");
+			if(card_list_menu == null) {
+				card_list_menu = makeCardListMenuTag();
+				down_menu.appendChild(card_list_menu);
+				
+				card_list_menu.querySelector("#current_page_selector").onclick = () => {
+					// 현재 페이지 선택
+					page_check_flag = "current";
+					all_checkbox.click();
+				}
+				
+				card_list_menu.querySelector("#whole_page_selector").onclick = () => {
+					// 모든 페이지 선택
+					page_check_flag = "whole";
+					all_checkbox.click();
+				}
+				
+				card_list_menu.querySelector("#select_cancel").onclick = () => {
+					// 체크박스 모두 해제
+					console.log("asdf");
+					page_check_flag = null;
+					all_checkbox.click();
+				}
+			} else {
+				card_list_menu.remove();
+			}
+		}
+		
 		if(card_list.length > 0) {
 			card_list_tag.querySelectorAll(".card")[0].click();
 		}
@@ -879,6 +1292,70 @@ function setCardDetail() {
 	
 	const card_list_wrapper = main_contents.querySelector(".card_list_wrapper");
 	
+	const card_image = card_detail_tag.querySelector(".card_summary > .card_image");
+	if(card_image != null) {
+		card_image.onclick = () => {
+			const show_card_images_modal = makeShowAllCardImageModal(selected_card_detail.card_images);
+			appendModalToContainer(show_card_images_modal);
+			
+			show_card_images_modal.querySelector(".close_modal").onclick = () => removeModal(show_card_images_modal);
+		}
+	}
+	
+	card_detail_tag.querySelector(".pass_card").onclick = () => {
+		// 공유 링크 모달
+	}
+	
+	const down_menu = card_detail_tag.querySelector(".down_menu");
+	down_menu.onclick = (event) => {
+		// detail menu tag toggle
+		let menu_list = down_menu.querySelector(".detail_menu");
+		if(menu_list == null) {
+			menu_list = makeCardDetailMenuTag();
+			down_menu.appendChild(menu_list);
+			
+			menu_list.querySelector("#report_typo").onclick = () => {
+				// 입력오타 신고 모달
+			}
+			
+			menu_list.querySelector("#save_to_personal").onclick = () => {
+				// 내 명함첩에 저장 모달
+				const save_to_personal_modal = makeSaveToPersonalModal(1);
+				appendModalToContainer(save_to_personal_modal);
+				const memo_include_input = save_to_personal_modal.querySelector("input[name='include_memo']");
+				
+				save_to_personal_modal.querySelector(".close_modal").onclick = () => removeModal(save_to_personal_modal);
+				
+				save_to_personal_modal.querySelector(".save_button").onclick = () => {
+					if(saveTeamCardToPersonalEach(memo_include_input.value)) {
+						alert("내 명함첩에 저장 완료");
+						removeModal(save_to_personal_modal);
+					} else {
+						alert("내 명함첩에 저장 실패");
+					}
+				}
+			}
+			
+			menu_list.querySelector("#delete_card").onclick = () => {
+				// 명함 삭제 확인 모달
+				const delete_confirm_modal = makeDeleteCardConfirmModal();
+				appendModalToContainer(delete_confirm_modal);
+				
+				delete_confirm_modal.querySelector(".close_modal").onclick = () => removeModal(delete_confirm_modal);
+				
+				delete_confirm_modal.querySelector(".confirm").onclick = () => {
+					if(deleteCard()) {
+						location.reload();
+					} else {
+						alert("명함 삭제에 실패했습니다.");
+					}
+				}
+			}
+		} else if(event.target.className == "down_menu") {
+			menu_list.remove();
+		}
+	}
+	
 	const edit_card_button = card_detail_tag.querySelector(".edit_card");
 	edit_card_button.onclick = () => {
 		const edit_card_form = makeEditCardForm();
@@ -891,8 +1368,27 @@ function setCardDetail() {
 		const card_image_wrapper = edit_card_form.querySelector(".card_image_wrapper");
 		const card_image_input_wrapper = edit_card_form.querySelector(".card_image_wrapper > .input_wrapper");
 		const card_image_input = card_image_input_wrapper.querySelector("input");
-		
+
 		let clicked_card;
+
+		if(selected_card_detail.card_images.length > 0) {
+			const front = makeCardImageTag(selected_card_detail.card_images[0].card_image, true, true);
+			card_image_wrapper.insertBefore(front, card_image_input_wrapper);
+			front.querySelector(".change_image").onclick = () => {
+				clicked_card = "front";
+				card_image_input.click();
+				card_image_input_wrapper.querySelector(".text").innerText = "뒷면 추가";
+			}
+			if(selected_card_detail.card_images.length > 1) {
+				const back = makeCardImageTag(selected_card_detail.card_images[1].card_image, false, true);
+				card_image_wrapper.insertBefore(back, card_image_input_wrapper);
+				back.querySelector(".change_image").onclick = () => {
+					clicked_card = "back";
+					card_image_input.click();
+				}
+				card_image_input_wrapper.classList.add("hidden");
+			}
+		}
 		
 		card_image_input_wrapper.onclick = () => {
 			card_image_input.click();
@@ -911,7 +1407,7 @@ function setCardDetail() {
 					card_image_wrapper.querySelector(".back > img").src = event.target.result;
 					back_card_image_file = card_image_input.files[0];
 				} else if(front_card_image_file == null) {
-					const card_image_tag = makeCardImageTag(event.target.result, true);
+					const card_image_tag = makeCardImageTag(event.target.result, true, false);
 					card_image_wrapper.insertBefore(card_image_tag, card_image_input_wrapper);
 					
 					card_image_tag.querySelector(".change_image").onclick = () => {
@@ -921,7 +1417,7 @@ function setCardDetail() {
 					front_card_image_file = card_image_input.files[0];
 					card_image_input_wrapper.querySelector(".text").innerText = "뒷면 추가";
 				} else {
-					const card_image_tag = makeCardImageTag(event.target.result, false);
+					const card_image_tag = makeCardImageTag(event.target.result, false, false);
 					card_image_wrapper.insertBefore(card_image_tag, card_image_input_wrapper);
 					
 					card_image_tag.querySelector(".change_image").onclick = () => {
@@ -942,7 +1438,7 @@ function setCardDetail() {
 		const profile_image_tag = edit_card_form.querySelector(".profile_image > img");
 		const profile_image_input = edit_card_form.querySelector(".profile_image > input");
 		
-		edit_card_form.querySelector(".set_profile_image").onclick = (event) => profile_image_input.click();
+		edit_card_form.querySelector(".set_profile_image").onclick = () => profile_image_input.click();
 		
 		profile_image_input.onchange = () => {
 			const file_reader = new FileReader();
@@ -1001,9 +1497,7 @@ function setCardDetail() {
 			}
 			appendModalToContainer(change_group_modal);
 			
-			change_group_modal.querySelector(".close_modal").onclick = () => {
-				removeModal(change_group_modal);
-			}
+			change_group_modal.querySelector(".close_modal").onclick = () => removeModal(change_group_modal);
 			
 			add_new_group_in_modal.onclick = () => {
 				add_new_group_in_modal.classList.add("hidden");
@@ -1210,6 +1704,72 @@ function pickTeamOrderByCreateDate(team_list) {
 	return team_list.sort((a, b) => new Date(b.create_date) - new Date(a.create_date))[0];
 }
 
+function makeCardSummaryUploadDateText(create_date) {
+	const date = new Date(create_date);
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+	
+	return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function makeCardSummaryCharacterText(name) {
+	if(name == null) return "";
+	const char = name.charCodeAt(0);
+	switch(char) {
+		case 48: return "0";
+		case 49: return "1";
+		case 50: return "2";
+		case 51: return "3";
+		case 52: return "4";
+		case 53: return "5";
+		case 54: return "6";
+		case 55: return "7";
+		case 56: return "8";
+		case 57: return "9";
+		case 97: case 65: return "A";
+		case 98: case 66: return "B";
+		case 99: case 67: return "C";
+		case 100: case 68: return "D";
+		case 101: case 69: return "E";
+		case 102: case 70: return "F";
+		case 103: case 71: return "G";
+		case 104: case 72: return "H";
+		case 105: case 73: return "I";
+		case 106: case 74: return "J";
+		case 107: case 75: return "K";
+		case 108: case 76: return "L";
+		case 109: case 77: return "M";
+		case 110: case 78: return "N";
+		case 111: case 79: return "O";
+		case 112: case 80: return "P";
+		case 113: case 81: return "Q";
+		case 114: case 82: return "R";
+		case 115: case 83: return "S";
+		case 116: case 84: return "T";
+		case 117: case 85: return "U";
+		case 118: case 86: return "V";
+		case 119: case 87: return "W";
+		case 120: case 88: return "X";
+		case 121: case 88: return "Y";
+		case 122: case 88: return "Z";
+	}
+	if(char == 12593 || (char > 44031 && char < 45208)) return "ㄱ";
+	if(char == 12596 || (char > 45207 && char < 45796)) return "ㄴ";
+	if(char == 12599 || (char > 45795 && char < 46972)) return "ㄷ";
+	if(char == 12601 || (char > 46971 && char < 47560)) return "ㄹ";
+	if(char == 12609 || (char > 47559 && char < 48418)) return "ㅁ";
+	if(char == 12610 || (char > 48417 && char < 49324)) return "ㅂ";
+	if(char == 12613 || (char > 49323 && char < 50500)) return "ㅅ";
+	if(char == 12615 || (char > 50499 && char < 51088)) return "ㅇ";
+	if(char == 12616 || (char > 51087 && char < 52264)) return "ㅈ";
+	if(char == 12618 || (char > 52263 && char < 52852)) return "ㅊ";
+	if(char == 12619 || (char > 52851 && char < 53440)) return "ㅋ";
+	if(char == 12620 || (char > 53439 && char < 54028)) return "ㅌ";
+	if(char == 12621 || (char > 54027 && char < 54616)) return "ㅍ";
+	if(char == 12622 || (char > 54615 && char < 55204)) return "ㅎ";
+	return "";
+}
+
 function makeRegDateText(create_date) {
 	const date = new Date(create_date);
 	const month = date.getMonth() + 1;
@@ -1238,6 +1798,16 @@ function makeAddressText(address, sub_address) {
 
 function makePhoneNumberText(phone) {
 	return `${phone.substring(0, 3)}-${phone.substring(3, 7)}-${phone.substring(7, 11)}`;
+}
+
+function makeSelectMessage(selected_card_count) {
+	if(page_check_flag == "current") {
+		return `이 페이지의 명함 ${selected_card_count}장이 모두 선택되었습니다.`;
+	} else if(page_check_flag == "not_max") {
+		return `명함 ${selected_card_count}장이 선택되었습니다.`;
+	} else if(page_check_flag == "whole" || page_check_flag == "whole_after") {
+		return `전체 페이지의 명함 ${selected_card_count}장이 모두 선택되었습니다.`;
+	}
 }
 
 function appendModalToContainer(tag) {
@@ -1530,6 +2100,13 @@ ${user.role == "ADMIN" ? '<span class="admin">관리자</span>' : ''}
 	return div;
 }
 
+function makeCardUploadDataTag(upload_date) {
+	const div = document.createElement("div");
+	div.className = "upload_date";
+	div.innerHTML = `${upload_date}`;
+	return div;
+}
+
 function makeCardTag(card) {
 	const div = document.createElement("div");
 	div.className = "card";
@@ -1561,9 +2138,9 @@ function makeCardListTag() {
 			</div>
 			<div class="right_menu">
 				<select class="card_ordering" name="order">
-					<option value="reg_date" selected>등록일순</option>
-					<option value="name">이름순</option>
-					<option value="company_name">회사명순</option>
+					<option value="reg_date" ${card_order_flag == 'reg_date' ? 'selected' : ''}>등록일순</option>
+					<option value="name" ${card_order_flag == 'name' ? 'selected' : ''}>이름순</option>
+					<option value="company_name" ${card_order_flag == 'company_name' ? 'selected' : ''}>회사명순</option>
 				</select>
 			</div>
 		</div>
@@ -1912,11 +2489,11 @@ function makeEditCardForm() {
 	return div;
 }
 
-function makeCardImageTag(img_src, is_front) {
+function makeCardImageTag(img_src, is_front, is_origin) {
 	const div = document.createElement("div");
 	div.className = is_front ? "front" : "back";
 	div.innerHTML = `
-		<img src="${img_src}">
+		<img src="${is_origin ? '/image/card_images/' + img_src : img_src}">
 		<div class="buttons">
 			<button type="button" class="edit_image">
 				<img src="/static/images/card_team_edit_card_image_button.png">
@@ -1927,6 +2504,56 @@ function makeCardImageTag(img_src, is_front) {
 				<span>이미지 변경</span>
 			</button>
 		</div>
+	`;
+	return div;
+}
+
+function makeCardDetailMenuTag() {
+	const div = document.createElement("div");
+	div.className = "detail_menu";
+	div.innerHTML = `
+		<button type="button" class="row" id="report_typo">입력오타 신고</button>
+		<button type="button" class="row" id="save_to_personal">내 명함첩에 저장</button>
+		<button type="button" class="row" id="delete_card">명함 삭제</button>
+	`;
+	return div;
+}
+
+function makeCardListMenuTag() {
+	const div = document.createElement("div");
+	div.className = "menu_list";
+	div.innerHTML = `
+		<button type="button" class="row" id="current_page_selector">현재 페이지 선택</button>
+		<button type="button" class="row" id="whole_page_selector">전체 페이지 선택</button>
+		<button type="button" class="row" id="select_cancel">선택 안함</button>
+	`;
+	return div;
+}
+
+function makeMoreMenuListTag() {
+	const div = document.createElement("div");
+	div.className = "more_menu_list";
+	div.innerHTML = `
+		<button type="button" class="row" id="get_address_list">단체메일</button>
+		<button type="button" class="row" id="save_to_personal">내 명함첩에 저장</button>
+		<button type="button" class="row" id="delete_cards">삭제</button>
+	`;
+	return div;
+}
+
+function makeMenuBoxTag(select_message) {
+	const div = document.createElement("div");
+	div.className = "menu_box";
+	div.innerHTML = `
+		<div class="select_menu_list">
+			<button type="button" class="menu" id="extract_to_file">파일로 내보내기</button>
+			<button type="button" class="menu" id="set_group">그룹설정</button>
+			<button type="button" class="menu" id="more_menus">
+				<img src="/static/images/card_team_selected_menu_more_menu_button.png">
+				<span>더 보기<span>
+			</button>
+		</div>
+		<div class="select_message">${select_message}</div>
 	`;
 	return div;
 }
@@ -2158,6 +2785,88 @@ function makeGroupTagForModal(group_belong_flag) {
 	div.innerHTML = `
 		<input type="checkbox" class="group_selector" name="is_checked" ${group_belong_flag.belong_flag ? 'checked' : ''}>
 		<span>${group_belong_flag.group_name}</span>
+	`;
+	return div;
+}
+
+function makeGroupTagForMultipleModal(group_belong_flag, group_name) {
+	const div = document.createElement("div");
+	div.className = "group";
+	div.innerHTML = `
+		<input type="checkbox" class="group_selector" name="is_checked" ${group_belong_flag ? 'checked' : ''}>
+		<span>${group_name}</span>
+	`;
+	return div;
+}
+
+function makeShowAllCardImageModal(card_images) {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window card_images">
+			<div class="title">
+				<span>명함 이미지</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="card_image_wrapper">
+				<div class="front">
+					<img src="/image/card_images/${card_images[0].card_image}">
+				</div>
+${card_images.length > 1 ? '<div class="back"><img src="/image/card_images/' + card_images[1].card_image + '">"</div>' : ''}
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeDeleteCardConfirmModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window confirm_delete_card">
+			<div class="title">
+				<span>명함 삭제</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="texts">
+				<span>명함을 삭제하시겠습니까?</span>
+				<span>삭제한 명함은 30일 간 휴지통에 보관되며, 그 이후에는</span>
+				<span>완전히 삭제됩니다.</span>
+			</div>
+			<div class="buttons">
+				<button type="button" class="confirm">삭제</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeSaveToPersonalModal(selected_card_count) {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window save_to_personal">
+			<div class="title">
+				<span>명함 삭제</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="save_info">
+				<span><span class="selected_card_count">${selected_card_count}</span>개의 선택된 명함을 내 명함첩에 저장합니다.</span>
+				<div class="input_wrapper">
+					<input type="checkbox" name="include_memo">
+					<span>메모 정보를 포함</span>
+				</div>
+			</div>
+			<div class="buttons">
+				<button type="button" class="save_button">저장</button>
+			</div>
+		</div>
 	`;
 	return div;
 }

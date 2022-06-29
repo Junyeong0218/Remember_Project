@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.CardBelongTeamGroup;
-import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.CardDetail;
+import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
@@ -32,8 +32,11 @@ import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
+import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
+import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
+import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
 import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 import com.remember.app.service.CardService;
@@ -266,13 +269,13 @@ public class CardRestController {
 	}
 	
 	@GetMapping("/team/book/{cardBookId}/card/list")
-	public List<Card> getAllCardListInCardBook(@PathVariable int cardBookId, int page) {
-		return cardService.getAllCardListInCardBook(cardBookId, page);
+	public List<Card> getAllCardListInCardBook(@PathVariable int cardBookId, int page, String card_order_flag) {
+		return cardService.getAllCardListInCardBook(cardBookId, page, card_order_flag);
 	}
 	
 	@GetMapping("/team/group/{groupId}/card/list")
-	public List<Card> getCardListInSpecificGroup(@PathVariable int groupId, int page) {
-		return cardService.getCardListInSpecificGroup(groupId, page);
+	public List<Card> getCardListInSpecificGroup(@PathVariable int groupId, int page, String card_order_flag) {
+		return cardService.getCardListInSpecificGroup(groupId, page, card_order_flag);
 	}
 	
 	@GetMapping("/team/card/{cardId}")
@@ -286,6 +289,18 @@ public class CardRestController {
 		updateCardDetailReqDto.setId(cardId);
 		System.out.println(updateCardDetailReqDto);
 		return cardService.updateTeamCardDetail(updateCardDetailReqDto);
+	}
+	
+	@DeleteMapping("/team/card/{cardId}")
+	public boolean deleteTeamCard(@PathVariable int cardId) {
+		return cardService.deleteTeamCard(cardId);
+	}
+	
+	@PostMapping("/team/card/{cardId}/to-personal")
+	public boolean insertCardFromTeamCard(@PathVariable int cardId,
+																					boolean memo_include_flag,
+																					@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		return cardService.insertCardFromTeamCard(principalDetails.getId(), cardId, memo_include_flag);
 	}
 	
 	@PostMapping("/team/card/{cardId}/memo")
@@ -320,6 +335,18 @@ public class CardRestController {
 		updateCardBelongTeamGroupReqDto.setCard_id(cardId);
 		System.out.println(updateCardBelongTeamGroupReqDto);
 		return cardService.updateCardBelongTeamGroup(updateCardBelongTeamGroupReqDto);
+	}
+	
+	@GetMapping("/team/cards/belong")
+	public List<CardBelongTeamGroupsResDto> getGroupBelongFlagsForMultipleId(GetBelongFlagsReqDto getBelongFlagsReqDto) {
+		System.out.println(getBelongFlagsReqDto);
+		return cardService.getGroupBelongFlagsForMultipleId(getBelongFlagsReqDto);
+	}
+	
+	@PutMapping("/team/cards/belong")
+	public boolean updateCardsBelongTeamGroup(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto) {
+		System.out.println(updateCardsBelongTeamGroupReqDto);
+		return cardService.updateCardsBelongTeamGroup(updateCardsBelongTeamGroupReqDto);
 	}
 	
 }
