@@ -804,6 +804,7 @@ function updateCardDetail(formdata) {
 	$.ajax({
 		type: "put",
 		url: "/api/v1/card/team/card/" + selected_card_detail.card.id,
+		async: false,
 		data : formdata,
 		encType: "multipart/form-data",
 		processData: false,
@@ -839,6 +840,63 @@ function deleteCard() {
 	return flag;
 }
 
+function deleteCards(card_id_list) {
+	let flag = false;
+	$.ajax({
+		type: "delete",
+		url: "/api/v1/card/team/cards",
+		async: false,
+		data: {"card_id_list":card_id_list},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function deleteAllCardsInGroup(not_selected_card_id_list) {
+	let flag = false;
+	$.ajax({
+		type: "delete",
+		url: "/api/v1/card/team/group/" + selected_group.id + "/cards",
+		async: false,
+		data: {"card_id_list":not_selected_card_id_list},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function deleteAllCardsInCardBook(not_selected_card_id_list) {
+	let flag = false;
+	$.ajax({
+		type: "delete",
+		url: "/api/v1/card/team/book/" + selected_card_book.id + "/cards",
+		async: false,
+		data: {"card_id_list":not_selected_card_id_list},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
 function saveTeamCardToPersonalEach(memo_include_flag) {
 	let flag = false;
 	$.ajax({
@@ -846,6 +904,123 @@ function saveTeamCardToPersonalEach(memo_include_flag) {
 		url: "/api/v1/card/team/card/" + selected_card_detail.card.id + "/to-personal",
 		async: false,
 		data: {"memo_include_flag":memo_include_flag},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function saveTeamCardsToPersonal(card_id_list, memo_include_flag) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/card/team/cards/to-personal",
+		async: false,
+		data: {"card_id_list":card_id_list,
+					"memo_include_flag":memo_include_flag},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function getCardEmails(card_id_list) {
+	let cards;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/team/cards/email",
+		async: false,
+		data: {"card_id_list":card_id_list},
+		dataType: "json",
+		success: function (data) {
+			cards = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return cards;
+}
+
+function getCardEmailsInGroup(not_selected_card_id_list) {
+	let cards;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/team/group/" + selected_group.id + "/cards/email",
+		async: false,
+		data: {"not_selected_id_list":not_selected_card_id_list},
+		dataType: "json",
+		success: function (data) {
+			cards = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return cards;
+}
+
+function getCardEmailsInCardBook(not_selected_card_id_list) {
+	let cards;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/team/book/" + selected_card_book.id + "/cards/email",
+		async: false,
+		data: {"not_selected_id_list":not_selected_card_id_list},
+		dataType: "json",
+		success: function (data) {
+			cards = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return cards;
+}
+
+function saveAllTeamCardsInGroupToPersonal(not_selected_card_id_list, memo_include_flag) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/card/team/group/" + selected_group.id + "/cards/to-personal",
+		async: false,
+		data: {"not_selected_card_id_list":not_selected_card_id_list,
+					"memo_include_flag":memo_include_flag},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function saveAllTeamCardsInCardBookToPersonal(not_selected_card_id_list, memo_include_flag) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/card/team/book/" + selected_card_book.id + "/cards/to-personal",
+		async: false,
+		data: {"not_selected_card_id_list":not_selected_card_id_list,
+					"memo_include_flag":memo_include_flag},
 		dataType: "json",
 		success: function (data) {
 			flag = data;
@@ -1002,105 +1177,9 @@ function setCardList() {
 			// 현재 페이지 모든 명함 선택
 			event.preventDefault();
 			let menu_box_tag = card_list_tag.querySelector(".menu_box");
-			if(page_check_flag == null) {
-				if(menu_box_tag != null) {
-					menu_box_tag.remove();
-				}
-				all_checkbox.classList.remove("not_max");
-				all_checkbox.classList.remove("checked");
-				all_checkbox.checked = false;
-				each_card_checkboxes.forEach((e, index) => {
-					e.checked = all_checkbox.checked;
-					cards[index].classList.remove("selected");
-				});
-				page_check_flag = "current";
-				right_menu.classList.remove("hidden");
-				
-			} else if(page_check_flag == "current") {
-				if(menu_box_tag != null) {
-					menu_box_tag.remove();
-				}
-				const select_message = makeSelectMessage(each_card_checkboxes.length);
-				menu_box_tag = makeMenuBoxTag(select_message);
+			if(menu_box_tag == null) {
+				menu_box_tag = makeMenuBoxTag();
 				card_list_tag.insertBefore(menu_box_tag, card_list_tag.children[0]);
-				
-				all_checkbox.classList.remove("not_max");
-				all_checkbox.classList.add("checked");
-				all_checkbox.checked = true;
-				each_card_checkboxes.forEach((e, index) => {
-					e.checked = all_checkbox.checked;
-					cards[index].classList.add("selected");
-				});
-				page_check_flag = null;
-				right_menu.classList.add("hidden");
-				
-			} else if(page_check_flag == "not_max") {
-				if(menu_box_tag != null) {
-					menu_box_tag.remove();
-				}
-				
-				let selected_count = 0;
-				each_card_checkboxes.forEach((e, index) => {
-					if(e.checked) {
-						cards[index].classList.add("selected");
-						selected_count++;
-					} 
-					else cards[index].classList.remove("selected");
-				});
-				
-				const select_message = makeSelectMessage(selected_count);
-				
-				menu_box_tag = makeMenuBoxTag(select_message);
-				card_list_tag.insertBefore(menu_box_tag, card_list_tag.children[0]);
-				
-				all_checkbox.classList.add("not_max");
-				all_checkbox.classList.remove("checked");
-				page_check_flag = null;
-				right_menu.classList.add("hidden");
-				
-			} else if(page_check_flag == "whole") {
-				if(menu_box_tag != null) {
-					menu_box_tag.remove();
-				}
-				
-				all_checkbox.classList.remove("not_max");
-				all_checkbox.classList.add("checked");
-				all_checkbox.checked = true;
-				each_card_checkboxes.forEach((e, index) => {
-					e.checked = all_checkbox.checked
-					cards[index].classList.add("selected");
-				});
-				
-				const select_message = makeSelectMessage(selected_card_book.card_count);
-				menu_box_tag = makeMenuBoxTag(select_message);
-				card_list_tag.insertBefore(menu_box_tag, card_list_tag.children[0]);
-				right_menu.classList.add("hidden");
-			} else if(page_check_flag == "whole_after") {
-				let menu_box_tag = card_list_tag.querySelector(".menu_box");
-				if(menu_box_tag != null) {
-					menu_box_tag.remove();
-				}
-				
-				all_checkbox.classList.remove("not_max");
-				all_checkbox.classList.add("checked");
-
-				let not_selected_count = 0;
-				each_card_checkboxes.forEach((e, index) => {
-					if(e.checked) {
-						cards[index].classList.add("selected");
-					} else {
-						cards[index].classList.remove("selected");
-						not_selected_count++;
-					} 
-				});
-				
-				const select_message = makeSelectMessage(selected_card_book.card_count - not_selected_count);
-				menu_box_tag = makeMenuBoxTag(select_message);
-				card_list_tag.insertBefore(menu_box_tag, card_list_tag.children[0]);
-				right_menu.classList.add("hidden");
-			}
-			
-			if(menu_box_tag != null) {
 				menu_box_tag.querySelector("#set_group").onclick = () => {
 					const selected_id_list = new Array();
 					each_card_checkboxes.forEach((e, index) => {
@@ -1208,20 +1287,270 @@ function setCardList() {
 						menu_box_tag.appendChild(more_menu_list);
 						
 						more_menu_list.querySelector("#delete_cards").onclick = () => {
-							// 선택 카드 삭제
+							if(page_check_flag == "whole" || page_check_flag == "whole_after") {
+								const not_selected_card_id_list = new Array();
+								each_card_checkboxes.forEach((e, index) => {
+									if(e.checked == false) not_selected_card_id_list.push(card_list[index].id);
+								});
+								if(whole_button_clicked_flag == true) {
+									const delete_confirm_modal = makeDeleteCardConfirmModal(selected_card_book.card_count - not_selected_card_id_list.length);
+									appendModalToContainer(delete_confirm_modal);
+									
+									delete_confirm_modal.querySelector(".close_modal").onclick = () => removeModal(delete_confirm_modal);
+									
+									delete_confirm_modal.querySelector(".confirm").onclick = () => {
+										if(deleteAllCardsInCardBook(not_selected_card_id_list)) {
+											location.reload();
+										} else {
+											alert("명함 삭제 실패");
+										}
+									}
+								} else {
+									const delete_confirm_modal = makeDeleteCardConfirmModal(selected_group.card_count - not_selected_card_id_list.length);
+									appendModalToContainer(delete_confirm_modal);
+									
+									delete_confirm_modal.querySelector(".close_modal").onclick = () => removeModal(delete_confirm_modal);
+									
+									delete_confirm_modal.querySelector(".confirm").onclick = () => {
+										if(deleteAllCardsInGroup(not_selected_card_id_list)) {
+											location.reload();
+										} else {
+											alert("명함 삭제 실패");
+										}
+									}
+								}
+							} else {
+								const selected_card_id_list = new Array();
+								each_card_checkboxes.forEach((e, index) => {
+									if(e.checked) selected_card_id_list.push(card_list[index].id);
+								});
+								const delete_confirm_modal = makeDeleteCardConfirmModal(selected_card_id_list.length);
+								appendModalToContainer(delete_confirm_modal);
+								
+								delete_confirm_modal.querySelector(".close_modal").onclick = () => removeModal(delete_confirm_modal);
+								
+								delete_confirm_modal.querySelector(".confirm").onclick = () => {
+									if(deleteCards(selected_card_id_list)) {
+										location.reload();
+									} else {
+										alert("명함 삭제 실패");
+									}
+								}
+							}
 						}
 						
 						more_menu_list.querySelector("#save_to_personal").onclick = () => {
 							// 선택 카드 내 명함첩에 저장
+							if(page_check_flag == "whole" || page_check_flag == "whole_after") {
+								const not_selected_card_id_list = new Array();
+								each_card_checkboxes.forEach((e, index) => {
+									if(e.checked == false) not_selected_card_id_list.push(card_list[index].id);
+								});
+								if(whole_button_clicked_flag == true) {
+									const save_to_personal_modal = makeSaveToPersonalModal(selected_card_book.card_count - not_selected_card_id_list.length);
+									appendModalToContainer(save_to_personal_modal);
+									const memo_include_input = save_to_personal_modal.querySelector("input[name='include_memo']");
+									
+									save_to_personal_modal.querySelector(".close_modal").onclick = () => removeModal(save_to_personal_modal);
+									
+									save_to_personal_modal.querySelector(".save_button").onclick = () => {
+										if(saveAllTeamCardsInCardBookToPersonal(not_selected_card_id_list, memo_include_input.value)) {
+											alert("내 명함첩에 저장 완료");
+											removeModal(save_to_personal_modal);
+										} else {
+											alert("내 명함첩에 저장 실패");
+										}
+									}
+								} else {
+									const save_to_personal_modal = makeSaveToPersonalModal();
+									appendModalToContainer(save_to_personal_modal);
+									const memo_include_input = save_to_personal_modal.querySelector("input[name='include_memo']");
+									
+									save_to_personal_modal.querySelector(".close_modal").onclick = () => removeModal(save_to_personal_modal);
+									
+									save_to_personal_modal.querySelector(".save_button").onclick = () => {
+										if(saveAllTeamCardsInGroupToPersonal(not_selected_card_id_list, memo_include_input.value)) {
+											alert("내 명함첩에 저장 완료");
+											removeModal(save_to_personal_modal);
+										} else {
+											alert("내 명함첩에 저장 실패");
+										}
+									}
+								}
+							} else {
+								const selected_card_id_list = new Array();
+								each_card_checkboxes.forEach((e, index) => {
+									if(e.checked) selected_card_id_list.push(card_list[index].id);
+								});
+								const save_to_personal_modal = makeSaveToPersonalModal(selected_card_id_list.length);
+								appendModalToContainer(save_to_personal_modal);
+								const memo_include_input = save_to_personal_modal.querySelector("input[name='include_memo']");
+								
+								save_to_personal_modal.querySelector(".close_modal").onclick = () => removeModal(save_to_personal_modal);
+								
+								save_to_personal_modal.querySelector(".save_button").onclick = () => {
+									if(saveTeamCardsToPersonal(selected_card_id_list, memo_include_input.value)) {
+										alert("내 명함첩에 저장 완료");
+										removeModal(save_to_personal_modal);
+									} else {
+										alert("내 명함첩에 저장 실패");
+									}
+								}
+							}
 						}
 						
 						more_menu_list.querySelector("#get_address_list").onclick = () => {
 							// 선택 카드 이메일 리스트 모달
+							if(page_check_flag == "whole" || page_check_flag == "whole_after") {
+								const not_selected_card_id_list = new Array();
+								each_card_checkboxes.forEach((e, index) => {
+									if(e.checked == false) not_selected_card_id_list.push(card_list[index].id);
+								});
+								if(whole_button_clicked_flag == true) {
+									console.log("whole_button true");
+									const email_list = getCardEmailsInCardBook(not_selected_card_id_list);
+									console.log(email_list);
+									const email_text = makeEmailText(email_list);
+									const email_modal = makeSendEmailModal(email_text);
+									appendModalToContainer(email_modal);
+									
+									const email_input = email_modal.querySelector("input");
+									setTimeout(() => {
+										email_input.focus();
+										email_input.select();
+									}, 150);
+									email_modal.querySelector(".close_modal").onclick = () => removeModal(email_modal);
+									email_modal.querySelector(".close_button").onclick = () => removeModal(email_modal);
+								} else {
+									console.log("whole_button false");
+									const email_list = getCardEmailsInGroup(not_selected_card_id_list);
+									console.log(email_list);
+									const email_text = makeEmailText(email_list);
+									const email_modal = makeSendEmailModal(email_text);
+									appendModalToContainer(email_modal);
+									
+									const email_input = email_modal.querySelector("input");
+									setTimeout(() => {
+										email_input.focus();
+										email_input.select();
+									}, 150);
+									email_modal.querySelector(".close_modal").onclick = () => removeModal(email_modal);
+									email_modal.querySelector(".close_button").onclick = () => removeModal(email_modal);
+								}
+							} else {
+								console.log("page_check_flag is not whole");
+								const selected_card_id_list = new Array();
+								each_card_checkboxes.forEach((e, index) => {
+									if(e.checked) selected_card_id_list.push(card_list[index].id);
+								});
+								
+								const email_list = getCardEmails(selected_card_id_list);
+								console.log(email_list);
+								const email_text = makeEmailText(email_list);
+								const email_modal = makeSendEmailModal(email_text);
+								appendModalToContainer(email_modal);
+								
+								const email_input = email_modal.querySelector("input");
+								setTimeout(() => {
+									email_input.focus();
+									email_input.select();
+								}, 150);
+								email_modal.querySelector(".close_modal").onclick = () => removeModal(email_modal);
+								email_modal.querySelector(".close_button").onclick = () => removeModal(email_modal);
+							}
 						}
 					} else {
 						more_menu_list.remove();
 					}
 				}
+			}
+			if(page_check_flag == null) {
+				console.log("page_check_flag is null");
+				menu_box_tag.classList.add("hidden");
+				
+				all_checkbox.classList.remove("not_max");
+				all_checkbox.classList.remove("checked");
+				all_checkbox.checked = false;
+				each_card_checkboxes.forEach((e, index) => {
+					e.checked = all_checkbox.checked;
+					cards[index].classList.remove("selected");
+				});
+				page_check_flag = "current";
+				right_menu.classList.remove("hidden");
+				
+			} else if(page_check_flag == "current") {
+				console.log("page_check_flag is current");
+				const select_message = makeSelectMessage(each_card_checkboxes.length);
+				menu_box_tag.querySelector(".select_message").innerText = select_message;
+				menu_box_tag.classList.remove("hidden");
+				
+				all_checkbox.classList.remove("not_max");
+				all_checkbox.classList.add("checked");
+				all_checkbox.checked = true;
+				each_card_checkboxes.forEach((e, index) => {
+					e.checked = all_checkbox.checked;
+					cards[index].classList.add("selected");
+				});
+				page_check_flag = null;
+				right_menu.classList.add("hidden");
+				
+			} else if(page_check_flag == "not_max") {
+				console.log("page_check_flag is not_max");
+				
+				let selected_count = 0;
+				each_card_checkboxes.forEach((e, index) => {
+					if(e.checked) {
+						cards[index].classList.add("selected");
+						selected_count++;
+					} 
+					else cards[index].classList.remove("selected");
+				});
+				
+				const select_message = makeSelectMessage(selected_count);
+				menu_box_tag.querySelector(".select_message").innerText = select_message;
+				menu_box_tag.classList.remove("hidden");
+				
+				all_checkbox.classList.add("not_max");
+				all_checkbox.classList.remove("checked");
+				page_check_flag = null;
+				right_menu.classList.add("hidden");
+				
+			} else if(page_check_flag == "whole") {
+				console.log("page_check_flag is whole");
+				
+				all_checkbox.classList.remove("not_max");
+				all_checkbox.classList.add("checked");
+				all_checkbox.checked = true;
+				each_card_checkboxes.forEach((e, index) => {
+					e.checked = all_checkbox.checked
+					cards[index].classList.add("selected");
+				});
+				
+				const select_message = makeSelectMessage(selected_card_book.card_count);
+				menu_box_tag.querySelector(".select_message").innerText = select_message;
+				menu_box_tag.classList.remove("hidden");
+				right_menu.classList.add("hidden");
+				
+			} else if(page_check_flag == "whole_after") {
+				console.log("whole_after");
+				
+				all_checkbox.classList.remove("not_max");
+				all_checkbox.classList.add("checked");
+
+				let not_selected_count = 0;
+				each_card_checkboxes.forEach((e, index) => {
+					if(e.checked) {
+						cards[index].classList.add("selected");
+					} else {
+						cards[index].classList.remove("selected");
+						not_selected_count++;
+					} 
+				});
+				
+				const select_message = makeSelectMessage(selected_card_book.card_count - not_selected_count);
+				menu_box_tag.querySelector(".select_message").innerText = select_message;
+				menu_box_tag.classList.remove("hidden");
+				right_menu.classList.add("hidden");
 			}
 		}
 		
@@ -1232,10 +1561,12 @@ function setCardList() {
 				each_card_checkboxes.forEach(e1 => {
 					if(e1.checked) checked_count++;
 				});
-				
+				console.log("checked_count : " + checked_count);
 				if(checked_count == 0) {
 					page_check_flag = null;
 				} else if(page_check_flag == "whole") {
+					page_check_flag = "whole_after";
+				} else if(page_check_flag == "whole_after") {
 					page_check_flag = "whole_after";
 				} else if(checked_count < each_card_checkboxes.length) {
 					page_check_flag = "not_max";
@@ -1267,7 +1598,6 @@ function setCardList() {
 				
 				card_list_menu.querySelector("#select_cancel").onclick = () => {
 					// 체크박스 모두 해제
-					console.log("asdf");
 					page_check_flag = null;
 					all_checkbox.click();
 				}
@@ -1798,6 +2128,17 @@ function makeAddressText(address, sub_address) {
 
 function makePhoneNumberText(phone) {
 	return `${phone.substring(0, 3)}-${phone.substring(3, 7)}-${phone.substring(7, 11)}`;
+}
+
+function makeEmailText(card_email_list) {
+	let email_text = "";
+	card_email_list.forEach(e => {
+		if(e.email != null) email_text += e.email + ", ";
+	});
+	if(email_text.includes(",")) {
+		email_text = email_text.substring(0, email_text.lastIndexOf(","));
+	}
+	return email_text;
 }
 
 function makeSelectMessage(selected_card_count) {
@@ -2541,19 +2882,19 @@ function makeMoreMenuListTag() {
 	return div;
 }
 
-function makeMenuBoxTag(select_message) {
+function makeMenuBoxTag() {
 	const div = document.createElement("div");
-	div.className = "menu_box";
+	div.className = "menu_box hidden";
 	div.innerHTML = `
 		<div class="select_menu_list">
 			<button type="button" class="menu" id="extract_to_file">파일로 내보내기</button>
 			<button type="button" class="menu" id="set_group">그룹설정</button>
 			<button type="button" class="menu" id="more_menus">
 				<img src="/static/images/card_team_selected_menu_more_menu_button.png">
-				<span>더 보기<span>
+				<span>더 보기</span>
 			</button>
 		</div>
-		<div class="select_message">${select_message}</div>
+		<div class="select_message"></div>
 	`;
 	return div;
 }
@@ -2845,6 +3186,30 @@ function makeDeleteCardConfirmModal() {
 	return div;
 }
 
+function makeDeleteCardConfirmModal(selected_card_count) {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window confirm_delete_card">
+			<div class="title">
+				<span>명함 삭제</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="texts">
+				<span>선택한 <span class="selected_card_count">${selected_card_count}</span>개의 명함을 삭제하시겠습니까?</span>
+				<span>삭제한 명함은 30일 간 휴지통에 보관되며, 그 이후에는</span>
+				<span>완전히 삭제됩니다.</span>
+			</div>
+			<div class="buttons">
+				<button type="button" class="confirm">삭제</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
 function makeSaveToPersonalModal(selected_card_count) {
 	const div = document.createElement("div");
 	div.className = "modal";
@@ -2865,6 +3230,29 @@ function makeSaveToPersonalModal(selected_card_count) {
 			</div>
 			<div class="buttons">
 				<button type="button" class="save_button">저장</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeSendEmailModal(email_text) {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window send_email">
+			<div class="title">
+				<span>명함 삭제</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="email_info">
+				<span>아래의 이메일 주소를 복사(Ctrl+C)하여 이용하시는 이메일 서비스의 "받는 사람" 항목에 붙여넣기(Ctrl+V) 하세요.</span>
+				<input type="text" name="emails" value="${email_text}" readonly>
+			</div>
+			<div class="buttons">
+				<button type="button" class="close_button">닫기</button>
 			</div>
 		</div>
 	`;

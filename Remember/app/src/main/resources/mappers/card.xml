@@ -29,7 +29,7 @@
   		0,
   		#{user_id},
   		#{name},
-  		null,
+  		#{profile_img},
   		#{phone},
   		#{email},
   		#{company_name},
@@ -404,12 +404,13 @@
 				book.team_id,
 				book.card_book_name,
 				count(distinct `join`.id) as join_count,
-				count(distinct belong.team_card_id) as card_count
+				count(distinct card.id) as card_count
 			from
 				team_card_book book
-				left outer join team_card_book_join_user `join` ON(`join`.team_card_book_id = book.id)
-				left outer join team_group `group` ON(`group`.card_book_id = book.id)
-				left outer join team_card_belong_team_group belong ON(belong.team_group_id = `group`.id)
+				left outer join team_card_book_join_user `join` on(`join`.team_card_book_id = book.id)
+				left outer join team_group `group` on(`group`.card_book_id = book.id)
+				left outer join team_card_belong_team_group belong on(belong.team_group_id = `group`.id)
+				left outer join team_card_mst card on(card.id = belong.team_card_id and card.deleted = false)
 			where
 				book.team_id = #{teamId}
 			group by
@@ -419,12 +420,14 @@
 		<select id="getTeamGroupList" parameterType="Integer" resultType="com.remember.app.entity.card.TeamGroupSummary">
 			select
 				`group`.*,
-				count(distinct belong.id) as card_count,
-				count(distinct belong2.team_card_id) as total_count
+				count(distinct card.id) as card_count,
+				count(distinct card2.id) as total_count
 			from
 				team_group `group`
 				left outer join team_card_belong_team_group belong on(belong.team_group_id = `group`.id)
+				left outer join team_card_mst card on(card.id = belong.team_card_id and card.deleted = false)
 				left outer join team_card_belong_team_group belong2 on(belong2.team_group_id in (select id from team_group where card_book_id = #{cardBookId}))
+				left outer join team_card_mst card2 on(card2.id = belong2.team_card_id and card2.deleted = false)
 			where
 				`group`.card_book_id = #{cardBookId}
 			group by
@@ -432,6 +435,28 @@
 				belong.team_group_id
 			order by
 				`group`.create_date desc;
+		</select>
+		
+		<select id="getAllCardIdInTeamGroup" parameterType="Integer" resultType="Integer">
+			select
+				card.id
+			from
+				team_card_belong_team_group belong
+				left outer join team_card_mst card on(card.id = belong.team_card_id and card.deleted = false)
+			where
+				belong.team_group_id = #{groupId};
+		</select>
+		
+		<select id="getAllCardIdInTeamCardBook" parameterType="Integer" resultType="Integer">
+			select
+				card.id
+			from
+				team_card_book book
+				left outer join team_group `group` on(`group`.card_book_id = book.id)
+				left outer join team_card_belong_team_group belong on(belong.team_group_id = `group`.id)
+				left outer join team_card_mst card on(card.id = belong.team_card_id and card.deleted = false)
+			where
+				book.id = #{cardBookId} and card.id is not null;
 		</select>
 		
 		<select id="getAllCardListInCardBook" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
@@ -653,6 +678,20 @@
 				id = #{cardId};
 		</update>
 		
+		<update id="updateTeamCardsToDeleted" parameterType="com.remember.app.requestDto.DeleteTeamCardsReqDto">
+			update
+				team_card_mst
+			set
+				deleted = true,
+				deleted_date = now()
+			where
+				id in(
+				<foreach collection="card_id_list" index="index" item="item" separator=",">
+					#{item}
+				</foreach>
+				);
+		</update>
+		
 		<delete id="deleteTeamCardAllBelongs" parameterType="Integer">
 			delete from
 				team_card_belong_team_group
@@ -715,13 +754,16 @@
 				`join`.role,
 				um.phone,
 				
-				count(distinct `join`.id) as total_count
+				count(distinct `join2`.id) as total_count
 			from
 				team_card_book_join_user `join`
 				left outer join team_user_profile `profile` on(`profile`.user_id = `join`.joined_user_id)
 				left outer join user_mst um on(um.id = `join`.joined_user_id)
+				left outer join team_card_book_join_user `join2` on(`join2`.team_card_book_id = #{teamCardBookId})
 			where
 				`join`.team_card_book_id = #{teamCardBookId}
+			group by
+				`join`.joined_user_id
 			limit #{page}, 10;
 		</select>
 		
@@ -896,5 +938,19 @@
 			</foreach>
 			;
 		</insert>
+		
+		<select id="getTeamCardEmails" parameterType="com.remember.app.requestDto.GetCardEmailReqDto" resultType="com.remember.app.entity.card.Card">
+			select
+				id,
+				email
+			from
+				team_card_mst
+			where
+				id in(
+				<foreach collection="card_id_list" index="index" item="item" separator=",">
+					#{item}
+				</foreach>
+				);
+		</select>
 		
   </mapper>

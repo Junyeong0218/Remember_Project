@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
+import com.remember.app.requestDto.GetCardEmailReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
 
@@ -76,6 +78,10 @@ public interface CardRepository {
 	
 	public List<TeamGroupSummary> getTeamGroupList(int cardBookId);
 	
+	public List<Integer> getAllCardIdInTeamGroup(int groupId);
+
+	public List<Integer> getAllCardIdInTeamCardBook(int cardBookId);
+	
 	public List<Card> getAllCardListInCardBook(int cardBookId, int page);
 
 	public List<Card> getAllCardListInCardBookOrderNameAsc(int cardBookId, int page);
@@ -93,6 +99,8 @@ public interface CardRepository {
 	public int updateTeamCard(Card card);
 	
 	public int updateTeamCardToDeleted(int cardId);
+	
+	public int updateTeamCardsToDeleted(DeleteTeamCardsReqDto deleteTeamCardsReqDto);
 	
 	public int deleteTeamCardAllBelongs(int cardId);
 	
@@ -129,5 +137,7 @@ public interface CardRepository {
 	public int insertCardsBelongDefaultTeamGroup(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto);
 	
 	public int insertCardBelongTeamGroups(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto);
+	
+	public List<Card> getTeamCardEmails(GetCardEmailReqDto getCardEmailReqDto);
 	
 }

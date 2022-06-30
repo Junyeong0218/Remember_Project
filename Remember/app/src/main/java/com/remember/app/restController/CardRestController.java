@@ -28,11 +28,15 @@ import com.remember.app.entity.card.TeamGroupSummary;
 import com.remember.app.entity.card.TeamJoinUser;
 import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.principal.PrincipalDetails;
+import com.remember.app.requestDto.AddAllCardsFromTeamCard;
+import com.remember.app.requestDto.AddCardsFromTeamCard;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
+import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
+import com.remember.app.requestDto.GetCardEmailReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
@@ -347,6 +351,67 @@ public class CardRestController {
 	public boolean updateCardsBelongTeamGroup(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto) {
 		System.out.println(updateCardsBelongTeamGroupReqDto);
 		return cardService.updateCardsBelongTeamGroup(updateCardsBelongTeamGroupReqDto);
+	}
+	
+	@DeleteMapping("/team/cards")
+	public boolean deleteTeamCards(DeleteTeamCardsReqDto deleteTeamCardsReqDto) {
+		return cardService.deleteTeamCards(deleteTeamCardsReqDto);
+	}
+	
+	@DeleteMapping("/team/group/{groupId}/cards")
+	public boolean deleteAllTeamCardsInGroup(@PathVariable int groupId,
+																						 DeleteTeamCardsReqDto deleteTeamCardsReqDto) {
+		return cardService.deleteAllTeamCardsInGroup(deleteTeamCardsReqDto);
+	}
+	
+	@DeleteMapping("/team/book/{cardBookId}/cards")
+	public boolean deleteAllTeamCardsInCardBook(@PathVariable int cardBookId,
+																								 DeleteTeamCardsReqDto deleteTeamCardsReqDto) {
+		return cardService.deleteAllTeamCardsInCardBook(deleteTeamCardsReqDto);
+	}
+	
+	@PostMapping("/team/cards/to-personal")
+	public boolean insertCardsFromTeamCard(AddCardsFromTeamCard addCardsFromTeamCard,
+																					   @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		addCardsFromTeamCard.setUserId(principalDetails.getId());
+		return cardService.insertCardsFromTeamCard(addCardsFromTeamCard);
+	}
+	
+	@PostMapping("/team/group/{groupId}/cards/to-personal")
+	public boolean insertAllCardsInTeamGroupToCard(@PathVariable int groupId,
+																									  AddAllCardsFromTeamCard addAllCardsFromTeamCard,
+																									  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		addAllCardsFromTeamCard.setGroupId(groupId);
+		addAllCardsFromTeamCard.setUserId(principalDetails.getId());
+		return cardService.insertAllCardsInTeamGroupToCard(addAllCardsFromTeamCard);
+	}
+	
+	@PostMapping("/team/book/{cardBookId}/cards/to-personal")
+	public boolean insertAllCardsInTeamCardBookToCard(@PathVariable int cardBookId,
+																											  AddAllCardsFromTeamCard addAllCardsFromTeamCard,
+																									  		  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		addAllCardsFromTeamCard.setCardBookId(cardBookId);
+		addAllCardsFromTeamCard.setUserId(principalDetails.getId());
+		return cardService.insertAllCardsInTeamCardBookToCard(addAllCardsFromTeamCard);
+	}
+	
+	@GetMapping("/team/cards/email")
+	public List<Card> getTeamCardEmails(GetCardEmailReqDto getCardEmailReqDto) {
+		return cardService.getTeamCardEmails(getCardEmailReqDto);
+	}
+	
+	@GetMapping("/team/group/{groupId}/cards/email")
+	public List<Card> getTeamCardEmailsInGroup(@PathVariable int groupId,
+																					GetCardEmailReqDto getCardEmailReqDto) {
+		getCardEmailReqDto.setGroupId(groupId);
+		return cardService.getTeamCardEmailsInGroup(getCardEmailReqDto);
+	}
+	
+	@GetMapping("/team/book/{cardBookId}/cards/email")
+	public List<Card> getTeamCardEmailsInCardBook(@PathVariable int cardBookId,
+																							GetCardEmailReqDto getCardEmailReqDto) {
+		getCardEmailReqDto.setCardBookId(cardBookId);
+		return cardService.getTeamCardEmailsInCardBook(getCardEmailReqDto);
 	}
 	
 }

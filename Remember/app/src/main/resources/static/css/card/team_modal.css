@@ -7,7 +7,7 @@
 	width: 100%;
 	height: 100vh;
 	background-color: rgba(0, 0, 0, 0.6);
-	z-index: 1;
+	z-index: 1000;
 }
 
 .modal > .window {
@@ -423,7 +423,8 @@
 
 .modal > .card_images > .title,
 .modal > .confirm_delete_card > .title,
-.modal > .save_to_personal > .title {
+.modal > .save_to_personal > .title,
+.modal > .send_email > .title {
 	position: relative;
 	padding: 15px;
 	width: 100%;
@@ -431,7 +432,8 @@
 
 .modal > .card_images > .title > span,
 .modal > .confirm_delete_card > .title > span,
-.modal > .save_to_personal > .title > span {
+.modal > .save_to_personal > .title > span,
+.modal > .send_email > .title > span {
 	font-size: 17px;
 	font-weight: 500;
 	color: rgba(0, 0, 0, 0.85);
@@ -440,7 +442,8 @@
 
 .modal > .card_images > .title > button,
 .modal > .confirm_delete_card > .title > button,
-.modal > .save_to_personal > .title > button {
+.modal > .save_to_personal > .title > button,
+.modal > .send_email > .title > button {
 	position: absolute;
 	top: 50%;
 	right: 0;
@@ -455,7 +458,8 @@
 
 .modal > .card_images > .title > button > img,
 .modal > .confirm_delete_card > .title > button > img,
-.modal > .save_to_personal > .title > button > img {
+.modal > .save_to_personal > .title > button > img,
+.modal > .send_email > .title > button > img {
 	pointer-events: none;
 }
 
@@ -505,8 +509,15 @@
 	line-height: 1.5;
 }
 
+.modal > .confirm_delete_card > .texts > span > span {
+	font: inherit;
+	font-weight: bold;
+	color: #00BD5D;
+}
+
 .modal > .confirm_delete_card > .buttons,
-.modal > .save_to_personal > .buttons {
+.modal > .save_to_personal > .buttons,
+.modal > .send_email > .buttons {
 	padding: 0 15px 30px;
 	display: flex;
 	justify-content: center;
@@ -514,7 +525,8 @@
 }
 
 .modal > .confirm_delete_card > .buttons > button,
-.modal > .save_to_personal > .buttons > button {
+.modal > .save_to_personal > .buttons > button,
+.modal > .send_email > .buttons > button {
 	padding: 6px 12px;
 	width: 355.3px;
 	background-color:#FF3838;
@@ -535,7 +547,8 @@
 	width: 450px;
 }
 
-.modal > .save_to_personal > .save_info {
+.modal > .save_to_personal > .save_info,
+.modal > .send_email > .email_info {
 	padding: 15px;
 	display: flex;
 	flex-direction: column;
@@ -586,6 +599,45 @@
 	line-height: 1.5;
 }
 
-.modal > .save_to_personal > .buttons > button {
+.modal > .save_to_personal > .buttons > button,
+.modal > .send_email > .buttons > button {
 	background-color: #333;
+}
+
+.modal > .send_email {
+	display: flex;
+	flex-direction: column;
+	width: 450px;
+}
+
+.modal > .send_email > .email_info {
+	align-items: center;
+}
+
+.modal > .send_email > .email_info > span {
+	padding: 15px 0;
+	width:355.3px;
+	font-size: 14px;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 1.5;
+	white-space: pre-line;
+}
+
+.modal > .send_email > .email_info > input {
+	padding: 6px 12px;
+	width: 355.3px;
+	height: 32px;
+	border: 1px solid #CCC;
+	background-color: #EEE;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.08);
+	font-size: 13px;
+	color: #555;
+	line-height: 20px;
+	cursor: not-allowed;
+	outline: none;
+}
+
+.modal > .send_email > .email_info > input:focus {
+	border: 1px solid #00BD5D;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.08), 0 0 8px rgba(0, 189, 93, 0.6);
 }

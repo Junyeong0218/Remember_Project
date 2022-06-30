@@ -16,10 +16,14 @@ import com.remember.app.entity.card.TeamGroup;
 import com.remember.app.entity.card.TeamGroupSummary;
 import com.remember.app.entity.card.TeamJoinUser;
 import com.remember.app.entity.card.TeamUserProfile;
+import com.remember.app.requestDto.AddAllCardsFromTeamCard;
+import com.remember.app.requestDto.AddCardsFromTeamCard;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
+import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
+import com.remember.app.requestDto.GetCardEmailReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
@@ -95,6 +99,12 @@ public interface CardService {
 	
 	public boolean insertCardFromTeamCard(int userId, int cardId, boolean memo_include_flag);
 	
+	public boolean insertCardsFromTeamCard(AddCardsFromTeamCard addCardsFromTeamCard);
+	
+	public boolean insertAllCardsInTeamGroupToCard(AddAllCardsFromTeamCard addAllCardsFromTeamCard);
+	
+	public boolean insertAllCardsInTeamCardBookToCard(AddAllCardsFromTeamCard addAllCardsFromTeamCard);
+	
 	public List<TeamUserProfile> getTeamJoinUsers(int teamId, int userId, int page);
 
 	public List<TeamUserProfile> getCardBookJoinUsers(int cardBookId, int page);
@@ -112,5 +122,17 @@ public interface CardService {
 	public boolean updateCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto);
 	
 	public boolean updateCardsBelongTeamGroup(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto);
+	
+	public boolean deleteTeamCards(DeleteTeamCardsReqDto deleteTeamCardsReqDto);
+
+	public boolean deleteAllTeamCardsInGroup(DeleteTeamCardsReqDto deleteTeamCardsReqDto);
+
+	public boolean deleteAllTeamCardsInCardBook(DeleteTeamCardsReqDto deleteTeamCardsReqDto);
+	
+	public List<Card> getTeamCardEmails(GetCardEmailReqDto getCardEmailReqDto);
+
+	public List<Card> getTeamCardEmailsInGroup(GetCardEmailReqDto getCardEmailReqDto);
+
+	public List<Card> getTeamCardEmailsInCardBook(GetCardEmailReqDto getCardEmailReqDto);
 	
 }

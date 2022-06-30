@@ -38,6 +38,7 @@ public class UpdateCardDetailReqDto {
 		return Card.builder()
 								.id(id)
 								.name(name)
+								.profile_img(profile_img)
 								.phone(phone)
 								.email(email)
 								.company_name(company_name)

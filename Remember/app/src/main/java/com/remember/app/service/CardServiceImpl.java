@@ -32,10 +32,14 @@ import com.remember.app.entity.card.TeamGroup;
 import com.remember.app.entity.card.TeamGroupSummary;
 import com.remember.app.entity.card.TeamJoinUser;
 import com.remember.app.entity.card.TeamUserProfile;
+import com.remember.app.requestDto.AddAllCardsFromTeamCard;
+import com.remember.app.requestDto.AddCardsFromTeamCard;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
+import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
+import com.remember.app.requestDto.GetCardEmailReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
@@ -366,6 +370,7 @@ public class CardServiceImpl implements CardService {
 	@Override
 	public boolean updateTeamCardDetail(UpdateCardDetailReqDto updateCardDetailReqDto) {
 		Card card = updateCardDetailReqDto.toCardEntity();
+		System.out.println(updateCardDetailReqDto);
 		if(updateCardDetailReqDto.getProfile_image() != null) {
 			String profile_img = downloadProfileImageFile(updateCardDetailReqDto.getProfile_image());
 			card.setProfile_img(profile_img);
@@ -405,6 +410,7 @@ public class CardServiceImpl implements CardService {
 				result += cardRepository.updateTeamCardImage(cardImage);
 			}
 		}
+		System.out.println(result);
 		return result > 0;
 	}
 	
@@ -437,6 +443,41 @@ public class CardServiceImpl implements CardService {
 		
 		System.out.println(result);
 		return result > 0;
+	}
+	
+	@Override
+	public boolean insertCardsFromTeamCard(AddCardsFromTeamCard addCardsFromTeamCard) {
+		boolean result = false;
+		for(int cardId : addCardsFromTeamCard.getCard_id_list()) {
+			result = insertCardFromTeamCard(addCardsFromTeamCard.getUserId(), cardId, addCardsFromTeamCard.isMemo_include_flag());
+		}
+		return result;
+	}
+	
+	@Override
+	public boolean insertAllCardsInTeamGroupToCard(AddAllCardsFromTeamCard addAllCardsFromTeamCard) {
+		List<Integer> cardIdList = cardRepository.getAllCardIdInTeamGroup(addAllCardsFromTeamCard.getGroupId());
+		if(addAllCardsFromTeamCard.getNot_selected_card_id_list() != null) {
+			cardIdList.removeAll(addAllCardsFromTeamCard.getNot_selected_card_id_list());
+		}
+		boolean result = false;
+		for(int cardId : cardIdList) {
+			result = insertCardFromTeamCard(addAllCardsFromTeamCard.getUserId(), cardId, addAllCardsFromTeamCard.isMemo_include_flag());
+		}
+		return result;
+	}
+	
+	@Override
+	public boolean insertAllCardsInTeamCardBookToCard(AddAllCardsFromTeamCard addAllCardsFromTeamCard) {
+		List<Integer> cardIdList = cardRepository.getAllCardIdInTeamCardBook(addAllCardsFromTeamCard.getCardBookId());
+		if(addAllCardsFromTeamCard.getNot_selected_card_id_list() != null) {
+			cardIdList.removeAll(addAllCardsFromTeamCard.getNot_selected_card_id_list());
+		}
+		boolean result = false;
+		for(int cardId : cardIdList) {
+			result = insertCardFromTeamCard(addAllCardsFromTeamCard.getUserId(), cardId, addAllCardsFromTeamCard.isMemo_include_flag());
+		}
+		return result;
 	}
 	
 	@Override
@@ -515,6 +556,58 @@ public class CardServiceImpl implements CardService {
 			}
 		}
 		return result > 1;
+	}
+	
+	@Override
+	public boolean deleteTeamCards(DeleteTeamCardsReqDto deleteTeamCardsReqDto) {
+		return cardRepository.updateTeamCardsToDeleted(deleteTeamCardsReqDto) > 0;
+	}
+	
+	@Override
+	public boolean deleteAllTeamCardsInGroup(DeleteTeamCardsReqDto deleteTeamCardsReqDto) {
+		List<Integer> cardIdList = cardRepository.getAllCardIdInTeamGroup(deleteTeamCardsReqDto.getGroupId());
+		if(deleteTeamCardsReqDto.getCard_id_list() != null) {
+			cardIdList.removeAll(deleteTeamCardsReqDto.getCard_id_list());
+		}
+		deleteTeamCardsReqDto.setCard_id_list(cardIdList);
+		return cardRepository.updateTeamCardsToDeleted(deleteTeamCardsReqDto) > 0;
+	}
+	
+	public boolean deleteAllTeamCardsInCardBook(DeleteTeamCardsReqDto deleteTeamCardsReqDto) {
+		List<Integer> cardIdList = cardRepository.getAllCardIdInTeamCardBook(deleteTeamCardsReqDto.getCardBookId());
+		if(deleteTeamCardsReqDto.getCard_id_list() != null) {
+			cardIdList.removeAll(deleteTeamCardsReqDto.getCard_id_list());
+		}
+		deleteTeamCardsReqDto.setCard_id_list(cardIdList);
+		return cardRepository.updateTeamCardsToDeleted(deleteTeamCardsReqDto) > 0;
+	}
+	
+	@Override
+	public List<Card> getTeamCardEmails(GetCardEmailReqDto getCardEmailReqDto) {
+		System.out.println(getCardEmailReqDto);
+		return cardRepository.getTeamCardEmails(getCardEmailReqDto);
+	}
+	
+	@Override
+	public List<Card> getTeamCardEmailsInGroup(GetCardEmailReqDto getCardEmailReqDto) {
+		List<Integer> cardIdList = cardRepository.getAllCardIdInTeamGroup(getCardEmailReqDto.getGroupId());
+		if(getCardEmailReqDto.getNot_selected_id_list() != null) {
+			cardIdList.removeAll(getCardEmailReqDto.getNot_selected_id_list());
+		}
+		getCardEmailReqDto.setCard_id_list(cardIdList);
+		System.out.println(getCardEmailReqDto);
+		return cardRepository.getTeamCardEmails(getCardEmailReqDto);
+	}
+	
+	@Override
+	public List<Card> getTeamCardEmailsInCardBook(GetCardEmailReqDto getCardEmailReqDto) {
+		List<Integer> cardIdList = cardRepository.getAllCardIdInTeamCardBook(getCardEmailReqDto.getCardBookId());
+		if(getCardEmailReqDto.getNot_selected_id_list() != null) {
+			cardIdList.removeAll(getCardEmailReqDto.getNot_selected_id_list());
+		}
+		getCardEmailReqDto.setCard_id_list(cardIdList);
+		System.out.println(getCardEmailReqDto);
+		return cardRepository.getTeamCardEmails(getCardEmailReqDto);
 	}
 	
 }
