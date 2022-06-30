@@ -63,9 +63,8 @@ public class CardRestController {
 	
 	@GetMapping("/{cardId}")
 	public ResponseEntity<?> getCardDetail(@PathVariable int cardId) {
-		CardDetail cardDetail = cardService.getCardDetail(cardId);
-		System.out.println(cardDetail);
-		return new ResponseEntity<>(cardDetail, HttpStatus.OK); 
+		
+		return new ResponseEntity<>(cardService.getCardDetail(cardId), HttpStatus.OK); 
 	}
 	
 	//명함 등록 post
@@ -177,6 +176,16 @@ public class CardRestController {
 		System.out.println(addGroupReqDto);
 		int result = cardService.addGroupUser(addGroupReqDto);
 		System.out.println(result);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+	
+	//메모 입력
+	@PostMapping("/{cardId}/memo")
+	public ResponseEntity<?> insertMemo(@PathVariable int cardId, CardMemo cardMemo,@AuthenticationPrincipal PrincipalDetails principalDetails ) {
+		cardMemo.setCard_id(cardId);
+		cardMemo.setUser_id(principalDetails.getId());
+		System.out.println(cardMemo);
+		boolean result = cardService.insertCardMemo(cardMemo) > 0;
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	

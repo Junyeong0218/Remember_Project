@@ -34,6 +34,7 @@ import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardDeleteReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
+import com.remember.app.responseDto.CardDetailResDto;
 import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 
@@ -54,8 +55,29 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public CardDetail getCardDetail(int card_id) {
-		return cardRepository.getCardDetail(card_id);
+	public CardDetailResDto getCardDetail(int card_id) {
+		List<CardDetail> details = cardRepository.getCardDetail(card_id);
+		System.out.println(details);
+		CardDetailResDto dto = new CardDetailResDto();
+		List<Group> groupList = new ArrayList<Group>();
+		List<CardMemoDetail> memoList = new ArrayList<CardMemoDetail>();
+		
+		for(int i = 0; i < details.size(); i++) {
+			CardDetail detail = details.get(i);
+			if(i == 0) {
+				dto.setCard(detail.toCardEntity());
+			}
+			Group group = detail.toGroupEntity();
+			if(group != null && ! groupList.contains(group)) groupList.add(group);
+			
+			CardMemoDetail memo = detail.toMemoDetailEntity();
+			if(memo != null && ! memoList.contains(memo)) memoList.add(memo);
+			
+		}
+		dto.setGroup_list(groupList);
+		dto.setMemo_list(memoList);
+		
+		return dto;
 	}
 	
 	@Override
@@ -194,6 +216,11 @@ public class CardServiceImpl implements CardService {
 	@Override
 	public List<Card> getCardSummaryList(int user_id, int page) {
 		return cardRepository.getCardSummaryList(user_id, page * 10);
+	}
+	
+	@Override
+	public int insertCardMemo(CardMemo cardMemo) {
+		return cardRepository.insertCardMemo(cardMemo);
 	}
 	
 	// -------------------------------------------------

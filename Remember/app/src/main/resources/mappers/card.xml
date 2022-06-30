@@ -4,236 +4,255 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="com.remember.app.entity.card.CardRepository">
-  <select id="getCards" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
-  select
-  	*
-  from
-  	card_mst
-  where
-  	user_id = #{user_id}
-  </select>
-  
-    <select id="getCardDetail" parameterType="Integer" resultType="com.remember.app.entity.card.CardDetail">
-select
-	cm.*,
-	cgm.group_name
-FROM 
-	card_mst cm
-	LEFT OUTER JOIN card_belong_group cbg ON(cbg.card_id = cm.id)
-	LEFT OUTER JOIN card_group_mst cgm ON(cgm.id = cbg.group_id)
-WHERE
-	card_id = 140;
-  </select>
-  
-  <insert id="insertCard" parameterType="com.remember.app.entity.card.Card">
-  	insert into
-  		card_mst
-  	values(
-  		0,
-  		#{user_id},
-  		#{name},
-  		null,
-  		#{phone},
-  		#{email},
-  		#{company_name},
-  		#{department_name},
-  		#{position_name},
-  		#{landline_phone},
-  		#{fax},
-  		#{address},
-  		#{sub_address},
-  		now(),
-  		now()
-  	);
-  	<selectKey keyProperty="id" resultType="Integer" order="AFTER">
-  		select id from card_mst where user_id = #{user_id} and name = #{name} order by create_date desc limit 1;
-  	</selectKey>
-
-  </insert>
-  
-  <update id="updateCard" parameterType="com.remember.app.entity.card.Card">
-  	update
-  		card_mst
-  	set
-  		name = #{name},
-  		profile_img = #{profile_img},
-  		phone = #{phone},
-  		email = #{email},
-  		company_name = #{company_name},
-  		department_name = #{department_name},
-  		position_name = #{position_name},
-  		landline_phone = #{landline_phone},
-  		fax = #{fax},
-  		address = #{address},
-  		sub_address = #{sub_address},
-  		update_date = now()
-  	where
-  		id = #{id}
-  </update>
-  
-  <delete id="deleteCard" parameterType="Integer">
-  	delete
-  	from
-  		card_mst
-  	where
-  		id = #{id}
-  </delete>
-  
-  <delete id="deleteCards" parameterType="com.remember.app.requestDto.CardDeleteReqDto">
-  delete
-  from
-  	card_mst
-  where
-  	id in (
-  		<foreach collection="card_id_list" item="item" index="index" separator=",">
-  			#{item}
-  		</foreach>
-  	);
-  </delete>
-  
-  <insert id="insertGroup" parameterType="com.remember.app.entity.card.Group">
-  	insert into
-  		card_group_mst
-  	values(
-  		0,
-  		#{user_id},
-  		#{group_name},
-  		now(),
-  		now()
-  	);
-  	
-  	<selectKey keyProperty="id" resultType="Integer" order="AFTER">
-  		select id from card_group_mst where user_id = #{user_id} and group_name = #{group_name};
-  	</selectKey>
-  </insert>
-  
-  <select id="getGroup" parameterType="Integer" resultType="com.remember.app.entity.card.GroupSummary">
-  	SELECT 
-		cgm.id,
-		cgm.group_name,
-		COUNT(DISTINCT cbg.id) AS card_count,
-		COUNT(DISTINCT cbg2.card_id) AS total_count
-	FROM 
-		card_group_mst cgm
-		LEFT OUTER JOIN card_belong_group cbg ON(cbg.group_id = cgm.id)
-		LEFT OUTER JOIN card_group_mst cgm2 ON(cgm2.user_id=#{user_id})
-		LEFT OUTER JOIN card_belong_group cbg2 ON(cbg2.group_id = cgm2.id)
-	WHERE
-		cgm.user_id=#{user_id}
-	GROUP BY
-		cgm.id
-	order by
-		cgm.create_date desc;
-  </select>
-  
-  <select id="getGroupByGroupId" parameterType="Integer" resultType="com.remember.app.entity.card.GroupCard">
-  	select
-	  	cm.*,
-	  	cgm.group_name
-	from
-	  	card_belong_group cbg
-	  	LEFT OUTER JOIN card_mst cm ON(cm.id = cbg.card_id)
-	  	LEFT OUTER JOIN card_group_mst cgm ON(cgm.id = cbg.group_id)
-	where
-	  	group_id = #{groupId}
-	order by
-  		cm.create_date desc;
-	  	
-  </select>
-  
-  <update id="updateGroup" parameterType="com.remember.app.entity.card.Group">
-  	update
-  		card_group_mst
-  	set
-  		group_name = #{group_name},
-  		update_date = now()
-  	where
-  		id = #{id}
-  </update>
-  
-  <delete id="deleteGroup" parameterType="com.remember.app.entity.card.Group">
-  	delete
-  	from
-  		card_group_mst
-  	where
-  		id =#{id}
-  </delete>
-  
-  <select id="getUserCard" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
-  	select
-  		*
-  	from
-  		card_mst
-  	where
-  		id = #{id}
-  </select>
-  
-  <insert id="addCardBelongGroups" parameterType="com.remember.app.requestDto.AddGroupReqDto">
-  	insert into
-  		card_belong_group
-  	values
-  	<foreach collection="group_id_list" index="index" item="item" separator=",">
-	  	(
-	  		0,
-	  		#{item},
-	  		#{cardId},
-	  		now(),
-	  		now()
-	  	)
-  	</foreach>
-  	;
-  </insert>
-  
-  <insert id="addCardsBelongDefaultGroup" parameterType="com.remember.app.requestDto.AddGroupReqDto">
-  	insert into
-  		card_belong_group
-  	values
-  	<foreach collection="card_id_list" index="index" item="item" separator=",">
-	  	(
-	  		0,
-	  		#{default_card_group_id},
-	  		#{item},
-	  		now()
-	  	)
-  	</foreach>
-  	;
-  </insert>
-  
-  <delete id="deleteCardsBelongGroup" parameterType="com.remember.app.requestDto.AddGroupReqDto">
-  	delete from
-  		card_belong_group
-  	where
-  		card_id in (
-  			<foreach collection="card_id_list" index="index" item="item" separator=",">
-  				#{item}
-  			</foreach>
-  		);
-  </delete>
-  
-  <select id="getCardSummaryList" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
-  	select
-  		card.id,
-  		card.`name`,
-  		card.company_name,
-  		card.department_name,
-  		card.position_name,
-  		card.create_date,
-  		
-  		count(distinct card2.id) as total_count
-  	from
-  		card_group_mst `group`
-  		left outer join card_belong_group belong on(belong.group_id = `group`.id)
-  		left outer join card_mst card on(card.id=belong.card_id)
-  		left outer join card_mst card2 on(card2.user_id = #{user_id})
-  	where
-  		`group`.user_id = #{user_id} and
-  		belong.id is not null
-  	group by
-  		belong.card_id
-  	order by
-  		card.create_date desc
-  	limit #{page}, 10;
-  </select>
+		<select id="getCards" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+			select
+				*
+			from
+				card_mst
+			where
+				user_id = #{user_id};
+		</select>
+	  
+	    <select id="getCardDetail" parameterType="Integer" resultType="com.remember.app.entity.card.CardDetail">
+			 select
+				cm.*,
+				cbg.group_id,
+				cgm.group_name,
+				memo.id as memo_id,
+				memo.user_id as memo_user_id,
+				memo.`contents`,
+				memo.create_date as memo_create_date,
+				memo.update_date as memo_update_date
+			FROM 
+				card_mst cm
+				LEFT OUTER JOIN card_belong_group cbg ON(cbg.card_id = cm.id)
+				LEFT OUTER JOIN card_group_mst cgm ON(cgm.id = cbg.group_id)
+				left outer join card_memo memo on(memo.card_id = cm.id)
+			WHERE
+				cm.id = #{card_id};
+		</select>
+	  
+		<insert id="insertCard" parameterType="com.remember.app.entity.card.Card">
+		  	insert into
+		  		card_mst
+		  	values(
+		  		0,
+		  		#{user_id},
+		  		#{name},
+		  		null,
+		  		#{phone},
+		  		#{email},
+		  		#{company_name},
+		  		#{department_name},
+		  		#{position_name},
+		  		#{landline_phone},
+		  		#{fax},
+		  		#{address},
+		  		#{sub_address},
+		  		now(),
+		  		now()
+		  	);
+		  	<selectKey keyProperty="id" resultType="Integer" order="AFTER">
+		  		select id from card_mst where user_id = #{user_id} and name = #{name} order by create_date desc limit 1;
+		  	</selectKey>
+	
+		</insert>
+	  
+		<update id="updateCard" parameterType="com.remember.app.entity.card.Card">
+		  	update
+		  		card_mst
+		  	set
+		  		name = #{name},
+		  		profile_img = #{profile_img},
+		  		phone = #{phone},
+		  		email = #{email},
+		  		company_name = #{company_name},
+		  		department_name = #{department_name},
+		  		position_name = #{position_name},
+		  		landline_phone = #{landline_phone},
+		  		fax = #{fax},
+		  		address = #{address},
+		  		sub_address = #{sub_address},
+		  		update_date = now()
+		  	where
+		  		id = #{id};
+		</update>
+	  
+		<delete id="deleteCard" parameterType="Integer">
+		  	delete
+		  	from
+		  		card_mst
+		  	where
+		  		id = #{id};
+		</delete>
+	  
+		<delete id="deleteCards" parameterType="com.remember.app.requestDto.CardDeleteReqDto">
+		delete
+		from
+			card_mst
+		where
+			id in(
+	  		<foreach collection="card_id_list" item="item" index="index" separator=",">
+	  			#{item}
+	  		</foreach>
+			);
+		</delete>
+	  
+		<insert id="insertGroup" parameterType="com.remember.app.entity.card.Group">
+		  	insert into
+		  		card_group_mst
+		  	values(
+		  		0,
+		  		#{user_id},
+		  		#{group_name},
+		  		now(),
+		  		now()
+		  	);
+		  	
+		  	<selectKey keyProperty="id" resultType="Integer" order="AFTER">
+		  		select id from card_group_mst where user_id = #{user_id} and group_name = #{group_name};
+		  	</selectKey>
+		</insert>
+	  
+		<select id="getGroup" parameterType="Integer" resultType="com.remember.app.entity.card.GroupSummary">
+		  	SELECT 
+				cgm.id,
+				cgm.group_name,
+				COUNT(DISTINCT cbg.id) AS card_count,
+				COUNT(DISTINCT cbg2.card_id) AS total_count
+			FROM 
+				card_group_mst cgm
+				LEFT OUTER JOIN card_belong_group cbg ON(cbg.group_id = cgm.id)
+				LEFT OUTER JOIN card_group_mst cgm2 ON(cgm2.user_id=#{user_id})
+				LEFT OUTER JOIN card_belong_group cbg2 ON(cbg2.group_id = cgm2.id)
+			WHERE
+				cgm.user_id=#{user_id}
+			GROUP BY
+				cgm.id
+			order by
+				cgm.create_date desc;
+		</select>
+	  
+		<select id="getGroupByGroupId" parameterType="Integer" resultType="com.remember.app.entity.card.GroupCard">
+		  	select
+			  	cm.*,
+			  	cgm.group_name
+			from
+			  	card_belong_group cbg
+			  	LEFT OUTER JOIN card_mst cm ON(cm.id = cbg.card_id)
+			  	LEFT OUTER JOIN card_group_mst cgm ON(cgm.id = cbg.group_id)
+			where
+			  	group_id = #{groupId}
+			order by
+		  		cm.create_date desc;
+		</select>
+	  
+		<update id="updateGroup" parameterType="com.remember.app.entity.card.Group">
+		  	update
+		  		card_group_mst
+		  	set
+		  		group_name = #{group_name},
+		  		update_date = now()
+		  	where
+		  		id = #{id};
+		</update>
+	  
+		<delete id="deleteGroup" parameterType="com.remember.app.entity.card.Group">
+		  	delete
+		  	from
+		  		card_group_mst
+		  	where
+		  		id =#{id};
+		</delete>
+	  
+		<select id="getUserCard" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+		  	select
+		  		*
+		  	from
+		  		card_mst
+		  	where
+		  		id = #{id};
+		</select>
+	  
+		<insert id="addCardBelongGroups" parameterType="com.remember.app.requestDto.AddGroupReqDto">
+		  	insert into
+		  		card_belong_group
+		  	values
+		  	<foreach collection="group_id_list" index="index" item="item" separator=",">
+			  	(
+			  		0,
+			  		#{item},
+			  		#{cardId},
+			  		now(),
+			  		now()
+			  	)
+		  	</foreach>
+		  	;
+		</insert>
+	  
+		<insert id="addCardsBelongDefaultGroup" parameterType="com.remember.app.requestDto.AddGroupReqDto">
+		  	insert into
+		  		card_belong_group
+		  	values
+		  	<foreach collection="card_id_list" index="index" item="item" separator=",">
+			  	(
+			  		0,
+			  		#{default_card_group_id},
+			  		#{item},
+			  		now()
+			  	)
+		  	</foreach>
+		  	;
+		</insert>
+	  
+		<delete id="deleteCardsBelongGroup" parameterType="com.remember.app.requestDto.AddGroupReqDto">
+		  	delete from
+		  		card_belong_group
+		  	where
+		  		card_id in (
+		  			<foreach collection="card_id_list" index="index" item="item" separator=",">
+		  				#{item}
+		  			</foreach>
+		  		);
+		</delete>
+	  
+		<select id="getCardSummaryList" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+		  	select
+		  		card.id,
+		  		card.`name`,
+		  		card.company_name,
+		  		card.department_name,
+		  		card.position_name,
+		  		card.create_date,
+		  		
+		  		count(distinct card2.id) as total_count
+		  	from
+		  		card_group_mst `group`
+		  		left outer join card_belong_group belong on(belong.group_id = `group`.id)
+		  		left outer join card_mst card on(card.id=belong.card_id)
+		  		left outer join card_mst card2 on(card2.user_id = #{user_id})
+		  	where
+		  		`group`.user_id = #{user_id} and
+		  		belong.id is not null
+		  	group by
+		  		belong.card_id
+		  	order by
+		  		card.create_date desc
+		  	limit #{page}, 10;
+		</select>
+	  
+		<insert id="insertCardMemo" parameterType="com.remember.app.entity.card.CardMemo">
+		  	insert into
+		  		card_memo
+		  	values(
+		  		0,
+		  		#{card_id},
+		  		#{user_id},
+		  		#{contents},
+		  		now(),
+		  		now()
+		  	);
+		</insert>
   
 		<insert id="insertTeam" parameterType="com.remember.app.entity.card.Team">
 			insert into

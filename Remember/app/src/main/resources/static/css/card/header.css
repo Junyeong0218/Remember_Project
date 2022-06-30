@@ -523,13 +523,20 @@ header {
 	cursor: pointer;
 }
 
-.info_no_value{
+.no_content,
+.info_group_value{
 	font-size: 14px;
 	color: #999;	
 }
 
+.info_con_box span {
+	display: flex;
+}
+
+
 .group_set_img{
 	display: none;
+
 }
 
 

@@ -12,7 +12,7 @@ public interface CardRepository {
 	
 	public List<Card> getCards(int user_id);
 	
-	public CardDetail getCardDetail(int card_id);
+	public List<CardDetail> getCardDetail(int card_id);
 	
 	public int insertCard(Card card);
 	
@@ -41,6 +41,8 @@ public interface CardRepository {
 	public int deleteCardsBelongGroup(AddGroupReqDto addGroupReqDto);
 	
 	public List<Card> getCardSummaryList(int user_id, int page);
+	
+	public int insertCardMemo(CardMemo cardMemo); 
 	
 	// -------------------------------------------------
 	// team 관련 repository methods
