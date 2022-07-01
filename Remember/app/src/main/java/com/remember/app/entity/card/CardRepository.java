@@ -64,6 +64,8 @@ public interface CardRepository {
 	
 	public int insertTeamUserProfile(TeamUserProfile teamUserProfile);
 	
+	public int getUserJoinTeamFlag(int userId);
+	
 	public int updateProfileNickname(TeamUserProfile teamUserProfile);
 	
 	public int insertTeamGroup(TeamGroup teamGroup);

@@ -328,6 +328,15 @@
 			);
 		</insert>
 		
+		<select id="getUserJoinTeamFlag" parameterType="Integer" resultType="Integer">
+			select
+				count(distinct id)
+			from
+				team_join_user
+			where
+				joined_user_id = #{userId};
+		</select>
+		
 		<update id="updateProfileNickname" parameterType="com.remember.app.entity.card.TeamUserProfile">
 			update
 				team_user_profile

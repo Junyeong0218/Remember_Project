@@ -71,6 +71,8 @@ public interface CardService {
 	
 	public boolean updateTeamName(Team team);
 	
+	public boolean isTeamJoined(int userId);
+	
 	public TeamUserProfile getTeamUserProfile(int userId);
 	
 	public boolean updateProfileNickname(TeamUserProfile teamUserProfile);

@@ -193,6 +193,11 @@ public class CardRestController {
 		return cardService.insertTeam(addTeamReqDto);
 	}
 	
+	@GetMapping("/team/user/{userId}")
+	public boolean isTeamJoined(@PathVariable int userId) {
+		return cardService.isTeamJoined(userId);
+	}
+	
 	@GetMapping("/team/profile")
 	public TeamUserProfile getTeamUserProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		return cardService.getTeamUserProfile(principalDetails.getId());

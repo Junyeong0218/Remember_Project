@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/static/css/card/header.css">
     <link rel="stylesheet" href="/static/css/card/footer.css">
     <link rel="stylesheet" href="/static/css/card/team.css">
+    <link rel="stylesheet" href="/static/css/card/card_modal.css">
     <link rel="stylesheet" href="/static/css/card/team_modal.css">
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="/static/js/get_principal.js"></script>
@@ -18,36 +19,8 @@
 
 <body>
     <div class="container">
-        <header>
-            <div class="header_wrapper">
-                <a href="/card" class="logo">
-                    <img src="/static/images/mypage_company_logo.png" alt="로고">
-                </a>
-                <div class="business_card_searcher">
-                    <input type="text" name="keyword" class="keyword_input" placeholder="명함을 검색">
-                    <span class="search_icon">
-                        <img src="/static/images/mypage_searcher_icon.png" alt="">
-                    </span>
-                    <div class="search_results">
-
-                    </div>
-                </div>
-                <div class="card_tabs">
-                    <a href="/card" class="tab">내 명함첩</a>
-                    <a href="/card/team-empty" class="tab selected">팀 명함첩</a>
-                    <button type="button" class="add_business_card">
-                        <img src="/static/images/mypage_add_business_card.png" alt="명함 추가">
-                    </button>
-                    <button type="button" class="alert_modal_button">
-                        <img src="/static/images/show_alert_modal_button.png" alt="알림 보기">
-                    </button>
-                    <button type="button" class="mypage_button">
-                        <span class="email"></span>
-                        <span class="arrow"></span>
-                    </button>
-                </div>
-            </div>
-        </header>
+        <header th:replace="fragment/header/card_header :: card_header"></header>
+        
         <main>
             <div class="main_wrapper">
             	<aside class="menus">
@@ -111,32 +84,8 @@
             	
             </div>
         </main>
-        <footer>
-            <div class="footer_wrapper">
-                <div class="links">
-                    <a href="#">회사소개</a>
-                    <a href="#">이용약관</a>
-                    <a href="#">개인정보처리방침</a>
-                    <a href="#">도움말</a>
-                    <a href="#">광고상품</a>
-                    <a href="#">언론보도</a>
-                    <button type="button" class="relate_service_modal">
-                        <span class="text">관련 서비스</span>
-                        <span class="arrow"></span>
-                    </button>
-                </div>
-                <div class="copyrights">
-                    <span class="row">대표전화 : 02-556-4202</span>
-                    <span class="row">06158 서울시 강남구 테헤란로79길 6, 6층 (삼성동, 제이에스타워) (대표자:최재호) 사업자등록번호 : 211-88-81111</span>
-                    <div class="row">
-                        <a href="#" class="company_number">통신판매업 신고번호: 2016-서울강남-03104호</a>
-                        <span class="company_number">직업정보제공사업 신고번호: 서울강남 제2019-11호</span>
-                        <span class="company_number">유료직업소개사업 신고번호: 2020-3220237-14-5-00003</span>
-                    </div>
-                    <span class="row">Copyright 2019. Drama & Company All rights reserved.</span>
-                </div>
-            </div>
-        </footer>
+        
+        <footer th:fragment="fragment/footer/card_footer :: card_footer"></footer>
     </div>
     <script src="/static/js/card/load_header.js"></script>
     <script src="/static/js/card/team.js"></script>

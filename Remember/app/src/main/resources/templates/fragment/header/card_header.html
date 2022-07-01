@@ -1,0 +1,30 @@
+<header th:fragment="card_header">
+    <div class="header_wrapper">
+        <a href="/card" class="logo">
+            <img src="/static/images/mypage_company_logo.png" alt="로고">
+        </a>
+        <div class="business_card_searcher">
+            <input type="text" name="keyword" class="keyword_input" placeholder="명함을 검색">
+            <span class="search_icon">
+                <img src="/static/images/mypage_searcher_icon.png" alt="">
+            </span>
+            <div class="search_results">
+
+            </div>
+        </div>
+        <div class="card_tabs">
+            <a href="/card" class="tab selected">내 명함첩</a>
+            <a href="" id="team_tab_button" class="tab">팀 명함첩</a>
+            <button type="button" class="add_business_card">
+                <img src="/static/images/mypage_add_business_card.png" alt="명함 추가">
+            </button>
+            <button type="button" class="alert_modal_button">
+                <img src="/static/images/show_alert_modal_button.png" alt="알림 보기">
+            </button>
+            <button type="button" class="mypage_button">
+                <span class="email"></span>
+                <span class="arrow"></span>
+            </button>
+        </div>
+    </div>
+</header>

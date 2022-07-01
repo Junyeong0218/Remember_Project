@@ -1,37 +1,79 @@
-
 const container = document.querySelector('.container');
 const header_email = document.querySelector('.header_wrapper .email');
-const mypageBtn = document.querySelectorAll('.mypage_button');
-const alertBtn = document.querySelector('.alert_modal_button');
-const addBtn = document.querySelector('.add_business_card');
-const cardTabs = document.querySelector('.card_tabs');
-
-
+const card_tabs = document.querySelector('.card_tabs');
+const team_tab_button = document.querySelector("#team_tab_button");
 
 console.log(principal);
 
 header_email.innerText = principal.email;
 
-cardTabs.onclick = addEvent;
+card_tabs.onclick = executeMultipleEvents;
 
-function tabMenu(){
-	cardTabs.innerHTML+= `
-		<div class="tabs_menu">
-                	<ul class="menu_box">
-                		<li><a href="">입력 중인 명함 (0)</a></li>
-                		<li><a href="">입력할 수 없는 명함 (0)</a></li>
-                		<li><a href="">공지사항</a></li>
-                		<li><a href="">도움말</a></li>
-                		<li><a href="">1:1 문의</a></li>
-                		<li><a href="">설정</a></li>
-                		<li><a href="/logout">로그아웃</a></li>
-                	</ul>
-                </div>
-	`;
+team_tab_button.onclick = (event) => {
+	event.preventDefault();
+	if(isTeamJoined()) {
+		location.href = "/card/team";
+	} else {
+		location.href = "/card/team-empty";
+	}
 }
-//cotainer -> 100% / 100vh / fixed top 0 / body overflow hidden
 
-function alertMenu(){
+function isTeamJoined() {
+	let flag = false;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/team/user/" + principal.id,
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			console.log(data);
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function insertNewCard(data) {
+	let card_id;
+	$.ajax({
+		type:'post',
+		url:'/api/v1/card',
+		async: false,
+		data: data,
+		dataType:'json',
+		success:function(data){
+			card_id = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return card_id;
+}
+
+function makeTabMenuTag() {
+	const div = document.createElement("div");
+	div.className = "tabs_menu";
+	div.innerHTML = `
+		<ul class="menu_box">
+			<li><a href="">입력 중인 명함 (0)</a></li>
+			<li><a href="">입력할 수 없는 명함 (0)</a></li>
+			<li><a href="">공지사항</a></li>
+			<li><a href="">도움말</a></li>
+			<li><a href="">1:1 문의</a></li>
+			<li><a href="">설정</a></li>
+			<li><a href="/logout">로그아웃</a></li>
+		</ul>
+	`;
+	return div;
+}
+
+function makeAlertMenuTag() {
 	const div = document.createElement("div");
 	div.className = "note_modal";
 	div.innerHTML = `
@@ -51,19 +93,13 @@ function alertMenu(){
 			</div>
 		</div>
 	`;
-	container.appendChild(div);
-	
-	const modal = document.querySelector('.note_modal');
-	const closeBtn = modal.querySelector('.close_btn');
-	closeBtn.onclick = () =>{
-		modal.remove();
-	}
+	return div;
 }
 
-function addMenu(){
-	const modal = document.createElement("div");
-	modal.className = "note_modal add";
-	modal.innerHTML = `
+function makeAddMenuModal() {
+	const div = document.createElement("div");
+	div.className = "note_modal add";
+	div.innerHTML = `
 		<div class="add_modal_content">
 			<div class="add_header">
 				<h1>명함등록</h1>
@@ -95,77 +131,7 @@ function addMenu(){
 			</div>
 		</div>
 	`;
-	container.appendChild(modal);
-	
-	const addCloseBtn = modal.querySelector('.add_close_btn');
-	addCloseBtn.onclick = () =>{
-		modal.remove();
-	}
-	const buttons = modal.querySelectorAll('.list_box');
-	buttons[buttons.length-1].onclick = () => {
-		const addCardForm = makeAddCardForm();
-		const main_contents = document.querySelector(".main_contents");
-		
-		main_contents.innerHTML = '';
-		main_contents.appendChild(addCardForm);
-		const addProfileImgBtn = addCardForm.querySelector('.card_profile > button');
-		const imgInput = addCardForm.querySelector('.profile_img_input');
-		const imgTag = addCardForm.querySelector('.proflie_img');
-		console.log(imgTag);
-		addProfileImgBtn.onclick = () => imgInput.click();
-		imgInput.onchange = (event) => {
-			AddProfileImg(event,imgTag);
-		}
-		document.querySelector('.my_business_card').classList.add("hidden");
-		modal.remove();
-		addCardForm.querySelector('.cancel').onclick = () => {
-		console.log('취소');
-		location.reload();
-		}
-		addCardForm.querySelector('.save').onclick = () => {
-			const data = makeCardData(addCardForm);
-			console.log('저장');
-			console.log(data);
-			if(data.name == null) {
-				alert("이름은 필수로 입력하셔야합니다.");
-			} else {
-				$.ajax({
-					type:'post',
-					url:'/api/v1/card',
-					data: data,
-					dataType:'json',
-					success:function(card_id){
-						console.log(card_id);
-						if(card_id > 0){
-							const cardDetail = cardDetailTag(getUserCard(card_id));
-							addCardForm.remove();
-							main_contents.innerHTML = '';
-							main_contents.appendChild(cardDetail);
-							document.querySelector('.my_business_card').classList.remove("hidden");
-							const editBtn =cardDetail.querySelector('.edit');
-							editBtn.onclick = () => {
-								const editForm = makeEditTag();
-								console.log("클릭");
-								cardDetail.remove();
-								main_contents.innerHTML='';
-								main_contents.appendChild(editForm);
-							}
-							
-							// 미분류명함 card_count select
-							
-						}else {
-							alert('명함 추가 실패')
-						}
-					},
-					error: function (xhr, stauts) {
-					console.log(xhr);
-					console.log(stauts);
-					}
-				});
-			}
-		}
-	}
-
+	return div;
 }
 
 function makeCardData(cardForm) {
@@ -190,7 +156,6 @@ function getUserCard(card_id){
 		success:function(data){
 			console.log(data);
 			card_data = data;
-
 		},
 		error: function (xhr, stauts) {
 				console.log(xhr);
@@ -202,7 +167,7 @@ function getUserCard(card_id){
 
 
 
-function makeAddCardForm(){
+function makeAddCardFormTag(){
 	const div = document.createElement("div");
 	div.className = "card_content";
 	div.innerHTML = `
@@ -282,20 +247,18 @@ function makeAddCardForm(){
 				</div>
 			</div>
 	`;
-	
 	return div;	
 }
 
 function AddProfileImg(event, imgTag){
 	const reader = new FileReader();
-	console.log(imgTag);
 	reader.onloadend = (e) => {
 		imgTag.src = e.target.result;
 	}
 	reader.readAsDataURL(event.target.files[0]);
 }
 
-function cardDetailTag(card_data){
+function makeCardDetailTag(card_data){
 	const position_text = card_data.position_name != null && card_data.department_name != null ? card_data.position_name + " / " + card_data.department_name :
 											 card_data.position_name == null && card_data.department_name == null ? null : 
 											 card_data.position_name == null ? card_data.department_name : card_data.position_name;
@@ -394,50 +357,93 @@ ${card_data.company_name == null ? '' : '<div class="profile_company">' + card_d
             <button class="t_btn">+ 메모추가</button>
         </div>
 	`;
-
 	return div;
 }
-
-function makeEditTag(){
-	const div = document.createElement('div');
-	div.className="edit_con";
-	div.innerHTML=`
-	<div>sdfsdf</div>
-	`;
-	
-	return div;
-}
-
-
 
 function makeCardDate(create_date){
-	const date = new Date();
+	const date = new Date(create_date);
 	date.getFullYear();
 	const month = date.getMonth() + 1 ;
 	const day = String(date.getDate());
+	
 	return `${date.getFullYear()}년 ${month}월 ${day}일 `;
 }
 
-
-
-function addEvent(event) {
+function executeMultipleEvents(event) {
 	if(event.target.className == 'mypage_button') {
-		const account_menu = cardTabs.querySelector(".tabs_menu");
+		let account_menu = card_tabs.querySelector(".tabs_menu");
 		if(account_menu == null) {
-			tabMenu();
+			account_menu = makeTabMenuTag();
+			card_tabs.appendChild(account_menu);
 		} else {
 			account_menu.remove();
 		}
 	} else if(event.target.className == 'alert_modal_button'){
-		const note_modal = document.querySelector(".note_modal");
-		console.log(note_modal);
+		let note_modal = document.querySelector(".note_modal");
 		if(note_modal == null){
-			alertMenu();
+			note_modal = makeAlertMenuTag();
+			container.appendChild(note_modal);
+			
+			note_modal.querySelector('.close_btn').onclick = () => note_modal.remove();
 		}
 	} else if(event.target.className == 'add_business_card'){
-		const note_modal = document.querySelector(".note_modal");
+		let note_modal = document.querySelector(".note_modal");
 		if(note_modal == null){
-			addMenu();
+			note_modal = makeAddMenuModal();
+			container.appendChild(note_modal);
+			
+			note_modal.querySelector('.add_close_btn').onclick = () => note_modal.remove();
+			
+			const buttons = note_modal.querySelectorAll('.list_box');
+			buttons[2].onclick = () => {
+				const add_card_form_tag = makeAddCardFormTag();
+				const main_contents = document.querySelector(".main_contents");
+				
+				main_contents.innerHTML = '';
+				main_contents.appendChild(add_card_form_tag);
+				
+				document.querySelector('.my_business_card').classList.add("hidden");
+				note_modal.remove();
+				
+				const add_profile_image_button = add_card_form_tag.querySelector('.card_profile > button');
+				const image_input = add_card_form_tag.querySelector('.profile_img_input');
+				const image_tag = add_card_form_tag.querySelector('.proflie_img');
+				
+				add_profile_image_button.onclick = () => image_input.click();
+				image_input.onchange = (event) => {
+					AddProfileImg(event, image_tag);
+				}
+				
+				add_card_form_tag.querySelector('.cancel').onclick = () => location.reload();
+				
+				add_card_form_tag.querySelector('.save').onclick = () => {
+					const data = makeCardData(add_card_form_tag);
+					if(data.name == null) {
+						alert("이름은 필수로 입력하셔야합니다.");
+					} else {
+						const new_card_id = insertNewCard(data);
+						if(new_card_id > 0) {
+							const card_detail_tag = makeCardDetailTag(getUserCard(new_card_id));
+							add_card_form_tag.remove();
+							
+							main_contents.innerHTML = '';
+							main_contents.appendChild(card_detail_tag);
+							
+							document.querySelector('.my_business_card').classList.remove("hidden");
+							const edit_button = card_detail_tag.querySelector('.edit');
+							edit_button.onclick = () => {
+								const editForm = makeEditTag();
+								card_detail_tag.remove();
+								
+								main_contents.innerHTML='';
+								main_contents.appendChild(editForm);
+							}
+						} else {
+							alert('명함 추가 실패');
+						}
+					}
+				}
+			}
 		}
 	} 
 }

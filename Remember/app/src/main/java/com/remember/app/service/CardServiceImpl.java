@@ -274,6 +274,11 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
+	public boolean isTeamJoined(int userId) {
+		return cardRepository.getUserJoinTeamFlag(userId) > 0;
+	}
+	
+	@Override
 	public boolean updateProfileNickname(TeamUserProfile teamUserProfile) {
 		return cardRepository.updateProfileNickname(teamUserProfile) == 1;
 	}
