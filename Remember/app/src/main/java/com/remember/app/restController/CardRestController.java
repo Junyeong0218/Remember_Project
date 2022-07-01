@@ -189,6 +189,14 @@ public class CardRestController {
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	
+	//메모 수정
+	@PutMapping("/{cardMemoId}/memo")
+	public ResponseEntity<?> updateMemo(@PathVariable int cardMemoId, CardMemo cardMemo) {
+		cardMemo.setId(cardMemoId);
+		boolean result = cardService.updateCardMemo(cardMemo);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+	
 
 	
 	// ------------------------------------------------------------------------------

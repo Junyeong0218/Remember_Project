@@ -253,6 +253,15 @@
 		  		now()
 		  	);
 		</insert>
+		
+		<update id="updateCardMemo" parameterType="com.remember.app.entity.card.CardMemo">
+			update
+				card_memo
+			set
+				contents = #{contents}
+			where
+				id = #{id};
+		</update>
   
 		<insert id="insertTeam" parameterType="com.remember.app.entity.card.Team">
 			insert into

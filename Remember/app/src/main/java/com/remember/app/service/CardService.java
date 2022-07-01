@@ -57,6 +57,8 @@ public interface CardService {
 	
 	public int insertCardMemo(CardMemo cardMemo);
 	
+	public boolean updateCardMemo(CardMemo cardMemo);
+	
 	// -------------------------------------------------
 	// team 관련 services
 	

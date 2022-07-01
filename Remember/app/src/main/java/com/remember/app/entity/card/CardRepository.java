@@ -44,6 +44,8 @@ public interface CardRepository {
 	
 	public int insertCardMemo(CardMemo cardMemo); 
 	
+	public int updateCardMemo(CardMemo cardMemo);
+	
 	// -------------------------------------------------
 	// team 관련 repository methods
 	

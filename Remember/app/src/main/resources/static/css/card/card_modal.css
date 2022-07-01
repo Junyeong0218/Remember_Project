@@ -244,6 +244,14 @@
 
 .memo_body {
 	padding: 15px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.memo_body span {
+	font-size: 13px;
+	opacity: 0.65;
 }
 
 .memo_write {

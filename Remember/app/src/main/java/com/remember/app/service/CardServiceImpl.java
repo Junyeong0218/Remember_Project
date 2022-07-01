@@ -223,6 +223,12 @@ public class CardServiceImpl implements CardService {
 		return cardRepository.insertCardMemo(cardMemo);
 	}
 	
+	@Override
+	public boolean updateCardMemo(CardMemo cardMemo) {
+		
+		return cardRepository.updateCardMemo(cardMemo) == 1;
+	}
+	
 	// -------------------------------------------------
 	// team 관련 services
 	

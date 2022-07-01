@@ -22,7 +22,7 @@ let total_page_check_flag = false;
 let group_list;
 let card_list;
 
-add_group_btn.onclick = toggleadd_group_input_wrapperTag;
+add_group_btn.onclick = makeAddGroupBoxTag;
 
 whole_cards.onclick = () => {
 	card_list = getAllCards();
@@ -103,7 +103,6 @@ function setGroupList() {
 						}
 					}
 				}
-				
 			} else {
 				console.log(group_list[i].id);
 				card_list = getCardListInSpecificGroup(group_list[i].id);
@@ -197,6 +196,24 @@ function updateCard(card_id, formdata) {
 	return flag;	
 }
 
+function updateMemo(card_memo_id,contents) {
+	let flag = false;
+	$.ajax({
+		type:'put',
+		url:'/api/v1/card/' + card_memo_id + '/memo',
+		async: false,
+		data:{"contents":contents},
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, stauts) {
+		console.log(xhr);
+		console.log(stauts);
+		}
+	});
+	return flag;
+}
+
 
 function setCardList() {
     total_page_check_flag = false;
@@ -216,13 +233,14 @@ function setCardList() {
         const send_more = card_list_tag.querySelectorAll('.send');
         const selcet = card_list_tag.querySelector('.list_select');
         const cards = card_list_tag.querySelectorAll(".card_list_con");
-        const checkBoxes = card_list_tag.querySelectorAll(".check_btn");
+        const checkBoxes = card_list_tag.querySelectorAll(".list_group .check_btn");
         
         makePageTag(total_card_count, pager.children);
         
         let card_count = 0;
                 
 		all_checkbox.onclick = (event) => {
+			console.log(event.target);
 			if(event.target.className.includes("not_max")) {
 				event.target.checked = false;
 				event.target.classList.remove("not_max");
@@ -230,6 +248,7 @@ function setCardList() {
             cards.forEach(item => item.querySelector(".check_btn").checked = event.target.checked);
             
 			card_count = countChecked(checkBoxes);
+			console.log(card_count);
 
             if(event.target.checked == true) {
 				selcet.classList.remove('hide');
@@ -419,7 +438,7 @@ function setCardList() {
 					
 					complete_button.onclick = () => {
 						const selected_group_id_list = new Array();
-						const group_tag_list = move_group.querySelectorAll(".group_list > ul > li > input");
+						const group_tag_list = move_group_modal.querySelectorAll(".group_list > ul > li > input");
 						group_tag_list.forEach((e, index) => {
 							if(e.checked) selected_group_id_list.push(groups[index].id);
 						});
@@ -436,6 +455,45 @@ function setCardList() {
 							alert("그룹 수정 실패");
 						}
 					}
+				}
+				
+				const memo_wrapper = card_detail_tag.querySelector('.info_memo_value');
+				for(let i = 0; i < card_detail.memo_list.length; i++) {
+					const memo = makeAddMemoTag(card_detail.memo_list[i]);
+					memo_wrapper.appendChild(memo);
+					
+					memo.querySelector('.show_edit_memo_modal').onclick = () => {
+						const update_memo_modal = makeUpdateCardMemoModal(card_detail.memo_list[i]);
+						const contents = update_memo_modal.querySelector(".memo_text");
+						const submit_button = update_memo_modal.querySelector(".memo_btn.save");
+						appendModalToContainer(update_memo_modal);
+						
+						update_memo_modal.querySelector('.close_btn').onclick = () => {
+							removeModal(update_memo_modal);
+						}
+						
+						update_memo_modal.querySelector('.memo_btn.cancel').onclick = () => {
+							removeModal(update_memo_modal);
+						}
+						
+						contents.oninput = (event) => {
+							if(event.target.value == "") {
+								submit_button.disabled = true;
+							} else {
+								submit_button.disabled = false;
+							}
+						}
+						
+						submit_button.onclick = () => {
+							if(updateMemo(card_detail.memo_list[i].id, contents.value)) {
+								location.reload();
+							} else {
+								alert("메모 수정 실패");
+							}
+							removeModal(update_memo_modal);
+						}
+					}
+					
 				}
 				
 	            const edit_card_button = card_detail_tag.querySelector(".t_btn.edit");
@@ -618,8 +676,8 @@ function makePageTag(total_card_count, pager) {
 			const page_for_event = page_number;
 			pager[i].onclick = () => {
 				page = page_for_event - 1;
-				main_contents.innerHTML = "";
-				getAllCards(page);
+				card_list = getAllCards();
+				setCardList();
 			}
 		}
 		page_number++;
@@ -1428,15 +1486,14 @@ ${card_detail.card.company_name == null ? '' : '<div class="profile_company">' +
 	                </div>
 	        	</div>  
 	        </div>
-   	 	</div>
          <div class="profile_memo">
             <div class="info_title">메모</div>
                 <div class="info_con_box">
-                    <div class="info_con"></div>
-                    <div class="info_group_value">메모없음</div>
+                    ${card_detail.memo_list.length == 0 ? '<span class="no_content">메모 없음</span>' : '<div class="info_memo_value"></div>'}
                 </div>
              </div>
         </div>
+   	 	</div>
         <div class="add_memo">
             메모를 추가하세요 
             <button class="t_btn memo">+ 메모추가</button>
@@ -1446,13 +1503,6 @@ ${card_detail.card.company_name == null ? '' : '<div class="profile_company">' +
     return div;
 }
 
-/*function makeDepartmentText(group_name) {
-    return position_name != null && department_name != null ? position_name + " / " + department_name :
-        position_name == null && department_name == null ? null :
-            position_name == null ? department_name : position_name;
-        group_name == "미분류 명함" ? "미지정" : group_name != null ? group.groupname + "," + group.group_name  
-}
-*/
 function makeJoinedGroupTag(group_list) {
 	let group_text = "";
 	group_list.forEach(e => {
@@ -1469,6 +1519,55 @@ function makeJoinedGroupTag(group_list) {
 	
 	return span;
 }
+
+function makeAddMemoTag(memo) {
+	const div = document.createElement("div");
+	div.className = "memo";
+	div.innerHTML = `
+		<div class="title">
+			<span class="text">${memo.create_date.replace('T', ' ')}</span>
+			<button type="button" class="show_edit_memo_modal">
+				<img src="/static/images/card_team_edit_memo.png">
+			</button>
+			<button type="button" class="show_remove_memo_modal">
+				<img src="/static/images/card_team_remove_memo.png">
+			</button>
+		</div>
+		<div class="memo_contents">${memo.contents}</div>
+	`;
+	return div;
+}
+
+function makeUpdateCardMemoModal(memo) {
+	const div = document.createElement('div');
+	div.className = "note_modal";
+	div.innerHTML =`
+		<div class="note_modal_content ">
+			<div class="note_content memo">
+				<div class="memo_header">
+					<button class="close_btn">
+						<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+					</button>
+					<h1>메모 수정</h1>
+				</div>
+				<div class="memo_body">
+					<span>${memo.update_date.replace("T", " ")}에 마지막 수정</span>
+					<div class="memo_write">
+						<textarea class="memo_text" rows="4" placeholder="내용을 입력해 주세요."max-length="1000" >${memo.contents}</textarea>
+				<div class="memo_buttons">
+					<div class="memo_btn cancel"><button type="button">취소</button></div>
+					<div class="memo_btn save"><button type="button">저장</button></div>
+				</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	`;
+	
+	return div;
+}
+
+
 
 function makeAddMemoModal(){
 	const div = document.createElement('div');
@@ -1536,9 +1635,9 @@ function changeGroupNameTag(group_data) {
 	return div;
 }
 
-function toggleadd_group_input_wrapperTag() {
-    const add_group_input_wrapperBox = add_group_input_wrapper.querySelector('.add_group_box');
-    if (add_group_input_wrapperBox == null) {
+function makeAddGroupBoxTag() {
+    const add_group_box_tag = add_group_input_wrapper.querySelector('.add_group_box');
+    if (add_group_box_tag == null) {
         const div = document.createElement("div");
         div.className = "add_group_box";
         div.innerHTML = `
@@ -1548,63 +1647,92 @@ function toggleadd_group_input_wrapperTag() {
 			</div>
 		`;
         add_group_input_wrapper.appendChild(div);
-        const add_group_input_wrapperCloseBtn = div.querySelector('.add_group_close_btn');
-        add_group_input_wrapperCloseBtn.onclick = () => {
+        const add_group_input_close_button = div.querySelector('.add_group_close_btn');
+        add_group_input_close_button.onclick = () => {
             div.remove();
         }
-        const add_group_input_wrapperInput = div.querySelector('.add_group_input')
-        add_group_input_wrapperInput.onkeypress = function () {
+        const add_group_input = div.querySelector('.add_group_input')
+        add_group_input.onkeypress = function () {
             if (window.event.keyCode == 13) {
-                console.log(add_group_input_wrapperInput.value);
-                inputadd_group_input_wrapper(add_group_input_wrapperInput.value);
+                console.log(add_group_input.value);
+                const new_group_id = insertNewGroup(add_group_input.value);
+                if (new_group_id > 0) {
+	                const before_element = my_card.children[4];
+	                const new_group_obj = {"id":new_group_id,
+                						   "group_name": add_group_input.value,
+                						   "card_count": 0 };
+	                const group_tag = makeGroupTag(new_group_obj);
+	                my_card.insertBefore(group_tag, before_element);
+	                add_group_input_wrapper.querySelector('.add_group_box').remove();
+	                
+	                group_tag.onclick = (event) => {
+						if(event.target.className == "group_btn") {
+							const group_drop = group_tag.querySelector('.drop_menu');
+							const drop_menu_tag_list = group_drop.querySelectorAll('.drop_menu ul li');
+			
+							group_drop.classList.toggle('hidden');
+							
+							drop_menu_tag_list[0].onclick = () => {
+								const change_name_tag = changeGroupNameTag(new_group_obj);
+								const input = change_name_tag.querySelector('.change_input input');
+								group_tag.innerHTML= '';
+								group_tag.appendChild(change_name_tag);
+								input.onkeypress = () => {
+									if(window.event.keyCode == 13) {
+										if(updateGroupName(new_group_obj.id, input.value)) {
+											location.reload();
+										} else {
+											alert("그룹명 변경 실패");
+										}
+									}
+								}
+							}
+							drop_menu_tag_list[1].onclick = () => {
+								const delete_group_modal = makeDeleteGroupModal(new_group_obj);
+								appendModalToContainer(delete_group_modal);
+								
+								delete_group_modal.querySelector(".add_close_btn").onclick = () => removeModal(delete_group_modal);
+								
+								const delete_button = delete_group_modal.querySelector(".footer_btn button");
+								delete_button.onclick = () => {
+									if(deleteGroup(new_group_obj.id)) {
+										location.reload();
+									} else {
+										alert("그룹 삭제 실패");
+									}
+								}
+							}
+						} else {
+							console.log(new_group_obj.id);
+							card_list = getCardListInSpecificGroup(new_group_obj.id);
+							console.log(card_list);
+							setCardList();
+						}
+					}
+	            } else {
+	                alert("그룹 생성 실패");
+	            }
             }
-
         };
     }
 }
 
-function inputadd_group_input_wrapper(group_name) {
+function insertNewGroup(group_name) {
+	let group_id;
     $.ajax({
         type: 'post',
         url: '/api/v1/card/group',
-        data: {
-            "group_name": group_name
-        },
+        async: false,
+        data: {"group_name": group_name},
         dataType: 'json',
-        success: function (group_id) {
-            console.log(group_id);
-            if (group_id > 0) {
-                console.log(group_name);
-                const beforeElement = myCard.children[4];
-                const groupTag = makeGroupTag({ "group_name": group_name, "card_count": 0 });
-                myCard.insertBefore(groupTag, beforeElement);
-                add_group_input_wrapper.querySelector('.add_group_box').remove();
-                groupTag.onclick = (event) => {
-					if(event.target.className == "group_btn") {
-						console.log('그룹');
-						const groupDrop = group_tag.querySelector('.drop_menu');
-						groupDrop.classList.toggle('hidden');
-						groupNameChange[0].onclick = () => {
-							console.log("변경");
-						/*	const changeName = changeGroupNameTag(group_name);
-							for(let i = 0; i< whole_cards.length; i ++) {
-								whole_cards[i].innerHTML= '';
-								whole_cards[i].appendChild(changeName);
-								
-							}*/
-							
-						}
-					} else {
-						getGroup(group_list[i].id);
-					}
-				}
-            } else {
-                alert("그룹 생성 실패");
-            }
+        success: function (id) {
+            console.log(id);
+            group_id = id;
         },
         error: function (xhr, status) {
-            console.log(xhr);
-            console.log(status);
-        }
-    })
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return group_id;
 }
