@@ -257,7 +257,7 @@ header {
 }
 
 .input_item.top{
-		border-bottom: 1px solid #cdcdcd;
+	border-bottom: 1px solid #cdcdcd;
 }
 
 .item_box{
@@ -504,8 +504,8 @@ header {
 .info_con_box{
 	display:flex;
 	padding: 15px 0 4px 0;
-
 }
+
 
 .info_con.link{
 	text-decoration: underline;
@@ -517,10 +517,79 @@ header {
 	color: rgba(0,0,0,.65);
 }
 
-.info_no_value{
-	font-size: 12px;
+.info_group_set {
+	width: 18px;
+	height: 18px;
+	cursor: pointer;
+}
+
+.no_content,
+.info_group_value{
+	font-size: 14px;
 	color: #999;	
 }
+
+.info_con_box span {
+	display: flex;
+}
+
+
+.group_set_img{
+	display: none;
+
+}
+
+
+.info_con_box:hover .group_set_img {
+	display: block;
+}
+
+.info_memo_value {
+	width: 100%;
+}
+
+.memo:hover {
+	background-color: #f5f5f5;
+}
+
+.title {
+	margin-bottom: 3px;
+	display: flex;
+	align-items: center;
+}
+
+.text{
+	margin-right: 7px;
+	font-size: 13px;
+	opacity: 0.5;
+}
+
+.memo_contents {
+	font-size: 14px;
+	font-weight: 300;
+}
+
+.show_edit_memo_modal,
+.show_remove_memo_modal{
+	display: none;
+	cursor: pointer;
+}
+
+.memo {
+	padding: 10px;
+}
+
+.memo:hover .show_edit_memo_modal,
+.memo:hover .show_remove_memo_modal {
+	display: block;
+}
+
+.show_edit_memo_modal,
+.show_remove_memo_modal{
+	width: 14px;
+	height: 14px;
+}
+
 
 .profile_memo{
 

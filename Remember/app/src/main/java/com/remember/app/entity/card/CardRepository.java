@@ -9,13 +9,15 @@ import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
+import com.remember.app.requestDto.AddGroupReqDto;
+import com.remember.app.requestDto.CardDeleteReqDto;
 
 @Mapper
 public interface CardRepository {
 	
 	public List<Card> getCards(int user_id);
 	
-	public CardDetail getCardDetail(int card_id);
+	public List<CardDetail> getCardDetail(int card_id);
 	
 	public int insertCard(Card card);
 	
@@ -29,6 +31,8 @@ public interface CardRepository {
 	
 	public int deleteCard(int card_id);
 	
+	public int deleteCards(CardDeleteReqDto cardDeleteReqDto);
+	
 	public List<GroupSummary> getGroup(int user_id);
 	
 	public List<GroupCard> getGroupByGroupId(int group_id);
@@ -39,9 +43,17 @@ public interface CardRepository {
 	
 	public Card getUserCard(int cardId);
 	
-	public int addUserGroup(AddGroup addGroup);
+	public int addCardBelongGroups(AddGroupReqDto addGroupReqDto);
+	
+	public int addCardsBelongDefaultGroup(AddGroupReqDto addGroupReqDto);
+	
+	public int deleteCardsBelongGroup(AddGroupReqDto addGroupReqDto);
 	
 	public List<Card> getCardSummaryList(int user_id, int page);
+	
+	public int insertCardMemo(CardMemo cardMemo); 
+	
+	public int updateCardMemo(CardMemo cardMemo);
 	
 	// -------------------------------------------------
 	// team 관련 repository methods

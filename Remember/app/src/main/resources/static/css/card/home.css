@@ -301,6 +301,14 @@ main {
     pointer-events :none;
 }
 
+.change_input input {
+	width: 100%;
+	height: 32px;
+	font-size: 13px;
+	border: none;
+	outline: none;
+}
+
 
 .main_contents {
     display: flex;
@@ -361,7 +369,24 @@ main {
 
 .drop_menu {
 	position: absolute;
+
 }
+
+.drop_menu.group {
+	position: absolute;
+	top: 100%;
+}
+
+.drop_menu.side_group {
+	position: absolute;
+	text-align: left;
+} 
+
+.drop_menu.side_group li:last-child {
+	border-top: none;
+}
+
+
 
 .drop_menu ul {
 	margin-top: 2px;
@@ -398,9 +423,7 @@ main {
 	text-align: left;
 }
 
-.drop_menu.group li:last-child {
-	border-top: none;
-}
+
 
 .top_btn_left {
 	position: relative;
@@ -545,11 +568,11 @@ main {
     height: 100%;
 }
 
-.list_info_name {
+.list_info.name {
     height: 20px;
 }
 
-.list_info_name span {
+.list_info.name span {
     max-width: 180px;
     color: #333333;
     font-weight: bold;

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.remember.app.entity.card.AddGroup;
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.CardBelongTeamGroup;
 import com.remember.app.entity.card.CardDetail;
@@ -36,6 +35,7 @@ import com.remember.app.requestDto.AddAllCardsFromTeamCard;
 import com.remember.app.requestDto.AddCardsFromTeamCard;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
+import com.remember.app.requestDto.CardDeleteReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
@@ -44,6 +44,7 @@ import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
 import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
+import com.remember.app.responseDto.CardDetailResDto;
 import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 
@@ -64,8 +65,29 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public CardDetail getCardDetail(int card_id) {
-		return cardRepository.getCardDetail(card_id);
+	public CardDetailResDto getCardDetail(int card_id) {
+		List<CardDetail> details = cardRepository.getCardDetail(card_id);
+		System.out.println(details);
+		CardDetailResDto dto = new CardDetailResDto();
+		List<Group> groupList = new ArrayList<Group>();
+		List<CardMemoDetail> memoList = new ArrayList<CardMemoDetail>();
+		
+		for(int i = 0; i < details.size(); i++) {
+			CardDetail detail = details.get(i);
+			if(i == 0) {
+				dto.setCard(detail.toCardEntity());
+			}
+			Group group = detail.toGroupEntity();
+			if(group != null && ! groupList.contains(group)) groupList.add(group);
+			
+			CardMemoDetail memo = detail.toMemoDetailEntity();
+			if(memo != null && ! memoList.contains(memo)) memoList.add(memo);
+			
+		}
+		dto.setGroup_list(groupList);
+		dto.setMemo_list(memoList);
+		
+		return dto;
 	}
 	
 	@Override
@@ -203,6 +225,12 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
+	public int deleteCards(CardDeleteReqDto cardDeleteReqDto) {
+		
+		return cardRepository.deleteCards(cardDeleteReqDto);
+	}
+	
+	@Override
 	public int updateGroupCard(Group group) {
 		
 		return cardRepository.updateGroup(group);
@@ -221,15 +249,32 @@ public class CardServiceImpl implements CardService {
 	
 	@Override
 	public int addGroupUser(AddGroupReqDto addGroupReqDto) {
-		
-		AddGroup addGroup = addGroupReqDto.toAddEntity();
-		
-		return cardRepository.addUserGroup(addGroup);
+		int result = cardRepository.deleteCardsBelongGroup(addGroupReqDto);
+		if(addGroupReqDto.getGroup_id_list() == null) {
+			result += cardRepository.addCardsBelongDefaultGroup(addGroupReqDto);
+		} else {
+			for(int card_id : addGroupReqDto.getCard_id_list()) {
+				addGroupReqDto.setCardId(card_id);
+				result += cardRepository.addCardBelongGroups(addGroupReqDto);
+			}
+		}
+		return result;
 	}
 	
 	@Override
 	public List<Card> getCardSummaryList(int user_id, int page) {
 		return cardRepository.getCardSummaryList(user_id, page * 10);
+	}
+	
+	@Override
+	public int insertCardMemo(CardMemo cardMemo) {
+		return cardRepository.insertCardMemo(cardMemo);
+	}
+	
+	@Override
+	public boolean updateCardMemo(CardMemo cardMemo) {
+		
+		return cardRepository.updateCardMemo(cardMemo) == 1;
 	}
 	
 	// -------------------------------------------------

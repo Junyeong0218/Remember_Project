@@ -9,11 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class AddGroupReqDto {
-	private int cardId;
+public class GroupCardDeleteReqDto {
+	private int card_id;
 	private List<Integer> card_id_list;
-	private List<Integer> group_id_list;
-	private int default_card_group_id;
-	
-
 }

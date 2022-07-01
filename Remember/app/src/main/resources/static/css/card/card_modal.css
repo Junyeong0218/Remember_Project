@@ -47,8 +47,6 @@
 
 .modal_body{
 	padding: 24px;
-	
-	
 }
 
 .note_empty{
@@ -100,6 +98,7 @@
 
 .add_body{
 	padding: 15px;
+	width:100%;
 	text-align: center;
 }
 
@@ -147,7 +146,11 @@
 	width: 450px;
 }
 
-.modal_body ul {
+.note_content.send_card {
+	width: 600px;
+}
+
+.team_group_con {
 	margin: -16px;
 	overflow-y : scroll;
 }
@@ -241,6 +244,14 @@
 
 .memo_body {
 	padding: 15px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.memo_body span {
+	font-size: 13px;
+	opacity: 0.65;
 }
 
 .memo_write {
@@ -261,10 +272,23 @@
 	transition: 300ms;
 }
 
-.memo_text:focus{
+.memo_text.send_card {
+	height: 163px;
+	resize: none;
+	overflow: hidden;
+	overflow-wrap: break-word;
+	white-space: pre-line;
+	font-size: 15px;
+	cursor: not-allowed;
+}
+
+
+.memo_text:focus,
+.mail_input:focus{
 	border-color: #00bd5d;
 	box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%),
 					0 0 8px rgb(0 183 93 / 60%);
+	transition: all 0.3s;
 }
 
 textarea::placeholder {
@@ -317,9 +341,35 @@ textarea::placeholder {
 	width: 85%;
 }
 
-.delete_text {
+.mail_text {
 	padding: 15px 0;
+
+}
+
+.mail_msg {
+	white-space: pre;
+}
+
+.mail_text span {
+	font-weight: 300;
+	font-size: 15px;
+}
+
+.mail_text.report,
+.mail_text.group{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.delete_text {
+	font-size: 14px;
     color: rgba(0,0,0,.65);
+}
+
+.delete_ok_text.hidden,
+.delete_count_text.hidden {
+	display: none;
 }
 
 .delete_footer {
@@ -345,5 +395,160 @@ textarea::placeholder {
 .note_modal_content.delete {
 	margin-top: 40px;
 }
+
+.add_body.mail {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.send_box {
+	width: 85%;
+}
+
+.mail_input {
+	width: 100%;
+	height: 32px;
+	padding: 6px 12px;
+	color : #555;
+	border: 1px solid #ccc;
+	background-color: #eee;
+	box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+	outline: none;
+    cursor: not-allowed;
+}
+
+.footer_btn.mail button{
+	background-color: #333;
+}
+
+.mail_address p {
+	margin-bottom: 7px;
+	color: #999;
+	font-size: 13px;
+}
+
+.mail_address input {
+	position: relative;
+	width: 100%;
+	height: 38px;
+	font-size: 15px;
+	margin-bottom: 17px;
+	padding: 0 12px;
+	color: #333;
+	border: 1px solid #d9d9d9;
+	background-color: #fafafa;
+}
+
+.file_btn {
+	display:flex;
+	justify-content: space-between;
+	align-items: center;
+	
+	padding: 0 12px;
+	width: 100%;
+	height: 38px;
+	color: #333;
+	font-size: 14px;
+	font-weight: 400;
+	border: 1px solid #d9d9d9;
+	cursor: pointer;
+}
+
+.file_list{
+	position: absolute;
+    width: 352px;
+    margin-top: 5px;
+}
+
+.file_list.hidden {
+	display: none;
+}
+
+.file_list ul {
+	padding: 4px 0;
+	overflow-y : auto;
+	text-align: left;
+	background-color: #fff;
+	box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+}
+
+.file_list ul li {
+	padding: 5px 12px;
+	font-size: 14px;
+	font-weight: 300;
+	line-height: 22px;
+	transition: all 0.3s;
+}
+
+.file_list ul li:first-child {
+	background-color: #eee;
+}
+
+.file_list ul li:hover {
+	background-color: #333;
+	color: #fff;
+}
+
+.team_card_btn.file {
+	padding: 0 15px;
+	height: 40px;
+}
+
+.team_card_btn.confirm  {
+	color:#fff;
+	background-color: #333;
+}
+
+
+.group_list {
+	max-height: 300px;
+	background-color: #f5f5f5;
+	border: 1px solid #ccc;
+	border-left: 0;
+	border-right: 0;
+}
+
+.group_list ul {
+	margin: 5px 15px;
+}
+
+.group_list ul li {
+	max-width: 300px;
+	height: 24px;
+	text-align: left;
+	font-size: 13px;
+	cursor: pointer;
+	overflow: hidden;
+	line-height: 24px;
+}
+
+.group_list ul li:hover {
+	background-color: #eee;
+}
+
+.group_list ul li.group_list_add{
+	height: 40px;
+	padding: 6px 0;
+}
+
+
+.group_list_add button {
+	padding: 5px 10px;
+	font-size: 12px;
+	line-height: 1.5;
+	background-color: #fff;
+	border: 1px solid #d9d9d9;
+	color: rgba(0,0,0,0.65);
+}
+
+.complete_btn.send {
+	opacity: 0.65;
+}
+
+
+
+
+
 
 

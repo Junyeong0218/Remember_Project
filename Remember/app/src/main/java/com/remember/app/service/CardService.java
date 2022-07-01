@@ -20,6 +20,7 @@ import com.remember.app.requestDto.AddAllCardsFromTeamCard;
 import com.remember.app.requestDto.AddCardsFromTeamCard;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
+import com.remember.app.requestDto.CardDeleteReqDto;
 import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
@@ -28,6 +29,7 @@ import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
 import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
+import com.remember.app.responseDto.CardDetailResDto;
 import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 
@@ -38,11 +40,13 @@ public interface CardService {
 	
 	public int insertNewCard(Card card);
 	
-	public CardDetail getCardDetail(int card_id);
+	public CardDetailResDto getCardDetail(int card_id);
 	
 	public int insertGroup(Group group);
 	
 	public int deleteCard(int card_id);
+	
+	public int deleteCards(CardDeleteReqDto cardDeleteReqDto);
 	
 	public int updateCard(CardUpdateReqDto cardUpdateReqDto);
 	
@@ -60,7 +64,9 @@ public interface CardService {
 	
 	public List<Card> getCardSummaryList(int user_id, int page);
 	
+	public int insertCardMemo(CardMemo cardMemo);
 	
+	public boolean updateCardMemo(CardMemo cardMemo);
 	
 	// -------------------------------------------------
 	// team 관련 services
