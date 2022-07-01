@@ -1,12 +1,3 @@
-
-//모든명함의 갯수가 0이면 nocontent -> 
-/*
-페이지 로드 -> (뼈대) -> 비동기 db에서 본인 user_id 로 명함들 select
-XX 그룹 ( X개 ) -> 버튼 -> click -> 어떤 명함들이 해당 그룹에 존재하는지 select(groupId)
--> 명함들 목록 표시하고 각각의 card_id로 해당 card detail을 select 하는 이벤트 등록
--> index[0].click();
- */
-
 const whole_cards = document.querySelector(".card_group");
 const whole_count = document.querySelector('.whole_count');
 const main_contents = document.querySelector(".main_contents");
@@ -60,58 +51,6 @@ function getAllGroups() {
 	});
 	return groups;
 }
-
-function setGroupList() {
-	for (let i = 0; i < group_list.length; i++) {
-        const group_tag = makeGroupTag(group_list[i]);
-        my_card.appendChild(group_tag);
-        
-        group_tag.onclick = (event) => {
-			if(event.target.className == "group_btn") {
-				const group_drop = group_tag.querySelector('.drop_menu');
-				const drop_menu_tag_list = group_drop.querySelectorAll('.drop_menu ul li');
-
-				group_drop.classList.toggle('hidden');
-				
-				drop_menu_tag_list[0].onclick = () => {
-					const change_name_tag = changeGroupNameTag(group_list[i]);
-					const input =change_name_tag.querySelector('.change_input input');
-					group_tag.innerHTML= '';
-					group_tag.appendChild(change_name_tag);
-					input.onkeypress = () => {
-						if(window.event.keyCode == 13) {
-							if(updateGroupName(group_list[i].id, input.value)) {
-								location.reload();
-							} else {
-								alert("그룹명 변경 실패");
-							}
-						}
-					}
-				}
-				drop_menu_tag_list[1].onclick = () => {
-					const delete_group_modal = makeDeleteGroupModal(group_list[i]);
-					appendModalToContainer(delete_group_modal);
-					
-					delete_group_modal.querySelector(".add_close_btn").onclick = () => removeModal(delete_group_modal);
-					
-					const delete_button = delete_group_modal.querySelector(".footer_btn button");
-					delete_button.onclick = () => {
-						if(deleteGroup(group_list[i].id)) {
-							location.reload();
-						} else {
-							alert("그룹 삭제 실패");
-						}
-					}
-				}
-			} else {
-				console.log(group_list[i].id);
-				card_list = getCardListInSpecificGroup(group_list[i].id);
-				console.log(card_list);
-				setCardList();
-			}
-		}
-    }
-}         
 
 function getAllCards() {
 	let cards;
@@ -214,6 +153,189 @@ function updateMemo(card_memo_id,contents) {
 	return flag;
 }
 
+function updateGroupName(group_id, group_name) {
+	let flag = false;
+	$.ajax({
+		type:'put',
+		url:'/api/v1/card/group/' + group_id,
+		async: false,
+		dataType:'json',
+		data:{"group_name":group_name},
+		success:function(data) {
+			console.log(data);
+			flag = data > 0;
+		},
+	    error: function (xhr, status) {
+	        console.log(xhr);
+	        console.log(status);
+	    }
+	});
+	return flag;
+}
+
+function deleteGroup(group_id) {
+	let flag = false;
+	$.ajax({
+		type:'delete',
+		url:'/api/v1/card/group/' + group_id,
+		async: false,
+		dataType:'json',
+		success:function(data) {
+			flag = data > 0;
+		},
+	    error: function (xhr, status) {
+	        console.log(xhr);
+	        console.log(status);
+	    }
+	});
+	return flag;
+}
+
+function getCardListInSpecificGroup(group_id) {
+	let cards;
+    $.ajax({
+        type: "get",
+        url: "/api/v1/card/group/" + group_id,
+        async: false,
+        dataType: "json",
+        success: function (data) {
+			cards = data.card_list;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return cards;
+}
+
+function deleteCard(card_id) {
+	let flag;
+	$.ajax({
+		type:"delete",
+		url:"/api/v1/card/" + card_id,
+		async: false,
+		dataType:"json",
+		success:function(data){
+			flag = data;
+		},
+		error: function (xhr, stauts) {
+			console.log(xhr);
+			console.log(stauts);
+		}
+	});
+	return flag;
+}
+
+function deleteCards(card_id_list_object) {
+	let flag = false;
+	$.ajax({
+		type:'delete',
+		url:'/api/v1/card/list',
+		async: false,
+		data: card_id_list_object,
+		dataType:'json',
+		success:function (data) {
+			flag = data > 0;
+		},
+		error: function (xhr, stauts) {
+		console.log(xhr);
+		console.log(stauts);
+		}
+	});
+	return flag;
+}
+
+function loadCardDetail(card_id) {
+	let card_detail;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/" + card_id,
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			console.log(data);
+			card_detail = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return card_detail;
+}
+
+function insertNewGroup(group_name) {
+	let group_id;
+    $.ajax({
+        type: 'post',
+        url: '/api/v1/card/group',
+        async: false,
+        data: {"group_name": group_name},
+        dataType: 'json',
+        success: function (id) {
+            console.log(id);
+            group_id = id;
+        },
+        error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return group_id;
+}
+
+function setGroupList() {
+	for (let i = 0; i < group_list.length; i++) {
+        const group_tag = makeGroupTag(group_list[i]);
+        my_card.appendChild(group_tag);
+        
+        group_tag.onclick = (event) => {
+			if(event.target.className == "group_btn") {
+				const group_drop = group_tag.querySelector('.drop_menu');
+				const drop_menu_tag_list = group_drop.querySelectorAll('.drop_menu ul li');
+
+				group_drop.classList.toggle('hidden');
+				
+				drop_menu_tag_list[0].onclick = () => {
+					const change_name_tag = changeGroupNameTag(group_list[i]);
+					const input =change_name_tag.querySelector('.change_input input');
+					group_tag.innerHTML= '';
+					group_tag.appendChild(change_name_tag);
+					input.onkeypress = () => {
+						if(window.event.keyCode == 13) {
+							if(updateGroupName(group_list[i].id, input.value)) {
+								location.reload();
+							} else {
+								alert("그룹명 변경 실패");
+							}
+						}
+					}
+				}
+				drop_menu_tag_list[1].onclick = () => {
+					const delete_group_modal = makeDeleteGroupModal(group_list[i]);
+					appendModalToContainer(delete_group_modal);
+					
+					delete_group_modal.querySelector(".add_close_btn").onclick = () => removeModal(delete_group_modal);
+					
+					const delete_button = delete_group_modal.querySelector(".footer_btn button");
+					delete_button.onclick = () => {
+						if(deleteGroup(group_list[i].id)) {
+							location.reload();
+						} else {
+							alert("그룹 삭제 실패");
+						}
+					}
+				}
+			} else {
+				console.log(group_list[i].id);
+				card_list = getCardListInSpecificGroup(group_list[i].id);
+				console.log(card_list);
+				setCardList();
+			}
+		}
+    }
+}
 
 function setCardList() {
     total_page_check_flag = false;
@@ -307,7 +429,7 @@ function setCardList() {
 			appendModalToContainer(move_group_modal);
 			
 			const default_card_group_id = groups[groups.findIndex(e => e.group_name == "미분류 명함")].id;
-			const complete_button = move_group.querySelector('.complete_btn');
+			const complete_button = move_group_modal.querySelector('.complete_btn');
 			complete_button.onclick = () => {
 				const selected_group_id_list = new Array();
 				const group_tag_list = move_group.querySelectorAll(".group_list > ul > li > input");
@@ -627,44 +749,6 @@ function removeModal(modal) {
 	modal.remove();
 }
 
-function updateGroupName(group_id, group_name) {
-	let flag = false;
-	$.ajax({
-		type:'put',
-		url:'/api/v1/card/group/' + group_id,
-		async: false,
-		dataType:'json',
-		data:{"group_name":group_name},
-		success:function(data) {
-			console.log(data);
-			flag = data > 0;
-		},
-	    error: function (xhr, status) {
-	        console.log(xhr);
-	        console.log(status);
-	    }
-	});
-	return flag;
-}
-
-function deleteGroup(group_id) {
-	let flag = false;
-	$.ajax({
-		type:'delete',
-		url:'/api/v1/card/group/' + group_id,
-		async: false,
-		dataType:'json',
-		success:function(data) {
-			flag = data > 0;
-		},
-	    error: function (xhr, status) {
-	        console.log(xhr);
-	        console.log(status);
-	    }
-	});
-	return flag;
-}
-
 function makePageTag(total_card_count, pager) {
 	let page_number = page - 1;
 	const last_page = total_card_count % 10 == 0 ? Math.floor(total_card_count / 10) : Math.floor(total_card_count / 10) + 1;
@@ -709,84 +793,11 @@ function countChecked(checkBoxes) {
 	return count;
 }
 
-function getCardListInSpecificGroup(group_id) {
-	let cards;
-    $.ajax({
-        type: "get",
-        url: "/api/v1/card/group/" + group_id,
-        async: false,
-        dataType: "json",
-        success: function (data) {
-			cards = data.card_list;
-		},
-		error: function (xhr, status) {
-			console.log(xhr);
-			console.log(status);
-		}
-	});
-	return cards;
-}
-
 function toggleClassActiveCards(cards, current_index) {
 	cards.forEach((item, index) => {
 	    if (index != current_index) item.classList.remove("active");	
     	else 						item.classList.add("active");
 	});
-}
-
-function deleteCard(card_id) {
-	let flag;
-	$.ajax({
-		type:"delete",
-		url:"/api/v1/card/" + card_id,
-		async: false,
-		dataType:"json",
-		success:function(data){
-			flag = data;
-		},
-		error: function (xhr, stauts) {
-			console.log(xhr);
-			console.log(stauts);
-		}
-	});
-	return flag;
-}
-
-function deleteCards(card_id_list_object) {
-	let flag = false;
-	$.ajax({
-		type:'delete',
-		url:'/api/v1/card/list',
-		async: false,
-		data: card_id_list_object,
-		dataType:'json',
-		success:function (data) {
-			flag = data > 0;
-		},
-		error: function (xhr, stauts) {
-		console.log(xhr);
-		console.log(stauts);
-		}
-	});
-	return flag;
-}
-
-function loadCardDetail(card_id) {
-	let card_detail;
-	$.ajax({
-		type: "get",
-		url: "/api/v1/card/" + card_id,
-		async: false,
-		dataType: "json",
-		success: function (data) {
-			card_detail = data;
-		},
-		error: function (xhr, status) {
-			console.log(xhr);
-			console.log(status);
-		}
-	});
-	return card_detail;
 }
 
 function makeEditCardFormTag(originCardData) {
@@ -1194,11 +1205,6 @@ function changeCardImage(event, image_tag) {
 	file_reader.readAsDataURL(event.target.files[0]);
 }
 
-function changeProfileImg(){
-	const formData = new FormData();
-	formData.append('profile_img',imgInput.files[0]);
-}
-
 function makeNoContentsTag() {
     const div = document.createElement("div");
     div.className = "no_contents";
@@ -1273,7 +1279,6 @@ function makeCardListTag() {
 		</div>
 
 	`;
-	
     return div;
 }
 
@@ -1410,13 +1415,13 @@ function makeCardDetailTag(card_detail) {
 					<button class="t_btn send">
 						<span class="btn_more"></span>
 					</button>
-				 <div class="send_drop_menu hidden">
-					<ul>
-						<li>입력오타 신고</li>
-						<li>팀 명함첩으로 복제</li>
-						<li>명함 삭제</li>
-					</ul>
-				</div>
+					<div class="send_drop_menu hidden">
+						<ul>
+							<li>입력오타 신고</li>
+							<li>팀 명함첩으로 복제</li>
+							<li>명함 삭제</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -1715,24 +1720,4 @@ function makeAddGroupBoxTag() {
             }
         };
     }
-}
-
-function insertNewGroup(group_name) {
-	let group_id;
-    $.ajax({
-        type: 'post',
-        url: '/api/v1/card/group',
-        async: false,
-        data: {"group_name": group_name},
-        dataType: 'json',
-        success: function (id) {
-            console.log(id);
-            group_id = id;
-        },
-        error: function (xhr, status) {
-			console.log(xhr);
-			console.log(status);
-		}
-	});
-	return group_id;
 }
