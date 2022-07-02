@@ -53,6 +53,8 @@ public interface CardRepository {
 	
 	public int updateCardMemo(CardMemo cardMemo);
 	
+	public int deleteCardMemo(int cardMemoId);
+	
 	// -------------------------------------------------
 	// team 관련 repository methods
 	

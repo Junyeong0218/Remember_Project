@@ -206,7 +206,12 @@ public class CardRestController {
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	
-
+	//메모 삭제
+	@DeleteMapping("/{cardMemoId}/memo")
+	public ResponseEntity<?> delteMemo(@PathVariable int cardMemoId) {
+		boolean result = cardService.deleteCardMemo(cardMemoId);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
 	
 	// ------------------------------------------------------------------------------
 	// team 관련 rest methods

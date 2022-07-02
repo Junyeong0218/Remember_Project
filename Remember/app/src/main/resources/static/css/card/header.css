@@ -548,7 +548,7 @@ header {
 	width: 100%;
 }
 
-.memo:hover {
+.add_memo_contents:hover {
 	background-color: #f5f5f5;
 }
 
@@ -575,12 +575,12 @@ header {
 	cursor: pointer;
 }
 
-.memo {
+.add_memo_contents {
 	padding: 10px;
 }
 
-.memo:hover .show_edit_memo_modal,
-.memo:hover .show_remove_memo_modal {
+.add_memo_contents:hover .show_edit_memo_modal,
+.add_memo_contents:hover .show_remove_memo_modal {
 	display: block;
 }
 

@@ -262,6 +262,14 @@
 			where
 				id = #{id};
 		</update>
+		
+		<delete id="deleteCardMemo" parameterType="Integer">
+			delete
+			from
+				card_memo
+			where
+				id = #{cardMemoId};
+		</delete>
   
 		<insert id="insertTeam" parameterType="com.remember.app.entity.card.Team">
 			insert into

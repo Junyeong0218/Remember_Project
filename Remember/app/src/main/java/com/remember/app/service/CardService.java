@@ -68,6 +68,8 @@ public interface CardService {
 	
 	public boolean updateCardMemo(CardMemo cardMemo);
 	
+	public boolean deleteCardMemo(int cardMemoId);
+	
 	// -------------------------------------------------
 	// team 관련 services
 	

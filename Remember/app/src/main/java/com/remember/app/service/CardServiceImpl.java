@@ -277,6 +277,11 @@ public class CardServiceImpl implements CardService {
 		return cardRepository.updateCardMemo(cardMemo) == 1;
 	}
 	
+	@Override
+	public boolean deleteCardMemo(int cardMemoId) {
+		return cardRepository.deleteCardMemo(cardMemoId) == 1;
+	}
+	
 	// -------------------------------------------------
 	// team 관련 services
 	

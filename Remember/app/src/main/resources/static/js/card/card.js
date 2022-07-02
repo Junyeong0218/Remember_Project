@@ -191,6 +191,24 @@ function deleteGroup(group_id) {
 	return flag;
 }
 
+function deleteMemo(card_memo_id){
+	let flag = false;
+	$.ajax({
+		type:'delete',
+		url:'/api/v1/card/' + card_memo_id + '/memo',
+		async: false,
+		dataType:'json',
+		success:function(data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+	        console.log(xhr);
+	        console.log(status);
+	    }
+	});
+	return flag;
+}
+
 function getCardListInSpecificGroup(group_id) {
 	let cards;
     $.ajax({
@@ -613,6 +631,24 @@ function setCardList() {
 								alert("메모 수정 실패");
 							}
 							removeModal(update_memo_modal);
+						}
+					}
+					
+					memo.querySelector('.show_remove_memo_modal').onclick = () => {
+						const remove_memo_modal = makeDeleteConfirmCardMemoModal(card_detail.memo_list[i]);
+						appendModalToContainer(remove_memo_modal);
+						
+						remove_memo_modal.querySelector('.close_btn').onclick = () => {
+							removeModal(remove_memo_modal);
+						}
+						
+						remove_memo_modal.querySelector('.remove_btn').onclick = () => {
+							if(deleteMemo(card_detail.memo_list[i].id)) {
+								location.reload();
+							}else {
+								alert("메모 삭제 실패");
+							}
+							removeModal(remove_memo_modal);
 						}
 					}
 					
@@ -1236,10 +1272,10 @@ function makeCardListTag() {
 				</div>
 			</div>
 			<div class="top_right">
-				<select class="top_select">
-					<option label="등록일순" value="">등록일순</option>
-					<option label="이름순" value="">이름순</option>
-					<option label="회사명순" value="">회사명순</option>
+				<select class="top_select" name="order">
+					<option value="reg_date">등록일순</option>
+					<option value="name">이름순</option>
+					<option value="company_name">회사명순</option>
 				</select>
 			</div>
 			<div class="top_right hide">
@@ -1527,7 +1563,7 @@ function makeJoinedGroupTag(group_list) {
 
 function makeAddMemoTag(memo) {
 	const div = document.createElement("div");
-	div.className = "memo";
+	div.className = "add_memo_contents";
 	div.innerHTML = `
 		<div class="title">
 			<span class="text">${memo.create_date.replace('T', ' ')}</span>
@@ -1565,6 +1601,44 @@ function makeUpdateCardMemoModal(memo) {
 				</div>
 					</div>
 				</div>
+			</div>
+		</div>
+	`;
+	
+	setTimeout(() => {
+		div.querySelector('.memo_text').focus();
+	}, 150);
+	
+	return div;
+}
+
+function makeDeleteConfirmCardMemoModal(memo) {
+	const div = document.createElement('div');
+	div.className = "note_modal";
+	div.innerHTML = `
+	<div class="note_modal_content ">
+			<div class="note_content memo">
+				<div class="memo_header">
+					<button class="close_btn">
+						<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+					</button>
+					<h1>메모 삭제</h1>
+				</div>
+				<div class="memo_body">
+					<h4>메모를 삭제하시겠습니까?</h4>
+				<div class="mail_text">
+				
+					<span>${memo.update_date.replace("T", " ")}에 마지막 수정</span>
+				</div>
+					<div class="memo_write delete">
+						<textarea class="memo_text delete" rows="6" placeholder="내용을 입력해 주세요."max-length="1000" readonly="readonly">${memo.contents}</textarea>
+					</div>
+				</div>
+				<div class="delete_footer">
+				<div class="footer_btn">
+					<button class="remove_btn">삭제</button>
+				</div>
+			</div>
 			</div>
 		</div>
 	`;

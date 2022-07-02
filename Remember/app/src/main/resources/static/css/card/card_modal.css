@@ -256,6 +256,11 @@
 
 .memo_write {
 	padding: 10px;
+	width: 85%;
+}
+
+.memo_write.delete {
+	padding: 0;
 }
 
 .memo_text {
@@ -279,6 +284,10 @@
 	overflow-wrap: break-word;
 	white-space: pre-line;
 	font-size: 15px;
+	cursor: not-allowed;
+}
+
+.memo_text.delete {
 	cursor: not-allowed;
 }
 
@@ -339,6 +348,10 @@ textarea::placeholder {
 .delete_text,
 .footer_btn {
 	width: 85%;
+}
+
+.remove_btn {
+	width: 100%;
 }
 
 .mail_text {
