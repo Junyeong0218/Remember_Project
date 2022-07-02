@@ -18,44 +18,6 @@ team_tab_button.onclick = (event) => {
 	}
 }
 
-function isTeamJoined() {
-	let flag = false;
-	$.ajax({
-		type: "get",
-		url: "/api/v1/card/team/user/" + principal.id,
-		async: false,
-		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			flag = data;
-		},
-		error: function (xhr, status) {
-			console.log(xhr);
-			console.log(status);
-		}
-	});
-	return flag;
-}
-
-function insertNewCard(data) {
-	let card_id;
-	$.ajax({
-		type:'post',
-		url:'/api/v1/card',
-		async: false,
-		data: data,
-		dataType:'json',
-		success:function(data){
-			card_id = data;
-		},
-		error: function (xhr, status) {
-			console.log(xhr);
-			console.log(status);
-		}
-	});
-	return card_id;
-}
-
 function makeTabMenuTag() {
 	const div = document.createElement("div");
 	div.className = "tabs_menu";

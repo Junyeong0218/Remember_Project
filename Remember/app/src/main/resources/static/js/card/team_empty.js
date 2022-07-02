@@ -46,25 +46,14 @@ start_free_button.onclick = () => {
 			console.log("2번 인덱스 next 누름!");
 			// team insert
 			// if success -> /card/team
-			$.ajax({
-				type: "post",
-				url: "/api/v1/card/team",
-				data: {"title": input_wrappers[0].querySelector("input").value,
-							 "nickname": input_wrappers[1].querySelector("input").value,
-							 "card_book_name": input_wrappers[2].querySelector("input").value},
-				dataType: "json",
-				success: function (data) {
-					if(data == true) {
-						location.replace("/card/team");
-					} else {
-						alert("팀 생성 실패");
-					}
-				},
-				error: function (xhr, status) {
-					console.log(xhr);
-					console.log(status);
-				}
-			});
+			const data = {"title": input_wrappers[0].querySelector("input").value,
+									   "nickname": input_wrappers[1].querySelector("input").value,
+									   "card_book_name": input_wrappers[2].querySelector("input").value};
+			if(ajax.insertNewTeam(data)) {
+				location.replace("/card/team");
+			} else {
+				alert("팀 생성 실패");
+			}
 		}
 	}
 	
@@ -102,14 +91,6 @@ function checkInput(modal, index) {
 		modal.querySelector(".next_button").disabled = true;
 	}
 }
-
-
-
-
-
-
-
-
 
 function makeNewTeamModal() {
 	const div = document.createElement("div");

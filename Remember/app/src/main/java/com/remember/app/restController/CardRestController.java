@@ -199,7 +199,7 @@ public class CardRestController {
 	}
 	
 	//메모 수정
-	@PutMapping("/{cardMemoId}/memo")
+	@PutMapping("/memo/{cardMemoId}")
 	public ResponseEntity<?> updateMemo(@PathVariable int cardMemoId, CardMemo cardMemo) {
 		cardMemo.setId(cardMemoId);
 		boolean result = cardService.updateCardMemo(cardMemo);
