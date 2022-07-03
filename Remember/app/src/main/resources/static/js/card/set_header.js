@@ -11,7 +11,7 @@ card_tabs.onclick = executeMultipleEvents;
 
 team_tab_button.onclick = (event) => {
 	event.preventDefault();
-	if(isTeamJoined()) {
+	if(ajax.isTeamJoined()) {
 		location.href = "/card/team";
 	} else {
 		location.href = "/card/team-empty";
@@ -243,7 +243,7 @@ function executeMultipleEvents(event) {
 					if(data.name == null) {
 						alert("이름은 필수로 입력하셔야합니다.");
 					} else {
-						const new_card_id = insertNewCard(data);
+						const new_card_id = ajax.insertNewCard(data);
 						if(new_card_id > 0) {
 							const new_card_detail = loadCardDetail(new_card_id);
 							const card_detail_tag = makeCardDetailTag(new_card_detail);
@@ -278,7 +278,7 @@ function executeMultipleEvents(event) {
 								
 								const delete_button = delete_card_modal.querySelector('.footer_btn button');
 								delete_button.onclick = () => {
-									if(deleteCard(new_card_detail.card.id)) {
+									if(ajax.deleteCard(new_card_detail.card.id)) {
 										location.reload();
 									} else {
 										alert("명함 삭제 실패");
@@ -292,7 +292,7 @@ function executeMultipleEvents(event) {
 							
 							const set_group_button = joined_group_tag.querySelector('.group_set_img');
 							set_group_button.onclick = () => {
-								const groups = getAllGroups();
+								const groups = ajax.loadUserGroups();
 								
 								const move_group_modal = moveGroupModal(1, groups);
 								appendModalToContainer(move_group_modal);
@@ -307,7 +307,7 @@ function executeMultipleEvents(event) {
 										if(e.checked) selected_group_id_list.push(groups[index].id);
 									});
 									
-									const is_success = updateCardsBelongGroups(new_card_detail.card.id, selected_group_id_list, default_card_group_id);
+									const is_success = ajax.updateCardsBelongGroups(new_card_detail.card.id, selected_group_id_list, default_card_group_id);
 									if(is_success) {
 										location.reload();
 									} else {
@@ -344,7 +344,7 @@ function executeMultipleEvents(event) {
 									}
 									
 									submit_button.onclick = () => {
-										if(updateMemo(new_card_detail.memo_list[i].id, contents.value)) {
+										if(ajax.updateCardMemo(new_card_detail.memo_list[i].id, contents.value)) {
 											location.reload();
 										} else {
 											alert("메모 수정 실패");
@@ -356,7 +356,7 @@ function executeMultipleEvents(event) {
 							
 							const edit_button = card_detail_tag.querySelector('.edit');
 							edit_button.onclick = () => {
-								const edit_card_form = makeEditCardFormTag(new_card_detail.card);
+								const edit_card_form = makeEditCardFormTag(new_card_detail);
 								card_detail_tag.remove();
 								
 								replaceTagInMainContents(edit_card_form);
@@ -388,7 +388,7 @@ function executeMultipleEvents(event) {
 									if(is_img_changed) formdata.append('profile_img',profile_image_input.files[0]);
 									else new_card_detail.profile_img != null ? formdata.append('origin_profile_img', new_card_detail.card.profile_img) : '';
 									
-									if(updateCard(new_card_detail.card.id, formdata)) {
+									if(ajax.updateCard(new_card_detail.card.id, formdata)) {
 										location.reload();
 									} else {
 										alert("명함 수정 실패");
@@ -404,7 +404,7 @@ function executeMultipleEvents(event) {
 								save_memo_button.onclick = () => {
 									if(memo_input.value == "") {
 										alert("내용을 입력해주세요");
-									} else if(insertCardMemo(new_card_detail.card.id, memo_input.value)){
+									} else if(ajax.insertCardMemo(new_card_detail.card.id, memo_input.value)){
 										location.reload();
 									} else {
 										alert("메모 저장 실패");

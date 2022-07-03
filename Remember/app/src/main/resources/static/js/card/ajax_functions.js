@@ -368,7 +368,7 @@ function loadTeams() {
 	return team_list;
 }
 
-function loadBookList(selected_team_id) {
+function loadCardBooks(selected_team_id) {
 	let book_list;
 	$.ajax({
 		type: "get",

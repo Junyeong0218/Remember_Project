@@ -13,17 +13,22 @@ let total_page_check_flag = false;
 let group_list;
 let card_list;
 
+let selected_group;
+
+let card_detail;
+
 add_group_btn.onclick = makeAddGroupBoxTag;
 
 whole_cards.onclick = () => {
-	card_list = getAllCards();
+	selected_group = null;
+	card_list = ajax.loadCardsInAllGroups(page);
 	setCardList();
 }
 
 main();
 
 function main() {
-	group_list = getAllGroups();
+	group_list = ajax.loadUserGroups();
 	console.log(group_list);
 	
 	whole_count.innerText = group_list[0].total_count;
@@ -53,7 +58,7 @@ function setGroupList() {
 					group_tag.appendChild(change_name_tag);
 					input.onkeypress = () => {
 						if(window.event.keyCode == 13) {
-							if(updateGroupName(group_list[i].id, input.value)) {
+							if(ajax.updateGroupName(group_list[i].id, input.value)) {
 								location.reload();
 							} else {
 								alert("그룹명 변경 실패");
@@ -69,7 +74,7 @@ function setGroupList() {
 					
 					const delete_button = delete_group_modal.querySelector(".footer_btn button");
 					delete_button.onclick = () => {
-						if(deleteGroup(group_list[i].id)) {
+						if(ajax.deleteGroup(group_list[i].id)) {
 							location.reload();
 						} else {
 							alert("그룹 삭제 실패");
@@ -78,7 +83,8 @@ function setGroupList() {
 				}
 			} else {
 				console.log(group_list[i].id);
-				card_list = getCardListInSpecificGroup(group_list[i].id);
+				selected_group = group_list[i];
+				card_list = ajax.loadCardsInSpecificGroup(group_list[i].id, page);
 				console.log(card_list);
 				setCardList();
 			}
@@ -191,7 +197,7 @@ function setCardList() {
 					if(e.checked) checked_card_id_list.push(card_list[index].id);
 				});
 				
-				const is_success = updateCardsBelongGroups(checked_card_id_list, selected_group_id_list, default_card_group_id);
+				const is_success = ajax.updateCardsBelongGroups(checked_card_id_list, selected_group_id_list, default_card_group_id);
 				if(is_success) {
 					location.reload();
 				} else {
@@ -239,7 +245,7 @@ function setCardList() {
 					if(e.querySelector('.check_btn').checked) card_id_list.push(card_list[index].id);
 				});
 				
-				if(deleteCards(card_id_list)) {
+				if(ajax.deleteCards(card_id_list)) {
 					location.reload();
 				} else {
 					alert("명함 리스트 삭제 실패");
@@ -249,7 +255,7 @@ function setCardList() {
 		
         for (let i = 0; i < cards.length; i++) {
             cards[i].onclick = () => {
-				const card_detail = loadCardDetail(card_list[i].id);
+				card_detail = loadCardDetail(card_list[i].id);
 				toggleClassActiveCards(cards, i);
 				
                 //있으면 지우고 
@@ -265,7 +271,16 @@ function setCardList() {
                 const down_menu_list_wrapper = card_detail_tag.querySelector('.send_drop_menu');
                 
                 right_buttons[0].onclick = () => {
-					makeSendCardModal(card_detail.name);
+					const send_card_modal = makeSendCardModal(card_detail.name);
+					appendModalToContainer(send_card_modal);
+					setTimeout(() => {
+						send_card_modal.querySelector('.memo_text').focus();
+						send_card_modal.querySelector('.memo_text').select();
+					}, 150);
+					
+					const close_buttons = send_card_modal.querySelectorAll(".add_close_btn")
+					close_buttons.forEach(e => e.onclick = () => removeModal(send_card_modal));
+					
 				}		
 				right_buttons[1].onclick = () => down_menu_list_wrapper.classList.toggle("hidden");	
 
@@ -285,7 +300,7 @@ function setCardList() {
 					
 					const delete_button = delete_card_modal.querySelector('.footer_btn button');
 					delete_button.onclick = () => {
-						if(deleteCard(card_list[i].id)) {
+						if(ajax.deleteCard(card_list[i].id)) {
 							location.reload();
 						} else {
 							alert("명함 삭제 실패");
@@ -299,7 +314,7 @@ function setCardList() {
 				
 				const set_group_button = joined_group_tag.querySelector('.group_set_img');
 				set_group_button.onclick = () => {
-					const groups = getAllGroups();
+					const groups = ajax.loadUserGroups();
 					
 					const move_group_modal = moveGroupModal(1, groups);
 					appendModalToContainer(move_group_modal);
@@ -319,7 +334,7 @@ function setCardList() {
 							if(e.checked) checked_card_id_list.push(card_list[index].id);
 						});
 						
-						const is_success = updateCardsBelongGroups(card_detail.card.id, selected_group_id_list, default_card_group_id);
+						const is_success = ajax.updateCardsBelongGroups(card_detail.card.id, selected_group_id_list, default_card_group_id);
 						if(is_success) {
 							location.reload();
 						} else {
@@ -356,7 +371,7 @@ function setCardList() {
 						}
 						
 						submit_button.onclick = () => {
-							if(updateMemo(card_detail.memo_list[i].id, contents.value)) {
+							if(ajax.updateCardMemo(card_detail.memo_list[i].id, contents.value)) {
 								location.reload();
 							} else {
 								alert("메모 수정 실패");
@@ -373,10 +388,10 @@ function setCardList() {
 					card_detail_tag.classList.add('hidden');
 					card_list_tag.classList.add('hidden');
 					
-					const edit_card_form = makeEditCardFormTag(card_detail.card);
+					const edit_card_form = makeEditCardFormTag(card_detail);
 					appendTagToMainContents(edit_card_form);
 					
-					const edit_cancel = edit_card_form.querySelector('.edit_cancel');
+					const edit_cancel = edit_card_form.querySelector('.cancel_button');
 					edit_cancel.onclick = () => {
 						card_list_tag.classList.remove("hidden");
 						card_detail_tag.classList.remove("hidden");
@@ -384,28 +399,28 @@ function setCardList() {
 					}
 					
 					let is_img_changed = false;
-					const add_profile_image_button = edit_card_form.querySelector('.card_profile > button');
-					const profile_image_input = edit_card_form.querySelector('.profile_img_input');
-					const image_tag = edit_card_form.querySelector('.proflie_img');
+					const add_profile_image_button = edit_card_form.querySelector('.profile_image > button');
+					const profile_image_input = edit_card_form.querySelector("input[name='profile_image']");
+					const image_tag = edit_card_form.querySelector('.profile_image > img');
 					add_profile_image_button.onclick = () => profile_image_input.click();
 					profile_image_input.onchange = (event) => {
 						changeCardImage(event, image_tag);
 						is_img_changed = true;
 					}
 					
-					const edit_save = edit_card_form.querySelector('.edit_save');
+					const edit_save = edit_card_form.querySelector('.submit_button');
 					edit_save.onclick = () => {
-						const card_inputs = edit_card_form.querySelectorAll('.input_con');
+						const card_inputs = edit_card_form.querySelectorAll('.details input');
 						if(card_inputs[0].value == "") {
 							alert("이름은 필수로 입력해야합니다.");
 							return;
 						}
 												
-						const formdata = makeFormdataForUpdateCard(card_inputs);
+						const formdata = makeFormDataForUpdateCard(card_inputs);
 						if(is_img_changed) formdata.append('profile_img',profile_image_input.files[0]);
 						else card_detail.profile_img != null ? formdata.append('origin_profile_img', card_detail.card.profile_img) : '';
 						
-						if(updateCard(card_list[i].id, formdata)) {
+						if(ajax.updateCard(card_list[i].id, formdata)) {
 							whole_cards.click();
 							edit_card_form.remove();
 			                cards[i].click();
@@ -423,7 +438,7 @@ function setCardList() {
 					save_memo_button.onclick = () => {
 						if(memo_input.value == "") {
 							alert("내용을 입력해주세요");
-						} else if(insertCardMemo(card_list[i].id, memo_input.value)){
+						} else if(ajax.insertCardMemo(card_list[i].id, memo_input.value)){
 							memo_modal.remove();
 							cards.forEach(e => {
 								if(e.className.includes("active")) {
@@ -473,31 +488,6 @@ function setCardList() {
     
 }
 
-function makeFormdataForUpdateCard(inputs) {
-	const formdata = new FormData();
-	inputs.forEach(e => {
-		if(e.value != "") formdata.append(e.name, e.value);
-	});
-	return formdata;
-}
-
-function replaceTagInMainContents(tag) {
-	main_contents.innerHTML = "";
-    main_contents.appendChild(tag);
-}
-
-function appendTagToMainContents(tag) {
-    main_contents.appendChild(tag);
-}
-
-function appendModalToContainer(modal) {
-	container.appendChild(modal);
-}
-
-function removeModal(modal) {
-	modal.remove();
-}
-
 function makePageTag(total_card_count, pager) {
 	let page_number = page - 1;
 	const last_page = total_card_count % 10 == 0 ? Math.floor(total_card_count / 10) : Math.floor(total_card_count / 10) + 1;
@@ -509,7 +499,8 @@ function makePageTag(total_card_count, pager) {
 			const page_for_event = page_number;
 			pager[i].onclick = () => {
 				page = page_for_event - 1;
-				card_list = getAllCards();
+				card_list = selected_group == null ? loadCardsInAllGroups(page) : 
+																				   loadCardsInSpecificGroup(selected_group.id, page);
 				setCardList();
 			}
 		}
@@ -547,107 +538,6 @@ function toggleClassActiveCards(cards, current_index) {
 	    if (index != current_index) item.classList.remove("active");	
     	else 						item.classList.add("active");
 	});
-}
-
-function makeEditCardFormTag(originCardData) {
-	const div = document.createElement("div");
-	div.className= "edit_contents";
-	div.innerHTML = `
-		<div class="edit_form">
-			<div class="edit_top">
-				<span class="edit_title">명함 편집</span>
-				<span class="buttons">
-					<button class="btn edit_cancel">취소</button>
-					<button class="btn edit_save">저장</button>
-				</span>
-			</div>
-			<div class="edit_con">
-				<div class="edit_img_add">
-					<div class="edit_img_upload">+</div>
-					<div class="edit_img_text">명함 이미지 추가</div>
-				<input type="file" name="file" class="profile_img_input" accept="image/*">
-				</div>
-			</div>
-			<div class="edit_write">
-				<div class="card_profile">
-					<img class="proflie_img" src="${originCardData.profile_img == null ? '/static/images/default_profile_image.png' : '/image/profile_images/' + originCardData.profile_img}" alt="프로필 기본">
-					<input type="file" name="file" class="profile_img_input" accept="image/*">
-					<button type="button" class="btn save">프로필 사진 설정</button>
-				</div>
-				<div class="card_inputs">
-					<div class="input_item top">
-						<div class="item_box">
-							<div>
-								<div class="input_title">
-									이름
-								</div>
-								<input type="text" class="input_con" name="name" placeholder="이름 입력" value="${originCardData.name}">
-							</div>
-							<div>
-								<div class="input_title">
-									직책
-								</div>
-								<input type="text" class="input_con" name="position_name" placeholder="직책 입력" 
-									value =${originCardData.position_name == null ? '' : originCardData.position_name}>
-							</div>
-						</div>
-						<div class="item_box">
-							<div>
-								<div class="input_title">
-									부서
-								</div>
-								<input type="text" class="input_con" name="department_name" placeholder="부서명 입력"
-									value =${originCardData.department_name == null ? '' : originCardData.department_name}>
-							</div>
-							<div>
-								<div class="input_title">
-									회사
-								</div>
-								<input type="text" class="input_con" name="company_name" placeholder="회사명 입력"
-									value =${originCardData.company_name == null ? '' : originCardData.company_name}>
-							</div>
-						</div>
-						
-					</div>
-					<div class="input_item">
-						<div class="item_box">
-							<div class="input_title">
-								이메일
-							</div>
-							<input type="text" class="input_con" name="email" placeholder="이메일 주소 입력"
-									vlaue =${originCardData.email == null ? '' : originCardData.email}>
-							<div class="input_title">
-								휴대폰
-							</div>
-							<input type="text" class="input_con" name="phone" placeholder="휴대폰 번호 입력"
-									value =${originCardData.phone == null ? '' : originCardData.phone}>
-							<div class="input_title">
-								유선전화
-							</div>
-							<input type="text" class="input_con" name="landline_phone" placeholder="유선전화 번호 입력"
-									value =${originCardData.landline_phone == null ? '' : originCardData.landline_phone}>
-							<div class="input_title">
-								팩스
-							</div>
-							<input type="text" class="input_con" name="fax" placeholder="팩스 번호 입력"
-									value =${originCardData.fax == null ? '' : originCardData.fax}>
-						</div>
-						<div class="item_box">
-							<div class="input_title">
-								주소
-							</div>
-							<input type="text" class="input_con" name="address" placeholder="주소 입력"
-									value =${originCardData.address == null ? '' : originCardData.address}>
-							<input type="text" class="input_con" name="sub_address" placeholder="상세 주소 입력"
-									value =${originCardData.sub_address == null ? '' : originCardData.sub_address}>
-							
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	`;
-	return div;
 }
 
 function makeSendCardModal(card_name) {
@@ -690,19 +580,10 @@ function makeSendCardModal(card_name) {
 		</div>
 	</div>
 	`;
-	appendModalToContainer(div);
-	setTimeout(() => {
-		div.querySelector('.memo_text').focus();
-		div.querySelector('.memo_text').select();
-	}, 150);
-	
-	const close_buttons = div.querySelectorAll(".add_close_btn")
-	close_buttons.forEach(e => e.onclick = () => div.remove());
-	
 	return div;
 }
 
-function moveGroupModal(card_count,group_list) {
+function moveGroupModal(card_count, group_list) {
 	const setGroupModal = document.createElement('div');
 	setGroupModal.className= "note_modal";
 	setGroupModal.innerHTML = `
@@ -1370,11 +1251,11 @@ function makeGroupTag(group_data) {
     	<div class="group_more">
     		<button class="group_btn"><span class="group_btn_arrow"></span></button>
     		<div class="drop_menu side_group hidden">
-					<ul>
-						<li class="group">그룹명 변경</li>
-						<li class="group">그룹 삭제</li>
-					</ul>
-				</div>
+				<ul>
+					<li class="group">그룹명 변경</li>
+					<li class="group">그룹 삭제</li>
+				</ul>
+			</div>
     	</div>
 	`;
     return button;
@@ -1409,7 +1290,7 @@ function makeAddGroupBoxTag() {
         add_group_input.onkeypress = function () {
             if (window.event.keyCode == 13) {
                 console.log(add_group_input.value);
-                const new_group_id = insertNewGroup(add_group_input.value);
+                const new_group_id = ajax.insertNewGroup(add_group_input.value);
                 if (new_group_id > 0) {
 	                const before_element = my_card.children[4];
 	                const new_group_obj = {"id":new_group_id,
