@@ -1,5 +1,7 @@
 package com.remember.app.principal;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
@@ -40,7 +42,13 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		Collection<GrantedAuthority> roles = Arrays.asList(new GrantedAuthority() {
+			@Override
+			public String getAuthority() {
+				return userDetail.getRole();
+			}
+		});
+		return roles;
 	}
 	
 	public UserDetail getUser() {

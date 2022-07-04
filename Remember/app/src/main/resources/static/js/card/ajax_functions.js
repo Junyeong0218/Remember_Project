@@ -624,7 +624,7 @@ function updateCard(card_id, formdata) {
 
 function updateCardMemo(card_memo_id,contents) {
 	let flag = false;
-	const url = location.pathname.includes("team") ? "/api/v1/card/team/memo/" + card_memo_id : "/api/v1/card/memo" + card_memo_id; 
+	const url = location.pathname.includes("team") ? "/api/v1/card/team/memo/" + card_memo_id : "/api/v1/card/memo/" + card_memo_id; 
 	$.ajax({
 		type:'put',
 		url: url,

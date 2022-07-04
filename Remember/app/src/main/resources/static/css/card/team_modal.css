@@ -424,7 +424,9 @@
 .modal > .card_images > .title,
 .modal > .confirm_delete_card > .title,
 .modal > .save_to_personal > .title,
-.modal > .send_email > .title {
+.modal > .send_email > .title,
+.modal > .delete_group > .title,
+.modal > .send_card > .title {
 	position: relative;
 	padding: 15px;
 	width: 100%;
@@ -433,7 +435,9 @@
 .modal > .card_images > .title > span,
 .modal > .confirm_delete_card > .title > span,
 .modal > .save_to_personal > .title > span,
-.modal > .send_email > .title > span {
+.modal > .send_email > .title > span,
+.modal > .delete_group > .title > span,
+.modal > .send_card > .title > span {
 	font-size: 17px;
 	font-weight: 500;
 	color: rgba(0, 0, 0, 0.85);
@@ -443,7 +447,9 @@
 .modal > .card_images > .title > button,
 .modal > .confirm_delete_card > .title > button,
 .modal > .save_to_personal > .title > button,
-.modal > .send_email > .title > button {
+.modal > .send_email > .title > button,
+.modal > .delete_group > .title > button,
+.modal > .send_card > .title > button {
 	position: absolute;
 	top: 50%;
 	right: 0;
@@ -459,7 +465,9 @@
 .modal > .card_images > .title > button > img,
 .modal > .confirm_delete_card > .title > button > img,
 .modal > .save_to_personal > .title > button > img,
-.modal > .send_email > .title > button > img {
+.modal > .send_email > .title > button > img,
+.modal > .delete_group > .title > button > img,
+.modal > .send_card > .title > button > img {
 	pointer-events: none;
 }
 
@@ -517,7 +525,9 @@
 
 .modal > .confirm_delete_card > .buttons,
 .modal > .save_to_personal > .buttons,
-.modal > .send_email > .buttons {
+.modal > .send_email > .buttons,
+.modal > .delete_group > .buttons,
+.modal > .send_card > .buttons {
 	padding: 0 15px 30px;
 	display: flex;
 	justify-content: center;
@@ -526,7 +536,9 @@
 
 .modal > .confirm_delete_card > .buttons > button,
 .modal > .save_to_personal > .buttons > button,
-.modal > .send_email > .buttons > button {
+.modal > .send_email > .buttons > button,
+.modal > .delete_group > .buttons > button,
+.modal > .send_card > .buttons > button {
 	padding: 6px 12px;
 	width: 355.3px;
 	background-color:#FF3838;
@@ -600,8 +612,13 @@
 }
 
 .modal > .save_to_personal > .buttons > button,
-.modal > .send_email > .buttons > button {
+.modal > .send_email > .buttons > button,
+.modal > .send_card > .buttons > button {
 	background-color: #333;
+}
+
+.modal > .send_card > .buttons > button {
+	width: 85%;
 }
 
 .modal > .send_email {
@@ -640,4 +657,54 @@
 .modal > .send_email > .email_info > input:focus {
 	border: 1px solid #00BD5D;
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.08), 0 0 8px rgba(0, 189, 93, 0.6);
+}
+
+.modal > .delete_group {
+	display: flex;
+	flex-direction: column;
+	width: 450px;
+}
+
+.modal > .delete_group > .description {
+	padding: 15px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	font-size: 14px;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 1.5;
+}
+
+.modal > .send_card {
+	display: flex;
+	flex-direction: column;
+	width: 600px;
+}
+
+.modal > .send_card > .description {
+	padding: 15px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+}
+
+.modal > .send_card > .description > span {
+	padding: 15px 0;
+	font-size: 15px;
+	font-weight: 300;
+}
+
+.modal > .send_card > .description > .send_card_area {
+	margin-bottom: 10px;
+	padding: 6px 12px;
+	width: 85%;
+	height: 163px;
+	font-size: 15px;
+	resize: none;
+	overflow: hidden;
+	overflow-wrap: break-word;
+	white-space: pre-line;
+	cursor: not-allowed;
 }

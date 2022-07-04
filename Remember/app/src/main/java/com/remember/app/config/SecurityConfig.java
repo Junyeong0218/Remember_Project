@@ -1,14 +1,19 @@
 package com.remember.app.config;
 
-import org.springframework.context.annotation.Bean;
+import java.io.IOException;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.remember.app.exceptionHandler.FormLoginAuthenticationExceptionHandler;
 import com.remember.app.exceptionHandler.OAuth2AuthenticationExceptionHandler;
@@ -34,9 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 		http.httpBasic().disable();
 		http.authorizeRequests()
-//					.antMatchers("/api/v1/auth/signup/*", "/api/v1/auth/account/list")
+//					.antMatchers("/api/v1/auth/signup/**", "/api/v1/auth/account/list", "/community", "")
 //					 	.permitAll()
-//				 	.antMatchers("/api/v1/*", "/card")
+//				 	.antMatchers("/api/v1/card/**", "/card/**")
 //				 		.authenticated()
 			 		.anyRequest()
 			 			.permitAll()
@@ -48,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				 		.loginPage("/auth/signin/phone")
 				 		.loginPage("/auth/signin")
 				 		.loginProcessingUrl("/auth/signin")
-				 			.defaultSuccessUrl("/card")
+//				 			.defaultSuccessUrl("/card")
 				 .and()
 				 	.oauth2Login()
 				 		.failureHandler(new OAuth2AuthenticationExceptionHandler())
@@ -58,7 +63,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				 		.userInfoEndpoint()
 				 		.userService(principalOauth2UserService)
 				 .and()
-				 	.defaultSuccessUrl("/card")
+				 	.successHandler(new AuthenticationSuccessHandler() {
+						
+						@Override
+						public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+								Authentication authentication) throws IOException, ServletException {
+							String originUri = (String) request.getSession().getAttribute("originUri");
+							System.out.println("security_config : " + originUri);
+							if(originUri != null) {
+								response.sendRedirect(originUri);
+							} else {
+								response.sendRedirect("/card");
+							}
+						}
+					})
 				 .and()
 				 	.logout()
 				 	.logoutSuccessUrl("/");

@@ -17,7 +17,7 @@
 ㅇ	loadCardEmails(card_id_list) - team / not null = return card_email_list
 ㅇ	loadCardEmailsInGroup(team_group_id, not_selected_card_id_list) - team / not null = return card_email_list
 ㅇ	loadCardEmailsInCardBook(team_card_book_id, not_selected_card_id_list) - team / not null = return card_email_list
-	
+
 ㅇ	insertNewGroup(group_name) - not null = return group_id
 ㅇ	insertNewCard(data) - name not null = return card_id ( if failed return 0 )
 ㅇ	insertCardMemo(card_id, contents) - both / not null = return boolean

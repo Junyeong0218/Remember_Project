@@ -137,6 +137,50 @@ function makeEmailTextForModal(card_email_list) {
 // 																											make tag functions
 // ============================================================================================================================
 
+function makeCardGroupTag(group, default_flag) {
+	const button = document.createElement("button");
+	button.type = "button";
+	button.className = "group";
+	console.log(default_flag);
+	button.innerHTML = `
+		<span class="sub_group_arrow"></span>
+		<span class="group_text">${group.group_name} (<span class="card_count">${group.card_count}</span>)</span>
+${default_flag == false ? '<div class="down_menu"><button type="button" class="show_list_button"> <span class="arrow"></span> </button></div>' : ''}
+	`;
+	return button;
+}
+
+function makeGroupDownMenuList() {
+	const div = document.createElement("div");
+	div.className = "menu_list";
+	div.innerHTML = `
+		<button type="button" class="change_group_name">그룹명 변경</button>
+		<button type="button" class="remove_group">그룹 삭제</button>
+	`;
+	return div;
+}
+
+function changeGroupNameTag(group_name) {
+	const div = document.createElement('div');
+	div.className = "input_wrapper";
+	div.innerHTML =`<input type="text" name="group_name" value = ${group_name}>`;
+	
+	return div;
+}
+
+function makeAddNewGroupTag() {
+	const div = document.createElement("div");
+	div.className = "input_wrapper";
+	div.id = "add_new_group";
+	div.innerHTML = `
+		<input type="text" name="group_name" placeholder="그룹명 입력">
+		<button type="button">
+			<img src="/static/images/card_team_add_card_wrapper_closer.png">
+		</button>
+	`;
+	return div;
+}
+
 function makeCardListTag(card_order_flag) {
 	const div = document.createElement("div");
 	div.className = "card_list_wrapper";
@@ -206,7 +250,7 @@ function makeCardDetailTag(card_detail) {
 	div.className = "card_detail";
 	div.innerHTML = `
 		<div class="detail_header">
-			<span class="reg_user_name">등록자 : ${card_detail.card.reg_user_nickname}</span>
+${location.pathname.includes("team") ? '<span class="reg_user_name">등록자 : ' + card_detail.card.reg_user_nickname + '</span>' : '<span></span>'}
 			<div class="detail_menu">
 				<button type="button" class="edit_card">편집</button>
 				<div class="right">
@@ -227,7 +271,7 @@ function makeCardDetailTag(card_detail) {
 ${card_detail.card.department_name == null ? '' : '<span class="department_text">' + card_detail.card.department_name + '</span>'}
 ${card_detail.card.company_name == null ? '' : '<span class="company_name">' + card_detail.card.company_name + '</span>'}
 				</div>
-${card_detail.card_images.length != 0 ? '<div class="card_image"><img src="/image/card_images/' + card_detail.card_images[0].card_image + '"></div>' : ''}
+${card_detail.card_images.length != 0 /*false*/ ? '<div class="card_image"><img src="/image/card_images/' + card_detail.card_images[0].card_image + '"></div>' : ''}
 			</div>
 			<div class="card_description">
 				<div class="left">
@@ -252,6 +296,7 @@ ${card_detail.card.landline_phone == null ? '<span class="description blank">유
 ${card_detail.card.fax == null ? '<span class="description blank">팩스번호 없음</span>' : 
 															 '<span class="description">' + card_detail.card.fax + '</span>'}
 					</div>
+${! location.pathname.includes("team") ? '<div class="row"><span class="title">그룹</span></div>' : ''}
 				</div>
 				<div class="right">
 					<div class="row">
@@ -265,9 +310,7 @@ ${address_text == null ? '<span class="description blank">주소 없음</span>' 
 					</div>
 				</div>
 			</div>
-			<div class="group_info">
-				<span class="title">그룹</span>
-			</div>
+${location.pathname.includes("team") ? '<div class="group_info"><span class="title">그룹</span></div>' : ''}
 			<div class="memo_list_wrapper">
 				<span class="title">메모</span>
 ${card_detail.memo_list.length == 0 ? '<span class="text no_content">메모 없음</span>' : '<div class="memo_list"></div>'}
@@ -413,13 +456,167 @@ function makeCardImageTag(img_src, is_front, is_origin) {
 // 																											make modal functions
 // ============================================================================================================================
 
+function makeChangeGroupModal(selected_card_count) {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window change_group">
+			<div class="title">
+				<span>그룹 설정</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="group_wrapper">
+				<span>선택한 <span class="card_count">${selected_card_count}</span>개의 명함을 아래의 그룹에 추가합니다.</span>
+				<div class="group_list">
+					
+					<button type="button" class="add_new_group">+ 그룹 추가하기</button>
+					<div class="insert_group_form hidden">
+						<input type="text" name="group_name" placeholder="그룹명 입력">
+						<button type="button" class="confirm">확인</button>
+						<button type="button" class="cancel">취소</button>
+					</div>
+				</div>
+			</div>
+			<div class="buttons">
+				<button type="button" class="set_group_button">완료</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeGroupTagForModal(group_belong_flag) {
+	const div = document.createElement("div");
+	div.className = "group";
+	div.innerHTML = `
+		<input type="checkbox" class="group_selector" name="is_checked" ${group_belong_flag.belong_flag ? 'checked' : ''}>
+		<span>${group_belong_flag.group_name}</span>
+	`;
+	return div;
+}
+
+function makeGroupTagForMultipleModal(belong_flag, group_name) {
+	const div = document.createElement("div");
+	div.className = "group";
+	div.innerHTML = `
+		<input type="checkbox" class="group_selector" name="is_checked" ${belong_flag ? 'checked' : ''}>
+		<span>${group_name}</span>
+	`;
+	return div;
+}
+
+function makeDeleteGroupModal(group_name) {
+	const div = document.createElement('div');
+	div.className ="modal";
+	div.innerHTML = `
+	<div class="window delete_group">
+		<div class="title">
+			<span>그룹 삭제</span>
+			<button type="button" class="close_modal">
+				<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+			</button>
+		</div>
+		<div class="description">
+			<span>${group_name}그룹을 삭제하시겠습니까?</span>
+			<span>그룹을 삭제해도 명함은 삭제되지 않습니다.</span>
+		</div>
+		<div class="buttons">
+			<button type="button" class="delete_group_button">삭제</button>
+		</div>
+	</div>
+	`;
+	return div;
+}
+
+function makeAddCardMemoModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window change_memo">
+			<div class="title">
+				<span>메모 추가</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="input_wrapper">
+				<textarea name="contents" placeholder="내용을 입력하세요" rows="4"></textarea>
+				<div class="buttons">
+					<button type="button" class="cancel_button">취소</button>
+					<button type="button" class="submit_button" disabled>추가</button>
+				</div>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeUpdateCardMemoModal(memo) {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window change_memo">
+			<div class="title">
+				<span>메모 수정</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="input_wrapper">
+				<span>${memo.update_date.replace("T", " ")}에 마지막 수정</span>
+${location.pathname.includes("team") ? '<span>작성자 : ' + memo.nickname + '</span>' : ''}
+				<textarea name="contents" placeholder="내용을 입력하세요" rows="4">${memo.contents}</textarea>
+				<div class="buttons">
+					<button type="button" class="cancel_button">취소</button>
+					<button type="button" class="submit_button" disabled>수정</button>
+				</div>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeSendCardModal(card_name) {
+	const div = document.createElement('div');
+	div.className="modal";
+	div.innerHTML = `
+	<div class="window send_card">
+		<div class="title">
+			<span>명함 전달</span>
+			<button type="button" class="close_modal">
+				<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+			</button>
+		</div>
+		<div class="description">
+			<span>아래의 내용을 복사(Ctrl+C)하여 다른 사람에게 전달해주세요.</span>
+			<textarea class="send_card_area" rows="4" readonly>
+				${card_name}의명함 정보입니다.
+				
+				이름: ${card_name}
+				
+				리멤버는 대한민국 300만 직장인이 사용하는 직장인 필수앱입니다.
+				아래 링크를 눌러 리멤버 앱에 명함을 저장하시면 언제 어디서든 손쉽게 찾아보
+				실 수 있습니다.
+				https://app.rmbr.in/Rf9Kx27wfrb
+			</textarea>
+		</div>
+		<div class="buttons">
+			<button class="close_modal">닫기</button>
+		</div>
+	</div>
+	`;
+	return div;
+}
+
 function makeSendEmailModal(email_text) {
 	const div = document.createElement("div");
 	div.className = "modal";
 	div.innerHTML = `
 		<div class="window send_email">
 			<div class="title">
-				<span>명함 삭제</span>
+				<span>단체 메일 보내기</span>
 				<button type="button" class="close_modal">
 					<img src="/static/images/signup_modal_closer.png">
 				</button>

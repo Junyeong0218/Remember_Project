@@ -1,3 +1,62 @@
+/*const ajax = {
+	// insert functions
+	insertNewCard: (data) => 																											insertNewCard(data),
+	insertNewGroup: (group_name) => 																							insertNewGroup(group_name),
+	insertNewTeam: (data) => 																											insertNewTeam(data),
+	insertCardMemo: (card_id, contents) => 																				insertCardMemo(card_id, contents),
+	insertTeamGroup: (selected_card_book_id, group_name) => 											insertTeamGroup(selected_card_book_id, group_name),
+	insertTeamCardToPersonal: (team_card_id, memo_include_flag) => 								insertTeamCardToPersonal(team_card_id, memo_include_flag),
+	insertTeamCardsToPersonal: (team_card_id_list, memo_include_flag) => 					insertTeamCardsToPersonal(team_card_id_list, memo_include_flag),
+	insertTeamCardsToPersonal: (team_card_id_list, memo_include_flag) => 					insertTeamCardsToPersonal(team_card_id_list, memo_include_flag),
+	insertAllTeamCardsInGroupToPersonal: (team_group_id, not_selected_card_id_list, memo_include_flag) => 
+																																								insertAllTeamCardsInGroupToPersonal(team_group_id, not_selected_card_id_list, memo_include_flag),
+	insertAllTeamCardsInCardBookToPersonal: (team_card_book_id, not_selected_card_id_list, memo_include_flag) => 
+																																								insertAllTeamCardsInCardBookToPersonal(team_card_book_id, not_selected_card_id_list, memo_include_flag),
+	
+	// select functions
+	isTeamJoined: () => 																														isTeamJoined(),
+	loadUserGroups: () => 																													loadUserGroups(),
+	loadCardsInAllGroups: (page) => 																								loadCardsInAllGroups(page),
+	loadCardsInSpecificGroup: (group_id, page) => 																	loadCardsInSpecificGroup(group_id, page),
+	loadCardDetail: (card_id) => 																										loadCardDetail(card_id),
+	loadPrincipalProfile: () => 																											loadPrincipalProfile(),
+	loadTeams: () => 																																loadTeams(),
+	loadCardBooks: (selected_team_id) => 																					loadCardBooks(selected_team_id),
+	loadTeamGroups: (selected_card_book_id) => 																		loadTeamGroups(selected_card_book_id),
+	loadTeamCardsInCardBook: (selected_card_book_id, page, card_order_flag) =>	loadTeamCardsInCardBook(selected_card_book_id, page, card_order_flag),
+	loadTeamCardsInSpecificGroup: (selected_group_id, page, card_order_flag) => 	loadTeamCardsInSpecificGroup(selected_group_id, page, card_order_flag),
+	loadTeamMembers: (selected_team_id, page) => 																	loadTeamMembers(selected_team_id, page),
+	loadCardBookJoinMembers: (selected_card_book_id, page) => 									loadCardBookJoinMembers(selected_card_book_id, page),
+	loadTeamGroupBelongFlags: (card_id) => 																				loadCardBookJoinMembers(card_id),
+	loadTeamGroupBelongFlagsForCards: (card_id_list) => 													loadTeamGroupBelongFlagsForCards(card_id_list),
+	loadCardEmails: (card_id_list) => 																								loadCardEmails(card_id_list),
+	loadCardEmailsInGroup: (team_group_id, not_selected_card_id_list) => 						loadCardEmailsInGroup(team_group_id, not_selected_card_id_list),
+	loadCardEmailsInCardBook: (team_card_book_id, not_selected_card_id_list) => 	loadCardEmailsInCardBook(team_card_book_id, not_selected_card_id_list),
+	
+	// update functions
+	updateGroupName: (group_id, group_name) => 																	updateGroupName(group_id, group_name),
+	updateCard: (card_id, formdata) => 																						updateCard(card_id, formdata),
+	updateCardMemo: (card_memo_id, contents) => 																updateCardMemo(card_memo_id, contents),
+	updateCardsBelongGroups: (card_id_list, group_id_list, default_group_id) => 			updateCardsBelongGroups(card_id_list, group_id_list, default_group_id),
+	updateTeamName: (team_id, title) => 																						updateTeamName(team_id, title),
+	updateProfileNickname: (team_profile_id, nickname) => 													updateProfileNickname(team_profile_id, nickname),
+	updateCardBookName: (selected_card_book_id, card_book_name) => 						updateCardBookName(selected_card_book_id, card_book_name),
+	updateTeamCardBelongTeamGroup: (card_id, data) => 													updateTeamCardBelongTeamGroup(card_id, data),
+	updateTeamCardsBelongTeamGroup: (data) => 																	updateTeamCardsBelongTeamGroup(data),
+	
+	// delete functions
+	deleteGroup: (group_id) => 																											deleteGroup(group_id),
+	deleteCard: (card_id) => 																												deleteCard(card_id),
+	deleteCards: (card_id_list) => 																									deleteCards(card_id_list),
+	deleteCardMemo: (card_memo_id) => 																						deleteCardMemo(card_memo_id),
+	deleteTeam: (selected_team_id) => 																							deleteTeam(selected_team_id),
+	leaveTeam: (selected_team_id) => 																								leaveTeam(selected_team_id),
+	deleteAllCardsInTeamGroup: (selected_group_id, not_selected_card_id_list) => 		deleteAllCardsInTeamGroup(selected_group_id, not_selected_card_id_list),
+	deleteAllCardsInCardBook: (selected_card_book_id, not_selected_card_id_list) => deleteAllCardsInCardBook(selected_card_book_id, not_selected_card_id_list),
+}*/
+
+// ajax obj for test
+
 const team_members_button = document.querySelector(".menus .members");
 const team_manage_button = document.querySelector(".menus .team_manage");
 const change_team_button = document.querySelector(".menus .change_team");
@@ -27,8 +86,7 @@ const service_object = {
 	selected_card_book: null,
 	selected_group: null,
 	selected_card: null,
-	selected_card_detail: null,
-	
+	selected_card_detail: null
 };
 
 let page = 0;
@@ -465,7 +523,7 @@ function setCardList() {
 		const how_to_use_tag = makeHowToUseTag();
 		replaceTagInMainContents(how_to_use_tag);
 	} else {
-		const card_list_wrapper_tag = makeCardListTag();
+		const card_list_wrapper_tag = makeCardListTag(card_order_flag);
 		replaceTagInMainContents(card_list_wrapper_tag);
 		setListPager(service_object.card_list[0].total_count);
 		
@@ -1397,19 +1455,6 @@ function makeSelectMessage(selected_card_count) {
 	}
 }
 
-function makeAddNewGroupTag() {
-	const div = document.createElement("div");
-	div.className = "input_wrapper";
-	div.id = "add_new_group";
-	div.innerHTML = `
-		<input type="text" name="group_name" placeholder="그룹명 입력">
-		<button type="button">
-			<img src="/static/images/card_team_add_card_wrapper_closer.png">
-		</button>
-	`;
-	return div;
-}
-
 function makeGroupNameTagInCardDetail(group) {
 	const span = document.createElement("span");
 	span.className = group.group_name == "미분류" ? "text no_content" : "text group";
@@ -1958,54 +2003,6 @@ function makeConfirmDeleteTeamModal() {
 	return div;
 }
 
-function makeAddTeamCardMemoModal() {
-	const div = document.createElement("div");
-	div.className = "modal";
-	div.innerHTML = `
-		<div class="window change_memo">
-			<div class="title">
-				<span>메모 추가</span>
-				<button type="button" class="close_modal">
-					<img src="/static/images/signup_modal_closer.png">
-				</button>
-			</div>
-			<div class="input_wrapper">
-				<textarea name="contents" placeholder="내용을 입력하세요" rows="4"></textarea>
-				<div class="buttons">
-					<button type="button" class="cancel_button">취소</button>
-					<button type="button" class="submit_button" disabled>추가</button>
-				</div>
-			</div>
-		</div>
-	`;
-	return div;
-}
-
-function makeUpdateTeamCardMemoModal(memo) {
-	const div = document.createElement("div");
-	div.className = "modal";
-	div.innerHTML = `
-		<div class="window change_memo">
-			<div class="title">
-				<span>메모 수정</span>
-				<button type="button" class="close_modal">
-					<img src="/static/images/signup_modal_closer.png">
-				</button>
-			</div>
-			<div class="input_wrapper">
-				<span>${memo.update_date.replace("T", " ")}에 마지막 수정</span>
-				<span>작성자 : ${memo.nickname}</span>
-				<textarea name="contents" placeholder="내용을 입력하세요" rows="4">${memo.contents}</textarea>
-				<div class="buttons">
-					<button type="button" class="cancel_button">취소</button>
-					<button type="button" class="submit_button" disabled>수정</button>
-				</div>
-			</div>
-		</div>
-	`;
-	return div;
-}
-
 function makeDeleteConfirmTeamCardMemoModal(memo) {
 	const div = document.createElement("div");
 	div.className = "modal";
@@ -2027,37 +2024,6 @@ function makeDeleteConfirmTeamCardMemoModal(memo) {
 				<div class="buttons">
 					<button type="button" class="remove_button">삭제</button>
 				</div>
-			</div>
-		</div>
-	`;
-	return div;
-}
-
-function makeChangeGroupModal(selected_card_count) {
-	const div = document.createElement("div");
-	div.className = "modal";
-	div.innerHTML = `
-		<div class="window change_group">
-			<div class="title">
-				<span>그룹 설정</span>
-				<button type="button" class="close_modal">
-					<img src="/static/images/signup_modal_closer.png">
-				</button>
-			</div>
-			<div class="group_wrapper">
-				<span>선택한 <span class="card_count">${selected_card_count}</span>개의 명함을 아래의 그룹에 추가합니다.</span>
-				<div class="group_list">
-					
-					<button type="button" class="add_new_group">+ 그룹 추가하기</button>
-					<div class="insert_group_form hidden">
-						<input type="text" name="group_name" placeholder="그룹명 입력">
-						<button type="button" class="confirm">확인</button>
-						<button type="button" class="cancel">취소</button>
-					</div>
-				</div>
-			</div>
-			<div class="buttons">
-				<button type="button" class="set_group_button">완료</button>
 			</div>
 		</div>
 	`;
