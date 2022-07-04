@@ -30,6 +30,9 @@ public class CardUpdateReqDto {
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
 	
+	private MultipartFile front_card_image;
+	private MultipartFile back_card_image;
+	
 	public Card toUpdateCardEntity() {
 		return Card.builder()
 				.id(id)

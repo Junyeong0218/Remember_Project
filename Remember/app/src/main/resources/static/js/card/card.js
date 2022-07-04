@@ -13,6 +13,10 @@ let total_page_check_flag = false;
 let group_list;
 let card_list;
 
+let card_order_flag = "reg_date";
+
+let whole_button_clicked_flag = false;
+
 add_group_btn.onclick = makeAddGroupBoxTag;
 
 whole_cards.onclick = () => {
@@ -28,6 +32,8 @@ function main() {
 	
 	whole_count.innerText = group_list[0].total_count;
 	setGroupList();
+	
+	myCard();
 	
 	setTimeout(() => {
 		whole_cards.click();
@@ -303,6 +309,36 @@ function insertNewGroup(group_name) {
 	return group_id;
 }
 
+function loadSpecificGroupCardList() {
+	let cards;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/group/" + card_list.id + "/card/list",
+		async: false,
+		data: {"page":page,
+					 "card_order_flag":card_order_flag},
+		dataType: "json",
+		success: function (data) {
+			console.log(data);
+			cards = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return cards;
+}
+
+function myCard() {
+	const register_my_card_button = document.querySelector('.register_business_card');
+	const add_card_form = makeAddCardFormTag();
+	register_my_card_button.onclick = () => {
+		
+		replaceTagInMainContents(add_card_form);
+	}
+}
+
 function setGroupList() {
 	for (let i = 0; i < group_list.length; i++) {
         const group_tag = makeGroupTag(group_list[i]);
@@ -366,6 +402,15 @@ function setCardList() {
         replaceTagInMainContents(card_list_tag);
         appendCardListTag(card_list);
         
+        const card_ordering = card_list_tag.querySelector(".top_select");
+        
+        card_ordering.onchange = () => {
+			card_order_flag = card_ordering.options[card_ordering.selectedIndex].value;
+			page = 0;
+			card_list = whole_button_clicked_flag ? loadAllCardList() : loadSpecificGroupCardList();
+			setCardList();
+		}
+       
       	const pager = card_list_tag.querySelector(".list_page > .pager");
         const all_checkbox = card_list_tag.querySelector(".top_list_btn > input");
         const check_more = card_list_tag.querySelector('.more');
@@ -374,6 +419,7 @@ function setCardList() {
         const selcet = card_list_tag.querySelector('.list_select');
         const cards = card_list_tag.querySelectorAll(".card_list_con");
         const checkBoxes = card_list_tag.querySelectorAll(".list_group .check_btn");
+        
         
         makePageTag(total_card_count, pager.children);
         
@@ -446,11 +492,49 @@ function setCardList() {
 			const move_group_modal = moveGroupModal(card_count, groups);
 			appendModalToContainer(move_group_modal);
 			
+			const group_list_tag = move_group_modal.querySelector('.group_list ul');
+			const add_group_button = move_group_modal.querySelector('.add_group_btn');
+			const insert_group_form = move_group_modal.querySelector('.insert_group_form');
+			const new_group_name_input = insert_group_form.querySelector("input");
+			add_group_button.onclick = () => {
+				add_group_button.classList.add('hidden');
+				insert_group_form.classList.remove('hidden');
+			}
+			insert_group_form.querySelector(".confirm").onclick = () => {
+				if(new_group_name_input.value == "") {
+					alert("그룹명을 확인해주세요.");
+				} else if(new_group_name_input.value == "미분류") {
+					alert("해당 그룹명은 사용할 수 없습니다.");
+				} else {
+					// insert new group
+					if(insertNewGroup(new_group_name_input.value)) {
+					const ul = move_group_modal.querySelector('.group_list > ul');
+					const group_list_add = move_group_modal.querySelector('.group_list_add');
+						const li = document.createElement('li');
+						li.innerHTML = `
+							<input type="checkbox" id="check" >
+							${new_group_name_input.value}
+						`;
+						ul.insertBefore(li, group_list_add);
+						
+	               
+					} else {
+						alert("그룹 인서트 실패");
+					}
+				}
+			}
+			
+			insert_group_form.querySelector(".cancel").onclick = () => {
+				new_group_name_input.value = "";
+				add_group_button.classList.remove("hidden");
+				insert_group_form.classList.add("hidden");
+			}
+	
 			const default_card_group_id = groups[groups.findIndex(e => e.group_name == "미분류 명함")].id;
 			const complete_button = move_group_modal.querySelector('.complete_btn');
 			complete_button.onclick = () => {
 				const selected_group_id_list = new Array();
-				const group_tag_list = move_group.querySelectorAll(".group_list > ul > li > input");
+				const group_tag_list = move_group_modal.querySelectorAll(".group_list > ul > li > input");
 				group_tag_list.forEach((e, index) => {
 					if(e.checked) selected_group_id_list.push(groups[index].id);
 				});
@@ -670,6 +754,16 @@ function setCardList() {
 						edit_card_form.remove();
 					}
 					
+					/*let front_card_image_file;
+					let back_card_image_file;
+					const card_imgae_wrapper = edit_card_form.querySelector('.edit_con');
+					const card_image_input_wrapper = edit_card_form.querySelector('.edit_img_add');
+					const card_image_input = edit_card_form.querySelector('input');
+					
+					let clicked_card;
+					
+				*/
+					
 					let is_img_changed = false;
 					const add_profile_image_button = edit_card_form.querySelector('.card_profile > button');
 					const profile_image_input = edit_card_form.querySelector('.profile_img_input');
@@ -836,6 +930,147 @@ function toggleClassActiveCards(cards, current_index) {
 	});
 }
 
+function makeCardSummaryCharacterText(name) {
+	if(name == null) return "";
+	const char = name.charCodeAt(0);
+	switch(char) {
+		case 48: return "0";
+		case 49: return "1";
+		case 50: return "2";
+		case 51: return "3";
+		case 52: return "4";
+		case 53: return "5";
+		case 54: return "6";
+		case 55: return "7";
+		case 56: return "8";
+		case 57: return "9";
+		case 97: case 65: return "A";
+		case 98: case 66: return "B";
+		case 99: case 67: return "C";
+		case 100: case 68: return "D";
+		case 101: case 69: return "E";
+		case 102: case 70: return "F";
+		case 103: case 71: return "G";
+		case 104: case 72: return "H";
+		case 105: case 73: return "I";
+		case 106: case 74: return "J";
+		case 107: case 75: return "K";
+		case 108: case 76: return "L";
+		case 109: case 77: return "M";
+		case 110: case 78: return "N";
+		case 111: case 79: return "O";
+		case 112: case 80: return "P";
+		case 113: case 81: return "Q";
+		case 114: case 82: return "R";
+		case 115: case 83: return "S";
+		case 116: case 84: return "T";
+		case 117: case 85: return "U";
+		case 118: case 86: return "V";
+		case 119: case 87: return "W";
+		case 120: case 88: return "X";
+		case 121: case 88: return "Y";
+		case 122: case 88: return "Z";
+	}
+	if(char == 12593 || (char > 44031 && char < 45208)) return "ㄱ";
+	if(char == 12596 || (char > 45207 && char < 45796)) return "ㄴ";
+	if(char == 12599 || (char > 45795 && char < 46972)) return "ㄷ";
+	if(char == 12601 || (char > 46971 && char < 47560)) return "ㄹ";
+	if(char == 12609 || (char > 47559 && char < 48418)) return "ㅁ";
+	if(char == 12610 || (char > 48417 && char < 49324)) return "ㅂ";
+	if(char == 12613 || (char > 49323 && char < 50500)) return "ㅅ";
+	if(char == 12615 || (char > 50499 && char < 51088)) return "ㅇ";
+	if(char == 12616 || (char > 51087 && char < 52264)) return "ㅈ";
+	if(char == 12618 || (char > 52263 && char < 52852)) return "ㅊ";
+	if(char == 12619 || (char > 52851 && char < 53440)) return "ㅋ";
+	if(char == 12620 || (char > 53439 && char < 54028)) return "ㅌ";
+	if(char == 12621 || (char > 54027 && char < 54616)) return "ㅍ";
+	if(char == 12622 || (char > 54615 && char < 55204)) return "ㅎ";
+	return "";
+}
+
+function makeAddCardFormTag(){
+	const div = document.createElement("div");
+	div.className = "card_content";
+	div.innerHTML = `
+			<div class="card_header">
+				<div class="card_title">명함 입력</div>
+				<div class="add_card_btn">
+					<button class="btn cancel">취소</button>
+					<button class="btn save">저장</button>
+				</div>
+			</div>
+			<div class="card_body">
+				<div class="card_profile">
+					<img class="proflie_img" src="/static/images/card_profile_user.png" alt="프로필 기본">
+					<input type="file" name="file" class="profile_img_input" accept="image/*">
+					<button type="button" class="btn save">프로필 사진 추가</button>
+				</div>
+				<div class="card_inputs">
+					<div class="input_item top">
+						<div class="item_box">
+							<div>
+								<div class="input_title">
+									이름
+								</div>
+								<input type="text" class="input_con" name="name" placeholder="이름 입력">
+							</div>
+							<div>
+								<div class="input_title">
+									직책
+								</div>
+								<input type="text" class="input_con" name="position_name" placeholder="직책 입력">
+							</div>
+						</div>
+						<div class="item_box">
+							<div>
+								<div class="input_title">
+									부서
+								</div>
+								<input type="text" class="input_con" name="department_name" placeholder="부서명 입력">
+							</div>
+							<div>
+								<div class="input_title">
+									회사
+								</div>
+								<input type="text" class="input_con" name="company_name" placeholder="회사명 입력">
+							</div>
+						</div>
+						
+					</div>
+					<div class="input_item">
+						<div class="item_box">
+							<div class="input_title">
+								이메일
+							</div>
+							<input type="text" class="input_con" name="email" placeholder="이메일 주소 입력">
+							<div class="input_title">
+								휴대폰
+							</div>
+							<input type="text" class="input_con" name="phone" placeholder="휴대폰 번호 입력">
+							<div class="input_title">
+								유선전화
+							</div>
+							<input type="text" class="input_con" name="landline_phone" placeholder="유선전화 번호 입력">
+							<div class="input_title">
+								팩스
+							</div>
+							<input type="text" class="input_con" name="fax" placeholder="팩스 번호 입력">
+						</div>
+						<div class="item_box">
+							<div class="input_title">
+								주소
+							</div>
+							<input type="text" class="input_con" name="address" placeholder="주소 입력">
+							<input type="text" class="input_con" name="sub_address" placeholder="상세 주소 입력">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+	`;
+	return div;	
+}
+
 function makeEditCardFormTag(originCardData) {
 	const div = document.createElement("div");
 	div.className= "edit_contents";
@@ -852,7 +1087,7 @@ function makeEditCardFormTag(originCardData) {
 				<div class="edit_img_add">
 					<div class="edit_img_upload">+</div>
 					<div class="edit_img_text">명함 이미지 추가</div>
-				<input type="file" name="file" class="profile_img_input" accept="image/*">
+					<input type="file" name="file" class="profile_img_input">
 				</div>
 			</div>
 			<div class="edit_write">
@@ -1007,7 +1242,14 @@ function moveGroupModal(card_count,group_list) {
 					<span>선택한 ${card_count}개의 명함을 아래의 그룹에 추가합니다.<span></div>
 				<div class="group_list">
 					<ul>
-						<li class="group_list_add"><button>+ 그룹 추가하기</button></li>
+						<li class="group_list_add">
+						<button class=add_group_btn>+ 그룹 추가하기</button>
+							<div class="insert_group_form hidden">
+							<input type="text" name="group_name" placeholder="그룹명 입력" value="">
+							<button type="button" class="confirm">확인</button>
+							<button type="button" class="cancel">취소</button>
+							</div>
+						</li>
 					</ul>
 				</div>
 				</div>
@@ -1273,9 +1515,9 @@ function makeCardListTag() {
 			</div>
 			<div class="top_right">
 				<select class="top_select" name="order">
-					<option value="reg_date">등록일순</option>
-					<option value="name">이름순</option>
-					<option value="company_name">회사명순</option>
+					<option value="reg_date" ${card_order_flag == 'reg_date' ? 'selected' : ''}>등록일순</option>
+					<option value="name" ${card_order_flag == 'name' ? 'selected' : ''}>이름순</option>
+					<option value="company_name" ${card_order_flag == 'company_name' ? 'selected' : ''}>회사명순</option>
 				</select>
 			</div>
 			<div class="top_right hide">
@@ -1321,10 +1563,11 @@ function makeCardListTag() {
 function appendCardListTag(card_list) {
     const list_group = document.querySelector(".list_group");
     let prev_date;
+    let prev_first_character;
     for (let i = 0; i < card_list.length; i++) {
-        const create_date = makeCardCreateDate(card_list[i].create_date);
-        if (prev_date == create_date) {
-            // 날짜 출력 X card만 출력
+        if (card_order_flag == "reg_date") {
+	        const create_date = makeCardCreateDate(card_list[i].create_date);
+	         if (prev_date == create_date) {
             const department_text = makeDepartmentText(card_list[i].department_name, card_list[i].position_name);
             const groups = list_group.querySelectorAll(".all_card_list");
             const div = groups[groups.length - 1];
@@ -1343,30 +1586,80 @@ function appendCardListTag(card_list) {
 					</div>
 				</div>
 			`;
-        } else {
-            const department_text = makeDepartmentText(card_list[i].department_name, card_list[i].position_name);
-            const div = document.createElement('div');
-            div.className = "all_card_list";
-            div.innerHTML = `
-				<div class="card_list_title">${create_date}</div>
-				<div class="card_list_con">
-					<div class="list_con_check">
-						<input type="checkbox" id="check" class="check_btn">
-						<label for="check"></label>
-					</div>
-					<div class="list_con_info">
-						<div class="list_info name">
-							<span>${card_list[i].name}</span>
-						</div>
-		${department_text == null ? '' : '<div class="list_info position">' + department_text + '</div>'}
-		${card_list[i].company_name == null ? '' : '<div class="list_info company">' + card_list[i].company_name + '</div>'}
-					</div>
+	        } else {
+	            const card_list_date = makeDateCardListTag(card_list[i]);
+	            list_group.appendChild(card_list_date);
+	            prev_date = create_date;
+	        }
+      	 } else if(card_order_flag == "name") {
+				const first_character = makeCardSummaryCharacterText(card_list[i].name);
+				if(prev_first_character != first_character) {
+					const upload_date_tag = makeCardUploadDataTag(first_character); 
+					list_group.appendChild(upload_date_tag);
+					prev_first_character = first_character;
+				}
+			} else if(card_order_flag == "company_name") {
+				const first_character = makeCardSummaryCharacterText(card_list[i].company);
+				if(prev_first_character != first_character) {
+					const upload_date_tag = makeCardUploadDataTag(first_character); 
+					list_group.appendChild(upload_date_tag);
+					prev_first_character = first_character;
+				}
+			}
+		}	
+}
+
+function makeCardTag(card) {
+	const div = document.createElement('div');
+	div.className = "card";
+	div.innerHTML = `
+	<div class="card_list_con">
+			<div class="list_con_check">
+				<input type="checkbox" id="check" class="check_btn">
+				
+			</div>
+			<div class="list_con_info">
+				<div class="list_info name">
+					<span>${card.name}</span>
 				</div>
-			`;
-            list_group.appendChild(div);
-            prev_date = create_date;
-        }
-    }
+${card.department_name == null ? '' : '<div class="list_info position">' + card.department_name + '</div>'}
+${card.company_name == null ? '' : '<div class="list_info company">' + card.company_name + '</div>'}
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeDateCardListTag(card_list) {
+	const create_date = makeCardCreateDate(card_list.create_date);
+	const department_text = makeDepartmentText(card_list.department_name, card_list.position_name);
+    const div = document.createElement('div');
+    div.className = "all_card_list";
+    div.innerHTML = `
+		<div class="card_list_title">${create_date}</div>
+		<div class="card_list_con">
+			<div class="list_con_check">
+				<input type="checkbox" id="check" class="check_btn">
+				<label for="check"></label>
+			</div>
+			<div class="list_con_info">
+				<div class="list_info name">
+					<span>${card_list.name}</span>
+				</div>
+${department_text == null ? '' : '<div class="list_info position">' + department_text + '</div>'}
+${card_list.company_name == null ? '' : '<div class="list_info company">' + card_list.company_name + '</div>'}
+			</div>
+		</div>
+	`;
+       return div;
+}
+
+
+function makeCardUploadDataTag(upload_date) {
+	const div = document.createElement("div");
+	div.className = "upload_date";
+	div.innerHTML = `${upload_date}`;
+	return div;
 }
 
 function makeCardcopyToTeamModal() {

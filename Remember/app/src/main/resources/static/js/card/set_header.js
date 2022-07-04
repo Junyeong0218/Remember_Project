@@ -390,6 +390,24 @@ function executeMultipleEvents(event) {
 										removeModal(update_memo_modal);
 									}
 								}
+								
+								memo.querySelector('.show_remove_memo_modal').onclick = () => {
+								const remove_memo_modal = makeDeleteConfirmCardMemoModal(new_card_detail.memo_list[i]);
+								appendModalToContainer(remove_memo_modal);
+								
+								remove_memo_modal.querySelector('.close_btn').onclick = () => {
+									removeModal(remove_memo_modal);
+								}
+								
+								remove_memo_modal.querySelector('.remove_btn').onclick = () => {
+									if(deleteMemo(new_card_detail.memo_list[i].id)) {
+										location.reload();
+									}else {
+										alert("메모 삭제 실패");
+									}
+									removeModal(remove_memo_modal);
+								}
+							}
 							}
 							
 							const edit_button = card_detail_tag.querySelector('.edit');
@@ -431,6 +449,7 @@ function executeMultipleEvents(event) {
 									} else {
 										alert("명함 수정 실패");
 									}
+									
 								}
 							}
 							

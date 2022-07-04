@@ -213,6 +213,11 @@ public class CardRestController {
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	
+	@GetMapping("/group/{groupId}/card/list")
+	public List<Card> getCardListInSpecificMyGroup(@PathVariable int groupId, int page, String card_order_flag) {
+		return cardService.getCardListInSpecificGroup(groupId, page, card_order_flag);
+	}
+	
 	// ------------------------------------------------------------------------------
 	// team 관련 rest methods
 	

@@ -70,6 +70,8 @@ public interface CardService {
 	
 	public boolean deleteCardMemo(int cardMemoId);
 	
+	public List<Card> getMyCardListInSpecificGroup(int groupId, int page, String card_order_flag);
+	
 	// -------------------------------------------------
 	// team 관련 services
 	

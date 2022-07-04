@@ -70,6 +70,7 @@ public class CardServiceImpl implements CardService {
 		System.out.println(details);
 		CardDetailResDto dto = new CardDetailResDto();
 		List<Group> groupList = new ArrayList<Group>();
+		List<CardImage> cardImageList = new ArrayList<CardImage>();
 		List<CardMemoDetail> memoList = new ArrayList<CardMemoDetail>();
 		
 		for(int i = 0; i < details.size(); i++) {
@@ -80,11 +81,15 @@ public class CardServiceImpl implements CardService {
 			Group group = detail.toGroupEntity();
 			if(group != null && ! groupList.contains(group)) groupList.add(group);
 			
+			CardImage cardImage = detail.toCardImageEntity();
+			if(cardImage != null && ! cardImageList.contains(cardImage)) cardImageList.add(cardImage);
+			
 			CardMemoDetail memo = detail.toMemoDetailEntity();
 			if(memo != null && ! memoList.contains(memo)) memoList.add(memo);
 			
 		}
 		dto.setGroup_list(groupList);
+		dto.setCard_images(cardImageList);
 		dto.setMemo_list(memoList);
 		
 		return dto;
@@ -280,6 +285,18 @@ public class CardServiceImpl implements CardService {
 	@Override
 	public boolean deleteCardMemo(int cardMemoId) {
 		return cardRepository.deleteCardMemo(cardMemoId) == 1;
+	}
+	
+	@Override
+	public List<Card> getMyCardListInSpecificGroup(int groupId, int page, String card_order_flag) {
+		if(card_order_flag.equals("reg_date")) {
+			return cardRepository.getCardListInSpecificGroup(groupId, page * 10);
+		} else if(card_order_flag.equals("name")) {
+			return cardRepository.getCardListInSpecificGroupOrderNameAsc(groupId, page * 10);
+		} else if(card_order_flag.equals("company_name")) {
+			return cardRepository.getCardListInSpecificGroupOrderCompanyAsc(groupId, page * 10);
+		}
+		return null;
 	}
 	
 	// -------------------------------------------------

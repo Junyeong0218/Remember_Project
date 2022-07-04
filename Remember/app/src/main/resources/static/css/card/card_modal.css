@@ -515,6 +515,7 @@ textarea::placeholder {
 
 
 .group_list {
+	overflow-y: scroll;
 	max-height: 300px;
 	background-color: #f5f5f5;
 	border: 1px solid #ccc;
@@ -554,6 +555,42 @@ textarea::placeholder {
 	border: 1px solid #d9d9d9;
 	color: rgba(0,0,0,0.65);
 }
+
+.add_group_btn.hidden {
+	display: none;
+}
+
+.insert_group_form {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	height: 32px;
+}
+
+.insert_group_form.hidden {
+	display: none;
+}
+
+.insert_group_form > input {
+	padding: 6px 12px;
+	width: 200px;
+	height: 100%;
+	border: none;
+	font-size: 13px;
+	font-weight: 400;
+	color: #555;
+	line-height: 20px;
+	outline: none;
+}
+
+.insert_group_form > button {
+	padding: 0 5px;
+	width: 36px;
+	height: 100%;
+	font-size: 12px;
+	line-height: 32px;
+	cursor: pointer;
+} 
 
 .complete_btn.send {
 	opacity: 0.65;
