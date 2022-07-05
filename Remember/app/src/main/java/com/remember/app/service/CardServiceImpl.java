@@ -36,7 +36,6 @@ import com.remember.app.requestDto.AddCardsFromTeamCard;
 import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardDeleteReqDto;
-import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
@@ -69,6 +68,7 @@ public class CardServiceImpl implements CardService {
 		List<CardDetail> details = cardRepository.getCardDetail(card_id);
 		System.out.println(details);
 		CardDetailResDto dto = new CardDetailResDto();
+		List<CardImage> imageList = new ArrayList<CardImage>();
 		List<Group> groupList = new ArrayList<Group>();
 		List<CardMemoDetail> memoList = new ArrayList<CardMemoDetail>();
 		
@@ -83,7 +83,10 @@ public class CardServiceImpl implements CardService {
 			CardMemoDetail memo = detail.toMemoDetailEntity();
 			if(memo != null && ! memoList.contains(memo)) memoList.add(memo);
 			
+			CardImage image = detail.toCardImageEntity();
+			if(image != null && ! imageList.contains(image)) imageList.add(image);
 		}
+		dto.setCard_images(imageList);
 		dto.setGroup_list(groupList);
 		dto.setMemo_list(memoList);
 		
@@ -124,60 +127,50 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public int updateCard(CardUpdateReqDto cardUpdateReqDto) {
-		Card updateCard = cardUpdateReqDto.toUpdateCardEntity();
-		if(cardUpdateReqDto.getProfile_img() != null) {
-			List<MultipartFile> files = new ArrayList<MultipartFile>();
-			files.add(cardUpdateReqDto.getProfile_img());
-			
-			List<String> fileNames = downloadArticleImageFiles(files);
-			if(fileNames != null) {
-				updateCard.setProfile_img(fileNames.get(0));
-				fileNames.clear();
-				fileNames.add(cardUpdateReqDto.getOrigin_profile_img());
-				deleteArticleImageFiles(fileNames);
+	public boolean updateCard(UpdateCardDetailReqDto updateCardDetailReqDto) {
+		Card card = updateCardDetailReqDto.toCardEntity();
+		System.out.println(updateCardDetailReqDto);
+		if(updateCardDetailReqDto.getProfile_image() != null) {
+			String profile_img = downloadProfileImageFile(updateCardDetailReqDto.getProfile_image());
+			card.setProfile_img(profile_img);
+		}
+		
+		int result = cardRepository.updateCard(card);
+		
+		String frontCardImageName;
+		String backCardImageName;
+		if(updateCardDetailReqDto.getFront_card_image() != null) {
+			frontCardImageName = downloadCardImageFile(updateCardDetailReqDto.getFront_card_image());
+			CardImage cardImage = CardImage.builder()
+																				   .card_id(card.getId())
+																				   .card_image(frontCardImageName)
+																				   .is_front(true)
+																				   .build();
+			Integer idWrapper = cardRepository.getCardImageId(card.getId(), 1);
+			if(idWrapper == null) {
+				result += cardRepository.insertCardImage(cardImage);
+			} else {
+				cardImage.setId(idWrapper.intValue());
+				result += cardRepository.updateCardImage(cardImage);
 			}
 		}
-		System.out.println(updateCard);
-		return cardRepository.updateCard(updateCard);
-	}
-	
-	private boolean deleteArticleImageFiles(List<String> files) {
-		try {
-			for(String fileName : files) {
-				Path path = Paths.get(filePath, "profile_images/" + fileName);
-				File file = new File(path.toString());
-				
-				if(file.exists()) {
-					file.delete();
-				}
+		if(updateCardDetailReqDto.getBack_card_image() != null) {
+			backCardImageName = downloadCardImageFile(updateCardDetailReqDto.getBack_card_image());
+			CardImage cardImage = CardImage.builder()
+																				   .card_id(card.getId())
+																				   .card_image(backCardImageName)
+																				   .is_front(false)
+																				   .build();
+			Integer idWrapper = cardRepository.getCardImageId(card.getId(), 0);
+			if(idWrapper == null) {
+				result += cardRepository.insertCardImage(cardImage);
+			} else {
+				cardImage.setId(idWrapper.intValue());
+				result += cardRepository.updateCardImage(cardImage);
 			}
-			return true;
-		} catch (Exception e) {
-			return false;
 		}
-	}
-	
-	private List<String> downloadArticleImageFiles(List<MultipartFile> files) {
-		try {
-			List<String> imageNames = new ArrayList<String>();
-			for(int i = 0; i < files.size(); i++) {
-				Path path = Paths.get(filePath, "profile_images");
-				File file = new File(path.toString());
-				
-				if(! file.exists()) {
-					file.mkdirs();
-				}
-				
-				String fileName = UUID.randomUUID().toString().replace("-", "") + "_" + files.get(i).getOriginalFilename();
-				Path imagePath = Paths.get(filePath, "profile_images/" + fileName);
-				Files.write(imagePath, files.get(i).getBytes());
-				imageNames.add(fileName);
-			}
-			return imageNames;
-		} catch (Exception e) {
-			return null;
-		}
+		System.out.println(result);
+		return result > 0;
 	}
 	
 	private String downloadProfileImageFile(MultipartFile file) {

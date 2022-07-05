@@ -25,6 +25,10 @@ public class CardDetail {
 	private String sub_address;
 	private LocalDateTime create_date;
 	
+	private int card_image_id;
+	private String card_image;
+	private boolean is_front;
+	
 	private int group_id;
 	private String group_name;
 	
@@ -73,6 +77,18 @@ public class CardDetail {
 							.create_date(memo_create_date)
 							.update_date(memo_update_date)
 							.build();
+	}
+	
+
+	public CardImage toCardImageEntity() {
+		if(card_image_id == 0) return null;
+		
+		return CardImage.builder()
+											.id(card_image_id)
+											.card_id(id)
+											.card_image(card_image)
+											.is_front(is_front)
+											.build();
 	}
 	
 }

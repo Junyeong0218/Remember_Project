@@ -109,7 +109,7 @@ function makePhoneNumberText(phone) {
 	return `${phone.substring(0, 3)}-${phone.substring(3, 7)}-${phone.substring(7, 11)}`;
 }
 
-function makeFormDataForUpdateCard(inputs, front_card_image, back_card_image, profile_image) {
+function makeFormDataForUpdateCard(origin_profile_img, inputs, front_card_image, back_card_image, profile_image) {
 	const formdata = new FormData();
 	for(let i = 0; i < inputs.length; i++) {
 		if(inputs[i].value != "") formdata.append(inputs[i].name, inputs[i].value);
@@ -117,7 +117,7 @@ function makeFormDataForUpdateCard(inputs, front_card_image, back_card_image, pr
 	if(front_card_image != null) formdata.append("front_card_image", front_card_image);
 	if(back_card_image != null) formdata.append("back_card_image", back_card_image);
 	if(profile_image != null) formdata.append("profile_image", profile_image);
-	if(selected_card_detail.card.profile_img != null) formdata.append("profile_img", selected_card_detail.card.profile_img);
+	if(origin_profile_img != null) formdata.append("profile_img", origin_profile_img);
 	
 	return formdata;
 }
@@ -132,6 +132,23 @@ function makeEmailTextForModal(card_email_list) {
 	}
 	return email_text;
 }
+
+function reloadCardDetail() {
+	const cards = document.querySelector(".card_list_wrapper .card_list").children;
+	for(let i = 0; i < cards.length; i++) {
+		if(cards[i].className.includes("clicked")) {
+			cards[i].click();
+			break;
+		}
+	}
+}
+
+function makeDepartmentText(department_name, position_name) {
+    return position_name != null && department_name != null ? position_name + " / " + department_name :
+        position_name == null && department_name == null ? null :
+            position_name == null ? department_name : position_name;
+}
+
 
 // ============================================================================================================================
 // 																											make tag functions
@@ -200,6 +217,13 @@ function makeCardListTag(card_order_flag) {
 					<option value="name" ${card_order_flag == 'name' ? 'selected' : ''}>이름순</option>
 					<option value="company_name" ${card_order_flag == 'company_name' ? 'selected' : ''}>회사명순</option>
 				</select>
+				<div class="buttons hidden">
+					<button type="button" class="copy_to_team">팀 명함첩으로 복제</button>
+					<button type="button" class="set_group">그룹설정</button>
+					<button type="button" class="down_menu">
+						<span class="arrow"></span>
+					</button>
+				</div>
 			</div>
 		</div>
 		<div class="card_list">
@@ -227,7 +251,29 @@ function makeCardOrderStandardTag(order_standard) {
 	return div;
 }
 
+function makeCardListMenuTag() {
+	const div = document.createElement("div");
+	div.className = "menu_list";
+	div.innerHTML = `
+		<span class="row" id="current_page_selector">현재 페이지 선택</span>
+		<span class="row" id="whole_page_selector">전체 페이지 선택</span>
+		<span class="row" id="select_cancel">선택 안함</span>
+	`;
+	return div;
+}
+
+function makeSelectMessage(page_check_flag, selected_card_count) {
+	if(page_check_flag == "current") {
+		return `이 페이지의 명함 ${selected_card_count}장이 모두 선택되었습니다.`;
+	} else if(page_check_flag == "not_max") {
+		return `명함 ${selected_card_count}장이 선택되었습니다.`;
+	} else if(page_check_flag == "whole" || page_check_flag == "whole_after") {
+		return `전체 페이지의 명함 ${selected_card_count}장이 모두 선택되었습니다.`;
+	}
+}
+
 function makeCardSummaryTag(card) {
+	const department_text = makeDepartmentText(card.department_name, card.position_name);
 	const div = document.createElement("div");
 	div.className = "card";
 	div.innerHTML = `
@@ -236,7 +282,8 @@ function makeCardSummaryTag(card) {
 		</div>
 		<div class="card_info">
 			<span class="name">${card.name}</span>
-${card.position_name == null ? '' : '<span class="position_name">' + card.position_name + '</span>'}
+${location.pathname.includes("team") ? card.position_name == null ? '' : '<span class="position_name">' + card.position_name + '</span>' :
+department_text == null ? '' : '<span class="position_name">' + department_text + '</span>'}
 ${card.company_name == null ? '' : '<span class="company_name">' + card.company_name + '</span>'}
 		</div>
 	`;
@@ -246,6 +293,7 @@ ${card.company_name == null ? '' : '<span class="company_name">' + card.company_
 function makeCardDetailTag(card_detail) {
 	const reg_date = makeCardDetailRegDateText(card_detail.card.create_date);
 	const address_text = makeAddressText(card_detail.card.address, card_detail.card.sub_address);
+	const department_text = makeDepartmentText(card_detail.card.department_name, card_detail.card.position_name);
 	const div = document.createElement("div");
 	div.className = "card_detail";
 	div.innerHTML = `
@@ -268,10 +316,10 @@ ${location.pathname.includes("team") ? '<span class="reg_user_name">등록자 : 
 				</div>
 				<div class="texts">
 					<span class="name">${card_detail.card.name}</span>
-${card_detail.card.department_name == null ? '' : '<span class="department_text">' + card_detail.card.department_name + '</span>'}
+${department_text == null ? '' : '<span class="department_text">' + department_text + '</span>'}
 ${card_detail.card.company_name == null ? '' : '<span class="company_name">' + card_detail.card.company_name + '</span>'}
 				</div>
-${card_detail.card_images.length != 0 /*false*/ ? '<div class="card_image"><img src="/image/card_images/' + card_detail.card_images[0].card_image + '"></div>' : ''}
+${card_detail.card_images.length != 0 ? '<div class="card_image"><img src="/image/card_images/' + card_detail.card_images[0].card_image + '"></div>' : ''}
 			</div>
 			<div class="card_description">
 				<div class="left">
@@ -329,7 +377,8 @@ function makeCardDetailMenuTag() {
 	div.className = "detail_menu";
 	div.innerHTML = `
 		<button type="button" class="row" id="report_typo">입력오타 신고</button>
-		<button type="button" class="row" id="save_to_personal">내 명함첩에 저장</button>
+${location.pathname.includes("team") ? '<button type="button" class="row" id="save_to_personal">내 명함첩에 저장</button>' :
+																			   '<button type="button" class="row" id="save_to_team">팀 명함첩에 저장</button>'}
 		<button type="button" class="row" id="delete_card">명함 삭제</button>
 	`;
 	return div;
@@ -681,6 +730,33 @@ function makeDeleteCardsConfirmModal(selected_card_count) {
 	return div;
 }
 
+function makeDeleteConfirmCardMemoModal(memo) {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window change_memo">
+			<div class="title">
+				<span>메모 삭제</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="input_wrapper">
+				<h4>메모를 삭제하시겠습니까?</h4>
+				<div class="texts">
+					<span>${memo.update_date.replace("T", " ")}에 마지막 수정</span>
+${location.pathname.includes("team") ? '<span>작성자 : ' + memo.nickname + '</span>' : ''}
+				</div>
+				<textarea class="disabled" name="contents" placeholder="내용을 입력하세요" rows="4" readonly>${memo.contents}</textarea>
+				<div class="buttons">
+					<button type="button" class="remove_button">삭제</button>
+				</div>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
 function makeShowAllCardImageModal(card_images) {
 	const div = document.createElement("div");
 	div.className = "modal";
@@ -699,6 +775,49 @@ function makeShowAllCardImageModal(card_images) {
 ${card_images.length > 1 ? '<div class="back"><img src="/image/card_images/' + card_images[1].card_image + '">"</div>' : ''}
 			</div>
 		</div>
+	`;
+	return div;
+}
+
+function makeReportModal() {
+	const div = document.createElement('div');
+	div.className = "modal";
+	div.innerHTML =`
+	<div class="window report_card">
+		<div class="title">
+			<span>입력오타 신고</span>
+			<button class="close_modal">
+				<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+			</button>
+		</div>
+		<div class="description">
+			<div class="texts">
+				<span>입력된 정보 중 오타가 발견된 항목을 선택해주세요.</span>
+				<span>입력 내용을 다시 검토하여 수정해 드립니다.</span>
+			</div>
+			<div class="item_list">
+				<div class="input_wrapper">
+					<input type="checkbox">
+					<span>이름</span>
+				</div>
+				<div class="input_wrapper">
+					<input type="checkbox">
+					<span>휴대폰 번호</span>
+				</div>
+				<div class="input_wrapper">
+					<input type="checkbox">
+					<span>이메일</span>
+				</div>
+				<div class="input_wrapper">
+					<input type="checkbox">
+					<span>기타 나머지 정보</span>
+				</div>
+			</div>
+		</div>
+		<div class="buttons">
+			<button class="send_button" disabled>전송</button>
+		</div>
+	</div>
 	`;
 	return div;
 }

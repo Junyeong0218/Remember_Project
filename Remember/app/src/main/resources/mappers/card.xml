@@ -16,8 +16,14 @@
 	    <select id="getCardDetail" parameterType="Integer" resultType="com.remember.app.entity.card.CardDetail">
 			 select
 				cm.*,
+				
+				image.id as card_image_id,
+				image.card_image,
+				image.is_front,
+				
 				cbg.group_id,
 				cgm.group_name,
+				
 				memo.id as memo_id,
 				memo.user_id as memo_user_id,
 				memo.`contents`,
@@ -25,6 +31,7 @@
 				memo.update_date as memo_update_date
 			FROM 
 				card_mst cm
+				left outer join card_image image on(image.card_id = cm.id)
 				LEFT OUTER JOIN card_belong_group cbg ON(cbg.card_id = cm.id)
 				LEFT OUTER JOIN card_group_mst cgm ON(cgm.id = cbg.group_id)
 				left outer join card_memo memo on(memo.card_id = cm.id)
@@ -97,6 +104,38 @@
 	  		</foreach>
 			);
 		</delete>
+		
+		<select id="getCardImageId" parameterType="Integer" resultType="Integer">
+			select
+				id
+			from
+				card_image
+			where
+				card_id = #{cardId} and is_front = #{is_front};
+		</select>
+		
+		<insert id="insertCardImage" parameterType="com.remember.app.entity.card.CardImage">
+			insert into
+				card_image
+			values(
+				0,
+				#{card_id},
+				#{card_image},
+				#{is_front},
+				now(),
+				now()
+			);
+		</insert>
+		
+		<update id="updateCardImage" parameterType="com.remember.app.entity.card.CardImage">
+			update
+				card_image
+			set
+				card_image = #{card_image},
+				update_date = now()
+			where
+				id = #{id};
+		</update>
 	  
 		<insert id="insertGroup" parameterType="com.remember.app.entity.card.Group">
 		  	insert into
@@ -199,6 +238,7 @@
 			  		0,
 			  		#{default_card_group_id},
 			  		#{item},
+			  		now(),
 			  		now()
 			  	)
 		  	</foreach>

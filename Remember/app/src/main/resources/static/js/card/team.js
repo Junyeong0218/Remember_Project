@@ -448,16 +448,6 @@ function setListPager(total_count) {
 	}
 }
 
-function reloadCardDetail() {
-	const cards = document.querySelector(".card_list_wrapper .card_list").children;
-	for(let i = 0; i < cards.length; i++) {
-		if(cards[i].className.includes("clicked")) {
-			cards[i].click();
-			break;
-		}
-	}
-}
-
 function setWholeGroup(whole_count) {
 	whole_card_button.querySelector(".whole_count").innerText = whole_count; 
 }
@@ -994,7 +984,7 @@ function setCardList() {
 		});
 		
 		const down_menu = card_list_wrapper_tag.querySelector(".down_menu");
-		down_menu.onclick = (event) => {
+		down_menu.onclick = () => {
 			let card_list_menu = down_menu.querySelector(".menu_list");
 			if(card_list_menu == null) {
 				card_list_menu = makeCardListMenuTag();
@@ -1443,16 +1433,6 @@ function makeTeamCreateDateText(create_date) {
 	const day = String(date.getDate()).padStart(2, "0");
 	
 	return `${date.getFullYear()}-${month}-${day}`;
-}
-
-function makeSelectMessage(selected_card_count) {
-	if(page_check_flag == "current") {
-		return `이 페이지의 명함 ${selected_card_count}장이 모두 선택되었습니다.`;
-	} else if(page_check_flag == "not_max") {
-		return `명함 ${selected_card_count}장이 선택되었습니다.`;
-	} else if(page_check_flag == "whole" || page_check_flag == "whole_after") {
-		return `전체 페이지의 명함 ${selected_card_count}장이 모두 선택되었습니다.`;
-	}
 }
 
 function makeGroupNameTagInCardDetail(group) {
@@ -1997,33 +1977,6 @@ function makeConfirmDeleteTeamModal() {
 			<div class="buttons">
 				<button type="button" class="cancel_button">취소</button>
 				<button type="button" class="submit_button">삭제</button>
-			</div>
-		</div>
-	`;
-	return div;
-}
-
-function makeDeleteConfirmTeamCardMemoModal(memo) {
-	const div = document.createElement("div");
-	div.className = "modal";
-	div.innerHTML = `
-		<div class="window change_memo">
-			<div class="title">
-				<span>메모 삭제</span>
-				<button type="button" class="close_modal">
-					<img src="/static/images/signup_modal_closer.png">
-				</button>
-			</div>
-			<div class="input_wrapper">
-				<h4>메모를 삭제하시겠습니까?</h4>
-				<div class="texts">
-					<span>${memo.update_date.replace("T", " ")}에 마지막 수정</span>
-					<span>작성자 : ${memo.nickname}</span>
-				</div>
-				<textarea class="disabled" name="contents" placeholder="내용을 입력하세요" rows="4" readonly>${memo.contents}</textarea>
-				<div class="buttons">
-					<button type="button" class="remove_button">삭제</button>
-				</div>
 			</div>
 		</div>
 	`;

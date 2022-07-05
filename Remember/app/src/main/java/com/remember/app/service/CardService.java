@@ -48,7 +48,7 @@ public interface CardService {
 	
 	public int deleteCards(CardDeleteReqDto cardDeleteReqDto);
 	
-	public int updateCard(CardUpdateReqDto cardUpdateReqDto);
+	public boolean updateCard(UpdateCardDetailReqDto updateCardDetailReqDto);
 	
 	public List<GroupSummary> getGroups(int user_id);
 	

@@ -21,15 +21,19 @@ public interface CardRepository {
 	
 	public int insertCard(Card card);
 	
-	public int insertCardImage(CardImage cardImage);
-	
-	public int insertGroup(Group group);
-	
 	public int updateCard(Card card);
 	
 	public int deleteCard(int card_id);
 	
 	public int deleteCards(CardDeleteReqDto cardDeleteReqDto);
+	
+	public Integer getCardImageId(int cardId, int is_front);
+	
+	public int insertCardImage(CardImage cardImage);
+	
+	public int updateCardImage(CardImage cardImage);
+	
+	public int insertGroup(Group group);	
 	
 	public List<GroupSummary> getGroup(int user_id);
 	

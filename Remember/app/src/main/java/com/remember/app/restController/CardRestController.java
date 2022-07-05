@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.CardBelongTeamGroup;
-import com.remember.app.entity.card.CardDetail;
 import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
@@ -34,7 +33,6 @@ import com.remember.app.requestDto.AddGroupReqDto;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardDeleteReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
-import com.remember.app.requestDto.CardUpdateReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
@@ -93,9 +91,9 @@ public class CardRestController {
 	//명함 수정 put
 	@PutMapping("/{cardId}")
 	public ResponseEntity<?> updateCard(@PathVariable int cardId,
-										CardUpdateReqDto cardUpdateReqDto) {
-		cardUpdateReqDto.setId(cardId);
-		int result = cardService.updateCard(cardUpdateReqDto);
+																			UpdateCardDetailReqDto updateCardDetailReqDto) {
+		updateCardDetailReqDto.setId(cardId);
+		boolean result = cardService.updateCard(updateCardDetailReqDto);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	

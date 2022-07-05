@@ -308,7 +308,8 @@
 	color: #00BD5D;
 }
 
-.modal > .change_group > .group_wrapper > .group_list {
+.modal > .change_group > .group_wrapper > .group_list,
+.modal > .report_card > .description > .item_list {
 	padding: 5px 15px;
 	display: flex;
 	flex-direction: column;
@@ -319,7 +320,8 @@
 	background-color: #F5F5F5;
 }
 
-.modal > .change_group > .group_wrapper > .group_list > .group {
+.modal > .change_group > .group_wrapper > .group_list > .group,
+.modal > .report_card > .description > .item_list > .input_wrapper {
 	display: flex;
 	align-items: center;
 	width: 100%;
@@ -329,11 +331,14 @@
 }
 
 .modal > .change_group > .group_wrapper > .group_list > .group > input,
-.modal > .change_group > .group_wrapper > .group_list > .group > span {
+.modal > .change_group > .group_wrapper > .group_list > .group > span,
+.modal > .report_card > .description > .item_list > .input_wrapper > input,
+.modal > .report_card > .description > .item_list > .input_wrapper > span {
 	pointer-events: none;
 }
 
-.modal > .change_group > .group_wrapper > .group_list > .group > span {
+.modal > .change_group > .group_wrapper > .group_list > .group > span,
+.modal > .report_card > .description > .item_list > .input_wrapper > span {
 	font-size: 13px;
 	color: rgba(0, 0, 0, 0.65);
 }
@@ -426,7 +431,10 @@
 .modal > .save_to_personal > .title,
 .modal > .send_email > .title,
 .modal > .delete_group > .title,
-.modal > .send_card > .title {
+.modal > .send_card > .title,
+.modal > .report_card > .title,
+.modal > .save_to_team > .title,
+.modal > .send_file > .title {
 	position: relative;
 	padding: 15px;
 	width: 100%;
@@ -437,7 +445,10 @@
 .modal > .save_to_personal > .title > span,
 .modal > .send_email > .title > span,
 .modal > .delete_group > .title > span,
-.modal > .send_card > .title > span {
+.modal > .send_card > .title > span, 
+.modal > .report_card > .title > span,
+.modal > .save_to_team > .title > span,
+.modal > .send_file > .title > span {
 	font-size: 17px;
 	font-weight: 500;
 	color: rgba(0, 0, 0, 0.85);
@@ -449,7 +460,10 @@
 .modal > .save_to_personal > .title > button,
 .modal > .send_email > .title > button,
 .modal > .delete_group > .title > button,
-.modal > .send_card > .title > button {
+.modal > .send_card > .title > button,
+.modal > .report_card > .title > button,
+.modal > .save_to_team > .title > button,
+.modal > .send_file > .title > button {
 	position: absolute;
 	top: 50%;
 	right: 0;
@@ -467,7 +481,10 @@
 .modal > .save_to_personal > .title > button > img,
 .modal > .send_email > .title > button > img,
 .modal > .delete_group > .title > button > img,
-.modal > .send_card > .title > button > img {
+.modal > .send_card > .title > button > img,
+.modal > .report_card > .title > button > img,
+.modal > .save_to_team > .title > button > img,
+.modal > .send_file > .title > button > img {
 	pointer-events: none;
 }
 
@@ -527,7 +544,8 @@
 .modal > .save_to_personal > .buttons,
 .modal > .send_email > .buttons,
 .modal > .delete_group > .buttons,
-.modal > .send_card > .buttons {
+.modal > .send_card > .buttons,
+.modal > .report_card > .buttons {
 	padding: 0 15px 30px;
 	display: flex;
 	justify-content: center;
@@ -538,7 +556,8 @@
 .modal > .save_to_personal > .buttons > button,
 .modal > .send_email > .buttons > button,
 .modal > .delete_group > .buttons > button,
-.modal > .send_card > .buttons > button {
+.modal > .send_card > .buttons > button,
+.modal > .report_card > .buttons > button {
 	padding: 6px 12px;
 	width: 355.3px;
 	background-color:#FF3838;
@@ -613,7 +632,8 @@
 
 .modal > .save_to_personal > .buttons > button,
 .modal > .send_email > .buttons > button,
-.modal > .send_card > .buttons > button {
+.modal > .send_card > .buttons > button,
+.modal > .report_card > .buttons > button {
 	background-color: #333;
 }
 
@@ -682,7 +702,8 @@
 	width: 600px;
 }
 
-.modal > .send_card > .description {
+.modal > .send_card > .description,
+.modal > .report_card > .description {
 	padding: 15px;
 	display: flex;
 	flex-direction: column;
@@ -690,10 +711,15 @@
 	width: 100%;
 }
 
-.modal > .send_card > .description > span {
+.modal > .send_card > .description > span,
+.modal > .report_card > .description > .texts > span {
 	padding: 15px 0;
 	font-size: 15px;
 	font-weight: 300;
+}
+
+.modal > .report_card > .description > .texts > span {
+	padding: 0;
 }
 
 .modal > .send_card > .description > .send_card_area {
@@ -707,4 +733,278 @@
 	overflow-wrap: break-word;
 	white-space: pre-line;
 	cursor: not-allowed;
+}
+
+.modal > .report_card {
+	display: flex;
+	flex-direction: column;
+	width: 450px;
+}
+
+.modal > .report_card > .description > .texts {
+	padding: 15px 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+}
+
+.modal > .report_card > .buttons > button:disabled {
+	opacity: 0.65;
+	cursor: not-allowed;
+}
+
+.modal > .save_to_team {
+	display: flex;
+	flex-direction: column;
+	width: 400px;
+}
+
+.modal > .save_to_team > .card_book_list {
+	display: flex;
+	flex-direction: column;
+	width:100%;
+	overflow-y: scroll;
+	cursor: pointer;
+}
+
+.modal > .save_to_team > .card_book_list > .team {
+	display: flex;
+	flex-direction: column;
+	width:100%;
+}
+
+.modal > .save_to_team > .card_book_list > .team > .title {
+	padding: 0 12px;
+	height: 20px;
+	border-bottom: 1px solid #E9E9E9;
+	background-color: #FCFCFC;
+	font-size: 12px;
+	font-weight: 500;
+	color: #999;
+	line-height: 20px;
+}
+
+.modal > .save_to_team > .card_book_list > .team > .card_book {
+	padding: 10px 0 10px 12px;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 59px;
+	transition: 300ms;
+	gap: 12px;
+}
+
+.modal > .save_to_team > .card_book_list > .team > .card_book * {
+	pointer-events: none;
+}
+
+.modal > .save_to_team > .card_book_list > .team > .card_book.checked {
+	background-color: #FEFFCE;
+}
+
+.modal > .save_to_team > .card_book_list > .team > .card_book > input,
+.modal > .save_to_team > .buttons > input {
+	width: 16px;
+	height: 16px;
+	appearance: none;
+	background: url("/static/images/signup_unchecked_checkbox.png");
+	transition: 300ms;
+}
+
+.modal > .save_to_team > .card_book_list > .team > .card_book > input:checked,
+.modal > .save_to_team > .buttons > input:checked {
+	background: url("/static/images/signup_checked_checkbox.png");
+}
+
+.modal > .save_to_team > .card_book_list > .team > .card_book > .summary {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.modal > .save_to_team > .card_book_list > .team > .card_book > .summary > .card_book_name {
+	font-size: 13px;
+	color: #666;
+}
+
+.modal > .save_to_team > .card_book_list > .team > .card_book > .summary > .card_count_info,
+.modal > .save_to_team > .card_book_list > .team > .card_book > .summary > .card_count_info * {
+	font-size: 11px;
+	color: #999;
+}
+
+.modal > .save_to_team > .buttons {
+	padding: 10px 16px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	width: 100%;
+	height: 61px;
+	border-top: 1px solid #E8E8E8;
+	gap: 8px;
+}
+
+.modal > .save_to_team > .buttons > span {
+	font-size: 14px;
+	color: rgba(0, 0, 0, 0.65);
+	cursor: pointer;
+}
+
+.modal > .save_to_team > .buttons > button {
+	padding: 0 15px;
+	height: 40px;
+	font-size: 16px;
+	font-weight: 400;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 40px;
+	transition: 300ms;
+	border: 1px solid #D9D9D9;
+	cursor: pointer;
+}
+
+.modal > .save_to_team > .buttons > button:disabled,
+.modal > .save_to_team > .buttons > button:disabled:hover {
+	border-color: #D9D9D9;
+	background-color: #F5F5F5;
+	color: rgba(0, 0, 0, 0.25);
+	cursor: not-allowed;
+}
+
+.modal > .save_to_team > .buttons > button:hover {
+	color: #403C3C;
+	border-color: #403C3C;
+}
+
+.modal > .send_file {
+	display: flex;
+	flex-direction: column;
+	width: 400px;
+}
+
+.modal > .send_file > .description {
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border-top: 1px solid #E8E8E8;
+	border-bottom: 1px solid #E8E8E8;
+}
+
+.modal > .send_file > .description > .row {
+	position: relative;
+	margin-bottom: 17px;
+	display: flex;
+	flex-direction: column;
+	width:100%;
+}
+
+.modal > .send_file > .description > .row + .row {
+	margin: 0;
+}
+
+.modal > .send_file > .description > .row > span {
+	margin-bottom: 7px;
+	font-size: 13px;
+	color: #999;
+}
+
+.modal > .send_file > .description > .row > input {
+	padding: 0 12px;
+	width: 100%;
+	height: 38px;
+	border: 1px solid #D9D9D9;
+	background-color: #FAFAFA;
+	font-size: 15px;
+	color: #333;
+	line-height: 38px;
+	transition: 300ms;
+	outline: none;
+}
+
+.modal > .send_file > .description > .row > .file_selector {
+	padding: 0 12px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	height: 38px;
+	border: 1px solid #D9D9D9;
+	font-size: 15px;
+	color: #333;
+	transition: 300ms;
+	cursor: pointer;
+}
+
+.modal > .send_file > .description > .row > .file_selector:focus,
+.modal > .send_file > .description > .row > .file_selector:hover,
+.modal > .send_file > .description > .row > input:focus,
+.modal > .send_file > .description > .row > input:hover {
+	border: 1px solid #0D0C0C;
+}
+
+.modal > .send_file > .description > .row > .file_list {
+	position: absolute;
+	top: 65px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	background-color: white;
+}
+
+.modal > .send_file > .description > .row > .file_list.hidden {
+	display: none;
+}
+
+.modal > .send_file > .description > .row > .file_list > span {
+	padding: 5px 12px;
+	width: 100%;
+	font-size: 14px;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 22px;
+	cursor: pointer;
+	transition: 300ms;
+}
+
+.modal > .send_file > .description > .row > .file_list > span:hover {
+	background-color: #333;
+	color: white;
+}
+
+.modal > .send_file > .buttons {
+	padding: 10px 16px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	width: 100%;
+	height: 61px;
+	gap: 8px;
+}
+
+.modal > .send_file > .buttons > button {
+	padding: 0 15px;
+	height: 40px;
+	font-size: 16px;
+	text-align: center;
+	line-height: 40px;
+	transition: 300ms;
+	cursor: pointer;
+}
+
+.modal > .send_file > .buttons > .cancel_button {
+	border: 1px solid #D9D9D9;
+	color: rgba(0, 0, 0, 0.65);
+}
+
+.modal > .send_file > .buttons > .cancel_button:hover {
+	border-color: #0D0C0C;
+}
+
+.modal > .send_file > .buttons > .submit_button {
+	background-color: #333;
+	color: white;
+}
+
+.modal > .send_file > .buttons > .submit_button:hover {
+	background-color: #403C3C;
 }

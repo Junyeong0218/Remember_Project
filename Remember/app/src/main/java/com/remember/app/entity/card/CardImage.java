@@ -24,4 +24,15 @@ public class CardImage {
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
 	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof CardImage) {
+			CardImage target = (CardImage) obj;
+			if(target.id == this.id) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }
