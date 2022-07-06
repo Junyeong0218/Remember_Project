@@ -425,6 +425,7 @@
 				now()
 			);
 			
+			
 			<selectKey keyProperty="id" resultType="Integer" order="AFTER">
 				select id from team_card_book where team_id = #{team_id} and card_book_name = #{card_book_name};
 			</selectKey>

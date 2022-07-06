@@ -207,7 +207,7 @@ public class CardRestController {
 	}
 	
 	//메모 삭제
-	@DeleteMapping("/{cardMemoId}/memo")
+	@DeleteMapping("/memo/{cardMemoId}")
 	public ResponseEntity<?> delteMemo(@PathVariable int cardMemoId) {
 		boolean result = cardService.deleteCardMemo(cardMemoId);
 		return new ResponseEntity<>(result,HttpStatus.OK);

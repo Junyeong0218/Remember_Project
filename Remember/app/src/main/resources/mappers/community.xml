@@ -20,10 +20,11 @@
 		select
 			sc.*,
 			count(distinct `join`.id) as join_count,
-			if(`join`.user_id = #{userId}, true, false) as join_flag
+			count(distinct `join2`.id) as join_flag
 		from
 			community_sub_category sc
 			left outer join community_join_user `join` on(`join`.sub_category_id = sc.id)
+			left outer join community_join_user `join2` on(`join2`.sub_category_id = sc.id and `join2`.user_id = #{userId})
 		group by
 			sc.id
 		order by
@@ -691,7 +692,9 @@
 			#{use_nickname},
 			null,
 			now(),
-			now()
+			now(),
+			false,
+			null
 		);
 	</insert>
 	
