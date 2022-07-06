@@ -4,19 +4,19 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.remember.app.requestDto.AddGroupReqDto;
+import com.remember.app.requestDto.UpdateCardBelongGroups;
 import com.remember.app.requestDto.CardDeleteReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
+import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
 
 @Mapper
 public interface CardRepository {
 	
-	public List<Card> getCards(int user_id);
-	
+
 	public List<CardDetail> getCardDetail(int card_id);
 	
 	public int insertCard(Card card);
@@ -37,22 +37,34 @@ public interface CardRepository {
 	
 	public List<GroupSummary> getGroup(int user_id);
 	
-	public List<GroupCard> getGroupByGroupId(int group_id);
-	
 	public int updateGroup(Group group);
 	
 	public int deleteGroup(Group group);
 	
 	public Card getUserCard(int cardId);
 	
-	public int addCardBelongGroups(AddGroupReqDto addGroupReqDto);
+	public int deleteCardBelongGroups(int cardId);
 	
-	public int addCardsBelongDefaultGroup(AddGroupReqDto addGroupReqDto);
+	public int insertCardBelongGroups(UpdateCardsBelongGroupsReqDto updateCardsBelongGroupsReqDto);
 	
-	public int deleteCardsBelongGroup(AddGroupReqDto addGroupReqDto);
+	public int insertCardBelongDefaultGroup(UpdateCardsBelongGroupsReqDto updateCardsBelongGroupsReqDto);
+	
+	public List<Integer> getAllCardIdList(int userId);
+	
+	public List<Integer> getAllCardIdListInGroup(int groupId);
 	
 	public List<Card> getCardSummaryList(int user_id, int page);
+
+	public List<Card> getCardSummaryListOrderNameAsc(int user_id, int page);
+
+	public List<Card> getCardSummaryListOrderCompanyAsc(int user_id, int page);
 	
+	public List<Card> getCardSummaryListInSpecificGroup(int group_id, int page);
+
+	public List<Card> getCardSummaryListInSpecificGroupOrderNameAsc(int group_id, int page);
+
+	public List<Card> getCardSummaryListInSpecificGroupOrderCompanyAsc(int group_id, int page);
+
 	public int insertCardMemo(CardMemo cardMemo);
 	
 	public int updateCardMemo(CardMemo cardMemo);
@@ -80,9 +92,13 @@ public interface CardRepository {
 	
 	public int getUserJoinTeamFlag(int userId);
 	
+	public List<TeamAndCardBooks> getTeamAndCardBooksWithJoinUser(int userId);
+	
 	public int updateProfileNickname(TeamUserProfile teamUserProfile);
 	
 	public int insertTeamGroup(TeamGroup teamGroup);
+	
+	public int getDefaultTeamGroupId(int cardBookId);
 	
 	public int updateTeamName(Team team);
 
@@ -111,6 +127,10 @@ public interface CardRepository {
 	public List<Card> getCardListInSpecificGroupOrderCompanyAsc(int groupId, int page);
 	
 	public List<TeamCardDetail> getTeamCardDetail(int cardId);
+	
+	public int insertTeamCard(Card card);
+	
+	public int insertTeamCardBelongDefaultGroup(int cardId, int defaultGroupId);
 	
 	public int updateTeamCard(Card card);
 	

@@ -39,10 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 		http.httpBasic().disable();
 		http.authorizeRequests()
-//					.antMatchers("/api/v1/auth/signup/**", "/api/v1/auth/account/list", "/community", "")
-//					 	.permitAll()
-//				 	.antMatchers("/api/v1/card/**", "/card/**")
-//				 		.authenticated()
+				 	.antMatchers("/api/v1/card/**", "/card/**")
+				 		.authenticated()
 			 		.anyRequest()
 			 			.permitAll()
 				 .and()
@@ -53,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				 		.loginPage("/auth/signin/phone")
 				 		.loginPage("/auth/signin")
 				 		.loginProcessingUrl("/auth/signin")
-//				 			.defaultSuccessUrl("/card")
+				 			.defaultSuccessUrl("/card")
 				 .and()
 				 	.oauth2Login()
 				 		.failureHandler(new OAuth2AuthenticationExceptionHandler())
@@ -63,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				 		.userInfoEndpoint()
 				 		.userService(principalOauth2UserService)
 				 .and()
+				 	.defaultSuccessUrl("/card")
 				 	.successHandler(new AuthenticationSuccessHandler() {
 						
 						@Override

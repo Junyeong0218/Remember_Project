@@ -20,4 +20,5 @@ public class CardDetailResDto {
 	private List<CardImage> card_images ;
 	private List<Group> group_list;
 	private List<CardMemoDetail> memo_list;
+	
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.CardBelongTeamGroup;
-import com.remember.app.entity.card.CardDetail;
+import com.remember.app.entity.card.CardBooksInTeam;
 import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
@@ -17,28 +17,28 @@ import com.remember.app.entity.card.TeamGroupSummary;
 import com.remember.app.entity.card.TeamJoinUser;
 import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.requestDto.AddAllCardsFromTeamCard;
+import com.remember.app.requestDto.AddAllTeamCardsFromCard;
 import com.remember.app.requestDto.AddCardsFromTeamCard;
-import com.remember.app.requestDto.AddGroupReqDto;
+import com.remember.app.requestDto.AddTeamCardsFromCard;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardDeleteReqDto;
-import com.remember.app.requestDto.CardUpdateReqDto;
+import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
+import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
+import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
 import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
 import com.remember.app.responseDto.CardDetailResDto;
-import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 
 
 public interface CardService {
 	
-	public List<Card> getCards(int user_id);
-	
-	public int insertNewCard(Card card);
+	public int insertNewCard(CardInsertReqDto cardInsertReqDto);
 	
 	public CardDetailResDto getCardDetail(int card_id);
 	
@@ -52,21 +52,35 @@ public interface CardService {
 	
 	public List<GroupSummary> getGroups(int user_id);
 	
-	public GroupRespDto getGroupId(int group_id);
-	
 	public int updateGroupCard(Group group);
 	
 	public int deleteGroupCard(Group group);
 	
 	public Card getUserCard(int cardId);
 	
-	public int addGroupUser(AddGroupReqDto addGroupReqDto);
+	public boolean updateCardBelongGroups(UpdateCardsBelongGroupsReqDto updateCardsBelongGroupsReqDto);
+
+	public boolean updateCardsBelongGroups(UpdateCardsBelongGroupsReqDto updateCardsBelongGroupsReqDto);
 	
-	public List<Card> getCardSummaryList(int user_id, int page);
+	public boolean updateAllCardsInGroupBelongGroups(UpdateAllCardsBelongGroupsReqDto updateAllCardsBelongGroupsReqDto);
+
+	public boolean updateAllCardsBelongGroups(UpdateAllCardsBelongGroupsReqDto updateAllCardsBelongGroupsReqDto);
 	
+	public List<Card> getCardSummaryList(int user_id, int page, String card_order_flag);
+	
+	public List<Card> getCardSummaryListInSpecificGroup(int group_id, int page, String card_order_flag);
+
 	public int insertCardMemo(CardMemo cardMemo);
 	
 	public boolean updateCardMemo(CardMemo cardMemo);
+	
+	public boolean insertTeamCardFromCard(int userId, int cardId, int cardBookId, boolean memo_include_flag);
+	
+	public boolean insertTeamCardsFromCard(AddTeamCardsFromCard addTeamCardsFromCard);
+
+	public boolean insertAllTeamCardsFromCardInGroup(AddAllTeamCardsFromCard addAllTeamCardsFromCard);
+	
+	public boolean insertAllTeamCardsFromCard(AddAllTeamCardsFromCard addAllTeamCardsFromCard);
 	
 	// -------------------------------------------------
 	// team 관련 services
@@ -91,6 +105,8 @@ public interface CardService {
 	
 	public List<TeamDetail> getTeamList(int userId);
 	
+	public List<CardBooksInTeam> getTeamListWithCardBooks(int userId);
+	
 	public List<TeamCardBookSummary> getCardBookList(int teamId);
 	
 	public List<TeamGroupSummary> getTeamGroupList(int cardBookId);
@@ -100,6 +116,8 @@ public interface CardService {
 	public List<Card> getCardListInSpecificGroup(int groupId, int page, String card_order_flag);
 	
 	public TeamCardDetailResDto getTeamCardDetail(int cardId);
+	
+	public boolean insertTeamCard(CardInsertReqDto cardInsertReqDto);
 	
 	public boolean updateTeamCardDetail(UpdateCardDetailReqDto updateCardDetailReqDto);
 	

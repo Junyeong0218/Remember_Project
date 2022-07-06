@@ -1,23 +1,29 @@
 const ajax = {
 	// insert functions
-	insertNewCard: (data) => 																											insertNewCard(data),
+	insertNewCard: (formdata) => 																									insertNewCard(formdata),
 	insertNewGroup: (group_name) => 																							insertNewGroup(group_name),
 	insertNewTeam: (data) => 																											insertNewTeam(data),
 	insertCardMemo: (card_id, contents) => 																				insertCardMemo(card_id, contents),
 	insertTeamGroup: (selected_card_book_id, group_name) => 											insertTeamGroup(selected_card_book_id, group_name),
 	insertTeamCardToPersonal: (team_card_id, memo_include_flag) => 								insertTeamCardToPersonal(team_card_id, memo_include_flag),
 	insertTeamCardsToPersonal: (team_card_id_list, memo_include_flag) => 					insertTeamCardsToPersonal(team_card_id_list, memo_include_flag),
-	insertTeamCardsToPersonal: (team_card_id_list, memo_include_flag) => 					insertTeamCardsToPersonal(team_card_id_list, memo_include_flag),
 	insertAllTeamCardsInGroupToPersonal: (team_group_id, not_selected_card_id_list, memo_include_flag) => 
 																																								insertAllTeamCardsInGroupToPersonal(team_group_id, not_selected_card_id_list, memo_include_flag),
 	insertAllTeamCardsInCardBookToPersonal: (team_card_book_id, not_selected_card_id_list, memo_include_flag) => 
 																																								insertAllTeamCardsInCardBookToPersonal(team_card_book_id, not_selected_card_id_list, memo_include_flag),
+	insertCardToTeam: (card_id, card_book_id_list, memo_include_flag) => 						insertCardToTeam(card_id, card_book_id_list, memo_include_flag),
+	insertCardsToTeam: (card_id_list, card_book_id_list, memo_include_flag) => 				insertCardsToTeam(card_id_list, card_book_id_list, memo_include_flag),
+	insertAllCardsInGroupToTeam: (group_id, not_selected_card_id_list, card_book_id_list, memo_include_flag) => 
+																																								insertAllCardsInGroupToTeam(group_id, not_selected_card_id_list, card_book_id_list, memo_include_flag),
+	insertAllCardsToTeam: (not_selected_card_id_list, card_book_id_list, memo_include_flag) => 
+																																								insertAllCardsToTeam(not_selected_card_id_list, card_book_id_list, memo_include_flag),
 	
 	// select functions
 	isTeamJoined: () => 																														isTeamJoined(),
+	loadJoinedTeamList: () => 																											loadJoinedTeamList(),
 	loadUserGroups: () => 																													loadUserGroups(),
-	loadCardsInAllGroups: (page) => 																								loadCardsInAllGroups(page),
-	loadCardsInSpecificGroup: (group_id, page) => 																	loadCardsInSpecificGroup(group_id, page),
+	loadCardsInAllGroups: (page, card_order_flag) => 															loadCardsInAllGroups(page, card_order_flag),
+	loadCardsInSpecificGroup: (group_id, page, card_order_flag) => 								loadCardsInSpecificGroup(group_id, page, card_order_flag),
 	loadCardDetail: (card_id) => 																										loadCardDetail(card_id),
 	loadPrincipalProfile: () => 																											loadPrincipalProfile(),
 	loadTeams: () => 																																loadTeams(),
@@ -37,7 +43,12 @@ const ajax = {
 	updateGroupName: (group_id, group_name) => 																	updateGroupName(group_id, group_name),
 	updateCard: (card_id, formdata) => 																						updateCard(card_id, formdata),
 	updateCardMemo: (card_memo_id, contents) => 																updateCardMemo(card_memo_id, contents),
+	updateCardBelongGroups: (card_id, group_id_list, default_group_id) => 					updateCardBelongGroups(card_id, group_id_list, default_group_id),
 	updateCardsBelongGroups: (card_id_list, group_id_list, default_group_id) => 			updateCardsBelongGroups(card_id_list, group_id_list, default_group_id),
+	updateAllCardsInGroupBelongGroups: (group_id, not_selected_card_id_list, group_id_list, default_group_id) => 
+																																								updateAllCardsInGroupBelongGroups(group_id, not_selected_card_id_list, group_id_list, default_group_id),
+	updateAllCardsBelongGroups: (not_selected_card_id_list, group_id_list, default_group_id) => 
+																																								updateAllCardsBelongGroups(not_selected_card_id_list, group_id_list, default_group_id),
 	updateTeamName: (team_id, title) => 																						updateTeamName(team_id, title),
 	updateProfileNickname: (team_profile_id, nickname) => 													updateProfileNickname(team_profile_id, nickname),
 	updateCardBookName: (selected_card_book_id, card_book_name) => 						updateCardBookName(selected_card_book_id, card_book_name),
@@ -78,15 +89,19 @@ function insertNewGroup(group_name) {
 	return group_id;
 }
 
-function insertNewCard(data) {
+function insertNewCard(formdata) {
 	let card_id;
+	const url = location.pathname.includes("team") ? "/api/v1/card/team/card" : "/api/v1/card";
 	$.ajax({
-		type:'post',
-		url:'/api/v1/card',
+		type: "post",
+		url: url,
 		async: false,
-		data: data,
-		dataType:'json',
-		success:function(data){
+		data: formdata,
+		dataType: "json",
+		encType: "multipart/form-data",
+		processData: false,
+		contentType: false,
+		success: function (data) {
 			card_id = data;
 		},
 		error: function (xhr, status) {
@@ -234,6 +249,89 @@ function insertAllTeamCardsInCardBookToPersonal(team_card_book_id, not_selected_
 	return flag;
 }
 
+function insertCardToTeam(card_id, card_book_id_list, memo_include_flag) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/card/" + card_id + "/to-team",
+		async: false,
+		data: {"card_book_id_list": card_book_id_list,
+					 "memo_include_flag": memo_include_flag},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function insertCardsToTeam(card_id_list, card_book_id_list, memo_include_flag) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/card/list/to-team",
+		async: false,
+		data: {"card_id_list": card_id_list,
+					 "card_book_id_list": card_book_id_list,
+					 "memo_include_flag": memo_include_flag},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function insertAllCardsInGroupToTeam(group_id, not_selected_card_id_list, card_book_id_list, memo_include_flag) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/card/group/" + group_id + "/list/to-team",
+		async: false,
+		data: {"not_selected_card_id_list": not_selected_card_id_list,
+					 "card_book_id_list": card_book_id_list,
+					 "memo_include_flag": memo_include_flag},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function insertAllCardsToTeam(not_selected_card_id_list, card_book_id_list, memo_include_flag) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/card/all/cards/to-team",
+		async: false,
+		data: {"not_selected_card_id_list": not_selected_card_id_list,
+					 "card_book_id_list": card_book_id_list,
+					 "memo_include_flag": memo_include_flag},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
 // ============================================================================================================================
 // 																											select functions
 // ============================================================================================================================
@@ -257,6 +355,24 @@ function isTeamJoined() {
 	return flag;
 }
 
+function loadJoinedTeamList() {
+	let team_list;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/team/detail/list",
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			team_list = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return team_list;
+}
+
 function loadUserGroups() {
 	let groups;
     $.ajax({
@@ -275,13 +391,15 @@ function loadUserGroups() {
 	return groups;
 }
 
-function loadCardsInAllGroups() {
+function loadCardsInAllGroups(page, card_order_flag) {
 	let cards;
+	console.log(card_order_flag);
     $.ajax({
         type: "get",
         url: "/api/v1/card/list",
         async: false,
-        data: {"page" : page},
+        data: {"page" : page,
+        			 "card_order_flag": card_order_flag},
         dataType: 'json',
         success: function (data) {
 			cards = data;
@@ -294,15 +412,18 @@ function loadCardsInAllGroups() {
 	return cards;
 }
 
-function loadCardsInSpecificGroup(group_id) {
+function loadCardsInSpecificGroup(group_id, page, card_order_flag) {
 	let cards;
     $.ajax({
         type: "get",
-        url: "/api/v1/card/group/" + group_id,
+        url: "/api/v1/card/list/group/" + group_id,
         async: false,
+        data: {"page": page,
+        			 "card_order_flag": card_order_flag},
         dataType: "json",
         success: function (data) {
-			cards = data.card_list;
+			cards = data;
+			console.log(cards);
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -619,7 +740,7 @@ function updateCard(card_id, formdata) {
 		console.log(stauts);
 		}
 	});
-	return flag;	
+	return flag;
 }
 
 function updateCardMemo(card_memo_id,contents) {
@@ -641,18 +762,79 @@ function updateCardMemo(card_memo_id,contents) {
 	return flag;
 }
 
+function updateCardBelongGroups(card_id, group_id_list, default_group_id) {
+	let flag = false;
+	$.ajax({
+		type: "put",
+		url: "/api/v1/card/" + card_id + "/belong",
+		async: false,
+		data: {"group_id_list": group_id_list,
+					 "default_group_id": default_group_id},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
 function updateCardsBelongGroups(card_id_list, group_id_list, default_card_group_id) {
 	let flag = false;
 	$.ajax({
 		type:'put',
-		url:'/api/v1/card/belong',
+		url:'/api/v1/card/list/belong',
 		async: false,
-		data:{
-			"card_id_list":card_id_list,
-			"group_id_list":group_id_list,
-			"default_card_group_id":default_card_group_id
+		data:{"card_id_list": card_id_list,
+					"group_id_list": group_id_list,
+					"default_card_group_id": default_card_group_id},
+		dataType: 'json',
+		success:function(data){
+			flag = data;
 		},
-		dataType:'json',
+        error: function (xhr, status) {
+            console.log(xhr);
+            console.log(status);
+        }
+	});
+	return flag;
+}
+
+function updateAllCardsInGroupBelongGroups(group_id, not_selected_card_id_list, group_id_list, default_group_id) {
+	let flag = false;
+	$.ajax({
+		type:'put',
+		url:"/api/v1/card/group/" + group_id + "/list/belong",
+		async: false,
+		data:{"group_id": group_id,
+					"not_selected_card_id_list": not_selected_card_id_list,
+					"group_id_list": group_id_list,
+					"default_card_group_id": default_card_group_id},
+		dataType: 'json',
+		success:function(data){
+			flag = data;
+		},
+        error: function (xhr, status) {
+            console.log(xhr);
+            console.log(status);
+        }
+	});
+	return flag;
+}
+
+function updateAllCardsBelongGroups(not_selected_card_id_list, group_id_list, default_group_id) {
+	let flag = false;
+	$.ajax({
+		type:'put',
+		url:"/api/v1/card/all/list/belong",
+		async: false,
+		data:{"not_selected_card_id_list": not_selected_card_id_list,
+					"group_id_list": group_id_list,
+					"default_card_group_id": default_card_group_id},
+		dataType: 'json',
 		success:function(data){
 			flag = data;
 		},

@@ -434,7 +434,9 @@
 .modal > .send_card > .title,
 .modal > .report_card > .title,
 .modal > .save_to_team > .title,
-.modal > .send_file > .title {
+.modal > .send_file > .title,
+.modal > .add_menu > .title,
+.modal > .alert > .title {
 	position: relative;
 	padding: 15px;
 	width: 100%;
@@ -448,7 +450,9 @@
 .modal > .send_card > .title > span, 
 .modal > .report_card > .title > span,
 .modal > .save_to_team > .title > span,
-.modal > .send_file > .title > span {
+.modal > .send_file > .title > span,
+.modal > .add_menu > .title > span,
+.modal > .alert > .title > span {
 	font-size: 17px;
 	font-weight: 500;
 	color: rgba(0, 0, 0, 0.85);
@@ -463,7 +467,9 @@
 .modal > .send_card > .title > button,
 .modal > .report_card > .title > button,
 .modal > .save_to_team > .title > button,
-.modal > .send_file > .title > button {
+.modal > .send_file > .title > button,
+.modal > .add_menu > .title > button,
+.modal > .alert > .title > button {
 	position: absolute;
 	top: 50%;
 	right: 0;
@@ -484,7 +490,9 @@
 .modal > .send_card > .title > button > img,
 .modal > .report_card > .title > button > img,
 .modal > .save_to_team > .title > button > img,
-.modal > .send_file > .title > button > img {
+.modal > .send_file > .title > button > img,
+.modal > .add_menu > .title > button > img,
+.modal > .alert > .title > button > img {
 	pointer-events: none;
 }
 
@@ -764,8 +772,8 @@
 	display: flex;
 	flex-direction: column;
 	width:100%;
+	border-top: 1px solid #E8E8E8;
 	overflow-y: scroll;
-	cursor: pointer;
 }
 
 .modal > .save_to_team > .card_book_list > .team {
@@ -793,6 +801,7 @@
 	height: 59px;
 	transition: 300ms;
 	gap: 12px;
+	cursor: pointer;
 }
 
 .modal > .save_to_team > .card_book_list > .team > .card_book * {
@@ -1007,4 +1016,78 @@
 
 .modal > .send_file > .buttons > .submit_button:hover {
 	background-color: #403C3C;
+}
+
+.modal > .add_menu {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 600px;
+}
+
+.modal > .add_menu > .add_methods {
+	padding: 15px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.modal > .add_menu > .add_methods > .method {
+	margin: 10px 0;
+	padding: 10px 5px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 32%;
+	cursor: pointer;
+}
+
+.modal > .add_menu > .add_methods > .method * {
+	pointer-events: none;
+	text-align: center;
+}
+
+.modal > .add_menu > .add_methods > .method > img {
+	width: 48px;
+	height: 48px;
+}
+
+.modal > .add_menu > .add_methods > .method > .title {
+	margin: 24px 0 8px;
+	font-size: 14px;
+	color:#000;
+	word-break: break-all;
+	white-space: pre-line;
+}
+
+.modal > .add_menu > .add_methods > .method > .text {
+	font-size: 12px;
+	color:#999;
+	word-break: break-all;
+    white-space: pre-line;
+}
+
+.modal > .alert {
+	display: flex;
+	flex-direction: column;
+	width: 360px;
+}
+
+.modal > .alert > .alert_list {
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	width:100%;
+	border-top: 1px solid #E8E8E8;
+}
+
+.modal > .alert > .alert_list > .no_alerts {
+	padding: 30px 0;
+	width: 100%;
+	font-size: 15px;
+	color: #999;
+	line-height: normal;
+	text-align: center;
 }

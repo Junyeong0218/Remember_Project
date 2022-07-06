@@ -2,6 +2,8 @@ package com.remember.app.requestDto;
 
 import java.time.LocalDateTime;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.remember.app.entity.card.Card;
 
 import lombok.AllArgsConstructor;
@@ -12,9 +14,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class CardInsertReqDto {
-	private int card_id;
+
 	private int user_id;
 	private String name;
+	private String profile_img;
 	private String phone;
 	private String email;
 	private String company_name;
@@ -27,20 +30,23 @@ public class CardInsertReqDto {
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
 	
-	public Card cardMstToEntity() {
+	private MultipartFile profile_image;
+	
+	private int card_book_id;
+	
+	public Card ToCardEntity() {
 		return Card.builder()
-				.id(card_id)
-				.user_id(user_id)
-				.name(name)
-				.phone(phone)
-				.email(email)
-				.company_name(company_name)
-				.department_name(department_name)
-				.position_name(position_name)
-				.landline_phone(landline_phone)
-				.fax(fax)
-				.address(address)
-				.sub_address(sub_address)
-				.build();
+								.user_id(user_id)
+								.name(name)
+								.phone(phone)
+								.email(email)
+								.company_name(company_name)
+								.department_name(department_name)
+								.position_name(position_name)
+								.landline_phone(landline_phone)
+								.fax(fax)
+								.address(address)
+								.sub_address(sub_address)
+								.build();
 	}
 }

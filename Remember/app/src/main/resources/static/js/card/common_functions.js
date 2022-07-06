@@ -109,6 +109,16 @@ function makePhoneNumberText(phone) {
 	return `${phone.substring(0, 3)}-${phone.substring(3, 7)}-${phone.substring(7, 11)}`;
 }
 
+function makeFormDataForInsertCard(inputs, profile_image) {
+	const formdata = new FormData();
+	for(let i = 0; i < inputs.length; i++) {
+		if(inputs[i].value != "") formdata.append(inputs[i].name, inputs[i].value);
+	}
+	if(profile_image != null) formdata.append("profile_image", profile_image);
+	
+	return formdata;
+}
+
 function makeFormDataForUpdateCard(origin_profile_img, inputs, front_card_image, back_card_image, profile_image) {
 	const formdata = new FormData();
 	for(let i = 0; i < inputs.length; i++) {
@@ -501,6 +511,96 @@ function makeCardImageTag(img_src, is_front, is_origin) {
 	return div;
 }
 
+function makeAddCardFormTag() {
+	const div = document.createElement("div");
+	div.className = "edit_card_form";
+	div.innerHTML = `
+		<div class="title">
+			<span class="text">명함 입력</span>
+			<div class="buttons">
+				<button type="button" class="cancel_button">취소</button>
+				<button type="button" class="submit_button">저장</button>
+			</div>
+		</div>
+		<div class="card_data">
+			<div class="profile_image">
+				<img src="/static/images/default_profile_image.png">
+				<button type="button" class="set_profile_image">프로필 사진 설정</button>
+				<input type="file" name="profile_image" accept="image/*">
+			</div>
+			<div class="details">
+				<div class="top">
+					<div class="column">
+						<div class="row">
+							<span class="title">이름</span>
+							<input type="text" name="name" placeholder="이름 입력">
+						</div>
+						<div class="row">
+							<span class="title">직책</span>
+							<input type="text" name="position_name" placeholder="직책 입력">
+						</div>
+					</div>
+					<div class="column">
+						<div class="row">
+							<span class="title">부서</span>
+							<input type="text" name="department_name" placeholder="부서명 입력">
+						</div>
+						<div class="row">
+							<span class="title">회사</span>
+							<input type="text" name="company_name" placeholder="회사명 입력">
+						</div>
+					</div>
+				</div>
+				<div class="bottom">
+					<div class="column">
+						<div class="row">
+							<span class="title">이메일</span>
+							<input type="text" name="email" placeholder="이메일 주소 입력">
+						</div>
+						<div class="row">
+							<span class="title">휴대폰</span>
+							<input type="text" name="phone" placeholder="휴대폰 번호 입력">
+						</div>
+						<div class="row">
+							<span class="title">유선전화</span>
+							<input type="text" name="landline_phone" placeholder="유선전화 번호 입력">
+						</div>
+						<div class="row">
+							<span class="title">팩스</span>
+							<input type="text" name="fax" placeholder="팩스 번호 입력">
+						</div>
+					</div>
+					<div class="column">
+						<div class="row">
+							<span class="title">주소</span>
+							<input type="text" name="address" placeholder="주소 입력">
+							<input type="text" name="sub_address" placeholder="상세 주소 입력">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeTabMenuTag() {
+	const div = document.createElement("div");
+	div.className = "tabs_menu";
+	div.innerHTML = `
+		<ul class="menu_box">
+			<li><a href="">입력 중인 명함 (0)</a></li>
+			<li><a href="">입력할 수 없는 명함 (0)</a></li>
+			<li><a href="">공지사항</a></li>
+			<li><a href="">도움말</a></li>
+			<li><a href="">1:1 문의</a></li>
+			<li><a href="">설정</a></li>
+			<li><a href="/logout">로그아웃</a></li>
+		</ul>
+	`;
+	return div;
+}
+
 // ============================================================================================================================
 // 																											make modal functions
 // ============================================================================================================================
@@ -695,8 +795,8 @@ function makeDeleteCardConfirmModal() {
 			</div>
 			<div class="texts">
 				<span>명함을 삭제하시겠습니까?</span>
-				<span>삭제한 명함은 30일 간 휴지통에 보관되며, 그 이후에는</span>
-				<span>완전히 삭제됩니다.</span>
+${location.pathname.includes("team") ? '<span>삭제한 명함은 30일 간 휴지통에 보관되며, 그 이후에는</span><span>완전히 삭제됩니다.</span>' :
+																				'<span>삭제한 후에는 복구가 되지 않습니다.</span>'}
 			</div>
 			<div class="buttons">
 				<button type="button" class="confirm">삭제</button>
@@ -719,8 +819,8 @@ function makeDeleteCardsConfirmModal(selected_card_count) {
 			</div>
 			<div class="texts">
 				<span>선택한 <span class="selected_card_count">${selected_card_count}</span>개의 명함을 삭제하시겠습니까?</span>
-				<span>삭제한 명함은 30일 간 휴지통에 보관되며, 그 이후에는</span>
-				<span>완전히 삭제됩니다.</span>
+${location.pathname.includes("team") ? '<span>삭제한 명함은 30일 간 휴지통에 보관되며, 그 이후에는</span><span>완전히 삭제됩니다.</span>' : 
+																				'<span>삭제한 후에는 복구가 되지 않습니다.</span>'}
 			</div>
 			<div class="buttons">
 				<button type="button" class="confirm">삭제</button>
@@ -818,6 +918,58 @@ function makeReportModal() {
 			<button class="send_button" disabled>전송</button>
 		</div>
 	</div>
+	`;
+	return div;
+}
+
+function makeAddMenuModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window add_menu">
+			<div class="title">
+				<span>명함등록</span>
+				<button class="close_modal">
+					<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+				</button>
+			</div>
+			<div class="add_methods">
+				<div class="method">
+					<img src="/static/images/card_modal_img.png">
+					<span class="title">명함 이미지 파일</span>
+					<span class="text">내 컴퓨터에 저장된\n이미지 파일을 업로드</span>
+				</div>
+				<div class="method">
+					<img src="/static/images/card_modal_file.png">
+					<span class="title">다른 서비스에서 명함 가져 오기</span>
+					<span class="text">CSV,XLS 파일 등을 가져와\n일괄 등록</span>
+				</div>
+				<div class="method">
+					<img src="/static/images/card_modal_self.png">
+					<span class="title">직접 입력</span>
+					<span class="text">명함 이미지 없이\n직접 입력하여 등록</span>
+				</div>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeAlertModal() {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window alert">
+			<div class="title">
+				<span>알림</span>
+				<button class="close_modal">
+					<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+				</button>
+			</div>
+			<div class="alert_list">
+				<div class="no_alerts">알림이 없습니다.</div>
+			</div>
+		</div>
 	`;
 	return div;
 }

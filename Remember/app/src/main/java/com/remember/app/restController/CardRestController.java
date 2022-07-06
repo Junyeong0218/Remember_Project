@@ -1,5 +1,6 @@
 package com.remember.app.restController;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.CardBelongTeamGroup;
+import com.remember.app.entity.card.CardBooksInTeam;
 import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
@@ -28,19 +30,21 @@ import com.remember.app.entity.card.TeamJoinUser;
 import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.requestDto.AddAllCardsFromTeamCard;
+import com.remember.app.requestDto.AddAllTeamCardsFromCard;
 import com.remember.app.requestDto.AddCardsFromTeamCard;
-import com.remember.app.requestDto.AddGroupReqDto;
+import com.remember.app.requestDto.AddTeamCardsFromCard;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardDeleteReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
+import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
+import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
 import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
-import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 import com.remember.app.service.CardService;
 
@@ -52,15 +56,6 @@ import lombok.RequiredArgsConstructor;
 public class CardRestController {
 	
 	private final CardService cardService;
-	
-	//명함 검색 ("") get
-	@GetMapping("")
-	public ResponseEntity<?> getCard(@AuthenticationPrincipal PrincipalDetails principalDetails){
-		
-		List<Card> card= cardService.getCards(principalDetails.getId());
-		System.out.println(card);
-		return new ResponseEntity<>(card,HttpStatus.OK);
-	}
 	
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllCard(@AuthenticationPrincipal PrincipalDetails principalDetails){
@@ -76,16 +71,13 @@ public class CardRestController {
 	
 	//명함 등록 post
 	@PostMapping("")
-	public ResponseEntity<?> registerCard(@AuthenticationPrincipal PrincipalDetails principalDetails, CardInsertReqDto cardInsertReqDto){
+	public ResponseEntity<?> registerCard(@AuthenticationPrincipal PrincipalDetails principalDetails, 
+																				CardInsertReqDto cardInsertReqDto){
 		cardInsertReqDto.setUser_id(principalDetails.getId());
 		System.out.println(cardInsertReqDto);
-		Card card = cardInsertReqDto.cardMstToEntity();
-		int result = cardService.insertNewCard(card);
-		if(result == 1) {
-			return new ResponseEntity<>(card.getId(), HttpStatus.OK);
-		}else {
-			return new ResponseEntity<>(0, HttpStatus.OK);
-		}
+		int cardId = cardService.insertNewCard(cardInsertReqDto);
+		
+		return new ResponseEntity<>(cardId, HttpStatus.OK);
 	}
 	
 	//명함 수정 put
@@ -137,17 +129,19 @@ public class CardRestController {
 	
 	//
 	@GetMapping("/list")
-	public ResponseEntity<?> getCardSummaryList(int page, @AuthenticationPrincipal PrincipalDetails principalDetails){
-		List<Card> cards= cardService.getCardSummaryList(principalDetails.getId(), page);
+	public ResponseEntity<?> getCardSummaryList(int page, String card_order_flag,
+																								@AuthenticationPrincipal PrincipalDetails principalDetails){
+		List<Card> cards = cardService.getCardSummaryList(principalDetails.getId(), page, card_order_flag);
 		return new ResponseEntity<>(cards,HttpStatus.OK); 
 	}
 	
-	//특정 그룹 검색 (/group/{groupId}) get
-	@GetMapping("/group/{groupId}")
-	public ResponseEntity<?> getGroupByGroupId(@PathVariable int groupId){
-		GroupRespDto dto = cardService.getGroupId(groupId);
-		System.out.println(dto);
-		return new ResponseEntity<>(dto,HttpStatus.OK);
+	@GetMapping("/list/group/{groupId}")
+	public ResponseEntity<?> getCardSummaryListInSpecificGroup(@PathVariable int groupId,
+																																int page,
+																																String card_order_flag) {
+		List<Card> cards = cardService.getCardSummaryListInSpecificGroup(groupId, page, card_order_flag);
+		System.out.println(cards);
+		return new ResponseEntity<>(cards,HttpStatus.OK);
 	}
 	
 	//그룹 수정
@@ -178,9 +172,31 @@ public class CardRestController {
 		return new ResponseEntity<>(card,HttpStatus.OK);
 	}*/
 	
-	@PutMapping("/belong")
-	public ResponseEntity<?> addUserGroup(AddGroupReqDto addGroupReqDto){
-		System.out.println(addGroupReqDto);
+	@PutMapping("/{cardId}/belong")
+	public ResponseEntity<?> updateCardBelongGroups(@PathVariable int cardId,
+																										  UpdateCardsBelongGroupsReqDto updateCardsBelongGroups){
+		updateCardsBelongGroups.setCardId(cardId);
+		boolean result = cardService.updateCardBelongGroup(updateCardsBelongGroups);
+		System.out.println(result);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+	
+	@PutMapping("/list/belong")
+	public ResponseEntity<?> updateCardsBelongGroups(UpdateCardsBelongGroupsReqDto updateCardsBelongGroups){
+		int result = cardService.addGroupUser(addGroupReqDto);
+		System.out.println(result);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+	
+	@PutMapping("/all/list/belong")
+	public ResponseEntity<?> updateAllCardsInGroupBelongGroups(UpdateAllCardsBelongGroupsReqDto updateAllCardsBelongGroupsReqDto){
+		int result = cardService.addGroupUser(addGroupReqDto);
+		System.out.println(result);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+	
+	@PutMapping("/{cardId}/belong")
+	public ResponseEntity<?> updateAllCardsBelongGroups(UpdateAllCardsBelongGroupsReqDto updateAllCardsBelongGroupsReqDto){
 		int result = cardService.addGroupUser(addGroupReqDto);
 		System.out.println(result);
 		return new ResponseEntity<>(result,HttpStatus.OK);
@@ -204,6 +220,37 @@ public class CardRestController {
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	
+	@PostMapping("/{cardId}/to-team")
+	public boolean insertTeamCardFromCard(@PathVariable int cardId,
+																					  AddTeamCardsFromCard addTeamCardsFromCard,
+																					 @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		addTeamCardsFromCard.setCard_id_list(Arrays.asList(cardId));
+		addTeamCardsFromCard.setUserId(principalDetails.getId());
+		return cardService.insertTeamCardsFromCard(addTeamCardsFromCard);
+	}
+	
+	@PostMapping("/list/to-team")
+	public boolean insertTeamCardsFromCard(AddTeamCardsFromCard addTeamCardsFromCard,
+																					   @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		addTeamCardsFromCard.setUserId(principalDetails.getId());
+		return cardService.insertTeamCardsFromCard(addTeamCardsFromCard);
+	}
+	
+	@PostMapping("/group/{groupId}/list/to-team")
+	public boolean insertAllCardsInTeamGroupToCard(@PathVariable int groupId,
+																									  AddAllTeamCardsFromCard addAllTeamCardsFromCard,
+																									  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		addAllTeamCardsFromCard.setGroupId(groupId);
+		addAllTeamCardsFromCard.setUserId(principalDetails.getId());
+		return cardService.insertAllTeamCardsFromCardInGroup(addAllTeamCardsFromCard);
+	}
+	
+	@PostMapping("/all/cards/to-team")
+	public boolean insertAllCardsInTeamCardBookToCard(AddAllTeamCardsFromCard addAllTeamCardsFromCard,
+																									  		  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		addAllTeamCardsFromCard.setUserId(principalDetails.getId());
+		return cardService.insertAllTeamCardsFromCard(addAllTeamCardsFromCard);
+	}
 
 	
 	// ------------------------------------------------------------------------------
@@ -237,6 +284,11 @@ public class CardRestController {
 	@GetMapping("/team/list")
 	public List<TeamDetail> getTeamList(@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		return cardService.getTeamList(principalDetails.getId());
+	}
+	
+	@GetMapping("/team/detail/list")
+	public List<CardBooksInTeam> getTeamListWithCardBooks(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		return cardService.getTeamListWithCardBooks(principalDetails.getId());
 	}
 	
 	@PutMapping("/team/{teamId}")
@@ -309,6 +361,13 @@ public class CardRestController {
 	@GetMapping("/team/group/{groupId}/card/list")
 	public List<Card> getCardListInSpecificGroup(@PathVariable int groupId, int page, String card_order_flag) {
 		return cardService.getCardListInSpecificGroup(groupId, page, card_order_flag);
+	}
+	
+	@PostMapping("/team/card")
+	public boolean insertTeamCard(CardInsertReqDto cardInsertReqDto,
+																@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		cardInsertReqDto.setUser_id(principalDetails.getId());
+		return cardService.insertTeamCard(cardInsertReqDto);
 	}
 	
 	@GetMapping("/team/card/{cardId}")

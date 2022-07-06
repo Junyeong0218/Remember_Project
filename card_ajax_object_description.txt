@@ -1,8 +1,9 @@
 ㅇ	isTeamJoined() - need principal.id = return boolean
+ㅇ	loadTeamListWithCardBooks = reutrn team_list ( team_detail + card_books )
 
 ㅇ	loadUserGroups() - personal = return group_list
-ㅇ	loadCardsInAllGroups(page) - personal = return card_list
-ㅇ	loadCardsInSpecificGroup(group_id, page) - personal = return card_list
+ㅇ	loadCardsInAllGroups(page, card_order_flag) - personal = return card_list
+ㅇ	loadCardsInSpecificGroup(group_id, page, card_order_flag) - personal = return card_list
 ㅇ	loadCardDetail(card_id) - both= return card_detail
 ㅇ	loadPrincipalProfile() - team = return team_profile
 ㅇ	loadTeams() - team = return team_list
@@ -19,7 +20,7 @@
 ㅇ	loadCardEmailsInCardBook(team_card_book_id, not_selected_card_id_list) - team / not null = return card_email_list
 
 ㅇ	insertNewGroup(group_name) - not null = return group_id
-ㅇ	insertNewCard(data) - name not null = return card_id ( if failed return 0 )
+ㅇ	insertNewCard(formdata) - name not null = return card_id ( if failed return 0 )
 ㅇ	insertCardMemo(card_id, contents) - both / not null = return boolean
 ㅇ	insertNewTeam(data) - title, nickname, cardbookname not null = return boolean
 ㅇ	insertTeamGroup(selected_card_book_id, group_name) - team / not null = return boolean
@@ -27,11 +28,18 @@
 ㅇ	insertTeamCardsToPersonal(team_card_id_list, memo_include_flag) - team / not null = return boolean
 ㅇ	insertAllTeamCardsInGroupToPersonal(team_group_id, not_selected_card_id_list, memo_include_flag) - team / not null = return boolean
 ㅇ	insertAllTeamCardsInCardBookToPersonal(team_card_book_id, not_selected_card_id_list, memo_include_flag)  - team / not null = return boolean
+ㅇ	insertCardToTeam(card_id, card_book_id_list, memo_include_flag) - personal / return boolean
+ㅇ	insertCardsToTeam(card_id_list, card_book_id_list, memo_include_flag) - personal / return boolean
+ㅇ	insertAllCardsInGroupToTeam(group_id, not_selected_card_id_list, card_book_id_list, memo_include_flag) - personal / return boolean
+ㅇ	insertAllCardsToTeam(not_selected_card_id_list, card_book_id_list, memo_include_flag) - personal / return boolean
 
 ㅇ	updateGroupName(group_id, group_name) - not null = return boolean
 ㅇ	updateCard(card_id, formdata) - both / name not null = return boolean
 ㅇ	updateCardMemo(card_memo_id, contents) - both / not null = return boolean
-ㅇ	updateCardsBelongGroups(card_id_list, group_id_list, default_card_group_id) - not null = return boolean
+	updateCardBelongGroups(card_id, group_id_list, default_card_group_id) - not null = return boolean
+	updateCardsBelongGroups(card_id_list, group_id_list, default_card_group_id) - not null = return boolean
+	updateAllCardsInGroupBelongGroups(group_id, not_selected_card_id_list, group_id_list, default_card_group_id) - not null = return boolean
+	updateAllCardsBelongGroups(not_selected_card_id_list, group_id_list, default_card_group_id) - not null = return boolean
 ㅇ	updateTeamName(team_id, title) - team / not null = return boolean
 ㅇ	updateProfileNickname(team_profile_id, nickname) - team / not null = return boolean
 ㅇ	updateCardBookName(selected_card_book_id, card_book_name) - team / not null = return boolean

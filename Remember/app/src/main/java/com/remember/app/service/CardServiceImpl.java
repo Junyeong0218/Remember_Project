@@ -14,15 +14,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.remember.app.entity.card.Card;
 import com.remember.app.entity.card.CardBelongTeamGroup;
+import com.remember.app.entity.card.CardBooksInTeam;
 import com.remember.app.entity.card.CardDetail;
 import com.remember.app.entity.card.CardImage;
 import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.CardMemoDetail;
 import com.remember.app.entity.card.CardRepository;
 import com.remember.app.entity.card.Group;
-import com.remember.app.entity.card.GroupCard;
 import com.remember.app.entity.card.GroupSummary;
 import com.remember.app.entity.card.Team;
+import com.remember.app.entity.card.TeamAndCardBooks;
 import com.remember.app.entity.card.TeamCardBook;
 import com.remember.app.entity.card.TeamCardBookSummary;
 import com.remember.app.entity.card.TeamCardDetail;
@@ -32,19 +33,22 @@ import com.remember.app.entity.card.TeamGroupSummary;
 import com.remember.app.entity.card.TeamJoinUser;
 import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.requestDto.AddAllCardsFromTeamCard;
+import com.remember.app.requestDto.AddAllTeamCardsFromCard;
 import com.remember.app.requestDto.AddCardsFromTeamCard;
-import com.remember.app.requestDto.AddGroupReqDto;
+import com.remember.app.requestDto.AddTeamCardsFromCard;
 import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardDeleteReqDto;
+import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
+import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
+import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
 import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
 import com.remember.app.responseDto.CardDetailResDto;
-import com.remember.app.responseDto.GroupRespDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 
 import lombok.RequiredArgsConstructor;
@@ -57,11 +61,6 @@ public class CardServiceImpl implements CardService {
 	private String filePath;
 	
 	private final CardRepository cardRepository;
-	
-	@Override
-	public List<Card> getCards(int user_id) {
-		return cardRepository.getCards(user_id);
-	}
 	
 	@Override
 	public CardDetailResDto getCardDetail(int card_id) {
@@ -94,10 +93,18 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public int insertNewCard(Card card) {
-		System.out.println(card);
-		return cardRepository.insertCard(card);
-
+	public int insertNewCard(CardInsertReqDto cardInsertReqDto) {
+		System.out.println(cardInsertReqDto);
+		Card card = cardInsertReqDto.ToCardEntity();
+		if(cardInsertReqDto.getProfile_image() != null) {
+			String profile_img = downloadProfileImageFile(cardInsertReqDto.getProfile_image());
+			card.setProfile_img(profile_img);
+		}
+		if(cardRepository.insertCard(card) == 1) {
+			return card.getId();
+		} else {
+			return 0;
+		}
 	}
 	
 	@Override
@@ -107,23 +114,7 @@ public class CardServiceImpl implements CardService {
 	
 	@Override
 	public List<GroupSummary> getGroups(int user_id) {
-		
 		return cardRepository.getGroup(user_id);
-	}
-	
-	@Override
-	public GroupRespDto getGroupId(int group_id) {
-		List<GroupCard> details = cardRepository.getGroupByGroupId(group_id);
-		GroupRespDto respDto = new GroupRespDto();
-		if(details.size() == 0) return respDto;
-		
-		respDto.setGroup_name(details.get(0).getGroup_name());
-		List<Card> card_list = new ArrayList<Card>();
-		for(GroupCard detail : details) {
-			card_list.add(detail.toCardEntity());
-		}
-		respDto.setCard_list(card_list);
-		return respDto;
 	}
 	
 	@Override
@@ -241,22 +232,75 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public int addGroupUser(AddGroupReqDto addGroupReqDto) {
-		int result = cardRepository.deleteCardsBelongGroup(addGroupReqDto);
-		if(addGroupReqDto.getGroup_id_list() == null) {
-			result += cardRepository.addCardsBelongDefaultGroup(addGroupReqDto);
-		} else {
-			for(int card_id : addGroupReqDto.getCard_id_list()) {
-				addGroupReqDto.setCardId(card_id);
-				result += cardRepository.addCardBelongGroups(addGroupReqDto);
+	public boolean updateCardBelongGroups(UpdateCardsBelongGroupsReqDto updateCardsBelongGroupsReqDto) {
+		int result = 0;
+		result += cardRepository.deleteCardBelongGroups(updateCardsBelongGroupsReqDto.getCardId());
+		if(result > 0) {
+			if(updateCardsBelongGroupsReqDto.getGroup_id_list() == null) {
+				result += cardRepository.insertCardBelongDefaultGroup(updateCardsBelongGroupsReqDto);
+			} else {
+				result += cardRepository.insertCardBelongGroups(updateCardsBelongGroupsReqDto);
 			}
+		}
+		return result > 1;
+	}
+	
+	@Override
+	public boolean updateCardsBelongGroups(UpdateCardsBelongGroupsReqDto updateCardsBelongGroupsReqDto) {
+		boolean result = false;
+		for(int i = 0; i < updateCardsBelongGroupsReqDto.getCard_id_list().size(); i++) {
+			updateCardsBelongGroupsReqDto.setCardId(updateCardsBelongGroupsReqDto.getCard_id_list().get(i));
+			
+			result = updateCardBelongGroups(updateCardsBelongGroupsReqDto);
 		}
 		return result;
 	}
 	
 	@Override
-	public List<Card> getCardSummaryList(int user_id, int page) {
-		return cardRepository.getCardSummaryList(user_id, page * 10);
+	public boolean updateAllCardsInGroupBelongGroups(UpdateAllCardsBelongGroupsReqDto updateAllCardsBelongGroupsReqDto) {
+		List<Integer> cardIdList = cardRepository.getAllCardIdListInGroup(updateAllCardsBelongGroupsReqDto.getGroupId());
+		if(updateAllCardsBelongGroupsReqDto.getNot_selected_card_id_list() != null) {
+			cardIdList.removeAll(updateAllCardsBelongGroupsReqDto.getNot_selected_card_id_list());
+		}
+		
+		int result = 0;
+		for(int i = 0; i < cardIdList.size(); i++) {
+			result += cardRepository.deleteCardBelongGroups(cardIdList.get(i));
+		}
+		// 내일 마무리
+		return false;
+	}
+	
+	@Override
+	public boolean updateAllCardsBelongGroups(UpdateAllCardsBelongGroupsReqDto updateAllCardsBelongGroupsReqDto) {
+		// TODO Auto-generated method stub
+		// 내일 마무리
+		
+		return false;
+	}
+	
+	@Override
+	public List<Card> getCardSummaryList(int user_id, int page, String card_order_flag) {
+		if(card_order_flag.equals("reg_date")) {
+			return cardRepository.getCardSummaryList(user_id, page * 10);
+		} else if(card_order_flag.equals("name")) {
+			return cardRepository.getCardSummaryListOrderNameAsc(user_id, page * 10);
+		} else if(card_order_flag.equals("company_name")) {
+			return cardRepository.getCardSummaryListOrderCompanyAsc(user_id, page * 10);
+		}
+		return null;
+	}
+	
+	@Override
+	public List<Card> getCardSummaryListInSpecificGroup(int group_id, int page, String card_order_flag) {
+		if(card_order_flag.equals("reg_date")) {
+			return cardRepository.getCardSummaryListInSpecificGroup(group_id, page);
+		} else if(card_order_flag.equals("name")) {
+			return cardRepository.getCardSummaryListInSpecificGroupOrderNameAsc(group_id, page * 10);
+		} else if(card_order_flag.equals("company_name")) {
+			return cardRepository.getCardSummaryListInSpecificGroupOrderCompanyAsc(group_id, page * 10);
+		}
+		return null;
 	}
 	
 	@Override
@@ -268,6 +312,87 @@ public class CardServiceImpl implements CardService {
 	public boolean updateCardMemo(CardMemo cardMemo) {
 		
 		return cardRepository.updateCardMemo(cardMemo) == 1;
+	}
+	
+	@Override
+	public boolean insertTeamCardFromCard(int userId, int cardId, int defaultGroupId, boolean memo_include_flag) {
+		CardDetailResDto cardData = getCardDetail(cardId);
+		Card card = cardData.getCard();
+		card.setUser_id(userId);
+		int result = cardRepository.insertTeamCard(card);
+		result += cardRepository.insertTeamCardBelongDefaultGroup(card.getId(), defaultGroupId);
+		
+		for(CardImage cardImage : cardData.getCard_images()) {
+			cardImage.setCard_id(card.getId());
+			result += cardRepository.insertTeamCardImage(cardImage);
+		}
+		
+		if(memo_include_flag) {
+			for(CardMemoDetail memo : cardData.getMemo_list()) {
+				memo.setCard_id(card.getId());
+				memo.setUser_id(userId);
+				result += cardRepository.insertTeamCardMemo(memo.toCardMemoEntity());
+			}
+		}
+		
+		System.out.println(result);
+		return result > 1;
+	}
+	
+	@Override
+	public boolean insertTeamCardsFromCard(AddTeamCardsFromCard addTeamCardsFromCard) {
+		boolean result = false;
+		for(int i = 0; i < addTeamCardsFromCard.getCard_book_id_list().size(); i++) {
+			int cardBookId = addTeamCardsFromCard.getCard_book_id_list().get(i);
+			int defaultGroupId = cardRepository.getDefaultTeamGroupId(cardBookId);
+			
+			for(int j = 0; j < addTeamCardsFromCard.getCard_id_list().size(); j++) {
+				int cardId = addTeamCardsFromCard.getCard_id_list().get(j);
+				
+				result = insertTeamCardFromCard(addTeamCardsFromCard.getUserId(), cardId, defaultGroupId, addTeamCardsFromCard.isMemo_include_flag());
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public boolean insertAllTeamCardsFromCardInGroup(AddAllTeamCardsFromCard addAllTeamCardsFromCard) {
+		List<Integer> cardIdList = cardRepository.getAllCardIdListInGroup(addAllTeamCardsFromCard.getGroupId());
+		if(addAllTeamCardsFromCard.getNot_selected_card_id_list() != null) {
+			cardIdList.removeAll(addAllTeamCardsFromCard.getNot_selected_card_id_list());
+		}
+		boolean result = false;
+		for(int i = 0; i < addAllTeamCardsFromCard.getCard_book_id_list().size(); i++) {
+			int cardBookId = addAllTeamCardsFromCard.getCard_book_id_list().get(i);
+			int defaultGroupId = cardRepository.getDefaultTeamGroupId(cardBookId);
+			
+			for(int j = 0; j < cardIdList.size(); j++) {
+				int cardId = cardIdList.get(j);
+				
+				result = insertTeamCardFromCard(addAllTeamCardsFromCard.getUserId(), cardId, defaultGroupId, addAllTeamCardsFromCard.isMemo_include_flag());
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public boolean insertAllTeamCardsFromCard(AddAllTeamCardsFromCard addAllTeamCardsFromCard) {
+		List<Integer> cardIdList = cardRepository.getAllCardIdList(addAllTeamCardsFromCard.getUserId());
+		if(addAllTeamCardsFromCard.getNot_selected_card_id_list() != null) {
+			cardIdList.removeAll(addAllTeamCardsFromCard.getNot_selected_card_id_list());
+		}
+		boolean result = false;
+		for(int i = 0; i < addAllTeamCardsFromCard.getCard_book_id_list().size(); i++) {
+			int cardBookId = addAllTeamCardsFromCard.getCard_book_id_list().get(i);
+			int defaultGroupId = cardRepository.getDefaultTeamGroupId(cardBookId);
+			
+			for(int j = 0; j < cardIdList.size(); j++) {
+				int cardId = cardIdList.get(j);
+				
+				result = insertTeamCardFromCard(addAllTeamCardsFromCard.getUserId(), cardId, defaultGroupId, addAllTeamCardsFromCard.isMemo_include_flag());
+			}
+		}
+		return result;
 	}
 	
 	// -------------------------------------------------
@@ -342,6 +467,27 @@ public class CardServiceImpl implements CardService {
 	@Override
 	public List<TeamDetail> getTeamList(int userId) {
 		return cardRepository.getTeamList(userId);
+	}
+	
+	@Override
+	public List<CardBooksInTeam> getTeamListWithCardBooks(int userId) {
+		List<TeamAndCardBooks> rawList = cardRepository.getTeamAndCardBooksWithJoinUser(userId);
+		List<CardBooksInTeam> teamDetailList = new ArrayList<CardBooksInTeam>();
+		
+		for(TeamAndCardBooks raw : rawList) {
+			if(teamDetailList.contains(raw.toTeamEntity())) {
+				teamDetailList.get(teamDetailList.indexOf(raw.toTeamEntity())).getCard_books().add(raw.toCardBookSummaryEntity());
+			} else {
+				List<TeamCardBookSummary> cardBookList = new ArrayList<TeamCardBookSummary>();
+				cardBookList.add(raw.toCardBookSummaryEntity());
+				CardBooksInTeam teamDetail = CardBooksInTeam.builder()
+																												 .team_detail(raw.toTeamEntity())
+																												 .card_books(cardBookList)
+																												 .build();
+				teamDetailList.add(teamDetail);
+			}
+		}
+		return teamDetailList;
 	}
 	
 	@Override
@@ -455,6 +601,23 @@ public class CardServiceImpl implements CardService {
 		}
 		System.out.println(result);
 		return result > 0;
+	}
+	
+	@Override
+	public boolean insertTeamCard(CardInsertReqDto cardInsertReqDto) {
+		int defaultGroupId = cardRepository.getDefaultTeamGroupId(cardInsertReqDto.getCard_book_id());
+		Card card = cardInsertReqDto.ToCardEntity();
+		if(cardInsertReqDto.getProfile_image() != null) {
+			String profile_img = downloadProfileImageFile(cardInsertReqDto.getProfile_image());
+			card.setProfile_img(profile_img);
+		}
+		
+		if(cardRepository.insertTeamCard(card) == 1) {
+			if(cardRepository.insertTeamCardBelongDefaultGroup(card.getId(), defaultGroupId) == 1) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	@Override
