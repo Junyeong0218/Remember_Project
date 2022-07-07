@@ -11,8 +11,7 @@
     <link rel="stylesheet" href="/static/css/card/header.css">
     <link rel="stylesheet" href="/static/css/card/footer.css">
     <link rel="stylesheet" href="/static/css/card/team.css">
-    <link rel="stylesheet" href="/static/css/card/card_modal.css">
-    <link rel="stylesheet" href="/static/css/card/team_modal.css">
+    <link rel="stylesheet" href="/static/css/card/modal.css">
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="/static/js/card/ajax_functions.js"></script>
     <script type="text/javascript" src="/static/js/card/common_functions.js"></script>
@@ -87,7 +86,7 @@
             </div>
         </main>
         
-        <footer th:fragment="fragment/footer/card_footer :: card_footer"></footer>
+        <footer th:replace="fragment/footer/card_footer :: card_footer"></footer>
     </div>
     
     <script src="/static/js/card/set_header.js"></script>
