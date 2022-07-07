@@ -182,7 +182,9 @@ function setGroupList() {
                 menu_list = makeGroupDownMenuList();
                 down_menu.appendChild(menu_list);
 
-                menu_list.querySelector(".change_group_name").onclick = () => {
+                menu_list.querySelector(".change_group_name").onclick = (e) => {
+					e.stopPropagation();
+	
                     let current_index = -1;
                     const group_tags = my_card_book.querySelectorAll(".group");
                     for (let i = 0; i < group_tags.length; i++) {
@@ -205,7 +207,9 @@ function setGroupList() {
                     }
                 }
 
-                menu_list.querySelector(".remove_group").onclick = () => {
+                menu_list.querySelector(".remove_group").onclick = (e) => {
+					e.stopPropagation();
+					
                     const delete_group_modal = makeDeleteGroupModal(group_list[i].group_name);
                     appendModalToContainer(delete_group_modal);
 
@@ -406,7 +410,7 @@ function setCardList() {
             } else {
                 // 그룹
                 if (page_check_flag == "whole" || page_check_flag == "whole_after") {
-                    card_caunt_for_modal = selected_group.card_count - not_selected_id_list.length;
+                    card_count_for_modal = selected_group.card_count - not_selected_id_list.length;
                 } else {
                     card_count_for_modal = selected_id_list.length;
                 }
@@ -536,13 +540,59 @@ function setCardList() {
                 }
 
                 menu_list.querySelector("#delete_cards").onclick = () => {
-                    const delete_cards_modal = makeDeleteCardsConfirmModal(10);
+					const selected_id_list = new Array();
+		            const not_selected_id_list = new Array();
+		            checkboxes.forEach((e, index) => {
+		                if (e.checked) selected_id_list.push(card_list[index].id);
+		                else not_selected_id_list.push(card_list[index].id);
+		            });
+					
+					let card_count_for_modal = 0;
+		            if (selected_group == null) {
+		                // 전체
+		                if (page_check_flag == "whole" || page_check_flag == "whole_after") {
+		                    card_count_for_modal = group_list[0].total_count - not_selected_id_list.length;
+		                } else {
+		                    card_count_for_modal = selected_id_list.length;
+		                }
+		            } else {
+		                // 그룹
+		                if (page_check_flag == "whole" || page_check_flag == "whole_after") {
+		                    card_count_for_modal = selected_group.card_count - not_selected_id_list.length;
+		                } else {
+		                    card_count_for_modal = selected_id_list.length;
+		                }
+		            }
+					
+                    const delete_cards_modal = makeDeleteCardsConfirmModal(card_count_for_modal);
                     appendModalToContainer(delete_cards_modal);
 
                     delete_cards_modal.querySelector(".close_modal").onclick = () => removeModal(delete_cards_modal);
 
                     delete_cards_modal.querySelector(".confirm").onclick = () => {
-                        alert("fsd");
+                        let ajax_flag = false;
+
+		                if (selected_group == null) {
+		                    // 전체
+		                    if (page_check_flag == "whole" || page_check_flag == "whole_after") {
+		                        ajax_flag = ajax.deleteAllCards(not_selected_id_list);
+		                    } else {
+		                        ajax_flag = ajax.deleteCards(selected_id_list);
+		                    }
+		                } else {
+		                    // 그룹
+		                    if (page_check_flag == "whole" || page_check_flag == "whole_after") {
+		                        ajax_flag = ajax.deleteAllCardsInGroup(selected_group.id, not_selected_id_list);
+		                    } else {
+		                        ajax_flag = ajax.deleteCards(selected_id_list);
+		                    }
+		                }
+		
+		                if (ajax_flag) {
+		                    location.reload();
+		                } else {
+		                    alert("그룹 수정 실패");
+		                }
                     }
                 };
             } else {
@@ -643,7 +693,7 @@ function setCardList() {
                     }
                 });
 
-                const select_message = makeSelectMessage(page_check_flag, group_list.total_count - not_selected_count);
+                const select_message = makeSelectMessage(page_check_flag, selected_group == null ? group_list[0].total_count - not_selected_count : selected_group.card_count - not_selected_count);
                 select_message_tag.innerText = select_message;
                 toggleCardListTitleRight(card_ordering_tag, right_buttons_wrapper, true);
             }
@@ -1099,6 +1149,9 @@ function setCardList() {
                     const save_memo_button = memo_modal.querySelector(".submit_button");
                     appendModalToContainer(memo_modal);
 
+					memo_modal.querySelector(".close_modal").onclick = () => removeModal(memo_modal);
+					memo_modal.querySelector(".cancel_button").onclick = () => removeModal(memo_modal);
+					
                     setTimeout(() => {
                         memo_input.focus();
                     }, 150);
@@ -1166,7 +1219,7 @@ function makePageTag(total_card_count, pager) {
                 pager[i].onclick = () => {
                     page = page_for_event - 1;
                     card_list = selected_group == null ? ajax.loadCardsInAllGroups(page, card_order_flag) :
-                        ajax.loadCardsInSpecificGroup(selected_group.id, page, card_order_flag);
+                    																	ajax.loadCardsInSpecificGroup(selected_group.id, page, card_order_flag);
                     setCardList();
                 }
             }
@@ -1336,9 +1389,10 @@ function changeCardImage(event, image_tag) {
 }
 
 function makeNoContentsTag() {
+	const inner_text = group_list[0].total_count == 0 ? "등록된 명함이 없습니다." : "그룹에 명함이 없습니다.";
     const div = document.createElement("div");
     div.className = "no_contents";
-    div.innerHTML = '<span class="text">등록된 명함이 없습니다.</span>';
+    div.innerHTML = `<span class="text">${inner_text}</span>`;
     return div;
 }
 

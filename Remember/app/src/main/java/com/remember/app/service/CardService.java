@@ -28,10 +28,9 @@ import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
 import com.remember.app.requestDto.JoinTeamReqDto;
 import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
-import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
-import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
+import com.remember.app.requestDto.UpdateTeamCardBelongTeamGroupReqDto;
 import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
 import com.remember.app.responseDto.CardDetailResDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
@@ -45,9 +44,13 @@ public interface CardService {
 	
 	public int insertGroup(Group group);
 	
-	public int deleteCard(int card_id);
+	public boolean deleteCard(int cardId);
 	
-	public int deleteCards(CardDeleteReqDto cardDeleteReqDto);
+	public boolean deleteCards(CardDeleteReqDto cardDeleteReqDto);
+	
+	public boolean deleteAllCardsInGroup(CardDeleteReqDto cardDeleteReqDto);
+
+	public boolean deleteAllCards(CardDeleteReqDto cardDeleteReqDto);
 	
 	public boolean updateCard(UpdateCardDetailReqDto updateCardDetailReqDto);
 	
@@ -154,9 +157,13 @@ public interface CardService {
 	
 	public List<CardBelongTeamGroupsResDto> getGroupBelongFlagsForMultipleId(GetBelongFlagsReqDto getBelongFlagsReqDto);
 	
-	public boolean updateCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto);
+	public boolean updateTeamCardBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto);
 	
-	public boolean updateCardsBelongTeamGroup(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto);
+	public boolean updateTeamCardsBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto);
+	
+	public boolean updateAllTeamCardsInGroupBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto);
+
+	public boolean updateAllTeamCardsBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto);
 	
 	public boolean deleteTeamCards(DeleteTeamCardsReqDto deleteTeamCardsReqDto);
 

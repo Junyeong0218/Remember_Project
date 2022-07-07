@@ -9,9 +9,8 @@ import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
 import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
-import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
-import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
+import com.remember.app.requestDto.UpdateTeamCardBelongTeamGroupReqDto;
 
 @Mapper
 public interface CardRepository {
@@ -22,7 +21,7 @@ public interface CardRepository {
 	
 	public int updateCard(Card card);
 	
-	public int deleteCard(int card_id);
+	public int deleteCard(int cardId);
 	
 	public int deleteCards(CardDeleteReqDto cardDeleteReqDto);
 	
@@ -177,19 +176,13 @@ public interface CardRepository {
 	
 	public List<CardBelongTeamGroup> getGroupBelongFlagsForMultipleId(GetBelongFlagsReqDto getBelongFlagsReqDto);
 	
-	public int insertCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto);
-
-	public int insertCardBelongDefaultTeamGroup(int cardId, int defaultTeamGroupId);
-
-	public int deleteCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto);
-
-	public int deleteCardBelongDefaultTeamGroup(int cardId, int defaultTeamGroupId);
+	public int deleteTeamCardBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto);
 	
-	public int deleteCardsBelongTeamGroups(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto);
-
-	public int insertCardsBelongDefaultTeamGroup(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto);
+	public int deleteTeamCardsBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto);
 	
-	public int insertCardBelongTeamGroups(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto);
+	public int insertTeamCardBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto);
+	
+	public int insertTeamCardBelongDefaultTeamGroup(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto);
 	
 	public List<Card> getTeamCardEmails(GetCardEmailReqDto getCardEmailReqDto);
 	

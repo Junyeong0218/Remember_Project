@@ -41,10 +41,9 @@ import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
 import com.remember.app.requestDto.JoinTeamReqDto;
 import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
-import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
-import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
+import com.remember.app.requestDto.UpdateTeamCardBelongTeamGroupReqDto;
 import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 import com.remember.app.service.CardService;
@@ -92,16 +91,32 @@ public class CardRestController {
 	//명함 삭제 delete
 	@DeleteMapping("{cardId}")
 	public ResponseEntity<?> deleteCard(@PathVariable int cardId){
-		int result =cardService.deleteCard(cardId);
-		return new ResponseEntity<>(result,HttpStatus.OK);
+		boolean result = cardService.deleteCard(cardId);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	//명함 여러개 삭제
 	@DeleteMapping("/list")
 	public ResponseEntity<?> deleteCards(CardDeleteReqDto cardDeleteReqDto){
 		System.out.println(cardDeleteReqDto);
-		int result = cardService.deleteCards(cardDeleteReqDto);
-		return new ResponseEntity<>(result,HttpStatus.OK);
+		boolean result = cardService.deleteCards(cardDeleteReqDto);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/group/{groupId}/list")
+	public ResponseEntity<?> deleteAllCardsInGroup(@PathVariable int groupId ,
+																									CardDeleteReqDto cardDeleteReqDto) {
+		cardDeleteReqDto.setGroup_id(groupId);
+		boolean result = cardService.deleteAllCardsInGroup(cardDeleteReqDto);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/all/list")
+	public ResponseEntity<?> deleteAllCards(CardDeleteReqDto cardDeleteReqDto,
+																				   @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		cardDeleteReqDto.setUser_id(principalDetails.getId());
+		boolean result = cardService.deleteAllCards(cardDeleteReqDto);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	//그룹추가 (/group) post
@@ -439,11 +454,12 @@ public class CardRestController {
 	}
 	
 	@PutMapping("/team/card/{cardId}/belong")
-	public boolean updateCardBelongTeamGroup(@PathVariable int cardId,
-																							 UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto) {
-		updateCardBelongTeamGroupReqDto.setCard_id(cardId);
-		System.out.println(updateCardBelongTeamGroupReqDto);
-		return cardService.updateCardBelongTeamGroup(updateCardBelongTeamGroupReqDto);
+	public boolean updateTeamCardBelongTeamGroups(@PathVariable int cardId,
+																							UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto) {
+		updateTeamCardBelongTeamGroupReqDto.setCard_id(cardId);
+		System.out.println("each");
+		System.out.println(updateTeamCardBelongTeamGroupReqDto);
+		return cardService.updateTeamCardBelongTeamGroups(updateTeamCardBelongTeamGroupReqDto);
 	}
 	
 	@GetMapping("/team/cards/belong")
@@ -453,9 +469,28 @@ public class CardRestController {
 	}
 	
 	@PutMapping("/team/cards/belong")
-	public boolean updateCardsBelongTeamGroup(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto) {
-		System.out.println(updateCardsBelongTeamGroupReqDto);
-		return cardService.updateCardsBelongTeamGroup(updateCardsBelongTeamGroupReqDto);
+	public boolean updateTeamCardsBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto) {
+		System.out.println("cards");
+		System.out.println(updateTeamCardBelongTeamGroupReqDto);
+		return cardService.updateTeamCardsBelongTeamGroups(updateTeamCardBelongTeamGroupReqDto);
+	}
+	
+	@PutMapping("/team/group/{groupId}/cards/belong")
+	public boolean updateAllTeamCardsInGroupBelongTeamGroups(@PathVariable int groupId,
+																																UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto) {
+		updateTeamCardBelongTeamGroupReqDto.setGroup_id(groupId);
+		System.out.println("all group");
+		System.out.println(updateTeamCardBelongTeamGroupReqDto);
+		return cardService.updateAllTeamCardsInGroupBelongTeamGroups(updateTeamCardBelongTeamGroupReqDto);
+	}
+	
+	@PutMapping("/team/book/{cardBookId}/cards/belong")
+	public boolean updateAllTeamCardsBelongTeamGroups(@PathVariable int cardBookId,
+																												UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto) {
+		updateTeamCardBelongTeamGroupReqDto.setCard_book_id(cardBookId);
+		System.out.println("all book");
+		System.out.println(updateTeamCardBelongTeamGroupReqDto);
+		return cardService.updateAllTeamCardsBelongTeamGroups(updateTeamCardBelongTeamGroupReqDto);
 	}
 	
 	@DeleteMapping("/team/cards")

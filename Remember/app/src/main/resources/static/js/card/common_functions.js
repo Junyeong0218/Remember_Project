@@ -308,7 +308,7 @@ function makeCardDetailTag(card_detail) {
 	div.className = "card_detail";
 	div.innerHTML = `
 		<div class="detail_header">
-${location.pathname.includes("team") ? '<span class="reg_user_name">등록자 : ' + card_detail.card.reg_user_nickname + '</span>' : '<span></span>'}
+${location.pathname.includes("team") ? '<span class="reg_user_name">등록자 : ' + card_detail.reg_user_nickname + '</span>' : '<span></span>'}
 			<div class="detail_menu">
 				<button type="button" class="edit_card">편집</button>
 				<div class="right">

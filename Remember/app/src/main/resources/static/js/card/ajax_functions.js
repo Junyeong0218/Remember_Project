@@ -55,13 +55,20 @@ const ajax = {
 	updateTeamName: (team_id, title) => 																						updateTeamName(team_id, title),
 	updateProfileNickname: (team_profile_id, nickname) => 													updateProfileNickname(team_profile_id, nickname),
 	updateCardBookName: (selected_card_book_id, card_book_name) => 						updateCardBookName(selected_card_book_id, card_book_name),
-	updateTeamCardBelongTeamGroup: (card_id, data) => 													updateTeamCardBelongTeamGroup(card_id, data),
-	updateTeamCardsBelongTeamGroup: (data) => 																	updateTeamCardsBelongTeamGroup(data),
+	updateTeamCardBelongTeamGroups: (card_id, group_id_list, default_group_id) => 	updateTeamCardBelongTeamGroups(card_id, group_id_list, default_group_id),
+	updateTeamCardsBelongTeamGroups: (card_id_list, group_id_list, default_group_id) => 
+																																								updateTeamCardsBelongTeamGroups(card_id_list, group_id_list, default_group_id),
+	updateAllTeamCardsInGroupBelongTeamGroups: (group_id, not_selected_card_id_list, group_id_list, default_group_id) =>
+																																								updateAllTeamCardsInGroupBelongTeamGroups(group_id, not_selected_card_id_list, group_id_list, default_group_id),
+	updateAllTeamCardsBelongTeamGroups: (card_book_id, not_selected_card_id_list, group_id_list, default_group_id) =>
+																																								updateAllTeamCardsBelongTeamGroups(card_book_id, not_selected_card_id_list, group_id_list, default_group_id),
 	
 	// delete functions
 	deleteGroup: (group_id) => 																											deleteGroup(group_id),
 	deleteCard: (card_id) => 																												deleteCard(card_id),
 	deleteCards: (card_id_list) => 																									deleteCards(card_id_list),
+	deleteAllCardsInGroup: (group_id, not_selected_card_id_list) => 									deleteAllCardsInGroup(group_id, not_selected_card_id_list),
+	deleteAllCards: (not_selected_card_id_list) => 																		deleteAllCards(not_selected_card_id_list),
 	deleteCardMemo: (card_memo_id) => 																						deleteCardMemo(card_memo_id),
 	deleteTeam: (selected_team_id) => 																							deleteTeam(selected_team_id),
 	leaveTeam: (selected_team_id) => 																								leaveTeam(selected_team_id),
@@ -963,13 +970,14 @@ function updateCardBookName(selected_card_book_id, card_book_name) {
 	return flag;
 }
 
-function updateTeamCardBelongTeamGroup(card_id, data) {
+function updateTeamCardBelongTeamGroups(card_id, group_id_list, default_group_id) {
 	let flag = false;
 	$.ajax({
 		type: "put",
 		url: "/api/v1/card/team/card/" + card_id + "/belong",
 		async: false,
-		data: data,
+		data: {"group_id_list": group_id_list,
+					 "default_group_id": default_group_id},
 		dataType: "json",
 		success: function (data) {
 			flag = data;
@@ -982,20 +990,64 @@ function updateTeamCardBelongTeamGroup(card_id, data) {
 	return flag;
 }
 
-function updateTeamCardsBelongTeamGroup(data) {
+function updateTeamCardsBelongTeamGroups(card_id_list, group_id_list, default_group_id) {
 	let flag = false;
 	$.ajax({
 		type: "put",
 		url: "/api/v1/card/team/cards/belong",
 		async: false,
-		data: data,
+		data: {"card_id_list": card_id_list,
+					 "group_id_list": group_id_list,
+					 "default_group_id": default_group_id},
 		dataType: "json",
 		success: function (data) {
 			flag = data;
 		},
 		error: function (xhr, status) {
-			consoe.log(xhr);
-			consoe.log(status);
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function updateAllTeamCardsInGroupBelongTeamGroups(group_id, not_selected_card_id_list, group_id_list, default_group_id) {
+	let flag = false;
+	$.ajax({
+		type: "put",
+		url: "/api/v1/card/team/group/" + group_id + "/cards/belong",
+		async: false,
+		data: {"not_selected_card_id_list": not_selected_card_id_list,
+					 "group_id_list": group_id_list,
+					 "default_group_id": default_group_id},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function updateAllTeamCardsBelongTeamGroups(card_book_id, not_selected_card_id_list, group_id_list, default_group_id) {
+	let flag = false;
+	$.ajax({
+		type: "put",
+		url: "/api/v1/card/team/book/" + card_book_id + "/cards/belong",
+		async: false,
+		data: {"not_selected_card_id_list": not_selected_card_id_list,
+					 "group_id_list": group_id_list,
+					 "default_group_id": default_group_id},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
 		}
 	});
 	return flag;
@@ -1045,13 +1097,11 @@ function deleteCard(card_id) {
 function deleteCards(card_id_list) {
 	let flag = false;
 	const url = location.pathname.includes("team") ? "/api/v1/card/team/cards" : "/api/v1/card/list";
-	const data = {"card_id_list":new Array()};
-	card_id_list.forEach(e => data.card_id_list.push(e));
 	$.ajax({
 		type:'delete',
 		url: url,
 		async: false,
-		data: data,
+		data: {"card_id_list": card_id_list},
 		dataType:'json',
 		success:function (data) {
 			flag = data;
@@ -1059,6 +1109,44 @@ function deleteCards(card_id_list) {
 		error: function (xhr, stauts) {
 		console.log(xhr);
 		console.log(stauts);
+		}
+	});
+	return flag;
+}
+
+function deleteAllCardsInGroup(group_id, not_selected_card_id_list) {
+	let flag = false;
+	$.ajax({
+		type: "delete",
+		url: "/api/v1/card/group/" + group_id + "/list",
+		async: false,
+		data: {"not_selected_card_id_list": not_selected_card_id_list},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function deleteAllCards(not_selected_card_id_list) {
+	let flag = false;
+	$.ajax({
+		type: "delete",
+		url: "/api/v1/card/all/list",
+		async: false,
+		data: {"not_selected_card_id_list": not_selected_card_id_list},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
 		}
 	});
 	return flag;

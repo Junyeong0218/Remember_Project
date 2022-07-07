@@ -17,5 +17,7 @@ public class DeleteTeamCardsReqDto {
 
 	private int cardBookId;
 	private int groupId;
+	
 	private List<Integer> card_id_list;
+	
 }

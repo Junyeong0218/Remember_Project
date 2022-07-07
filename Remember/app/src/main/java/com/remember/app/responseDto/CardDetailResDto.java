@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 public class CardDetailResDto {
 	
 	private Card card;
-	private List<CardImage> card_images ;
 	private List<Group> group_list;
 	private List<CardImage> card_images;
 	private List<CardMemoDetail> memo_list;

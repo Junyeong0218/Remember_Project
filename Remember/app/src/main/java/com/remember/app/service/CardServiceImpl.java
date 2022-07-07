@@ -44,10 +44,9 @@ import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
 import com.remember.app.requestDto.JoinTeamReqDto;
 import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
-import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
-import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
+import com.remember.app.requestDto.UpdateTeamCardBelongTeamGroupReqDto;
 import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
 import com.remember.app.responseDto.CardDetailResDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
@@ -209,13 +208,37 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public int deleteCard(int card_id) {
-		return cardRepository.deleteCard(card_id);
+	public boolean deleteCard(int cardId) {
+		return cardRepository.deleteCard(cardId) == 1;
 	}
 	
 	@Override
-	public int deleteCards(CardDeleteReqDto cardDeleteReqDto) {
-		return cardRepository.deleteCards(cardDeleteReqDto);
+	public boolean deleteCards(CardDeleteReqDto cardDeleteReqDto) {
+		return cardRepository.deleteCards(cardDeleteReqDto) > 0;
+	}
+	
+	@Override
+	public boolean deleteAllCardsInGroup(CardDeleteReqDto cardDeleteReqDto) {
+		List<Integer> cardIdList = cardRepository.getAllCardIdListInGroup(cardDeleteReqDto.getGroup_id());
+		if(cardDeleteReqDto.getNot_selected_card_id_list() != null) {
+			cardIdList.removeAll(cardDeleteReqDto.getNot_selected_card_id_list());
+		}
+		
+		cardDeleteReqDto.setCard_id_list(cardIdList);
+		
+		return cardRepository.deleteCards(cardDeleteReqDto) > 0;
+	}
+	
+	@Override
+	public boolean deleteAllCards(CardDeleteReqDto cardDeleteReqDto) {
+		List<Integer> cardIdList = cardRepository.getAllCardIdList(cardDeleteReqDto.getUser_id());
+		if(cardDeleteReqDto.getNot_selected_card_id_list() != null) {
+			cardIdList.removeAll(cardDeleteReqDto.getNot_selected_card_id_list());
+		}
+		
+		cardDeleteReqDto.setCard_id_list(cardIdList);
+		
+		return cardRepository.deleteCards(cardDeleteReqDto) > 0;
 	}
 	
 	@Override
@@ -801,36 +824,90 @@ public class CardServiceImpl implements CardService {
 		return dtoList;
 	}
 	
+//	@Override
+//	public boolean updateCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto) {
+//		int result = 0;
+//		if(updateCardBelongTeamGroupReqDto.getRemove_id_list() != null) {
+//			result += cardRepository.deleteCardBelongTeamGroup(updateCardBelongTeamGroupReqDto);
+//		}
+//		if(updateCardBelongTeamGroupReqDto.getAdd_id_list() != null) {
+//			result += cardRepository.insertCardBelongTeamGroup(updateCardBelongTeamGroupReqDto);
+//		}
+//		if(updateCardBelongTeamGroupReqDto.isRemove_all_flag()) {
+//			result += cardRepository.insertCardBelongDefaultTeamGroup(updateCardBelongTeamGroupReqDto.getCard_id(), updateCardBelongTeamGroupReqDto.getDefault_team_group_id());
+//		} else {
+//			result += cardRepository.deleteCardBelongDefaultTeamGroup(updateCardBelongTeamGroupReqDto.getCard_id(), updateCardBelongTeamGroupReqDto.getDefault_team_group_id());
+//		}
+//		System.out.println(result);
+//		return result > 0;
+//	}
+//	
+//	@Override
+//	public boolean updateCardsBelongTeamGroup(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto) {
+//		int result = cardRepository.deleteCardsBelongTeamGroups(updateCardsBelongTeamGroupReqDto);
+//		if(updateCardsBelongTeamGroupReqDto.getAdd_belong_id_list() == null) {
+//			result += cardRepository.insertCardsBelongDefaultTeamGroup(updateCardsBelongTeamGroupReqDto);
+//		} else {
+//			for(int card_id : updateCardsBelongTeamGroupReqDto.getCard_id_list()) {
+//				updateCardsBelongTeamGroupReqDto.setCardId(card_id);
+//				result += cardRepository.insertCardBelongTeamGroups(updateCardsBelongTeamGroupReqDto); 
+//			}
+//		}
+//		return result > 1;
+//	}
 	@Override
-	public boolean updateCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto) {
-		int result = 0;
-		if(updateCardBelongTeamGroupReqDto.getRemove_id_list() != null) {
-			result += cardRepository.deleteCardBelongTeamGroup(updateCardBelongTeamGroupReqDto);
-		}
-		if(updateCardBelongTeamGroupReqDto.getAdd_id_list() != null) {
-			result += cardRepository.insertCardBelongTeamGroup(updateCardBelongTeamGroupReqDto);
-		}
-		if(updateCardBelongTeamGroupReqDto.isRemove_all_flag()) {
-			result += cardRepository.insertCardBelongDefaultTeamGroup(updateCardBelongTeamGroupReqDto.getCard_id(), updateCardBelongTeamGroupReqDto.getDefault_team_group_id());
-		} else {
-			result += cardRepository.deleteCardBelongDefaultTeamGroup(updateCardBelongTeamGroupReqDto.getCard_id(), updateCardBelongTeamGroupReqDto.getDefault_team_group_id());
-		}
-		System.out.println(result);
-		return result > 0;
-	}
-	
-	@Override
-	public boolean updateCardsBelongTeamGroup(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto) {
-		int result = cardRepository.deleteCardsBelongTeamGroups(updateCardsBelongTeamGroupReqDto);
-		if(updateCardsBelongTeamGroupReqDto.getAdd_belong_id_list() == null) {
-			result += cardRepository.insertCardsBelongDefaultTeamGroup(updateCardsBelongTeamGroupReqDto);
-		} else {
-			for(int card_id : updateCardsBelongTeamGroupReqDto.getCard_id_list()) {
-				updateCardsBelongTeamGroupReqDto.setCardId(card_id);
-				result += cardRepository.insertCardBelongTeamGroups(updateCardsBelongTeamGroupReqDto); 
+	public boolean updateTeamCardBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto) {
+		int result = cardRepository.deleteTeamCardBelongTeamGroups(updateTeamCardBelongTeamGroupReqDto);
+		
+		if(result > 0) {
+			if(updateTeamCardBelongTeamGroupReqDto.getGroup_id_list() == null) {
+				result += cardRepository.insertTeamCardBelongDefaultTeamGroup(updateTeamCardBelongTeamGroupReqDto);
+			} else {
+				result += cardRepository.insertTeamCardBelongTeamGroups(updateTeamCardBelongTeamGroupReqDto);
 			}
 		}
 		return result > 1;
+	}
+	
+	@Override
+	public boolean updateTeamCardsBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto) {
+		int result = cardRepository.deleteTeamCardsBelongTeamGroups(updateTeamCardBelongTeamGroupReqDto);
+		
+		if(result > 0) {
+			for(int cardId : updateTeamCardBelongTeamGroupReqDto.getCard_id_list()) {
+				updateTeamCardBelongTeamGroupReqDto.setCard_id(cardId);
+				if(updateTeamCardBelongTeamGroupReqDto.getGroup_id_list() == null) {
+					result += cardRepository.insertTeamCardBelongDefaultTeamGroup(updateTeamCardBelongTeamGroupReqDto);
+				} else {
+					result += cardRepository.insertTeamCardBelongTeamGroups(updateTeamCardBelongTeamGroupReqDto);
+				}
+			}
+		}
+		return result > 1;
+	}
+	
+	@Override
+	public boolean updateAllTeamCardsInGroupBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto) {
+		List<Integer> cardIdList = cardRepository.getAllCardIdInTeamGroup(updateTeamCardBelongTeamGroupReqDto.getGroup_id());
+		if(updateTeamCardBelongTeamGroupReqDto.getNot_selected_card_id_list() != null) {
+			cardIdList.removeAll(updateTeamCardBelongTeamGroupReqDto.getNot_selected_card_id_list());
+		}
+		
+		updateTeamCardBelongTeamGroupReqDto.setCard_id_list(cardIdList);
+		System.out.println(updateTeamCardBelongTeamGroupReqDto);
+		return updateTeamCardsBelongTeamGroups(updateTeamCardBelongTeamGroupReqDto);
+	}
+	
+	@Override
+	public boolean updateAllTeamCardsBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto) {
+		List<Integer> cardIdList = cardRepository.getAllCardIdInTeamCardBook(updateTeamCardBelongTeamGroupReqDto.getCard_book_id());
+		if(updateTeamCardBelongTeamGroupReqDto.getNot_selected_card_id_list() != null) {
+			cardIdList.removeAll(updateTeamCardBelongTeamGroupReqDto.getNot_selected_card_id_list());
+		}
+		System.out.println(cardIdList);
+		updateTeamCardBelongTeamGroupReqDto.setCard_id_list(cardIdList);
+		System.out.println(updateTeamCardBelongTeamGroupReqDto);
+		return updateTeamCardsBelongTeamGroups(updateTeamCardBelongTeamGroupReqDto);
 	}
 	
 	@Override

@@ -526,6 +526,7 @@ main {
 	font-size: 13px;
 }
 
+.menus > .team_description > .groups > .group > .down_menu,
 .side_bar > .my_card_book > .group > .down_menu {
 	position: absolute;
 	top: 50%;
@@ -534,6 +535,7 @@ main {
 	display: none;
 }
 
+.menus > .team_description > .groups > .group > .down_menu > .show_list_button,
 .side_bar > .my_card_book > .group > .down_menu > .show_list_button {
 	display: flex;
 	justify-content:center;
@@ -545,15 +547,18 @@ main {
 	cursor: pointer;
 }
 
+.menus > .team_description > .groups > .group:hover > .down_menu,
 .side_bar > .my_card_book > .group:hover > .down_menu {
 	display: block;
 }
 
+.menus > .team_description > .groups > .group:hover > .down_menu > .show_list_button:hover,
 .side_bar > .my_card_book > .group:hover > .down_menu > .show_list_button:hover {
 	border-color: #333333;
 	transition : all 0.3s;
 }
 
+.menus > .team_description > .groups > .group:hover > .down_menu > .show_list_button > .arrow,
 .side_bar > .my_card_book > .group:hover > .down_menu > .show_list_button > .arrow {
     display: inline-block;
     width: 0;
@@ -565,6 +570,7 @@ main {
     pointer-events :none;
 }
 
+.menus > .team_description > .groups > .group:hover > .down_menu > .menu_list,
 .side_bar > .my_card_book > .group:hover > .down_menu > .menu_list {
 	position: absolute;
 	margin-top: 2px;
@@ -577,6 +583,7 @@ main {
 	z-index: 2;
 }
 
+.menus > .team_description > .groups > .group:hover > .down_menu > .menu_list > button,
 .side_bar > .my_card_book > .group:hover > .down_menu > .menu_list > button {
 	padding: 10px 20px;
 	font-size: 14px;
@@ -588,6 +595,7 @@ main {
 	transition: 300ms;
 }
 
+.menus > .team_description > .groups > .group > .down_menu > .menu_list > button:hover,
 .side_bar > .my_card_book > .group:hover > .down_menu > .menu_list > button:hover {
 	background-color: #333;
 	color: white;
@@ -651,6 +659,22 @@ main {
 	display: flex;
 	align-items: flex-start;
 	width: 965px;
+}
+
+.main_contents > .no_contents {
+    margin: 200px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 22.5px;
+}
+
+.main_contents > .no_contents > .text {
+    font-size: 15px;
+    color: #999;
+    line-height: 22.5px;
 }
 
 .main_contents > .no_member {
