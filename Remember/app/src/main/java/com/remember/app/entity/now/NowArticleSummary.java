@@ -21,6 +21,7 @@ public class NowArticleSummary {
 	private LocalDateTime create_date;
 	
 	private int category_id;
+	private String category_name;
 	
 	private String title;
 	private String summary;

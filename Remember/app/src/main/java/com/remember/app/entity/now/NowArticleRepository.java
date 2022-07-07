@@ -18,11 +18,19 @@ public interface NowArticleRepository {
 	
 	public List<NowArticleSummary> getNowArticleSummaryListAboutCategory(int categoryId, int page);
 	
-	public int getTotalArticleCount(int page);
+	public int getTotalArticleCount();
 	
-	public int getTotalArticleCountAboutCategory(int categoryId, int page);
+	public int getTotalArticleCountAboutCategory(int categoryId);
 	
 	public List<NowArticleDetail> getArticleDetail(int articleId);
+	
+	public List<NowAnotherArticles> getAnotherArticles(int articleId);
+	
+	public int insertArticle(NowArticle nowArticle);
+	
+	public int insertNowArticleTitleImage(NowArticleTitleImage nowArticleTitleImage);
+	
+	public int insertNowArticleContentsImage(List<NowArticleContentsImage> nowArticleContentsImages);
 	
 //	public List<NowArticle> getNowArticleList();
 //	
@@ -38,7 +46,5 @@ public interface NowArticleRepository {
 //	
 //	public int uploadNowArticle(NowArticle nowArticle);
 //	
-//	public int insertNowArticleTitleImage(List<NowArticleTitleImage> nowArticleTitleImage);
 //	
-//	public int insertNowArticleContentsImage(List<NowArticleContentsImage> nowArticleContentsImages);
 }

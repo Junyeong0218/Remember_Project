@@ -18,7 +18,7 @@
   			nam.create_date,
   			
   			nam.category_id,
-  			ncm.name,
+  			ncm.name as category_name,
   			
   			nam.title,
   			nam.summary,
@@ -40,14 +40,14 @@
   			
   	</select>
   	
-  	<select id="getNowArticleSummaryListAboutCategory" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticleSummary">
+  	<select id="getNowArticleSummaryListAboutCategory"  resultType="com.remember.app.entity.now.NowArticleSummary">
   		select
   			nam.id,
   			
   			nam.create_date,
   			
   			nam.category_id,
-  			ncm.name,
+  			ncm.name as category_name,
   			
   			nam.title,
   			nam.summary,
@@ -72,13 +72,11 @@
   		
   	</select>
   	
-  	<select id="getTotalArticleCount" parameterType="Integer" resultType="Integer">
+  	<select id="getTotalArticleCount" resultType="Integer">
   		select 
   			count(id)
   		from 
-  			now_article_mst 
-  			
-		limit #{page}, 10;  		
+  			now_article_mst; 		
   	
   	</select>
   	
@@ -88,9 +86,7 @@
   		from
   			now_article_mst
   		where
-  			nam.category_id = #{categoryId}
-  		
-  		limit #{page}, 10; 
+  			category_id = #{categoryId};
   		
   	</select>
   	
@@ -101,6 +97,8 @@
   			nam.category_id,
   			nam.title,
   			nam.contents,
+  			nam.insight_title,
+  			nam.insight_contents,
   			nam.create_date,
   			
   			nci.file_name
@@ -108,8 +106,60 @@
 			now_article_mst nam
 			left outer join now_contents_image nci ON(nci.article_id = nam.id)
 		where
-			nam.id = {article_id}
+			nam.id = #{articleId};
   	</select>
+  	
+  	<select id="getAnotherArticles" parameterType="Integer" resultType="com.remember.app.entity.now.NowAnotherArticles">
+  		select
+			nam.id,
+			nam.title,
+			nam.create_date,
+			
+			nti.file_name
+		from
+			now_article_mst_with_rownum rownum
+			left outer join now_article_mst nam ON(nam.id = rownum.id)
+			left outer join now_title_image nti ON(nti.article_id = rownum.id)
+		where
+			rownum <![CDATA[ < ]]> (select rownum from now_article_mst_with_rownum where id = #{articleId})
+		order by 
+			create_date desc	
+		limit 3;
+  	</select>
+  	
+  	<insert id="insertArticle" parameterType="com.remember.app.entity.now.NowArticle">
+  		insert into
+  			now_article_mst
+  		values(
+  			0,
+  			2,
+  			3,
+  			#{title},
+  			#{summary},
+  			#{contents},
+  			#{insight_title},
+  			#{insight_contents},
+  			now(),
+  			now()
+  		);
+  		
+  	</insert>
+  		
+  	<insert id="insertNowArticleContentsImage" parameterType="List">
+	  	insert into
+	  		now_contents_image
+	  	values
+	  	<foreach collection="list" index="index" item="item" separator=",">
+	  	(
+	  		0,
+	  		#(item.article_id),
+	  		#{item.file_name},
+	  		now(),
+	  		now()
+	  	)
+	  	</foreach>
+	  	;
+  	</insert>
    	
   <!-- 	<insert id="uploadNowArticle" parameterType="com.remember.app.entity.now.NowArticle">
 			insert

@@ -48,7 +48,7 @@ function getCategories() {
 function makeCategoryTag(category) {
 	const a = document.createElement("a");
 	a.className = "category";
-	a.href = "/now/" + category.id;
+	a.href = "/now/category/" + category.id;
 	a.innerText = category.name;
 	return a;
 }

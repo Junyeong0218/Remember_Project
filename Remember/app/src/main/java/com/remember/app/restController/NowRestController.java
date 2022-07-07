@@ -1,18 +1,22 @@
-package com.remember.app.restController;
+ package com.remember.app.restController;
 
 import java.util.List;
 
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.remember.app.entity.now.NowAnotherArticles;
 import com.remember.app.entity.now.NowArticle;
-import com.remember.app.entity.now.NowArticleRelated;
 import com.remember.app.entity.now.NowArticleSummary;
 import com.remember.app.entity.now.NowCategory;
-import com.remember.app.requestDto.UploadNowArticleReqDto;
+import com.remember.app.principal.PrincipalDetails;
+import com.remember.app.requestDto.AddArticleReqDto;
+import com.remember.app.requestDto.AddNowArticleReqDto;
 import com.remember.app.responseDto.NowArticleDetailRespDto;
 import com.remember.app.service.NowService;
 
@@ -43,20 +47,38 @@ public class NowRestController {
 	
 	
 	@GetMapping("/count")
-	public int getTotalArticleCount(int page) {
-		return nowService.getTotalArticleCount(page);
+	public int getTotalArticleCount() {
+		return nowService.getTotalArticleCount();
 	}
 	
 	
 	@GetMapping("/{categoryId}/count")
-	public int getTotalArticleCountAboutCategory(@PathVariable int categoryId, int page) {
-		return nowService.getTotalArticleCountAboutCategory(categoryId, page);
+	public int getTotalArticleCountAboutCategory(@PathVariable int categoryId) {
+		return nowService.getTotalArticleCountAboutCategory(categoryId);
 	}
 	
 	@GetMapping("/detail/{articleId}")
 	public NowArticleDetailRespDto getArticleDetail(@PathVariable int articleId){
-		return nowService.getArticleDetail(articleId);	
+		System.out.println(articleId);
+		NowArticleDetailRespDto dto = nowService.getArticleDetail(articleId);
+		System.out.println(dto);
+		return dto;
 	}
+	
+	@GetMapping("/{articleId}/another/list")
+	public List<NowAnotherArticles> getAnotherArticles(@PathVariable int articleId) {
+		return nowService.getAnotherArticles(articleId);
+	}
+	
+	@PostMapping("/article")
+	public boolean insertArticle(AddNowArticleReqDto addNowArticleReqDto) {
+		System.out.println(addNowArticleReqDto);
+//		System.out.println(addNowArticleReqDto.getTitle_image().getOriginalFilename());
+//		if(addNowArticleReqDto.getContents_images() != null) addNowArticleReqDto.getContents_images().forEach(e -> System.out.println(e.getOriginalFilename()));
+		return nowService.insertArticle(addNowArticleReqDto);
+	}
+	
+	
 	
 //	@GetMapping("/list")
 //	public List<NowArticle> getNowArticleList() {

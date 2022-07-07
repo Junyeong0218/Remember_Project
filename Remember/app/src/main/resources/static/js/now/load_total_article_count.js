@@ -1,18 +1,14 @@
 const pager = document.querySelector(".pager");
-const before_page_button = pager.querySelector(".before");
-const after_page_button = pager.querySelector(".after");
+const before_page_button = pager.querySelector(".prev_page");
+const after_page_button = pager.querySelector(".next_page");
 
 loadTotalArticleCount();
 
 function loadTotalArticleCount() {
 	const url = category_id == 0 ? "/api/v1/now/count" : "/api/v1/now/" + category_id + "/count";
-	const page_param = page > 0 ? page - 1 : page;
-	const data = category_id == 0 ? {"page":page_param} :
-																  {"page":page_param};
 	$.ajax({
 		type: "get",
 		url: url,
-		data: data,
 		dataType: "json",
 		success: function (count) {
 			appendPageLinks(Number(count));
@@ -25,6 +21,7 @@ function loadTotalArticleCount() {
 }
 
 function appendPageLinks(count) {
+	const current = page;
 	const last_page = count == 0 ? 1 : count%10 == 0 ? Math.floor(count/10) : Math.floor(count/10) + 1;
 	const min_page_number = Math.floor(page/10) + 1;
 	const max_page_number = (Math.floor(page/10) + 1) * 10 < last_page ? (Math.floor(page/10) + 1) * 10 : last_page;
@@ -34,7 +31,7 @@ function appendPageLinks(count) {
 		const tag = makeCurrentPageTag(min_page_number);
 		pager.insertBefore(tag, after_page_button);
 	} else {
-		for(let i = min_page_number; i < max_page_number; i++) {
+		for(let i = min_page_number; i < max_page_number + 1; i++) {
 			if(current == i) {
 				const tag = makeCurrentPageTag(i);
 				pager.insertBefore(tag, after_page_button);
@@ -58,17 +55,15 @@ function appendPageLinks(count) {
 
 function makeCurrentPageTag(number) {
 	const span = document.createElement("span");
-	span.className = "page_link current";
+	span.className = "page current";
 	span.innerText = number;
 	return span;
 }
 
 function makePageLinkTag(number) {
 	const a = document.createElement("a");
-	a.href = location.search == "" ? "?page=" + number : 
-					location.search == "?" ? location.pathname + "?page=" + number : 
-					location.search.includes("tag=") ? location.pathname + "tag_id=" + tag_id +",page=" + number : "";
-	a.className = "page_link";
+	a.href = location.search == "" ? "?page=" + number : location.pathname + "?page=" + number;
+	a.className = "page";
 	a.innerText = number;
 	return a;
 }

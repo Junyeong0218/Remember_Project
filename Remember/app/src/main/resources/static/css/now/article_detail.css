@@ -25,6 +25,10 @@ main {
     white-space: initial;
 }
 
+.article_detail > .description {
+    margin: 0 0 1.5em;
+}
+
 .article_detail p {
     margin-bottom: 27px;
     font-size: 18px;
@@ -177,6 +181,7 @@ main {
     align-items: center;
     width: 100%;
     height: 62px;
+    cursor: pointer;
 }
 
 .another_articles>.row>.main_image {
