@@ -131,8 +131,8 @@ function insertArticleModalForSpecificCategory() {
 				contentType: false,
 				dataType: "json",
 				success: function (data) {
-					if(data == true) {
-						location.reload();
+					if(data == false) {
+						location.href =  "/now/detail/" + data[i].id
 					} else {
 						console.log(data);
 					}

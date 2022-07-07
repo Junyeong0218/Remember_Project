@@ -1,0 +1,93 @@
+.upload {
+    margin-top: 60px;
+    padding: 30px 0 60px;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    align-items: center;
+    width: 650px;
+}
+
+.upload > .register_article {
+	display: flex;
+	flex-direction: column;
+	width: 650px;
+}
+
+.upload > .register_article > .title {
+    width: 100%;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 26px;
+}
+
+.modal > .register_article > hr {
+	margin: 12px 0 24px;
+	width: 650px;
+	height: 1px;
+	border: none;
+	background-color: rgb(235, 235, 235);
+}
+
+.upload > .register_article > form {
+    display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.upload > .register_article > form > input {
+    margin-bottom: 12px;
+    padding: 12px 12px;
+    width: 100%;
+    height: 51px;
+    border: none;
+    border-bottom: 1px solid rgb(235, 235, 235);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px
+
+}
+
+.upload > .register_article > form > textarea {
+    width: 100%;
+    padding: 12px 12px;
+    height: 500px;
+    border: none;
+    font-size: 1.125em;
+    line-height: 1.6em;
+    color: rgb(51, 51, 51);
+    word-wrap: break-word;
+}
+
+.upload > .register_article > form > .article_title {
+    font-size: 29px;
+}
+
+.upload > .register_article > form > .buttons {
+    margin-top: 24px;
+	flex-direction: row;
+	align-items: center;
+	text-align: center;
+	width: 100%;
+	height: 44px;
+}
+
+.upload > .register_article > form > .buttons > .button_wrapper {
+    display: flex;
+	height: 100%;
+	gap: 8px;
+}
+
+.upload > .register_article > form > .buttons > .button_wrapper > button {
+    width: 100%;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 44px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.upload > .register_article > form > .buttons > .button_wrapper > button > .register_article_button {
+    background-color: #333;
+}

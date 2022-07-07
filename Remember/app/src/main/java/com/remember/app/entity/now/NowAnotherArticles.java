@@ -1,9 +1,6 @@
 package com.remember.app.entity.now;
 
-
-
 import java.time.LocalDateTime;
-
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,19 +13,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class NowArticleDetail {
-
+public class NowAnotherArticles {
 	private int id;
-	
-	private int user_id;
-	
-	private LocalDateTime create_date;
 	private String title;
-	private String contents;
-	
-	private String insight_title;
-	private String insight_contents;
-	
 	private String file_name;
-	
+	private LocalDateTime create_date;
 }

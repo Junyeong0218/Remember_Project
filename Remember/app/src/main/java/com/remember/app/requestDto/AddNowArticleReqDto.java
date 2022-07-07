@@ -17,19 +17,26 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class UploadNowArticleReqDto {
+public class AddNowArticleReqDto {
 	private int user_id;
 	private int category_id;
 	private String title;
+	private String summary;
 	private String contents;
-	private List<MultipartFile> files;
+	private String insight_title;
+	private String insight_contents;
+	private MultipartFile title_image;
+	private List<MultipartFile> contents_images;
 	
 	public NowArticle toNowArticleEntity() {
 		return NowArticle.builder()
 						.user_id(user_id)
 						.category_id(category_id)
 						.title(title)
+						.summary(summary)
 						.contents(contents)
+						.insight_title(insight_title)
+						.insight_contents(insight_contents)
 						.build();
 	}
 }
