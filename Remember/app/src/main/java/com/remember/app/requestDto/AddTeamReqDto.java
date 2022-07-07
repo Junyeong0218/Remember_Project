@@ -61,6 +61,7 @@ public class AddTeamReqDto {
 	
 	public TeamUserProfile toProfileEntity() {
 		return TeamUserProfile.builder()
+													  .id(id)
 													  .user_id(made_user_id)
 													  .nickname(nickname)
 													  .build();

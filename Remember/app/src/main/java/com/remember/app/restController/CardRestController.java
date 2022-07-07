@@ -39,6 +39,7 @@ import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
+import com.remember.app.requestDto.JoinTeamReqDto;
 import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
@@ -176,28 +177,32 @@ public class CardRestController {
 	public ResponseEntity<?> updateCardBelongGroups(@PathVariable int cardId,
 																										  UpdateCardsBelongGroupsReqDto updateCardsBelongGroups){
 		updateCardsBelongGroups.setCardId(cardId);
-		boolean result = cardService.updateCardBelongGroup(updateCardsBelongGroups);
+		boolean result = cardService.updateCardBelongGroups(updateCardsBelongGroups);
 		System.out.println(result);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	
 	@PutMapping("/list/belong")
 	public ResponseEntity<?> updateCardsBelongGroups(UpdateCardsBelongGroupsReqDto updateCardsBelongGroups){
-		int result = cardService.addGroupUser(addGroupReqDto);
+		boolean result = cardService.updateCardsBelongGroups(updateCardsBelongGroups);
+		System.out.println(result);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+	
+	@PutMapping("/group/{groupId}/belong")
+	public ResponseEntity<?> updateAllCardsInGroupBelongGroups(@PathVariable int groupId, 
+																																UpdateAllCardsBelongGroupsReqDto updateAllCardsBelongGroupsReqDto) {
+		updateAllCardsBelongGroupsReqDto.setGroupId(groupId);
+		boolean result = cardService.updateAllCardsInGroupBelongGroups(updateAllCardsBelongGroupsReqDto);
 		System.out.println(result);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
 	
 	@PutMapping("/all/list/belong")
-	public ResponseEntity<?> updateAllCardsInGroupBelongGroups(UpdateAllCardsBelongGroupsReqDto updateAllCardsBelongGroupsReqDto){
-		int result = cardService.addGroupUser(addGroupReqDto);
-		System.out.println(result);
-		return new ResponseEntity<>(result,HttpStatus.OK);
-	}
-	
-	@PutMapping("/{cardId}/belong")
-	public ResponseEntity<?> updateAllCardsBelongGroups(UpdateAllCardsBelongGroupsReqDto updateAllCardsBelongGroupsReqDto){
-		int result = cardService.addGroupUser(addGroupReqDto);
+	public ResponseEntity<?> updateAllCardsBelongGroups(UpdateAllCardsBelongGroupsReqDto updateAllCardsBelongGroupsReqDto,
+																												@AuthenticationPrincipal PrincipalDetails principalDetails){
+		updateAllCardsBelongGroupsReqDto.setUserId(principalDetails.getId());
+		boolean result = cardService.updateAllCardsBelongGroups(updateAllCardsBelongGroupsReqDto);
 		System.out.println(result);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
@@ -262,6 +267,23 @@ public class CardRestController {
 		addTeamReqDto.setMade_user_id(principalDetails.getId());
 		System.out.println(addTeamReqDto);
 		return cardService.insertTeam(addTeamReqDto);
+	}
+	
+	@PostMapping("/team/{teamId}/invite-code")
+	public String generateInviteCode(@PathVariable int teamId) {
+		return cardService.generateInviteCode(teamId);
+	}
+	
+	@GetMapping("/team/invite-code/{inviteCode}")
+	public TeamDetail getInvitedTeamInfo(@PathVariable String inviteCode) {
+		return cardService.getInvitedTeamInfo(inviteCode);
+	}
+	
+	@PostMapping("/team/user")
+	public boolean joinInvitedTeam(JoinTeamReqDto joinTeamReqDto,
+																 @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		joinTeamReqDto.setUser_id(principalDetails.getId());
+		return cardService.joinInvitedTeam(joinTeamReqDto);
 	}
 	
 	@GetMapping("/team/user/{userId}")

@@ -21,6 +21,7 @@ public class Team {
 	private int made_user_id;
 	private int grade_id;
 	private String title;
+	private String invite_code;
 	private LocalDateTime create_date;
 	private LocalDateTime update_date;
 	private boolean deleted;

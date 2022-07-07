@@ -17,10 +17,13 @@ const ajax = {
 																																								insertAllCardsInGroupToTeam(group_id, not_selected_card_id_list, card_book_id_list, memo_include_flag),
 	insertAllCardsToTeam: (not_selected_card_id_list, card_book_id_list, memo_include_flag) => 
 																																								insertAllCardsToTeam(not_selected_card_id_list, card_book_id_list, memo_include_flag),
+	generateNewInviteCode: (team_id) =>																					generateNewInviteCode(team_id), 
+	joinInvitedTeam: (team_id, nickname) => 																				joinInvitedTeam(team_id, nickname),
 	
 	// select functions
 	isTeamJoined: () => 																														isTeamJoined(),
 	loadJoinedTeamList: () => 																											loadJoinedTeamList(),
+	loadInvitedTeamInfo : (invite_code) => 																					loadInvitedTeamInfo(invite_code),
 	loadUserGroups: () => 																													loadUserGroups(),
 	loadCardsInAllGroups: (page, card_order_flag) => 															loadCardsInAllGroups(page, card_order_flag),
 	loadCardsInSpecificGroup: (group_id, page, card_order_flag) => 								loadCardsInSpecificGroup(group_id, page, card_order_flag),
@@ -332,6 +335,44 @@ function insertAllCardsToTeam(not_selected_card_id_list, card_book_id_list, memo
 	return flag;
 }
 
+function generateNewInviteCode(team_id) {
+	let invite_code;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/card/team/" + team_id + "/invite-code",
+		async: false,
+		dataType: "text",
+		success: function (data) {
+			invite_code = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return invite_code;
+}
+
+function joinInvitedTeam(team_id, nickname) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/card/team/user",
+		async: false,
+		data: {"team_id": team_id,
+					 "nickname": nickname},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
 // ============================================================================================================================
 // 																											select functions
 // ============================================================================================================================
@@ -371,6 +412,25 @@ function loadJoinedTeamList() {
 		}
 	});
 	return team_list;
+}
+
+function loadInvitedTeamInfo(invite_code) {
+	let team;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/team/invite-code/" + invite_code,
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			console.log(data);
+			team = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return team;
 }
 
 function loadUserGroups() {

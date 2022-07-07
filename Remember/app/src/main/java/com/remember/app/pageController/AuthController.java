@@ -13,7 +13,10 @@ public class AuthController {
 
 	@GetMapping("/signin")
 	public String signin(HttpServletRequest request, Model model) {
-		String uri = request.getHeader("Referer").replace("http://localhost:8080", "");
+		String uri = request.getHeader("Referer");
+		if(uri == null) return "/auth/signin";
+		
+		uri = uri.replace("http://localhost:8080", "");
 		System.out.println(uri);
 		if(! uri.equals("/") && ! uri.equals("/index")) {
 			request.getSession().setAttribute("originUri", uri);

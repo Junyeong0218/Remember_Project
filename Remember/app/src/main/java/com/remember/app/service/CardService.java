@@ -26,6 +26,7 @@ import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
+import com.remember.app.requestDto.JoinTeamReqDto;
 import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
@@ -91,7 +92,13 @@ public interface CardService {
 	
 	public boolean updateTeamName(Team team);
 	
+	public TeamDetail getInvitedTeamInfo(String inviteCode);
+	
+	public String generateInviteCode(int teamId);
+	
 	public boolean isTeamJoined(int userId);
+	
+	public boolean joinInvitedTeam(JoinTeamReqDto joinTeamReqDto);
 	
 	public TeamUserProfile getTeamUserProfile(int userId);
 	

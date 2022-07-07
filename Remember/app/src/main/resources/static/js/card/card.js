@@ -57,7 +57,7 @@ whole_cards.onclick = () => {
 
 main();
 
-function main() {
+async function main() {
 	group_list = ajax.loadUserGroups();
 	console.log(group_list);
 	
@@ -67,6 +67,59 @@ function main() {
 	setTimeout(() => {
 		whole_cards.click();
 	}, 0);
+	
+	const uri = location.pathname;
+	const uris = uri.substring(1, uri.length).split("/");
+	let invite_code;
+	if(uris.length == 2) {
+		invite_code = uris[1];
+		
+		console.log("invite_code : " + invite_code);
+		// 팀 초대 모달 출력
+		// 초대 코드 유효성 판별 ( 팀 정보 select )
+		// 이후에 팀 프로필 있는지
+		const invited_team = await ajax.loadInvitedTeamInfo(invite_code);
+		console.log(invited_team);
+		
+		const invite_team_modal = makeInviteTeamModal(invited_team);
+		appendModalToContainer(invite_team_modal);
+		
+		const flow_columns = invite_team_modal.querySelectorAll(".column");
+		const step_descriptions = invite_team_modal.querySelectorAll(".step_description");
+		const nickname_input = step_descriptions[1].querySelector("input");
+		const next_button = invite_team_modal.querySelector(".next");
+		const submit_button = invite_team_modal.querySelector(".submit_button");
+		
+		invite_team_modal.querySelector(".close_modal").onclick = () => removeModal(invite_team_modal);
+		
+		next_button.onclick = () => {
+			next_button.classList.add("hidden");
+			submit_button.classList.remove("hidden");
+			
+			flow_columns[0].className = "column checked";
+			flow_columns[0].querySelector(".circle").innerText = "";
+			flow_columns[1].className = "column selected";
+			
+			step_descriptions[0].classList.add("hidden");
+			step_descriptions[1].classList.remove("hidden");
+		}
+		
+		nickname_input.oninput = () => {
+			if(nickname_input.value == "") {
+				submit_button.disabled = true;
+			} else {
+				submit_button.disabled = false;
+			}
+		}
+		
+		submit_button.onclick = () => {
+			if(ajax.joinInvitedTeam(invited_team.id, nickname_input.value)) {
+				document.querySelector("#team_tab_button").click();
+			} else {
+				alert("팀 참가에 실패했습니다.");
+			}
+		}
+	}
 }
 
 function setGroupList() {
@@ -308,12 +361,20 @@ function setCardList() {
 				else 				not_selected_id_list.push(card_list[index].id);
 			});
 			let card_count_for_modal = 0;
-			if(page_check_flag == "whole" || page_check_flag == "whole_after") {
-				card_count_for_modal = group_list[0].total_count - not_selected_id_list.length;
-			} else if(page_check_flag == "current") {
-				card_count_for_modal = selected_group.card_count;
-			} else if(page_check_flag == "not_max") {
-				card_count_for_modal = selected_group.card_count -  not_selected_id_list.length;
+			if(selected_group == null) {
+				// 전체
+				if(page_check_flag == "whole" || page_check_flag == "whole_after") {
+					card_count_for_modal = group_list[0].total_count - not_selected_id_list.length;
+				} else {
+					card_count_for_modal = selected_id_list.length;
+				}
+			} else {
+				// 그룹
+				if(page_check_flag == "whole" || page_check_flag == "whole_after") {
+					card_caunt_for_modal = selected_group.card_count - not_selected_id_list.length;
+				} else {
+					card_count_for_modal = selected_id_list.length;
+				}
 			}
 			const move_group_modal = makeChangeGroupModal(card_count_for_modal);
 			appendModalToContainer(move_group_modal);
@@ -373,25 +434,37 @@ function setCardList() {
 			const default_card_group_id = group_list[group_list.findIndex(e => e.group_name == "미분류 명함")].id;
 			const complete_button = move_group_modal.querySelector('.set_group_button');
 			
-			/*complete_button.onclick = () => {
+			complete_button.onclick = () => {
 				const selected_group_id_list = new Array();
 				const group_check_list = move_group_modal.querySelectorAll(".group > input");
 				group_check_list.forEach((e, index) => {
 					if(e.checked) selected_group_id_list.push(group_list[index].id);
 				});
 				
-				const checked_card_id_list = new Array();
-				checkboxes.forEach((e, index) => {
-					if(e.checked) checked_card_id_list.push(card_list[index].id);
-				});
+				let ajax_flag = false;
 				
-				const is_success = ajax.updateCardsBelongGroups(card_detail.card.id, selected_group_id_list, default_card_group_id);
-				if(is_success) {
+				if(selected_group == null) {
+					// 전체
+					if(page_check_flag == "whole" || page_check_flag == "whole_after") {
+						ajax_flag = ajax.updateAllCardsBelongGroups(not_selected_id_list, selected_group_id_list, default_card_group_id);
+					} else {
+						ajax_flag = ajax.updateCardsBelongGroups(selected_id_list, selected_group_id_list, default_card_group_id);
+					}
+				} else {
+					// 그룹
+					if(page_check_flag == "whole" || page_check_flag == "whole_after") {
+						ajax_flag = ajax.updateAllCardsInGroupBelongGroups(selected_group.id, not_selected_id_list, selected_group_id_list, default_card_group_id);
+					} else {
+						ajax_flag = ajax.updateCardsBelongGroups(selected_id_list, selected_group_id_list, default_card_group_id);
+					}
+				}
+				
+				if(ajax_flag) {
 					location.reload();
 				} else {
 					alert("그룹 수정 실패");
 				}
-			}*/
+			}
 		}
 		
 		
@@ -925,8 +998,7 @@ function setCardList() {
 							if(e.checked) checked_card_id_list.push(card_list[index].id);
 						});
 						
-						const is_success = ajax.updateCardBelongGroups(card_detail.card.id, selected_group_id_list, default_card_group_id);
-						if(is_success) {
+						if(ajax.updateCardBelongGroups(card_detail.card.id, selected_group_id_list, default_card_group_id)) {
 							location.reload();
 						} else {
 							alert("그룹 수정 실패");
@@ -1268,6 +1340,51 @@ function makeTeamWithCardBooksTag(team_data) {
 			</div>	
 		`;
 	}
+	return div;
+}
+
+function makeInviteTeamModal(team) {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window invite_team">
+			<div class="title">
+				<span>팀 명함첩</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/card_modal_close.png">
+				</button>
+			</div>
+			<div class="description">
+				<div class="flow">
+					<div class="column selected">
+						<span class="circle">1</span>
+						<span class="flow_name">조직 정보</span>
+						<hr>
+					</div>
+					<div class="column">
+						<span class="circle">2</span>
+						<span class="flow_name">사용자 이름 설정</span>
+					</div>
+				</div>
+				<div class="step_description">
+					<span class="text">아래 조직의 팀 명함첩에 참여하시겠습니까?</span>
+					<div class="team_info">
+						<span class="team_name">${team.title}</span>
+						<span class="owner_nickname">${team.owner_nickname}님의 초대</span>
+					</div>
+				</div>
+				<div class="step_description hidden">
+					<span class="text accent">회원님의 이름을 입력하세요</span>
+					<input type="text" name="nickname" placeholder="회원님의 이름을 입력하세요">
+					<span class="text small">조직 구성원에게 보여지는 이름입니다.</span>
+				</div>
+				<div class="buttons">
+					<button type="button" class="next">다음</button>
+					<button type="button" class="submit_button hidden" disabled>완료</button>
+				</div>
+			</div>
+		</div>
+	`;
 	return div;
 }
 

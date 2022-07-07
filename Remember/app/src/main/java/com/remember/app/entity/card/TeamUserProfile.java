@@ -18,6 +18,7 @@ import lombok.ToString;
 public class TeamUserProfile {
 
 	private int id;
+	private int team_id;
 	private int user_id;
 	private String nickname;
 	private String phone;

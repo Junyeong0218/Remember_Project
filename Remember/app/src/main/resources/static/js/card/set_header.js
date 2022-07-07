@@ -5,6 +5,8 @@ const team_tab_button = document.querySelector("#team_tab_button");
 
 console.log(principal);
 
+setUnderlineInHeader();
+
 header_email.innerText = principal.email;
 
 card_tabs.onclick = executeMultipleEvents;
@@ -15,6 +17,14 @@ team_tab_button.onclick = (event) => {
 		location.href = "/card/team";
 	} else {
 		location.href = "/card/team-empty";
+	}
+}
+
+function setUnderlineInHeader() {
+	if(location.pathname.includes("team")) {
+		card_tabs.children[1].classList.add("selected");
+	} else {
+		card_tabs.children[0].classList.add("selected");
 	}
 }
 

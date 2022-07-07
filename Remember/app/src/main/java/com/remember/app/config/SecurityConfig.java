@@ -39,8 +39,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 		http.httpBasic().disable();
 		http.authorizeRequests()
-				 	.antMatchers("/api/v1/card/**", "/card/**")
-				 		.authenticated()
 			 		.anyRequest()
 			 			.permitAll()
 				 .and()
@@ -61,15 +59,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				 		.userInfoEndpoint()
 				 		.userService(principalOauth2UserService)
 				 .and()
-				 	.defaultSuccessUrl("/card")
 				 	.successHandler(new AuthenticationSuccessHandler() {
-						
 						@Override
 						public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-								Authentication authentication) throws IOException, ServletException {
+																								Authentication authentication) throws IOException, ServletException {
 							String originUri = (String) request.getSession().getAttribute("originUri");
 							System.out.println("security_config : " + originUri);
 							if(originUri != null) {
+								request.getSession().removeAttribute("originUri");
 								response.sendRedirect(originUri);
 							} else {
 								response.sendRedirect("/card");

@@ -19,6 +19,7 @@ public class TeamDetail {
 
 	private int id;
 	private int made_user_id;
+	private String owner_nickname;
 	
 	private int grade_id;
 	private String grade;

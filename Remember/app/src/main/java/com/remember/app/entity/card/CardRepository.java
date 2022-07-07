@@ -4,18 +4,17 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.remember.app.requestDto.UpdateCardBelongGroups;
 import com.remember.app.requestDto.CardDeleteReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
+import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongTeamGroupReqDto;
 
 @Mapper
 public interface CardRepository {
-	
 
 	public List<CardDetail> getCardDetail(int card_id);
 	
@@ -47,7 +46,9 @@ public interface CardRepository {
 	
 	public int insertCardBelongGroups(UpdateCardsBelongGroupsReqDto updateCardsBelongGroupsReqDto);
 	
-	public int insertCardBelongDefaultGroup(UpdateCardsBelongGroupsReqDto updateCardsBelongGroupsReqDto);
+	public int insertCardBelongGroupsForMultiple(UpdateAllCardsBelongGroupsReqDto updateAllCardsBelongGroupsReqDto);
+	
+	public int insertCardBelongDefaultGroup(int cardId, int defaultCardGroupId);
 	
 	public List<Integer> getAllCardIdList(int userId);
 	
@@ -101,12 +102,20 @@ public interface CardRepository {
 	public int getDefaultTeamGroupId(int cardBookId);
 	
 	public int updateTeamName(Team team);
+	
+	public TeamDetail getInvitedTeam(String inviteCode);
+	
+	public int checkDuplicateInviteCode(String inviteCode);
+	
+	public int registerInviteCodeToTeam(Team team);
 
 	public TeamUserProfile getTeamUserProfile(int userId);
 	
 	public List<TeamDetail> getTeamList(int userId);
 	
 	public List<TeamCardBookSummary> getCardBookList(int teamId);
+	
+	public List<Integer> getCardBookIdList(int teamId);
 	
 	public List<TeamGroupSummary> getTeamGroupList(int cardBookId);
 	

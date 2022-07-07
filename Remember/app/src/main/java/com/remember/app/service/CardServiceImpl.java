@@ -42,6 +42,7 @@ import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
+import com.remember.app.requestDto.JoinTeamReqDto;
 import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardBelongTeamGroupReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
@@ -237,7 +238,8 @@ public class CardServiceImpl implements CardService {
 		result += cardRepository.deleteCardBelongGroups(updateCardsBelongGroupsReqDto.getCardId());
 		if(result > 0) {
 			if(updateCardsBelongGroupsReqDto.getGroup_id_list() == null) {
-				result += cardRepository.insertCardBelongDefaultGroup(updateCardsBelongGroupsReqDto);
+				result += cardRepository.insertCardBelongDefaultGroup(updateCardsBelongGroupsReqDto.getCardId(), 
+																																updateCardsBelongGroupsReqDto.getDefault_card_group_id());
 			} else {
 				result += cardRepository.insertCardBelongGroups(updateCardsBelongGroupsReqDto);
 			}
@@ -266,17 +268,40 @@ public class CardServiceImpl implements CardService {
 		int result = 0;
 		for(int i = 0; i < cardIdList.size(); i++) {
 			result += cardRepository.deleteCardBelongGroups(cardIdList.get(i));
+			
+			updateAllCardsBelongGroupsReqDto.setCardId(cardIdList.get(i));
+			
+			if(updateAllCardsBelongGroupsReqDto.getGroup_id_list() == null) {
+				result += cardRepository.insertCardBelongDefaultGroup(updateAllCardsBelongGroupsReqDto.getCardId(), 
+																																updateAllCardsBelongGroupsReqDto.getDefault_card_group_id());
+			} else {
+				result += cardRepository.insertCardBelongGroupsForMultiple(updateAllCardsBelongGroupsReqDto);
+			}
 		}
-		// 내일 마무리
-		return false;
+		return result > 1;
 	}
 	
 	@Override
 	public boolean updateAllCardsBelongGroups(UpdateAllCardsBelongGroupsReqDto updateAllCardsBelongGroupsReqDto) {
-		// TODO Auto-generated method stub
-		// 내일 마무리
+		List<Integer> cardIdList = cardRepository.getAllCardIdList(updateAllCardsBelongGroupsReqDto.getUserId());
+		if(updateAllCardsBelongGroupsReqDto.getNot_selected_card_id_list() != null) {
+			cardIdList.removeAll(updateAllCardsBelongGroupsReqDto.getNot_selected_card_id_list());
+		}
 		
-		return false;
+		int result = 0;
+		for(int i = 0; i < cardIdList.size(); i++) {
+			result += cardRepository.deleteCardBelongGroups(cardIdList.get(i));
+			
+			updateAllCardsBelongGroupsReqDto.setCardId(cardIdList.get(i));
+			
+			if(updateAllCardsBelongGroupsReqDto.getGroup_id_list() == null) {
+				result += cardRepository.insertCardBelongDefaultGroup(updateAllCardsBelongGroupsReqDto.getCardId(), 
+																																updateAllCardsBelongGroupsReqDto.getDefault_card_group_id());
+			} else {
+				result += cardRepository.insertCardBelongGroupsForMultiple(updateAllCardsBelongGroupsReqDto);
+			}
+		}
+		return result > 1;
 	}
 	
 	@Override
@@ -429,6 +454,46 @@ public class CardServiceImpl implements CardService {
 	@Override
 	public boolean updateTeamName(Team team) {
 		return cardRepository.updateTeamName(team) == 1;
+	}
+	
+	@Override
+	public TeamDetail getInvitedTeamInfo(String inviteCode) {
+		TeamDetail teamDetail = cardRepository.getInvitedTeam(inviteCode);
+		System.out.println(teamDetail);
+		return teamDetail;
+	}
+	
+	@Override
+	public String generateInviteCode(int teamId) {
+		String inviteCode = generateUUIDTenDigits();
+		System.out.println(inviteCode);
+		while(cardRepository.checkDuplicateInviteCode(inviteCode) == 1) {
+			inviteCode = generateUUIDTenDigits();
+		}
+		if(cardRepository.registerInviteCodeToTeam(Team.builder()
+																										   .id(teamId)
+																										   .invite_code(inviteCode)
+																										   .build()) == 1) {
+			return inviteCode;
+		}
+		return null;
+	}
+	
+	private String generateUUIDTenDigits() {
+		return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10).toUpperCase();
+	}
+	
+	@Override
+	public boolean joinInvitedTeam(JoinTeamReqDto joinTeamReqDto) {
+		int result = cardRepository.joinTeam(joinTeamReqDto.toJoinEntity());
+		result += cardRepository.insertTeamUserProfile(joinTeamReqDto.toProfileEntity());
+		
+		List<Integer> cardBookIdList = cardRepository.getCardBookIdList(joinTeamReqDto.getTeam_id());
+		joinTeamReqDto.setCard_book_id(cardBookIdList.get(0));
+		
+		result += cardRepository.insertTeamCardBookJoinUser(joinTeamReqDto.toCardBookJoinEntity());
+	
+		return result > 2;
 	}
 	
 	@Override

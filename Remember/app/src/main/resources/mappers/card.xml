@@ -214,12 +214,28 @@
 			;
 		</insert>
 		
-		<insert id="insertCardBelongDefaultGroup" parameterType="com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto">
+		<insert id="insertCardBelongGroupsForMultiple" parameterType="com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto">
+			insert into
+				card_belong_group
+			values
+			<foreach collection="group_id_list" index="index" item="item" separator=",">
+				(
+					0,
+					#{item},
+					#{cardId},
+					now(),
+					now()
+				)
+			</foreach>
+			;
+		</insert>
+		
+		<insert id="insertCardBelongDefaultGroup" parameterType="Integer">
 			insert into
 				card_belong_group
 			values(
 				0,
-				#{default_card_group_id},
+				#{defaultCardGroupId},
 				#{cardId},
 				now(),
 				now()
@@ -430,6 +446,7 @@
 				#{made_user_id},
 				#{grade_id},
 				#{title},
+				null,
 				now(),
 				now(),
 				false,
@@ -527,6 +544,7 @@
 				team_user_profile
 			values(
 				0,
+				#{team_id},
 				#{user_id},
 				#{nickname},
 				now(),
@@ -613,6 +631,35 @@
 				id = #{id};
 		</update>
 		
+		<select id="getInvitedTeam" parameterType="String" resultType="com.remember.app.entity.card.TeamDetail">
+			select
+				team.*,
+				profile.nickname as owner_nickname
+			from
+				team_mst team
+				left outer join team_user_profile profile on(profile.team_id = team.id and profile.user_id = team.made_user_id)
+			where
+				team.invite_code = #{inviteCode};
+		</select>
+		
+		<select id="checkDuplicateInviteCode" parameterType="String" resultType="Integer">
+			select
+				count(invite_code)
+			from
+				team_mst
+			where
+				invite_code = #{inviteCode};
+		</select>
+		
+		<update id="registerInviteCodeToTeam" parameterType="com.remember.app.entity.card.Team">
+			update
+				team_mst
+			set
+				invite_code = #{invite_code}
+			where
+				id = #{id};
+		</update>
+		
 		<select id="getTeamUserProfile" parameterType="Integer" resultType="com.remember.app.entity.card.TeamUserProfile">
 			select
 				*
@@ -668,6 +715,17 @@
 				book.team_id = #{teamId}
 			group by
 				book.id;
+		</select>
+		
+		<select id="getCardBookIdList" parameterType="Integer" resultType="Integer">
+			select
+				id
+			from
+				team_card_book
+			where
+				team_id = #{teamId}
+			order by
+				create_date desc;
 		</select>
 		
 		<select id="getTeamGroupList" parameterType="Integer" resultType="com.remember.app.entity.card.TeamGroupSummary">

@@ -79,6 +79,7 @@ team_members_button.onclick = () => {
 		no_member_tag.querySelector(".invite_member").onclick = () => {
 			// 링크 생성 및 모달 출력
 			console.log("링크 생성 및 모달 출력");
+			console.log(ajax.generateNewInviteCode(service_object.selected_team.id));
 		}
 	} else {
 		console.log(team_member_list);

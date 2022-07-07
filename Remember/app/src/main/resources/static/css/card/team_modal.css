@@ -436,7 +436,8 @@
 .modal > .save_to_team > .title,
 .modal > .send_file > .title,
 .modal > .add_menu > .title,
-.modal > .alert > .title {
+.modal > .alert > .title,
+.modal > .invite_team > .title {
 	position: relative;
 	padding: 15px;
 	width: 100%;
@@ -452,7 +453,8 @@
 .modal > .save_to_team > .title > span,
 .modal > .send_file > .title > span,
 .modal > .add_menu > .title > span,
-.modal > .alert > .title > span {
+.modal > .alert > .title > span,
+.modal > .invite_team > .title > span {
 	font-size: 17px;
 	font-weight: 500;
 	color: rgba(0, 0, 0, 0.85);
@@ -469,7 +471,8 @@
 .modal > .save_to_team > .title > button,
 .modal > .send_file > .title > button,
 .modal > .add_menu > .title > button,
-.modal > .alert > .title > button {
+.modal > .alert > .title > button,
+.modal > .invite_team > .title > button {
 	position: absolute;
 	top: 50%;
 	right: 0;
@@ -492,7 +495,8 @@
 .modal > .save_to_team > .title > button > img,
 .modal > .send_file > .title > button > img,
 .modal > .add_menu > .title > button > img,
-.modal > .alert > .title > button > img {
+.modal > .alert > .title > button > img,
+.modal > .invite_team > .title > buttons > img {
 	pointer-events: none;
 }
 
@@ -1090,4 +1094,199 @@
 	color: #999;
 	line-height: normal;
 	text-align: center;
+}
+
+.modal > .invite_team {
+	display: flex;
+	flex-direction: column;
+	width: 520px;
+}
+
+.modal > .invite_team > .description {
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.modal > .invite_team > .description > .flow {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	height: 32px;
+}
+
+.modal > .invite_team > .description > .flow > .column {
+	position: relative;
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	height: 100%;
+	overflow: hidden;
+}
+
+.modal > .invite_team > .description > .flow > .column:not(:last-child) {
+	margin-right: 16px;
+}
+
+.modal > .invite_team > .description > .flow > .column > .circle {
+	margin-right: 8px;
+	min-width: 32px;
+	height: 100%;
+	border-radius: 50%;
+	border: 1px solid rgb(0, 0, 0, 0.25);
+	background-color: white;
+	font-size: 16px;
+	color: rgb(0, 0, 0, 0.25);
+	line-height: 32px;
+	text-align: center;
+	transition: 300ms;
+}
+
+.modal > .invite_team > .description > .flow > .column.checked > .circle {
+	border: 1px solid #333;
+}
+
+.modal > .invite_team > .description > .flow > .column.selected > .circle {
+	border: none;
+	background-color: #333;
+	color: white;
+}
+
+.modal > .invite_team > .description > .flow > .column.checked > .circle {
+	background-image: url("/static/images/team_empty_circle_checked.png");
+	background-size: 16px 16px;
+	background-repeat: no-repeat;
+	background-position: 50% 50%; 
+}
+
+.modal > .invite_team > .description > .flow > .column > .flow_name {
+	position: relative;
+	font-size: 16px;
+	color: rgb(0, 0, 0, 0.45);
+}
+
+.modal > .invite_team > .description > .flow > .column:not(:last-child) > .flow_name {
+	margin-right: 16px;
+}
+
+.modal > .invite_team > .description > .flow > .column:last-child {
+	display: contents;
+}
+
+.modal > .invite_team > .description > .flow > .column.selected > .flow_name {
+	color: rgb(0, 0, 0, 0.65); 
+}
+
+.modal > .invite_team > .description > .flow > .column.selected > .flow_name::after {
+	content: "";
+	position: absolute;
+	top: 16px;
+	left: 100%;
+	display: inline-block;
+	width: 100%;
+	border-color: #E8E8E8;
+}
+
+.modal > .invite_team > .description > .flow > .column > hr {
+	flex-grow: 1;
+}
+
+.modal > .invite_team > .description > .step_description {
+	padding: 10px 0;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.modal > .invite_team > .description > .step_description.hidden {
+	display: none;
+}
+
+.modal > .invite_team > .description > .step_description > .team_info {
+	margin-top: 10px;
+	padding: 10px 0;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 65px;
+}
+
+.modal > .invite_team > .description > .step_description > .team_info > .team_name {
+	font-size: 17px;
+}
+
+.modal > .invite_team > .description > .step_description > .team_info > .owner_nickname {
+	font-size: 13px;
+	color: #999;
+}
+
+.modal > .invite_team > .description > .step_description .text {
+	font-size: 15px;
+}
+
+.modal > .invite_team > .description > .step_description .text.accent {
+	margin-bottom: 10px;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 2;
+}
+
+.modal > .invite_team > .description > .step_description .text.small {
+	margin-top: 10px;
+	font-size: 12px;
+	color: #999;
+}
+
+.modal > .invite_team > .description > .step_description > input {
+	padding: 6px 11px;
+	width: 100%;
+	height: 40px;
+	border: 1px solid #D9D9D9;
+	font-size: 16px;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 1.5;
+	transition: 300ms;
+	outline: none;
+}
+
+.modal > .invite_team > .description > .step_description > input:hover,
+.modal > .invite_team > .description > .step_description > input:active {
+	border-color: #0D0C0C;
+} 
+
+.modal > .invite_team > .description > .buttons {
+	padding: 10px 0;
+	display: flex;
+	justify-content: flex-end;
+	width: 100%;
+	height: 52px;
+}
+
+.modal > .invite_team > .description > .buttons > button {
+	padding: 0 15px;
+	height: 100%;
+	background-color: #333;
+	font-size: 14px;
+	color: white;
+	cursor: pointer;
+	transition: 300ms;
+}
+
+.modal > .invite_team > .description > .buttons > button.hidden {
+	display: none;
+}
+
+.modal > .invite_team > .description > .buttons > button:disabled,
+.modal > .invite_team > .description > .buttons > button:disabled:hover {
+	border: 1px solid #D9D9D9;
+	background-color: #F5F5F5;
+	color: rgba(0, 0, 0, 0.25);
+	cursor: not-allowed;
+}
+
+.modal > .invite_team > .description > .buttons > button:hover {
+	background-color: #403C3C;
 }
