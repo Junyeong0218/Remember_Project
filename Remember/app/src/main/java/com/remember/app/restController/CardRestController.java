@@ -66,7 +66,6 @@ public class CardRestController {
 	
 	@GetMapping("/{cardId}")
 	public ResponseEntity<?> getCardDetail(@PathVariable int cardId) {
-		
 		return new ResponseEntity<>(cardService.getCardDetail(cardId), HttpStatus.OK); 
 	}
 	
@@ -128,7 +127,6 @@ public class CardRestController {
 		return new ResponseEntity<>(groups,HttpStatus.OK);
 	}
 	
-	//
 	@GetMapping("/list")
 	public ResponseEntity<?> getCardSummaryList(int page, String card_order_flag,
 																								@AuthenticationPrincipal PrincipalDetails principalDetails){
@@ -163,15 +161,6 @@ public class CardRestController {
 		int deleteResult =cardService.deleteGroupCard(group);
 		return new ResponseEntity<>( deleteResult, HttpStatus.OK);
 	}
-		
-	//특정ID 타인명함 select
-	/*@GetMapping("/{cardId}")
-	public ResponseEntity<?> getIdCard(@PathVariable int cardId){
-		System.out.println(cardId);
-		Card card = cardService.getUserCard(cardId);
-		
-		return new ResponseEntity<>(card,HttpStatus.OK);
-	}*/
 	
 	@PutMapping("/{cardId}/belong")
 	public ResponseEntity<?> updateCardBelongGroups(@PathVariable int cardId,
@@ -224,6 +213,13 @@ public class CardRestController {
 		boolean result = cardService.updateCardMemo(cardMemo);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
+
+	//메모 삭제
+	@DeleteMapping("/memo/{cardMemoId}")
+	public ResponseEntity<?> delteMemo(@PathVariable int cardMemoId) {
+		boolean result = cardService.deleteCardMemo(cardMemoId);
+		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
 	
 	@PostMapping("/{cardId}/to-team")
 	public boolean insertTeamCardFromCard(@PathVariable int cardId,
@@ -256,7 +252,6 @@ public class CardRestController {
 		addAllTeamCardsFromCard.setUserId(principalDetails.getId());
 		return cardService.insertAllTeamCardsFromCard(addAllTeamCardsFromCard);
 	}
-
 	
 	// ------------------------------------------------------------------------------
 	// team 관련 rest methods

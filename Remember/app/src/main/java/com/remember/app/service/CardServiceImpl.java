@@ -70,6 +70,7 @@ public class CardServiceImpl implements CardService {
 		CardDetailResDto dto = new CardDetailResDto();
 		List<CardImage> imageList = new ArrayList<CardImage>();
 		List<Group> groupList = new ArrayList<Group>();
+		List<CardImage> cardImageList = new ArrayList<CardImage>();
 		List<CardMemoDetail> memoList = new ArrayList<CardMemoDetail>();
 		
 		for(int i = 0; i < details.size(); i++) {
@@ -80,6 +81,9 @@ public class CardServiceImpl implements CardService {
 			Group group = detail.toGroupEntity();
 			if(group != null && ! groupList.contains(group)) groupList.add(group);
 			
+			CardImage cardImage = detail.toCardImageEntity();
+			if(cardImage != null && ! cardImageList.contains(cardImage)) cardImageList.add(cardImage);
+			
 			CardMemoDetail memo = detail.toMemoDetailEntity();
 			if(memo != null && ! memoList.contains(memo)) memoList.add(memo);
 			
@@ -88,6 +92,7 @@ public class CardServiceImpl implements CardService {
 		}
 		dto.setCard_images(imageList);
 		dto.setGroup_list(groupList);
+		dto.setCard_images(cardImageList);
 		dto.setMemo_list(memoList);
 		
 		return dto;
@@ -205,25 +210,21 @@ public class CardServiceImpl implements CardService {
 	
 	@Override
 	public int deleteCard(int card_id) {
-		
 		return cardRepository.deleteCard(card_id);
 	}
 	
 	@Override
 	public int deleteCards(CardDeleteReqDto cardDeleteReqDto) {
-		
 		return cardRepository.deleteCards(cardDeleteReqDto);
 	}
 	
 	@Override
 	public int updateGroupCard(Group group) {
-		
 		return cardRepository.updateGroup(group);
 	}
 	
 	@Override
 	public int deleteGroupCard(Group group) {
-		
 		return cardRepository.deleteGroup(group);
 	}
 	
@@ -335,8 +336,11 @@ public class CardServiceImpl implements CardService {
 	
 	@Override
 	public boolean updateCardMemo(CardMemo cardMemo) {
-		
 		return cardRepository.updateCardMemo(cardMemo) == 1;
+	}
+
+    public boolean deleteCardMemo(int cardMemoId) {
+		return cardRepository.deleteCardMemo(cardMemoId) == 1;
 	}
 	
 	@Override
@@ -418,7 +422,7 @@ public class CardServiceImpl implements CardService {
 			}
 		}
 		return result;
-	}
+    }
 	
 	// -------------------------------------------------
 	// team 관련 services

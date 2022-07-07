@@ -74,6 +74,8 @@ public interface CardService {
 	public int insertCardMemo(CardMemo cardMemo);
 	
 	public boolean updateCardMemo(CardMemo cardMemo);
+
+    public boolean deleteCardMemo(int cardMemoId);
 	
 	public boolean insertTeamCardFromCard(int userId, int cardId, int cardBookId, boolean memo_include_flag);
 	

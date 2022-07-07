@@ -70,6 +70,14 @@ public interface CardRepository {
 	
 	public int updateCardMemo(CardMemo cardMemo);
 	
+	public int deleteCardMemo(int cardMemoId);
+	
+	public List<Card> getMyCardListInSpecificGroup(int groupId, int page);
+	
+	public List<Card> getMyCardListInSpecificGroupOrderNameAsc(int groupId, int page);
+	
+	public List<Card> getMyCardListInSpecificGroupOrderCompanyAsc(int groupId, int page);
+	
 	// -------------------------------------------------
 	// team 관련 repository methods
 	

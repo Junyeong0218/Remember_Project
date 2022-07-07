@@ -692,7 +692,9 @@
 			#{use_nickname},
 			null,
 			now(),
-			now()
+			now(),
+			false,
+			null
 		);
 	</insert>
 	

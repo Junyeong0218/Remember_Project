@@ -79,7 +79,6 @@ public class CardDetail {
 							.build();
 	}
 	
-
 	public CardImage toCardImageEntity() {
 		if(card_image_id == 0) return null;
 		

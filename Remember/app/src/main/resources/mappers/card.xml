@@ -6,7 +6,7 @@
   <mapper namespace="com.remember.app.entity.card.CardRepository">
 
 	    <select id="getCardDetail" parameterType="Integer" resultType="com.remember.app.entity.card.CardDetail">
-			 select
+			 SELECT
 				cm.*,
 				
 				image.id as card_image_id,
@@ -25,6 +25,7 @@
 				card_mst cm
 				left outer join card_image image on(image.card_id = cm.id)
 				LEFT OUTER JOIN card_belong_group cbg ON(cbg.card_id = cm.id)
+				left outer join card_image image ON(image.card_id = cm.id)
 				LEFT OUTER JOIN card_group_mst cgm ON(cgm.id = cbg.group_id)
 				left outer join card_memo memo on(memo.card_id = cm.id)
 			WHERE
@@ -437,6 +438,92 @@
 			where
 				id = #{id};
 		</update>
+		
+		<delete id="deleteCardMemo" parameterType="Integer">
+			delete
+			from
+				card_memo
+			where
+				id = #{cardMemoId};
+		</delete>
+		
+		<select id="getMyCardListInSpecificGroup" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+			select
+				card.id,
+				card.`name`,
+				card.company_name,
+				card.department_name,
+				card.position_name,
+				card.create_date,
+				
+				count(distinct belong2.card_id) as total_count
+			from
+				card_group_mst `group`
+				left outer join card_belong_group belong on(belong.group_id = `group`.id)
+				left outer join card_mst card on(card.id = belong.card_id)
+				left outer join card_belong_group belong2 on(belong2.group_id = `group`.id and belong2.card_id is not null)
+			where
+				`group`.id = #{groupId} and
+				card.id is not null
+			group by
+				`group`.id,
+				card.id
+			order by
+				card.create_date DESC;
+			limit #{page}, 10;
+		</select>
+		
+		<select id="getMyCardListInSpecificGroupOrderNameAsc" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+			select
+				card.id,
+				card.`name`,
+				card.company_name,
+				card.department_name,
+				card.position_name,
+				card.create_date,
+				
+				count(distinct belong2.card_id) as total_count
+			from
+				card_group_mst `group`
+				left outer join card_belong_group belong on(belong.group_id = `group`.id)
+				left outer join card_mst card on(card.id = belong.card_id)
+				left outer join card_belong_group belong2 on(belong2.group_id = `group`.id and belong2.card_id is not null)
+			where
+				`group`.id = #{groupId} and
+				card.id is not null
+			group by
+				`group`.id,
+				card.id
+			order by
+				card.`name` asc
+			limit #{page}, 10;
+		</select>
+		
+		<select id="getMyCardListInSpecificGroupOrderCompanyAsc" parameterType="Integer" resultType="com.remember.app.entity.card.Card">
+			select
+				card.id,
+				card.`name`,
+				card.company_name,
+				card.department_name,
+				card.position_name,
+				card.create_date,
+				
+				count(distinct belong2.card_id) as total_count
+			from
+				card_group_mst `group`
+				left outer join card_belong_group belong on(belong.group_id = `group`.id)
+				left outer join card_mst card on(card.id = belong.card_id)
+				left outer join card_belong_group belong2 on(belong2.group_id = `group`.id and belong2.card_id is not null)
+			where
+				`group`.id = #{groupId} and
+				card.id is not null
+			group by
+				`group`.id,
+				card.id
+			order by
+				card.company_name asc
+			limit #{page}, 10;
+		</select>
   
 		<insert id="insertTeam" parameterType="com.remember.app.entity.card.Team">
 			insert into
@@ -510,6 +597,7 @@
 				now(),
 				now()
 			);
+			
 			
 			<selectKey keyProperty="id" resultType="Integer" order="AFTER">
 				select id from team_card_book where team_id = #{team_id} and card_book_name = #{card_book_name};
