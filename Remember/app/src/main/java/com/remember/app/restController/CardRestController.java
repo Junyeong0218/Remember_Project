@@ -395,6 +395,20 @@ public class CardRestController {
 		return cardService.getCardListInSpecificGroup(groupId, page, card_order_flag);
 	}
 	
+	@PutMapping("/team/group/{groupId}")
+	public boolean updateGroupName(@PathVariable int groupId,
+																		String group_name) {
+		return cardService.updateTeamGroupName(TeamGroup.builder()
+																													 .id(groupId)
+																													 .group_name(group_name)
+																													 .build());
+	}
+	
+	@DeleteMapping("/team/group/{groupId}")
+	public boolean deleteTeamGroup(@PathVariable int groupId) {
+		return cardService.deleteTeamGroup(groupId);
+	}
+	
 	@PostMapping("/team/card")
 	public boolean insertTeamCard(CardInsertReqDto cardInsertReqDto,
 																@AuthenticationPrincipal PrincipalDetails principalDetails) {

@@ -10,6 +10,12 @@
     <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/static/css/community/header.css">
     <link rel="stylesheet" href="/static/css/now/article_input.css">
+    <link rel="stylesheet" href="/module/froala-editor/css/froala_editor.pkgd.min.css" type="text/css">
+    <link rel="stylesheet" href="/module/froala-editor/css/plugins/image.min.css" type="text/css">
+    <script src="/module/froala-editor/js/froala_editor.pkgd.min.js"></script>
+    <script src="/module/froala-editor/js/plugins/image.min.js"></script>
+    <script src="/module/froala-editor/js/plugins/file.min.js"></script>
+    <script src="/module/froala-editor/js/plugins/files_manager.min.js"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
 </head>
@@ -21,9 +27,24 @@
             <img src="/static/images/remember_now_logo.png">
         </div>
     </header>
-
+	<main>
+		<div class="upload">
+			<div class="title">게시글 작성</div>
+			<select class="category">
+				<option value="">카테고리를 선택해주세요.</option>
+			</select>
+			<input type="text" class="article_title" name="title" placeholder="제목을 입력하세요">
+			<div class="main_image">
+				<input type="file" name="main_image" accept=".jpg, .png, .jpeg">
+				<img class="hidden">
+				<button type="button" class="insert_main_image">이미지 등록 ( 필수 )</button>
+			</div>
+			<div id="text_editor"></div>
+			<button type="button" class="submit_button">게시글 등록</button>
+		</div>
+	</main>
     </div>
-		<script src="/static/js/now/load_insert_article.js"></script>
+	<script src="/static/js/now/load_insert_article.js"></script>
 </body>
 
 </html>

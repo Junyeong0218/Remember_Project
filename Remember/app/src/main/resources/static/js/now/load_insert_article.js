@@ -1,121 +1,171 @@
-let files = new Array();
-
-insertArticle();
-
-function insertArticle(){
-	const upload = makeInsertArticle();
-	document.querySelector(".container").appendChild(upload);
-	
-	const add_contents_image_button = upload.querySelector(".add_contents_image_button"); 
-	const file_input = upload.querySelector("input[name='file']");
-	const image_wrapper = upload.querySelector(".image_wrapper");
-	add_contents_image_button.onclick = () => file_input.click();
-	file_input.onchange = (event) => {
-		loadUploadFiles(event, image_wrapper);
-	}
-	
-	const title_input_tag = upload.querySelector("input[name='title']");
-	const contents_area_tag = upload.querySelector("textarea[name='contents']");
-	const summary_input_tag = upload.querySelector("input[name='summary']");
-	const insight_title_input_tag = upload.querySelector("input[name='insight_title']");
-	const insight_contents_input_tag = upload.querySelector("input[name='insight_contents']");
-	const insert_article_button = upload.querySelector(".register_article_button");
-	insert_article_button.onclick = () => {
-		const form_data = new FormData();
-		form_data.append("title", title_input_tag.value);
-		form_data.append("contents", contents_area_tag.value);
-		form_data.append("summary", summary_input_tag.value);
-		form_data.append("insight_title", insight_title_input_tag.value);
-		form_data.append("insight_contents", insight_contents_input_tag.value);
-		for(let i = 0; i < files.length; i++) {
-		form_data.append("files", files[i]);
-		}
-		$.ajax({
-				type: "post",
-				url: "/api/v1/now/article",
-				data: form_data,
-				encType: "multipart/form-data",
-				processData: false,
-				contentType: false,
-				dataType: "json",
-				success: function (data) {
-					if(data == true) {
-						location.reload();
-					} else {
-						console.log(data);
-					}
-				},
-				error: function (xhr, status) {
-					console.log(xhr);
-					console.log(status);
-				}
-			});
-	}
-}
-
-function loadUploadFiles(event, image_wrapper) {
-		for(let i = 0; i < event.target.files.length; i++) {
-		const fileReader = new FileReader();
-		fileReader.onloadend = (e) => {
-			image_wrapper.classList.add("active");
-			files.push(event.target.files[i]);
-			const file_name = event.target.files[i].name;
-			
-			const image_tag = makeImageTag(e.target.result);
-			image_wrapper.appendChild(image_tag);
-			files = files.filter(file => file.name != file_name);
+const article_title = document.querySelector(".article_title");
+const category_wrapper = document.querySelector(".category");
+const main_image_wrapper = document.querySelector(".main_image");
+const main_image_input = main_image_wrapper.querySelector("input");
+const main_image_tag = main_image_wrapper.querySelector("img");
+const main_image_button = main_image_wrapper.querySelector(".insert_main_image");
+const submit_button = document.querySelector(".submit_button");
+const text_editor = new FroalaEditor("#text_editor", {
+	pastePlain: true,
+	events: {
+		"image.beforeUpload": (images) => {
+			console.log(images);
+			for(let i = 0; i < images.length; i++) {
+				file_list.push({
+					file: images[i],
+					tag: null
+				});
 			}
-			
-		fileReader.readAsDataURL(event.target.files[i]);
+		},
+		"image.inserted": (image_tags, response) => {
+			file_list[file_list.length - 1].tag = image_tags[0];
+		},
+		"image.beforeRemove": (image_tags) => {
+			const remove_image = image_tags[0];
+			for(let i = 0; i < file_list.length; i++) {
+				if(file_list[i].tag == remove_image) {
+					file_list.splice(i, 1);
+					break;
+				}
+			}
 		}
-		
 	}
+});
 
-function makeImageTag(img_src) {
-	const div = document.createElement("div");
-	div.className = "image_box";
-	div.innerHTML = `
-		<img class="image" src="${img_src}">
-	`;
-	return div;
+let file_list = new Array();
+let main_image_file;
+const category_list = getCategories();
+
+for(let i = 0; i < category_list.length; i++) {
+	const option = document.createElement("option");
+	option.value = category_list[i].id;
+	option.innerText = category_list[i].name;
+	
+	category_wrapper.appendChild(option);
 }
 
+main_image_button.onclick = () => main_image_input.click();
+main_image_tag.onclick = () => main_image_input.click();
+main_image_input.onchange = () => {
+	const file_reader = new FileReader();
+	
+	file_reader.onloadend = (event) => {
+		main_image_file = main_image_input.files[0];
+		main_image_tag.src = event.target.result;
+		main_image_tag.classList.remove("hidden");
+		main_image_button.classList.add("hidden");
+		
+		main_image_tag.style = "width: 100%;";
+	}
+	
+	file_reader.readAsDataURL(main_image_input.files[0]);
+}
 
-function makeInsertArticle() {
-	const div = document.createElement("div");
-	div.className = "upload";
-	div.innerHTML = `
-		<div class="register_article">
-			<div class="title">게시글 쓰기</div>
-			<hr>
-			<form>
-				<input type="text" class="article_title" name="title" placeholder="제목을 입력하세요">
-				<textarea class="article_contents" name="contents" placeholder="내용을 입력하세요"></textarea>
-				<input type="text" class="article_summary" name="summary" placeholder="요약글을 입력하세요">
-				<input type="text" class="article_insight_title" name="insight_title" placeholder="작성자를 입력하세요">
-				<input type="text" class="article_insight_contents" name="insight_contents" placeholder="작성자 소개를 입력하세요">
-				<div class="row active">
-					<button type="button" class="add_title_image_button">
-						<span class="text">제목사진 첨부</span>
-						<img src="/static/images/insert_new_article_add_image_button.svg">
-						<input type="file" name="file" accept=".jpg, .png, .jpeg" multiple>
-					</button>
-				</div>
-				<div class="row active">
-					<button type="button" class="add_contents_image_button">
-						<span class="text">내용사진 첨부</span>
-						<img src="/static/images/insert_new_article_add_image_button.svg">
-						<input type="file" name="file" accept=".jpg, .png, .jpeg" multiple>
-					</button>
-				</div>
-				<div class="image_wrapper"></div>
-				<div class="buttons">
-					<div class="button_wrapper">
-						<button type="button" class="register_article_button">등록</button>
-					</div>
-				</div>
-			</form>	
-		</div>
-	`;
-	return div;
+submit_button.onclick = () => {
+	if(article_title.value == "") {
+		alert("제목을 입력해주세요.");
+		return;
+	}
+	if(main_image_file == null) {
+		alert("메인 이미지는 필수로 등록해야 합니다.");
+		return;
+	}
+	const contents = changeContentstoTag();
+	if(contents == "<p></p>") {
+		alert("내용을 입력해주세요.");
+		return;
+	}
+	
+}
+
+function changeContentstoTag() {
+	const fr_view = document.querySelector(".fr-view");
+	let tag = "";
+	let blank_start_index = 0;
+	let blank_end_index = -1;
+	for(let i = 0; i < fr_view.childNodes.length; i++) {
+		const p = fr_view.childNodes[i];
+		if(p.innerHTML == "<br>" || p.innerHTML.startsWith("<img")) {
+			blank_end_index = i;
+			if(fr_view.childNodes[i].innerHTML.startsWith("<img")) {
+				tag += `<p>${fr_view.childNodes[i].innerHTML.split(" class")[0].split(" style")[0]}></p>`;
+			} else {
+				tag += `<p>`;
+				for(let j = blank_start_index; j < blank_end_index + 1; j++) {
+					if(fr_view.childNodes[j].innerHTML == "<br>") continue;
+					if(fr_view.childNodes[j].innerHTML.startsWith("<img")) continue;
+					
+					tag += `${fr_view.childNodes[j].innerHTML}`;
+				}
+				tag += `</p>`;
+			}
+			blank_start_index = blank_end_index + 1;
+		} else if(i == fr_view.childNodes.length - 1) {
+			blank_end_index = i;
+			tag += `<p>`;
+			for(let j = blank_start_index; j < blank_end_index + 1; j++) {
+				if(fr_view.childNodes[j].innerHTML == "<br>") continue;
+				if(fr_view.childNodes[j].innerHTML.startsWith("<img")) {
+					tag += `${fr_view.childNodes[j].innerHTML}`;
+				} else {
+					tag += `${fr_view.childNodes[j].innerHTML}`;
+				}
+			}
+			tag += `</p>`;
+		}
+	}
+	return tag;
+}
+
+function insertArticle(formdata) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/now/article",
+		async: false,
+		data: formdata,
+		encType: "multipart/form-data",
+		processData: false,
+		contentType: false,
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function getCategories() {
+	let categories;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/now/categories",
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			categories = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return categories;
+}
+
+function makeFormData(contents) {
+	const formdata = new FormData();
+	formdata.append("title", title_input_tag.value);
+	formdata.append("contents", contents_area_tag.value);
+	formdata.append("summary", summary_input_tag.value);
+	formdata.append("insight_title", insight_title_input_tag.value);
+	formdata.append("insight_contents", insight_contents_input_tag.value);
+	for(let i = 0; i < files.length; i++) {
+		formdata.append("files", files[i]);
+	}
+	return formdata;
 }

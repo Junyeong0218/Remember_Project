@@ -191,7 +191,7 @@ function setGroupList() {
                         if (group_tags[i] == group_tag) current_index = i + 3;
                     }
 
-                    const change_name_tag = changeGroupNameTag(group_list[i].group_name);
+                    const change_name_tag = makeChangeGroupNameTag(group_list[i].group_name);
                     const group_name_input = change_name_tag.querySelector("input[name='group_name']");
                     group_tag.classList.add("hidden");
                     my_card_book.insertBefore(change_name_tag, my_card_book.children[current_index]);

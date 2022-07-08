@@ -187,7 +187,7 @@ function makeGroupDownMenuList() {
 	return div;
 }
 
-function changeGroupNameTag(group_name) {
+function makeChangeGroupNameTag(group_name) {
 	const div = document.createElement('div');
 	div.className = "input_wrapper";
 	div.innerHTML =`<input type="text" name="group_name" value = ${group_name}>`;

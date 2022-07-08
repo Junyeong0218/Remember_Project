@@ -18,8 +18,16 @@ public class BeanConfig {
 	@Value("${file.path}")
 	private String filePath;
 	
+	@Value("${module.path}")
+	private String modulePath;
+	
 	@Bean
 	public String filePath() {
 		return filePath;
+	}
+	
+	@Bean
+	public String modulePath() {
+		return modulePath;
 	}
 }

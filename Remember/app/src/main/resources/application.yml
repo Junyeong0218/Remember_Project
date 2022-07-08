@@ -65,3 +65,6 @@ coolsms:
   
 file:
   path: C:/Remember_workspace/Remember_Project/file_upload/
+
+module:
+   path: C:/Remember_workspace/Remember_Project/node_modules/

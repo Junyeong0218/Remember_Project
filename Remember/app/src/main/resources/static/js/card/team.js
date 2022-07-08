@@ -184,6 +184,20 @@ team_manage_button.onclick = () => {
 	const invite_member = document.querySelector("#invite_member");
 	invite_member.onclick = () => {
 		// 구성원 초대 가능한 링크있는 모달 출력
+		const invite_code = ajax.generateNewInviteCode(service_object.selected_team.id);
+		const invite_code_modal = makeInviteTeamModal(invite_code);
+		appendModalToContainer(invite_code_modal);
+		
+		const invite_text = invite_code_modal.querySelector("textarea");
+		
+		invite_code_modal.querySelector(".close_modal").onclick = () => removeModal(invite_code_modal);
+		
+		setTimeout(()=> {
+			invite_text.focus();
+			invite_text.select();
+		}, 0);
+		
+		invite_text.onclick = () => invite_text.select();
 	}
 	
 	const leave_team = document.querySelector("#leave_team");
@@ -469,19 +483,23 @@ function setGroupList() {
 					e.stopPropagation();
 	
                     let current_index = -1;
-                    const group_tags = my_card_book.querySelectorAll(".group");
+                    const group_tags = groups.querySelectorAll(".group");
                     for (let i = 0; i < group_tags.length; i++) {
-                        if (group_tags[i] == group_tag) current_index = i + 3;
+                        if (group_tags[i] == group_button) current_index = i + 1;
                     }
 
-                    const change_name_tag = changeGroupNameTag(group_list[i].group_name);
+                    const change_name_tag = makeChangeGroupNameTag(service_object.group_list[i].group_name);
                     const group_name_input = change_name_tag.querySelector("input[name='group_name']");
-                    group_tag.classList.add("hidden");
-                    my_card_book.insertBefore(change_name_tag, my_card_book.children[current_index]);
+                    group_button.classList.add("hidden");
+                    groups.insertBefore(change_name_tag, groups.children[current_index]);
+					
+					setTimeout(() => {
+						group_name_input.focus();
+					}, 0);
 
                     group_name_input.onkeypress = () => {
                         if (window.event.keyCode == 13) {
-                            if (ajax.updateGroupName(group_list[i].id, group_name_input.value)) {
+                            if (ajax.updateTeamGroupName(service_object.group_list[i].id, group_name_input.value)) {
                                 location.reload();
                             } else {
                                 alert("그룹명 변경 실패");
@@ -493,13 +511,13 @@ function setGroupList() {
                 menu_list.querySelector(".remove_group").onclick = (e) => {
 					e.stopPropagation();
 					
-                    const delete_group_modal = makeDeleteGroupModal(group_list[i].group_name);
+                    const delete_group_modal = makeDeleteGroupModal(service_object.group_list[i].group_name);
                     appendModalToContainer(delete_group_modal);
 
                     delete_group_modal.querySelector(".close_modal").onclick = () => removeModal(delete_group_modal);
 
                     delete_group_modal.querySelector(".delete_group_button").onclick = () => {
-                        if (ajax.deleteGroup(group_list[i].id)) {
+                        if (ajax.deleteGroup(service_object.group_list[i].id)) {
                             location.reload();
                         } else {
                             alert("그룹 삭제 실패");
@@ -2029,6 +2047,30 @@ function makeSaveToPersonalModal(selected_card_count) {
 			</div>
 			<div class="buttons">
 				<button type="button" class="save_button">저장</button>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeInviteTeamModal(invite_code) {
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window show_invite_url">
+			<div class="title">
+				<span>조직 구성원 초대</span>
+				<button type="button" class="close_modal">
+					<img src="/static/images/signup_modal_closer.png">
+				</button>
+			</div>
+			<div class="description">
+				<span>아래 내용과 주소를 복사(Ctrl+C)하여 다른 사람에게 전달하세요.</span>
+				<textarea readonly>remember_test 의 팀명함첩에 초대합니다.
+					팀 명함첩에서는 동료들과 함께 명함을 관리할 수 있습니다.
+					아래 링크를 클릭하여 참여할 수 있습니다.
+					https://localhost:8080/card/${invite_code}
+				</textarea>
 			</div>
 		</div>
 	`;

@@ -115,6 +115,10 @@ public interface CardService {
 	
 	public boolean insertTeamGroup(TeamGroup teamGroup);
 	
+	public boolean updateTeamGroupName(TeamGroup teamGroup);
+	
+	public boolean deleteTeamGroup(int groupId);
+	
 	public List<TeamDetail> getTeamList(int userId);
 	
 	public List<CardBooksInTeam> getTeamListWithCardBooks(int userId);

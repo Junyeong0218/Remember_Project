@@ -18,6 +18,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Value("${file.path}")
 	private String filePath;
 	
+	@Value("${module.path}")
+	private String modulePath;
+	
 	private List<String> excludePathPatterns = Arrays.asList("/static/**", "/image/**", "", "/auth/signin", "/api/**");
 	
 	@Override
@@ -31,8 +34,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		WebMvcConfigurer.super.addResourceHandlers(registry);
-		registry.addResourceHandler("/image/**")
-						.addResourceLocations("file:///" + filePath)
+		registry.addResourceHandler("/image/**", "/module/**")
+						.addResourceLocations("file:///" + filePath, "file:///" + modulePath)
 						.setCachePeriod(60 * 60)
 						.resourceChain(true)
 						.addResolver(new PathResourceResolver());

@@ -619,6 +619,22 @@
 			);
 		</insert>
 		
+		<update id="updateTeamGroup" parameterType="com.remember.app.entity.card.TeamGroup">
+			update
+				team_group
+			set
+				group_name = #{group_name}
+			where
+				id = #{id};
+		</update>
+		
+		<delete id="deleteTeamGroup" parameterType="Integer">
+			delete from
+				team_group
+			where
+				id = #{groupId};
+		</delete>
+		
 		<select id="getDefaultTeamGroupId" parameterType="Integer" resultType="Integer">
 			select
 				id

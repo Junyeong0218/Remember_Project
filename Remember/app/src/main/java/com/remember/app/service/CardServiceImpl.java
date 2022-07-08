@@ -552,6 +552,16 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
+	public boolean updateTeamGroupName(TeamGroup teamGroup) {
+		return cardRepository.updateTeamGroup(teamGroup) == 1;
+	}
+	
+	@Override
+	public boolean deleteTeamGroup(int groupId) {
+		return cardRepository.deleteTeamGroup(groupId) == 1;
+	}
+	
+	@Override
 	public boolean updateCardBookName(TeamCardBook teamCardBook) {
 		return cardRepository.updateTeamCardBookName(teamCardBook) == 1;
 	}

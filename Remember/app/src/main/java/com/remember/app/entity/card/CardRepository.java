@@ -105,6 +105,10 @@ public interface CardRepository {
 	public int updateProfileNickname(TeamUserProfile teamUserProfile);
 	
 	public int insertTeamGroup(TeamGroup teamGroup);
+
+	public int updateTeamGroup(TeamGroup teamGroup);
+	
+	public int deleteTeamGroup(int groupId);
 	
 	public int getDefaultTeamGroupId(int cardBookId);
 	

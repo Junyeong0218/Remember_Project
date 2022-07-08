@@ -55,6 +55,7 @@ const ajax = {
 	updateTeamName: (team_id, title) => 																						updateTeamName(team_id, title),
 	updateProfileNickname: (team_profile_id, nickname) => 													updateProfileNickname(team_profile_id, nickname),
 	updateCardBookName: (selected_card_book_id, card_book_name) => 						updateCardBookName(selected_card_book_id, card_book_name),
+	updateTeamGroupName: (group_id, group_name) => 															updateTeamGroupName(group_id, group_name),
 	updateTeamCardBelongTeamGroups: (card_id, group_id_list, default_group_id) => 	updateTeamCardBelongTeamGroups(card_id, group_id_list, default_group_id),
 	updateTeamCardsBelongTeamGroups: (card_id_list, group_id_list, default_group_id) => 
 																																								updateTeamCardsBelongTeamGroups(card_id_list, group_id_list, default_group_id),
@@ -970,6 +971,25 @@ function updateCardBookName(selected_card_book_id, card_book_name) {
 	return flag;
 }
 
+function updateTeamGroupName(group_id, group_name) {
+	let flag = false;
+	$.ajax({
+		type: "put",
+		url: "/api/v1/card/team/group/" + group_id,
+		async: false,
+		data: {"group_name": group_name},
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
 function updateTeamCardBelongTeamGroups(card_id, group_id_list, default_group_id) {
 	let flag = false;
 	$.ajax({
@@ -1059,12 +1079,13 @@ function updateAllTeamCardsBelongTeamGroups(card_book_id, not_selected_card_id_l
 
 function deleteGroup(group_id) {
 	let flag = false;
+	const url = location.pathname.includes("team") ? "/api/v1/card/team/group/" + group_id : "/api/v1/card/group/" + group_id;
 	$.ajax({
-		type:'delete',
-		url:'/api/v1/card/group/' + group_id,
+		type: "delete",
+		url: url,
 		async: false,
-		dataType:'json',
-		success:function(data) {
+		dataType: "json",
+		success: function (data) {
 			flag = data;
 		},
 	    error: function (xhr, status) {

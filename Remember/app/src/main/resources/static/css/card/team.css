@@ -429,6 +429,10 @@ main {
 	cursor: pointer;
 }
 
+.menus > .team_description > .groups > .group.hidden {
+	display: none;
+}
+
 .side_bar > .my_card_book > .input_wrapper {
 	background-color: rgb(240, 240, 240);
 }
