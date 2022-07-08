@@ -18,13 +18,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddNowArticleReqDto {
+	
 	private int user_id;
 	private int category_id;
 	private String title;
 	private String summary;
 	private String contents;
-	private String insight_title;
-	private String insight_contents;
 	private MultipartFile title_image;
 	private List<MultipartFile> contents_images;
 	
@@ -35,8 +34,6 @@ public class AddNowArticleReqDto {
 						.title(title)
 						.summary(summary)
 						.contents(contents)
-						.insight_title(insight_title)
-						.insight_contents(insight_contents)
 						.build();
 	}
 }

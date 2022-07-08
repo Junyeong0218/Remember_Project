@@ -19,16 +19,14 @@ import lombok.ToString;
 public class NowArticleDetail {
 
 	private int id;
-	
 	private int user_id;
+	private String name;
 	
 	private LocalDateTime create_date;
 	private String title;
 	private String contents;
 	
-	private String insight_title;
-	private String insight_contents;
-	
-	private String file_name;
+	private String title_file_name;
+	private String contents_image_file_name;
 	
 }

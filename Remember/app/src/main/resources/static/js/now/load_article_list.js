@@ -50,7 +50,7 @@ function makeArticleTag(article) {
 		<a class="title">${new_tag ? '<span class="new">N</span>' : ''}${article.title}</a>
 		<div class="article_summary">
 			<span class="text">${article.summary}</span>
-			${article.file_name = '<div class="main_image"><img src="/image/article_images/' + article.file_name + '"></div>'}
+			${article.file_name != null ?  '<div class="main_image"><img src="/image/now_article_images/' + article.file_name + '"></div>' : ''}
 		</div>
 	`;
 	return div;

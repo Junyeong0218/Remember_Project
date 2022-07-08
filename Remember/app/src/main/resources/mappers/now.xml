@@ -92,21 +92,18 @@
   	
   	<select id="getArticleDetail" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticleDetail">
   		select
-  			nam.id,
-  			nam.user_id,
-  			nam.category_id,
-  			nam.title,
-  			nam.contents,
-  			nam.insight_title,
-  			nam.insight_contents,
-  			nam.create_date,
+  			article.*,
   			
-  			nci.file_name
+  			`user`.name,
+  			`title`.file_name as title_file_name,
+  			`contents`.file_name as contents_image_file_name
   		from 
-			now_article_mst nam
-			left outer join now_contents_image nci ON(nci.article_id = nam.id)
+			now_article_mst article
+			left outer join user_mst `user` on(`user`.id = article.user_id)
+			left outer join now_title_image `title` on(`title`.article_id = article.id)
+			left outer join now_contents_image `contents` ON(`contents`.article_id = article.id)
 		where
-			nam.id = #{articleId};
+			article.id = #{articleId};
   	</select>
   	
   	<select id="getAnotherArticles" parameterType="Integer" resultType="com.remember.app.entity.now.NowAnotherArticles">
@@ -132,178 +129,46 @@
   			now_article_mst
   		values(
   			0,
-  			2,
-  			3,
+  			#{user_id},
+  			#{category_id},
   			#{title},
   			#{summary},
   			#{contents},
-  			#{insight_title},
-  			#{insight_contents},
   			now(),
   			now()
   		);
   		
+  		<selectKey keyProperty="id" resultType="Integer" order="AFTER">
+  			select id from now_article_mst where user_id = #{user_id} order by create_date desc limit 1;
+  		</selectKey>
+  	</insert>
+  	
+  	<insert id="insertNowArticleTitleImage" parameterType="com.remember.app.entity.now.NowArticleTitleImage">
+  		insert into
+  			now_title_image
+  		values(
+  			0,
+  			#{article_id},
+  			#{file_name},
+  			now(),
+  			now()
+  		);
   	</insert>
   		
-  	<insert id="insertNowArticleContentsImage" parameterType="List">
+  	<insert id="insertNowArticleContentsImage" parameterType="com.remember.app.entity.now.NowArticleContentsImage">
 	  	insert into
 	  		now_contents_image
 	  	values
 	  	<foreach collection="list" index="index" item="item" separator=",">
-	  	(
-	  		0,
-	  		#(item.article_id),
-	  		#{item.file_name},
-	  		now(),
-	  		now()
-	  	)
+		  	(
+		  		0,
+		  		#{item.article_id},
+		  		#{item.file_name},
+		  		now(),
+		  		now()
+		  	)
 	  	</foreach>
 	  	;
   	</insert>
-   	
-  <!-- 	<insert id="uploadNowArticle" parameterType="com.remember.app.entity.now.NowArticle">
-			insert
-			
-			into now_article_mst am(
-				am.user_id,
-				am.category_id,
-				am.title,
-				am.contents,  
-				am.create_date,
-				am.update_date
-			)
-			
-			VALUES(	
-				#{user_id},
-				#{category_id},
-				#{title}, 
-				#{contents},
-				NOW(),
-				NOW()
-			)
-			
-	</insert>
-	
-	<insert id="insertTitleImages" parameterType="List">
-			insert into
-				now_title_image
-			values
-		<foreach collection="list" index="index" item="item" separator=",">
-		(
-			0,
-			#{item.article_id},
-			#{item.file_name},
-			now(),
-			now()
-		)
-		</foreach>
-		;
-	</insert>
-	
-	<insert id="insertContentsImages" parameterType="List">
-			insert into
-				now_contents_image
-			values
-		<foreach collection="list" index="index" item="item" separator=",">
-		(
-			0,
-			#{item.article_id},
-			#{item.file_name},
-			now(),
-			now()
-		)
-		</foreach>
-		;
-	</insert>
   	
-  	<select id = "getNowArticleList" resultType="com.remember.app.entity.now.NowArticle">
-  		select 
-  			am.id,
-  		
-  			am.create_date,
-  			am.category_id,
-  			am.title,
-  			am.contents,
-  			ti.file_name
-  		from
-  			now_article_mst am
-  			left outer join now_category_mst category ON(category.id = am.category_id)
-  			left outer join now_title_image ti ON(ti.article_id = am.id)
-  		order_by
-  			am.create_date DESC
-  		limit 0, 10;
-  	</select>  
-  	
-  	<select id = "getNowArticleListWithCategory" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticle">
-  		select 
-  			am.id,
-  			
-  			am.create_date,
-  			am.category_id,
-  			am.title,
-  			am.contents,
-  			ti.file_name
-  		from
-  			now_article_mst am
-  			left outer join now_category_mst category ON(category.id = am.category_id)
-  			left outer join now_title_image ti ON(ti.article_id = am.id)
-  		where
-  			am.category_id = {categoryId}
-  		order_by
-  			am.create_date DESC
-  		limit 0, 10;	
-  	</select>  
-  	
-  	<select id = "getNowArticleDetail" parameterType="Integer" resultType = "com.remember.app.responseDto.NowArticleDetailRespDto">
-		select
-			am.id,
-			am.user_id,
-			am.category_id,
-			
-			am.create_date,
-			am.title,
-			am.contents,
-			ci.file_name
-		from 
-			now_article_mst am
-			left outer join now_contents_image ci ON(ci.article_id = am.id)
-		where
-			am.id= #{articleId}		
-  	</select>
-  	
-  	<select id="getNowArticleTotalCount" parameterType="Integer" resultType="Integer">
-  		select
-  			count(am.id)
-  		from
-  			now_article_mst
-		limit #{page}, 10;
-  	</select>
-  	
-  	<select id="getNowArticleTotalCountWithCategory" parameterType="Integer" resultType="Integer">
-  		select
-  			count(am.id)
-  		from
-  			now_article_mst
-  			left outer join now_category_mst category ON(category.id = am.category_id)
-  		where
-			am.category_id= #{categoryId}	
-		limit #{page}, 10;
-  	</select>
-  	
-  	<select id = "getNowArticleRelated" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticleRelated">
-  		select 
-  			am.id,
-  			am.user_id,
-  			am.title,
-  			am.create_date
-  			ti.file_name
-  		from
-  			now_article_mst
-  			left outer join now_title_image ti ON(ti.article_id = am.id)
-  		where
-  			am.id != {articleId}
-  		order_by
-			
-  	</select> 
-  	 -->
   </mapper>

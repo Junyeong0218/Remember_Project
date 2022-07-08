@@ -66,6 +66,11 @@ submit_button.onclick = () => {
 		alert("제목을 입력해주세요.");
 		return;
 	}
+	const category_id = category_wrapper.options[category_wrapper.selectedIndex].value;
+	if(category_id == "") {
+		alert("카테고리를 선택해주세요.");
+		return;
+	}
 	if(main_image_file == null) {
 		alert("메인 이미지는 필수로 등록해야 합니다.");
 		return;
@@ -75,7 +80,13 @@ submit_button.onclick = () => {
 		alert("내용을 입력해주세요.");
 		return;
 	}
+	const formdata = makeFormData(category_id, contents);
 	
+	if(insertArticle(formdata)) {
+		location.replace("/now");
+	} else {
+		alert("게시글 인서트에 실패했습니다.");
+	}
 }
 
 function changeContentstoTag() {
@@ -88,15 +99,16 @@ function changeContentstoTag() {
 		if(p.innerHTML == "<br>" || p.innerHTML.startsWith("<img")) {
 			blank_end_index = i;
 			if(fr_view.childNodes[i].innerHTML.startsWith("<img")) {
-				tag += `<p>${fr_view.childNodes[i].innerHTML.split(" class")[0].split(" style")[0]}></p>`;
+				tag += `<p><img></p>`;
 			} else {
 				tag += `<p>`;
 				for(let j = blank_start_index; j < blank_end_index + 1; j++) {
 					if(fr_view.childNodes[j].innerHTML == "<br>") continue;
 					if(fr_view.childNodes[j].innerHTML.startsWith("<img")) continue;
 					
-					tag += `${fr_view.childNodes[j].innerHTML}`;
+					tag += `${fr_view.childNodes[j].innerHTML}<br>`;
 				}
+				tag = tag.substring(0, tag.lastIndexOf("<br>"));
 				tag += `</p>`;
 			}
 			blank_start_index = blank_end_index + 1;
@@ -157,15 +169,18 @@ function getCategories() {
 	return categories;
 }
 
-function makeFormData(contents) {
+function makeFormData(category_id, contents) {
 	const formdata = new FormData();
-	formdata.append("title", title_input_tag.value);
-	formdata.append("contents", contents_area_tag.value);
-	formdata.append("summary", summary_input_tag.value);
-	formdata.append("insight_title", insight_title_input_tag.value);
-	formdata.append("insight_contents", insight_contents_input_tag.value);
-	for(let i = 0; i < files.length; i++) {
-		formdata.append("files", files[i]);
+	formdata.append("category_id", category_id);
+	formdata.append("title", article_title.value);
+	let summary = contents.substring(3, contents.indexOf("</p>"));
+	console.log(summary);
+	console.log(summary.length);
+	formdata.append("summary", summary);
+	formdata.append("contents", contents);
+	formdata.append("title_image",main_image_file);
+	for(let i = 0; i < file_list.length; i++) {
+		formdata.append("contents_images", file_list[i].file);
 	}
 	return formdata;
 }

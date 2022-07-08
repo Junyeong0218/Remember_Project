@@ -22,6 +22,7 @@ import lombok.ToString;
 @AllArgsConstructor
 
 public class NowArticleDetailRespDto {
+	
 	private NowArticleDetail nowArticleDetail;
 	private List<String> imageList;
 	

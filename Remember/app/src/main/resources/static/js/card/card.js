@@ -745,7 +745,7 @@ function setCardList() {
                 const down_menu = card_detail_tag.querySelector('.down_menu');
 
                 pass_card_button.onclick = () => {
-                    const send_card_modal = makeSendCardModal(card_detail.name);
+                    const send_card_modal = makeSendCardModal(card_detail.card.name);
                     appendModalToContainer(send_card_modal);
                     setTimeout(() => {
                         send_card_modal.querySelector('.send_card_area').focus();

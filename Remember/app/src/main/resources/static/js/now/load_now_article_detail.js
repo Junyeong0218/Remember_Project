@@ -68,14 +68,12 @@ function makeAnotherArticleTag(article_data){
 function setArticleDetailTag(article_data, article_images) {
 	article_detail_tag.querySelector(".upload_time").innerText = makeArticleUploadTimeString(article_data.create_date);
 	article_detail_tag.querySelector(".title").innerText = article_data.title;
-	article_detail_tag.querySelector(".description").innerText = article_data.contents;
-	article_detail_tag.querySelector(".insight_title").innerText = article_data.insight_title;
-	article_detail_tag.querySelector(".insight_description").innerText = article_data.insight_contents;
+	article_detail_tag.querySelector(".description").innerHTML = article_data.contents;
+	article_detail_tag.querySelector(".main_image > img").src = "/image/now_article_images/" + article_data.title_file_name;
 	
+	const image_tags = document.querySelectorAll(".description img");
 	for(let i = 0; i < article_images.length; i++) {
-	const image_tag = document.createElement("img");
-	image_tag.className = "main_image";
-	image_tag.src = "/image/article_images/" + article_images[i];
+		image_tags[i].src = "/image/now_article_images/" + article_images[i];
 	}
 }
 
