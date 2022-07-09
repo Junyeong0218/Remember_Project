@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.remember.app.entity.card.Card;
-import com.remember.app.entity.card.CardBelongTeamGroup;
 import com.remember.app.entity.card.CardBooksInTeam;
 import com.remember.app.entity.card.CardDetail;
 import com.remember.app.entity.card.CardImage;
@@ -40,14 +39,12 @@ import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardDeleteReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
-import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
 import com.remember.app.requestDto.JoinTeamReqDto;
 import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateTeamCardBelongTeamGroupReqDto;
-import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
 import com.remember.app.responseDto.CardDetailResDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 
@@ -813,58 +810,6 @@ public class CardServiceImpl implements CardService {
 		return cardRepository.deleteTeamCardMemo(cardMemoId) == 1;
 	}
 	
-	@Override
-	public List<CardBelongTeamGroup> getGroupBelongFlags(int cardId) {
-		return cardRepository.getGroupBelongFlags(cardId);
-	}
-	
-	@Override
-	public List<CardBelongTeamGroupsResDto> getGroupBelongFlagsForMultipleId(GetBelongFlagsReqDto getBelongFlagsReqDto) {
-		List<CardBelongTeamGroup> belongList = cardRepository.getGroupBelongFlagsForMultipleId(getBelongFlagsReqDto);
-		List<CardBelongTeamGroupsResDto> dtoList = new ArrayList<CardBelongTeamGroupsResDto>();
-		
-		for(CardBelongTeamGroup belong : belongList) {
-			CardBelongTeamGroupsResDto cardId = CardBelongTeamGroupsResDto.builder().card_id(belong.getCard_id()).build();
-			if(dtoList.contains(cardId)) {
-				dtoList.get(dtoList.indexOf(cardId)).getTeam_group_list().add(belong);
-			} else {
-				dtoList.add(belong.toMultipleDto());
-			}
-		}
-		return dtoList;
-	}
-	
-//	@Override
-//	public boolean updateCardBelongTeamGroup(UpdateCardBelongTeamGroupReqDto updateCardBelongTeamGroupReqDto) {
-//		int result = 0;
-//		if(updateCardBelongTeamGroupReqDto.getRemove_id_list() != null) {
-//			result += cardRepository.deleteCardBelongTeamGroup(updateCardBelongTeamGroupReqDto);
-//		}
-//		if(updateCardBelongTeamGroupReqDto.getAdd_id_list() != null) {
-//			result += cardRepository.insertCardBelongTeamGroup(updateCardBelongTeamGroupReqDto);
-//		}
-//		if(updateCardBelongTeamGroupReqDto.isRemove_all_flag()) {
-//			result += cardRepository.insertCardBelongDefaultTeamGroup(updateCardBelongTeamGroupReqDto.getCard_id(), updateCardBelongTeamGroupReqDto.getDefault_team_group_id());
-//		} else {
-//			result += cardRepository.deleteCardBelongDefaultTeamGroup(updateCardBelongTeamGroupReqDto.getCard_id(), updateCardBelongTeamGroupReqDto.getDefault_team_group_id());
-//		}
-//		System.out.println(result);
-//		return result > 0;
-//	}
-//	
-//	@Override
-//	public boolean updateCardsBelongTeamGroup(UpdateCardsBelongTeamGroupReqDto updateCardsBelongTeamGroupReqDto) {
-//		int result = cardRepository.deleteCardsBelongTeamGroups(updateCardsBelongTeamGroupReqDto);
-//		if(updateCardsBelongTeamGroupReqDto.getAdd_belong_id_list() == null) {
-//			result += cardRepository.insertCardsBelongDefaultTeamGroup(updateCardsBelongTeamGroupReqDto);
-//		} else {
-//			for(int card_id : updateCardsBelongTeamGroupReqDto.getCard_id_list()) {
-//				updateCardsBelongTeamGroupReqDto.setCardId(card_id);
-//				result += cardRepository.insertCardBelongTeamGroups(updateCardsBelongTeamGroupReqDto); 
-//			}
-//		}
-//		return result > 1;
-//	}
 	@Override
 	public boolean updateTeamCardBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto) {
 		int result = cardRepository.deleteTeamCardBelongTeamGroups(updateTeamCardBelongTeamGroupReqDto);

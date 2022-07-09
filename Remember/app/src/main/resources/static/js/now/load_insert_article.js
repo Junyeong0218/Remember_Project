@@ -81,7 +81,7 @@ submit_button.onclick = () => {
 		return;
 	}
 	const formdata = makeFormData(category_id, contents);
-	
+	console.log(contents);
 	if(insertArticle(formdata)) {
 		location.replace("/now");
 	} else {
@@ -94,37 +94,42 @@ function changeContentstoTag() {
 	let tag = "";
 	let blank_start_index = 0;
 	let blank_end_index = -1;
+	console.log(fr_view.childNodes);
 	for(let i = 0; i < fr_view.childNodes.length; i++) {
 		const p = fr_view.childNodes[i];
 		if(p.innerHTML == "<br>" || p.innerHTML.startsWith("<img")) {
 			blank_end_index = i;
-			if(fr_view.childNodes[i].innerHTML.startsWith("<img")) {
-				tag += `<p><img></p>`;
-			} else {
-				tag += `<p>`;
-				for(let j = blank_start_index; j < blank_end_index + 1; j++) {
-					if(fr_view.childNodes[j].innerHTML == "<br>") continue;
-					if(fr_view.childNodes[j].innerHTML.startsWith("<img")) continue;
-					
-					tag += `${fr_view.childNodes[j].innerHTML}<br>`;
+			tag += `<p>`;
+			for(let j = blank_start_index; j < blank_end_index + 1; j++) {
+				if(fr_view.childNodes[j].innerHTML == "<br>") continue;
+				if(fr_view.childNodes[j].innerHTML.includes("<img")) {
+					tag += fr_view.childNodes[j].innerHTML.substring(0, fr_view.childNodes[j].innerHTML.indexOf("<img"));
+					tag += `</p><p><img></p><p>`;
+					tag += fr_view.childNodes[j].innerHTML.substring(fr_view.childNodes[j].innerHTML.indexOf(">") + 1, fr_view.childNodes[j].innerHTML.length);
+				} else {
+					tag += `${fr_view.childNodes[j].innerHTML}\n`;
 				}
-				tag = tag.substring(0, tag.lastIndexOf("<br>"));
-				tag += `</p>`;
 			}
+			tag += `</p>`;
 			blank_start_index = blank_end_index + 1;
 		} else if(i == fr_view.childNodes.length - 1) {
 			blank_end_index = i;
 			tag += `<p>`;
 			for(let j = blank_start_index; j < blank_end_index + 1; j++) {
 				if(fr_view.childNodes[j].innerHTML == "<br>") continue;
-				if(fr_view.childNodes[j].innerHTML.startsWith("<img")) {
-					tag += `${fr_view.childNodes[j].innerHTML}`;
+				if(fr_view.childNodes[j].innerHTML.includes("<img")) {
+					tag += fr_view.childNodes[j].innerHTML.substring(0, fr_view.childNodes[j].innerHTML.indexOf("<img"));
+					tag += `</p><p><img></p><p>`;
+					tag += fr_view.childNodes[j].innerHTML.substring(fr_view.childNodes[j].innerHTML.indexOf(">") + 1, fr_view.childNodes[j].innerHTML.length);
 				} else {
-					tag += `${fr_view.childNodes[j].innerHTML}`;
+					tag += `${fr_view.childNodes[j].innerHTML}\n`;
 				}
 			}
 			tag += `</p>`;
 		}
+	}
+	while(tag.includes("<p></p>")) {
+		tag = tag.replace("<p></p>", "");
 	}
 	return tag;
 }

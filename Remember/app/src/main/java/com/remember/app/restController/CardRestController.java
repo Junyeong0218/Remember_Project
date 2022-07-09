@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.remember.app.entity.card.Card;
-import com.remember.app.entity.card.CardBelongTeamGroup;
 import com.remember.app.entity.card.CardBooksInTeam;
 import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.Group;
@@ -37,14 +36,12 @@ import com.remember.app.requestDto.AddTeamReqDto;
 import com.remember.app.requestDto.CardDeleteReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
-import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
 import com.remember.app.requestDto.JoinTeamReqDto;
 import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateTeamCardBelongTeamGroupReqDto;
-import com.remember.app.responseDto.CardBelongTeamGroupsResDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 import com.remember.app.service.CardService;
 
@@ -462,11 +459,6 @@ public class CardRestController {
 		return cardService.deleteTeamCardMemo(cardMemoId);
 	}
 	
-	@GetMapping("/team/card/{cardId}/belong")
-	public List<CardBelongTeamGroup> getGroupBelongFlags(@PathVariable int cardId) {
-		return cardService.getGroupBelongFlags(cardId);
-	}
-	
 	@PutMapping("/team/card/{cardId}/belong")
 	public boolean updateTeamCardBelongTeamGroups(@PathVariable int cardId,
 																							UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto) {
@@ -474,12 +466,6 @@ public class CardRestController {
 		System.out.println("each");
 		System.out.println(updateTeamCardBelongTeamGroupReqDto);
 		return cardService.updateTeamCardBelongTeamGroups(updateTeamCardBelongTeamGroupReqDto);
-	}
-	
-	@GetMapping("/team/cards/belong")
-	public List<CardBelongTeamGroupsResDto> getGroupBelongFlagsForMultipleId(GetBelongFlagsReqDto getBelongFlagsReqDto) {
-		System.out.println(getBelongFlagsReqDto);
-		return cardService.getGroupBelongFlagsForMultipleId(getBelongFlagsReqDto);
 	}
 	
 	@PutMapping("/team/cards/belong")

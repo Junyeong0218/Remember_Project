@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.remember.app.requestDto.CardDeleteReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
-import com.remember.app.requestDto.GetBelongFlagsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
 import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
@@ -175,10 +174,6 @@ public interface CardRepository {
 	public int updateTeamCardMemo(CardMemo cardMemo);
 	
 	public int deleteTeamCardMemo(int cardMemoId);
-	
-	public List<CardBelongTeamGroup> getGroupBelongFlags(int cardId);
-	
-	public List<CardBelongTeamGroup> getGroupBelongFlagsForMultipleId(GetBelongFlagsReqDto getBelongFlagsReqDto);
 	
 	public int deleteTeamCardBelongTeamGroups(UpdateTeamCardBelongTeamGroupReqDto updateTeamCardBelongTeamGroupReqDto);
 	

@@ -56,7 +56,7 @@ function makeAnotherArticleTag(article_data){
 	const a = document.createElement("a");
 	a.className = "row"; 
 	a.innerHTML = `
-		${article_data.file_name = '<div class="main_image"><img src="/image/article_images/' + article_data.file_name + '"></div>'}
+		${article_data.file_name = '<div class="main_image"><img src="/image/now_article_images/' + article_data.file_name + '"></div>'}
 		<div class="texts">
 		<span class="title">${article_data.title}</span>
 		<span class="upload_time">${makeAnotherArticleUploadTimeString(article_data.create_date)}</span>
@@ -72,7 +72,7 @@ function setArticleDetailTag(article_data, article_images) {
 	article_detail_tag.querySelector(".main_image > img").src = "/image/now_article_images/" + article_data.title_file_name;
 	
 	const image_tags = document.querySelectorAll(".description img");
-	for(let i = 0; i < article_images.length; i++) {
+	for(let i = 0; i < image_tags.length; i++) {
 		image_tags[i].src = "/image/now_article_images/" + article_images[i];
 	}
 }
