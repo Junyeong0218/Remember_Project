@@ -7,6 +7,7 @@ footer {
 }
 
 .footer_wrapper {
+	position: relative;
     padding: 28px 16px 21px;
     display: flex;
     flex-direction: column;
@@ -69,4 +70,40 @@ footer .related_services>.text {
     font-weight: bold;
     line-height: 17px;
     color: black;
+}
+
+footer .related_services * {
+	pointer-events: none;
+}
+
+.footer_wrapper > .modal {
+	position: absolute;
+	bottom: 120px;
+	left: 50%;
+	margin-left: -120px;
+	padding: 10px 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 240px;
+	border: 1px solid black;
+	border-radius: 4px;
+	background-color: white; 
+}
+
+.footer_wrapper > .modal > a {
+	padding: 7px 0;
+	width: 100%;
+	font-size: 15px;
+	color: #1F3A93;
+	line-height: 18px;
+	text-align: center;
+	cursor: pointer;
+	transition: 150px;
+}
+
+.footer_wrapper > .modal > a:hover {
+	font-weight: bold;
+	color: black;
+	text-decoration: underline;
 }

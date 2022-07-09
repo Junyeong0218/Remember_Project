@@ -39,6 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 		http.httpBasic().disable();
 		http.authorizeRequests()
+					.antMatchers("/now/upload", "/api/v1/now/article")
+						.access("hasRole('ROLE_CONNECTORS')")
 			 		.anyRequest()
 			 			.permitAll()
 				 .and()

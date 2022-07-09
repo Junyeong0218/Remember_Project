@@ -8,6 +8,7 @@ header {
 .logo {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     padding: 18px 16px 6px;
     width: 650px;
@@ -15,6 +16,24 @@ header {
 
 .logo>img {
     width: 220px;
+}
+
+.logo > button {
+	padding: 0 10px;
+	height: 20px;
+	border: 1px solid #FAFAFA;
+	border-radius: 10px;
+	background-color: white;
+	font-size: 14px;
+	color: #333;
+	line-height: 20px;
+	cursor: pointer;
+	transition: 300ms;
+}
+
+.logo > button:hover {
+	background-color: rgba(0, 0, 0, 0.65);
+	color: white;
 }
 
 .searcher {
