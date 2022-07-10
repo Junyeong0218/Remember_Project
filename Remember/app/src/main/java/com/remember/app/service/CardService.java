@@ -94,7 +94,7 @@ public interface CardService {
 	
 	public boolean updateTeamName(Team team);
 	
-	public TeamDetail getInvitedTeamInfo(String inviteCode);
+	public TeamDetail getInvitedTeamInfo(TeamDetail teamDetail);
 	
 	public String generateInviteCode(int teamId);
 	

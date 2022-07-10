@@ -322,7 +322,7 @@ function executeMultipleEvents(event) {
                                     delete_confirm_modal.querySelector(".close_modal").onclick = () => removeModal(delete_confirm_modal);
 
                                     delete_confirm_modal.querySelector(".confirm").onclick = () => {
-                                        if (ajax.deleteCard(card_detail.card.id)) {
+                                        if (ajax.deleteCard(new_card_detail.card.id)) {
                                             location.reload();
                                         } else {
                                             alert("명함 삭제에 실패했습니다.");

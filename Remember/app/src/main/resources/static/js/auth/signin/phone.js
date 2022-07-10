@@ -7,10 +7,18 @@ const code_input = document.querySelector(".code");
 
 send_code_button.onclick = () => {
 	console.log(checkInput(phone_input));
-	if(! checkInput(phone_input)) return;
+	const phone_regex = /([^0-9])/g;
+	const has_only_number = ! phone_regex.test(phone_input.value);
+	if(! checkInput(phone_input)) {
+		alert("휴대폰 번호를 입력해주세요.");
+		return;
+	} else if(! has_only_number) {
+		alert("- 를 빼고 숫자만 입력해주세요.");
+		return;
+	}
 	$.ajax({
 		type: "post",
-		url: "/api/v1/auth/signin/phone/certificate",
+		url: "/api/v1/auth/phone/certificate",
 		data:{"phone":phone_input.value},
 		dataType: "json",
 		success: function (data) {
@@ -32,7 +40,7 @@ submit_button.onclick = () => {
 	if(! checkInput(code_input)) return;
 	$.ajax({
 		type: "get",
-		url: "/api/v1/auth/signin/phone/certificate",
+		url: "/api/v1/auth/phone/certificate",
 		data:{"phone":phone_input.value,
 					"code":code_input.value},
 		dataType: "json",
@@ -58,9 +66,6 @@ submit_button.onclick = () => {
 				document.body.appendChild(form);
 				
 				form.submit();
-				/*const user_data = getUserData();
-				console.log(user_data);*/
-				/*if(user_data.user)*/
 			}
 		},
 		error: function (xhr, status) {

@@ -40,6 +40,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 		} else if(provider.equals("google")) {
 			attributes = oAuth2User.getAttributes();
 		}
+		
 		String oauth_username = makeOAuthUsername(provider, attributes);
 		UserDetail userDetail = userRepository.getOAuthUserByOAuthUsername(oauth_username);
 		
@@ -52,29 +53,29 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 				TermsReqDto dto = (TermsReqDto) termsDto;
 				userDetail = userRepository.getOAuthUserByPhone(dto.getPhone());
 				if(userDetail == null) {
-					// insert
+					// 유저 정보 인서트
 					User user = User.builder()
 													.email((String) attributes.get("email"))
 													.phone(dto.getPhone())
 													.role("ROLE_USER")
 													.build();
-					if(userRepository.insertOAuthUserToMst(user) == 1) {
-						UserTerms terms = dto.toEntity();
-						terms.setUser_id(user.getId());
-						int result = userRepository.insertUserTerms(terms);
-						UserOauthDetail oauthDetail = UserOauthDetail.builder()
-																													 .user_id(user.getId())
-																													 .oauth_username(oauth_username)
-																												 	 .provider(provider)
-																													 .build();
-						result += userRepository.insertOAuthUserToOAuthDetail(oauthDetail);
-						if(result == 2) {
-							userDetail = userRepository.getOAuthUserByOAuthUsername(oauth_username);
-							
-							return new PrincipalDetails(userDetail, attributes);
-						} else {
-							throw new OAuth2AuthenticationException(new OAuth2Error("400", provider + " 회원가입 실패", "/auth/signup"));
-						}
+					int result = userRepository.insertOAuthUserToMst(user);
+					
+					// 약관 동의 정보 인서트
+					UserTerms terms = dto.toEntity();
+					terms.setUser_id(user.getId());
+					result += userRepository.insertUserTerms(terms);
+					
+					// oauth data 인서트
+					UserOauthDetail oauthDetail = UserOauthDetail.builder()
+																												 .user_id(user.getId())
+																												 .oauth_username(oauth_username)
+																											 	 .provider(provider)
+																												 .build();
+					result += userRepository.insertOAuthUserToOAuthDetail(oauthDetail);
+					
+					if(result == 3) {
+						userDetail = userRepository.getOAuthUserByOAuthUsername(oauth_username);
 					} else {
 						throw new OAuth2AuthenticationException(new OAuth2Error("400", provider + " 회원가입 실패", "/auth/signup"));
 					}
@@ -87,8 +88,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 																												 .build();
 					if(userRepository.insertOAuthUserToOAuthDetail(oauthDetail) == 1) {
 						userDetail = userRepository.getOAuthUserByOAuthUsername(oauth_username);
-						
-						return new PrincipalDetails(userDetail, attributes);
 					} else {
 						throw new OAuth2AuthenticationException(new OAuth2Error("400", provider + " 회원가입 실패", "/auth/signup"));
 					}
@@ -98,9 +97,9 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 			}
 		} else if(userDetail == null) {
 			throw new OAuth2AuthenticationException(new OAuth2Error("400", "간편 로그인 실패", "/auth/signup"));
-		} else {
-			return new PrincipalDetails(userDetail, attributes);
 		}
+		
+		return new PrincipalDetails(userDetail, attributes);
 	}
 	
 	private String makeOAuthUsername(String provider, Map<String, Object> attributes) {
@@ -112,13 +111,5 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 			return null;
 		}
 	}
+	
 }
-
-
-
-
-
-
-
-
-

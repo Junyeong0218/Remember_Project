@@ -1,3 +1,4 @@
+const backwards = document.querySelector("#backwards");
 const article_title = document.querySelector(".article_title");
 const category_wrapper = document.querySelector(".category");
 const main_image_wrapper = document.querySelector(".main_image");
@@ -42,6 +43,13 @@ for(let i = 0; i < category_list.length; i++) {
 	option.innerText = category_list[i].name;
 	
 	category_wrapper.appendChild(option);
+}
+
+backwards.onclick = () => {
+	const is_okay_to_lose = confirm("작성중인 데이터가 소실됩니다.\n그래도 나가시겠습니까?");
+	if(is_okay_to_lose) {
+		location.replace("/now");
+	}
 }
 
 main_image_button.onclick = () => main_image_input.click();

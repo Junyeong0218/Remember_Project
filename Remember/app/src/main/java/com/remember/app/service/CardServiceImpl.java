@@ -481,10 +481,8 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	@Override
-	public TeamDetail getInvitedTeamInfo(String inviteCode) {
-		TeamDetail teamDetail = cardRepository.getInvitedTeam(inviteCode);
-		System.out.println(teamDetail);
-		return teamDetail;
+	public TeamDetail getInvitedTeamInfo(TeamDetail teamDetail) {
+		return cardRepository.getInvitedTeam(teamDetail);
 	}
 	
 	@Override

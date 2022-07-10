@@ -28,7 +28,11 @@ public class TeamDetail {
 	
 	private String title;
 	private LocalDateTime create_date;
+	private String invite_code;
 	
 	private int total_join_user_count;
 	private int total_card_count;
+	
+	private int invited_user_id;
+	private boolean join_flag;
 }

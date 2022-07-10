@@ -16,6 +16,7 @@ footer {
 }
 
 .links {
+	position: relative;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -43,8 +44,38 @@ footer {
     font-weight: 700;
 }
 
+.links > .footer_modal_wrapper {
+	position: absolute;
+	left: 350px;
+	bottom: 32px;
+	padding-bottom: 15px;
+	width: 242px;
+}
+
+.links > .footer_modal_wrapper > .footer_modal {
+	padding: 10px 20px;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border: 1px solid black;
+	border-radius: 4px;
+	background-color: white;
+}
+
+.links > .footer_modal_wrapper > .footer_modal > a {
+	width: 100%;
+	height: 32px;
+	font-size: 15px;
+	color: black;
+	line-height: 32px;
+}
+
+.links > .footer_modal_wrapper > .footer_modal > a:hover {
+	font-weight: 700;
+	text-decoration: underline;
+}
+
 .relate_service_modal {
-    position: relative;
     margin-left: 20px;
     padding: 7px 10px;
     display: flex;

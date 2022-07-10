@@ -282,8 +282,15 @@ public class CardRestController {
 	}
 	
 	@GetMapping("/team/invite-code/{inviteCode}")
-	public TeamDetail getInvitedTeamInfo(@PathVariable String inviteCode) {
-		return cardService.getInvitedTeamInfo(inviteCode);
+	public TeamDetail getInvitedTeamInfo(@PathVariable String inviteCode,
+																			   @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		TeamDetail teamDetail = TeamDetail.builder()
+																			 .invite_code(inviteCode)
+																			 .invited_user_id(principalDetails.getId())
+																			 .build();
+		TeamDetail a = cardService.getInvitedTeamInfo(teamDetail);
+		System.out.println(a);
+		return a;
 	}
 	
 	@PostMapping("/team/user")

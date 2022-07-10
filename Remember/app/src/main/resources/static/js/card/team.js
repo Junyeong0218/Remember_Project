@@ -60,6 +60,7 @@ function main() {
 }
 
 whole_card_button.onclick = () => {
+	service_object.selected_group = null;
 	service_object.card_list = ajax.loadTeamCardsInCardBook(service_object.selected_card_book.id, page, card_order_flag);
 	console.log(service_object.card_list);
 	setCardList();
@@ -983,7 +984,9 @@ function setCardList() {
 		
 		each_card_checkboxes.forEach(e => {
 			// 각 명함 체크
-			e.onclick = () => {
+			e.onclick = (event) => {
+				event.stopPropagation();
+				
 				let checked_count = 0;
 				each_card_checkboxes.forEach(e1 => {
 					if(e1.checked) checked_count++;

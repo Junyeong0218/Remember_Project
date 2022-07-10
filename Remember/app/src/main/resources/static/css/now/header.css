@@ -20,13 +20,13 @@ header {
 
 .logo > button {
 	padding: 0 10px;
-	height: 20px;
-	border: 1px solid #FAFAFA;
-	border-radius: 10px;
+	height: 100%;
+	border: 1px solid #333;
+	border-radius: 4px;
 	background-color: white;
 	font-size: 14px;
 	color: #333;
-	line-height: 20px;
+	line-height: 29px;
 	cursor: pointer;
 	transition: 300ms;
 }

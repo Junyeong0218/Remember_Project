@@ -8,6 +8,7 @@
     <title>리멤버 - 직장인 필수 앱</title>
     <link rel="stylesheet" href="/static/css/container.css">
     <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
@@ -55,7 +56,7 @@
                     <h2 class="go_title under">스카웃 제안이 찾아와요!</h2>
                     <h3 class="go_msg">재직중인회사에서는</h3>
                     <h3 class="go_msg">내 프로필을볼수없으니안심하세요.</h3>
-                    <button class="go_btn">지금 프로필 등록하기 <img class="arrow" src="/static/images/main_content_arrow.svg" alt="버튼"></button>
+                    <button id="to_profile_registration" class="go_btn">지금 프로필 등록하기 <img class="arrow" src="/static/images/main_content_arrow.svg" alt="버튼"></button>
                 </div>
             </div>
             <div class="main_con">
@@ -65,7 +66,7 @@
                         <h2 class="go_title under">깊이 있게 소통해요!</h2>
                         <h3 class="go_msg">커리어고민과</h3>
                         <h3 class="go_msg">직장 생활의 노하우를 공유해요.</h3>
-                        <button class="go_btn">커뮤니티 바로가기 <img class="arrow" src="/static/images/main_content_arrow.svg" alt="버튼"></button>
+                        <button id="to_community" class="go_btn">커뮤니티 바로가기 <img class="arrow" src="/static/images/main_content_arrow.svg" alt="버튼"></button>
                     </div>
                     <div>
                         <span><img src="/static/images/main_content_community.PNG" alt="커뮤니티이미지"></span>
@@ -77,9 +78,9 @@
                     <div class="go_briefing">
                         <h2 class="go_title">전문가 브리핑으로</h2>
                         <h2 class="go_title under">인사이트 충전해요!</h2>
-                        <h3 class="go_msg">매일아침,국내최고전문가들의<h3>
+                        <h3 class="go_msg">매일아침,국내최고전문가들의</h3>
                             <h3 class="go_msg">경제브리핑을받으세요.</h3>
-                        <button class="go_btn">바로 읽어보기<img class="arrow" src="/static/images/main_content_arrow.svg" alt="버튼"></button>
+                        <button id="to_now" class="go_btn">바로 읽어보기<img class="arrow" src="/static/images/main_content_arrow.svg" alt="버튼"></button>
                     </div>
                     <div style="margin-top:68px;">
                         <span><img src="/static/images/main_content_briefing.PNG" alt="뉴스브리핑"></span>
@@ -96,7 +97,7 @@
                         <h2 class="go_title under">명함관리 쉽게 해요!</h2>
                         <h3 class="go_msg">내 인맥의 이직, 승진 소식도</h3>
                         <h3 class="go_msg">받아보세요</h3>
-                        <button class="go_btn">명함 관리 시작하기<img class="arrow" src="/static/images/main_content_arrow.svg" alt="버튼"></button>
+                        <button id="to_card" class="go_btn">명함 관리 시작하기<img class="arrow" src="/static/images/main_content_arrow.svg" alt="버튼"></button>
                     </div>
                 </div>
             </div>
@@ -181,6 +182,8 @@
             </div>
         </footer>
     </div>
+    
+    <script src="/static/js/main_links.js"></script>
 </body>
 
 </html>

@@ -82,45 +82,51 @@ async function main() {
         // 이후에 팀 프로필 있는지
         const invited_team = await ajax.loadInvitedTeamInfo(invite_code);
         console.log(invited_team);
-
-        const invite_team_modal = makeInviteTeamModal(invited_team);
-        appendModalToContainer(invite_team_modal);
-
-        const flow_columns = invite_team_modal.querySelectorAll(".column");
-        const step_descriptions = invite_team_modal.querySelectorAll(".step_description");
-        const nickname_input = step_descriptions[1].querySelector("input");
-        const next_button = invite_team_modal.querySelector(".next");
-        const submit_button = invite_team_modal.querySelector(".submit_button");
-
-        invite_team_modal.querySelector(".close_modal").onclick = () => removeModal(invite_team_modal);
-
-        next_button.onclick = () => {
-            next_button.classList.add("hidden");
-            submit_button.classList.remove("hidden");
-
-            flow_columns[0].className = "column checked";
-            flow_columns[0].querySelector(".circle").innerText = "";
-            flow_columns[1].className = "column selected";
-
-            step_descriptions[0].classList.add("hidden");
-            step_descriptions[1].classList.remove("hidden");
-        }
-
-        nickname_input.oninput = () => {
-            if (nickname_input.value == "") {
-                submit_button.disabled = true;
-            } else {
-                submit_button.disabled = false;
-            }
-        }
-
-        submit_button.onclick = () => {
-            if (ajax.joinInvitedTeam(invited_team.id, nickname_input.value)) {
-                document.querySelector("#team_tab_button").click();
-            } else {
-                alert("팀 참가에 실패했습니다.");
-            }
-        }
+		
+		if(invited_team == null) {
+			alert("유효하지 않은 팀 초대 코드입니다.\n팀 관리자에게 다시 문의해주세요.");
+		} else if(invited_team.join_flag) {
+			alert("이미 가입된 팀입니다.");
+		} else {
+	        const invite_team_modal = makeInviteTeamModal(invited_team);
+	        appendModalToContainer(invite_team_modal);
+	
+	        const flow_columns = invite_team_modal.querySelectorAll(".column");
+	        const step_descriptions = invite_team_modal.querySelectorAll(".step_description");
+	        const nickname_input = step_descriptions[1].querySelector("input");
+	        const next_button = invite_team_modal.querySelector(".next");
+	        const submit_button = invite_team_modal.querySelector(".submit_button");
+	
+	        invite_team_modal.querySelector(".close_modal").onclick = () => removeModal(invite_team_modal);
+	
+	        next_button.onclick = () => {
+	            next_button.classList.add("hidden");
+	            submit_button.classList.remove("hidden");
+	
+	            flow_columns[0].className = "column checked";
+	            flow_columns[0].querySelector(".circle").innerText = "";
+	            flow_columns[1].className = "column selected";
+	
+	            step_descriptions[0].classList.add("hidden");
+	            step_descriptions[1].classList.remove("hidden");
+	        }
+	
+	        nickname_input.oninput = () => {
+	            if (nickname_input.value == "") {
+	                submit_button.disabled = true;
+	            } else {
+	                submit_button.disabled = false;
+	            }
+	        }
+	
+	        submit_button.onclick = () => {
+	            if (ajax.joinInvitedTeam(invited_team.id, nickname_input.value)) {
+	                document.querySelector("#team_tab_button").click();
+	            } else {
+	                alert("팀 참가에 실패했습니다.");
+	            }
+	        }
+		}
     }
 }
 
@@ -1183,7 +1189,9 @@ function setCardList() {
 
         checkboxes.forEach((e, index) => {
             // 각 명함 체크
-            e.onclick = () => {
+            e.onclick = (event) => {
+				event.stopPropagation();
+				
                 let checked_count = 0;
                 checkboxes.forEach(e1 => {
                     if (e1.checked) checked_count++;

@@ -65,6 +65,15 @@ signup_email_button.onclick = () => {
 }
 
 function checkAvailableLogins() {
+	const phone_regex = /([^0-9])/g;
+	const has_only_number = ! phone_regex.test(phone_number_input.value);
+	if(phone_number_input == "") {
+		alert("휴대폰 번호를 입력해주세요.");
+		return;
+	} else if(! has_only_number) {
+		alert("- 를 빼고 숫자만 입력해주세요.");
+		return;
+	}
 	$.ajax({
 		type: "get",
 		url: "/api/v1/auth/signup/account/list",
@@ -122,12 +131,11 @@ function showAlreadyHaveAccountModal(phone_number) {
 function showPhoneCertificateModal(phone_number) {
 	$.ajax({
 		type: "post",
-		url: "/api/v1/auth/signup/phone/certificate",
+		url: "/api/v1/auth/phone/certificate",
 		data: {"phone":phone_number},
 		dataType: "json",
 		success: function (data) {
-			console.log(data);
-			if(data != null) {
+			if(data == true) {
 				const div = makePhoneCertificateModal();
 				document.querySelector(".container").appendChild(div);
 				const left_time_tag = div.querySelector(".left_time");
@@ -156,14 +164,8 @@ function showPhoneCertificateModal(phone_number) {
 				div.querySelector(".close_button").onclick = () => div.remove();
 				div.querySelector(".cancel").onclick = () => div.remove();
 				div.querySelector(".resend_button").onclick = () => {
-					if(resendPhoneCertificationCode(phone_number)) {
-						time = Date.now();
-						timer = setInterval(() => {
-							left_time = new Date(Math.abs(time - Date.now()));
-							left_time_tag.innerText = `${String(left_time.getMinutes()).padStart(2, "0")}:${String(left_time.getSeconds()).padStart(2, "0")}`;
-							if(left_time > 1000 * 60 * 3) timer = null;
-						}, 1000);
-					}
+					div.remove();
+					showPhoneCertificateModal(phone_number);
 				}
 				div.querySelector(".apply").onclick = () => {
 					const result = sendAuthenticateCode(div.querySelector("input").value, phone_number);
@@ -188,7 +190,7 @@ function sendAuthenticateCode(code, phone_number) {
 	let flag;
 	$.ajax({
 		type: "get",
-		url: "/api/v1/auth/signup/phone/certificate",
+		url: "/api/v1/auth/phone/certificate",
 		data: {"code":code,
 					 "phone":phone_number},
 		async: false,
@@ -203,7 +205,6 @@ function sendAuthenticateCode(code, phone_number) {
 		}
 	});
 	return flag;
-	/*return true;*/
 }
 
 function resendPhoneCertificationCode(phone_number) {

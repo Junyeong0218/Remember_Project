@@ -373,7 +373,7 @@
 		  		card.position_name,
 		  		card.create_date,
 		  		
-		  		count(distinct card2.id) as total_count
+		  		count(distinct card.id) as total_count
 		  	from
 		  		card_group_mst `group`
 		  		left outer join card_belong_group belong on(belong.group_id = `group`.id)
@@ -398,7 +398,7 @@
 		  		card.position_name,
 		  		card.create_date,
 		  		
-		  		count(distinct card2.id) as total_count
+		  		count(distinct card.id) as total_count
 		  	from
 		  		card_group_mst `group`
 		  		left outer join card_belong_group belong on(belong.group_id = `group`.id)
@@ -655,15 +655,18 @@
 				id = #{id};
 		</update>
 		
-		<select id="getInvitedTeam" parameterType="String" resultType="com.remember.app.entity.card.TeamDetail">
+		<select id="getInvitedTeam" parameterType="com.remember.app.entity.card.TeamDetail" resultType="com.remember.app.entity.card.TeamDetail">
 			select
 				team.*,
-				profile.nickname as owner_nickname
+				profile.nickname as owner_nickname,
+				
+				count(distinct `join`.joined_user_id) as join_flag
 			from
 				team_mst team
 				left outer join team_user_profile profile on(profile.team_id = team.id and profile.user_id = team.made_user_id)
+				left outer join team_join_user `join` on(`join`.team_id = team.id and `join`.joined_user_id = #{invited_user_id})
 			where
-				team.invite_code = #{inviteCode};
+				team.invite_code = #{invite_code};
 		</select>
 		
 		<select id="checkDuplicateInviteCode" parameterType="String" resultType="Integer">

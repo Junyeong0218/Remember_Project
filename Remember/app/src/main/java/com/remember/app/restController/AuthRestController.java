@@ -50,27 +50,17 @@ public class AuthRestController {
 		}
 	}
 	
-	@PostMapping("/signup/phone/certificate")
-	public String sendPhoneMessage(String phone) {
-		return phoneCertificateService.getRandomNumber(phone);
-//		return phoneCertificateService.sendMessage(phone);
+	@PostMapping("/phone/certificate")
+	public boolean sendPhoneMessage(String phone) {
+//		return phoneCertificateService.getRandomNumber(phone);
+		return phoneCertificateService.sendMessage(phone);
 	}
 	
-	@GetMapping("/signup/phone/certificate")
+	@GetMapping("/phone/certificate")
 	public boolean isEqual(String code, String phone) {
 		return phoneCertificateService.isEqual(code, phone);
 	}
-	
-	@PostMapping("/signin/phone/certificate")
-	public String sendPhoneMessageTest(String phone) {
-		return phoneCertificateService.getRandomNumber(phone);
-	}
-	
-	@GetMapping("/signin/phone/certificate")
-	public boolean isEqualSignin(String code, String phone) {
-		return phoneCertificateService.isEqual(code, phone);
-	}
-	
+
 	@PostMapping("/signup/email")
 	public boolean signupWithEmail(HttpServletRequest request, EmailSignupReqDto emailSignupReqDto) {
 		TermsReqDto termsDto = (TermsReqDto) request.getSession().getAttribute("dto");
