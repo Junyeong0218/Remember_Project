@@ -2,8 +2,6 @@
 
 import java.util.List;
 
-
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,11 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.remember.app.entity.now.NowAnotherArticles;
-import com.remember.app.entity.now.NowArticle;
 import com.remember.app.entity.now.NowArticleSummary;
 import com.remember.app.entity.now.NowCategory;
-import com.remember.app.principal.PrincipalDetails;
-import com.remember.app.requestDto.AddArticleReqDto;
 import com.remember.app.requestDto.AddNowArticleReqDto;
 import com.remember.app.responseDto.NowArticleDetailRespDto;
 import com.remember.app.service.NowService;

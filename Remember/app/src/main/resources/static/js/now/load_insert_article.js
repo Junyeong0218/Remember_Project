@@ -68,7 +68,6 @@ function loadUploadFiles(event, image_wrapper) {
 			
 		fileReader.readAsDataURL(event.target.files[i]);
 		}
-		
 	}
 
 function makeImageTag(img_src) {
