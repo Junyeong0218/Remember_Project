@@ -64,7 +64,7 @@ coolsms:
   fromnumber: 01035947111
   
 file:
-  path: C:/Remember_workspace/Remember_Project/file_upload/
+  path: /file_upload/
 
 module:
-   path: C:/Remember_workspace/Remember_Project/node_modules/
+   path: /node_modules/

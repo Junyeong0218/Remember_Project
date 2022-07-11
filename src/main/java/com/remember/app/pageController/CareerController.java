@@ -10,17 +10,17 @@ public class CareerController {
 	
 	@GetMapping("")
 	public String home() {
-		return "/career/main_career";
+		return "career/main_career";
 	}
 
 	@GetMapping("/business")
 	public String business() {
-		return "/career/business";
+		return "career/business";
 	}
 
 	@GetMapping("/profile/registration")
 	public String registration() {
-		return "/career/profile_registration";
+		return "career/profile_registration";
 	}
 	
 }

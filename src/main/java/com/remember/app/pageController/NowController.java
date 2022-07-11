@@ -11,17 +11,17 @@ public class NowController {
 	
 	@GetMapping(value = {"", "/category/{categoryId}"})
 	public String home() {
-		return "/now/home";
+		return "now/home";
 	}	
 	
 	@GetMapping("/detail/{articleId}")
 	public String nowDetail(@PathVariable(required = false) Integer categoryId,@PathVariable(required = false) Integer articleId) {
-		return "/now/article_detail";
+		return "now/article_detail";
 	}
 	
 	@GetMapping("/upload")
 	public String uploadArticle() {
-		return "/now/article_input";
+		return "now/article_input";
 	}
 	
 

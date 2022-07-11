@@ -12,16 +12,16 @@ public class CardController {
 	@GetMapping(value = {"", "/{inviteCode}"})
 	public String main(@PathVariable(required = false) String inviteCode) {
 		System.out.println(inviteCode);
-		return "/card/home";
+		return "card/home";
 	}
 	
 	@GetMapping("/team-empty")
 	public String teamEmpty() {
-		return "/card/team_empty";
+		return "card/team_empty";
 	}
 	
 	@GetMapping("/team")
 	public String team() {
-		return "/card/team";
+		return "card/team";
 	}
 }
