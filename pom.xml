@@ -10,9 +10,10 @@
 	</parent>
 	<groupId>com.remember</groupId>
 	<artifactId>app</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>app</name>
+	<version>1.0</version>
+	<name>remember</name>
 	<description>Remember Web App</description>
+	<packaging>jar</packaging>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
