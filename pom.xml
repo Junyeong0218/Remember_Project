@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.remember</groupId>
-	<artifactId>app</artifactId>
+	<artifactId>remember</artifactId>
 	<version>1.0</version>
 	<name>remember</name>
 	<description>Remember Web App</description>
