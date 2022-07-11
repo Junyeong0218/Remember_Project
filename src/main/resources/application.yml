@@ -40,13 +40,13 @@ spring:
             scope:
             - email
           naver:
-            client-id: 9_dnPO2aAshpkXkjaOfQ
-            client-secret: aJgh1KmYnq
+            client-id: 4Ze3gMbEnzn_SjgyX1Nw
+            client-secret: EM4YwjZJ7x
             scope:
             - email
             client-name: Naver
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/naver
+            redirect-uri: https://remember-test.herokuapp.com//login/oauth2/code/naver
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize
