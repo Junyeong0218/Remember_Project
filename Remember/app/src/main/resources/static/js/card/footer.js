@@ -4,7 +4,7 @@ const relate_service_modal = document.querySelector(".relate_service_modal");
 let service_list_modal;
 
 relate_service_modal.onmouseenter = () => {
-	service_list_modal = location.pathname == "/card" ? makeShowRelateServiceListModalForCard() : 
+	service_list_modal = location.pathname.includes("/card") ? makeShowRelateServiceListModalForCard() : 
 																										makeShowRelateServiceListModalForCommunity();
 	links.appendChild(service_list_modal);
 	

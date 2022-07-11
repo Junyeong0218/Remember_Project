@@ -54,7 +54,10 @@ function executeMultipleEvents(event) {
             const add_card_form_tag = makeAddCardFormTag();
             replaceTagInMainContents(add_card_form_tag);
 
-            document.querySelector('.my_business_card').classList.add("hidden");
+            const my_business_card = document.querySelector('.my_business_card');
+            if(my_business_card != null) {
+				my_business_card.classList.add("hidden");
+			}
             removeModal(add_menu_modal);
 
             const add_profile_image_button = add_card_form_tag.querySelector('.profile_image > button');
