@@ -64,7 +64,7 @@ coolsms:
   fromnumber: 01035947111
   
 file:
-  path: /file_upload/
+  path: classpath:/file_upload/
 
 module:
-   path: /node_modules/
+   path: classpath:/node_modules/
