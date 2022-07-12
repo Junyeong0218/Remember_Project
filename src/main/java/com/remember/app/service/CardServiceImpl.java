@@ -183,6 +183,7 @@ public class CardServiceImpl implements CardService {
 				
 			return fileName;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
