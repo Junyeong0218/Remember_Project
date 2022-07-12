@@ -18,21 +18,21 @@ public class BeanConfig {
 		return new HashMap<String, String>();
 	}
 	
-	@Value("${file.path}")
-	private String filePath;
-	
-	@Value("${module.path}")
-	private String modulePath;
-	
-	@Bean
-	public String filePath() {
-		return filePath;
-	}
-	
-	@Bean
-	public String modulePath() {
-		return modulePath;
-	}
+//	@Value("${file.path}")
+//	private String filePath;
+//	
+//	@Value("${module.path}")
+//	private String modulePath;
+//	
+//	@Bean
+//	public String filePath() {
+//		return filePath;
+//	}
+//	
+//	@Bean
+//	public String modulePath() {
+//		return modulePath;
+//	}
 	
 	@Bean
 	public FilterRegistrationBean<?> filter() {
