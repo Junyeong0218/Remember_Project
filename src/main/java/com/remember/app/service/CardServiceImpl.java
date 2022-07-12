@@ -168,6 +168,7 @@ public class CardServiceImpl implements CardService {
 	
 	private String downloadProfileImageFile(MultipartFile file) {
 		try {
+			System.out.println(filePath);
 			Path path = Paths.get(filePath, "profile_images");
 			File fileForPathMake = new File(path.toString());
 			
