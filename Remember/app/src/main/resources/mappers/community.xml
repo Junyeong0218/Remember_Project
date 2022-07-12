@@ -709,7 +709,9 @@
 			#{use_nickname},
 			#{related_comment_id},
 			now(),
-			now()
+			now(),
+			false,
+			null
 		);
 	</insert>
 	

@@ -1905,6 +1905,59 @@ function makeMenuBoxTag() {
 	return div;
 }
 
+function makeProductDescriptionTtag() {
+	const div = document.createElement("div");
+	div.className = "product_wrapper";
+	div.innerHTML = `
+		<div class="product_description">
+			
+		</div>
+		<div class="foot_notes">
+			<span class="note">1) 상기 안내된 이용 가격은 부가가치세(VAT)가 포함되지 않은 가격입니다.</span>
+			<span class="note">2) 팀 명함첩 구성원들의 비용이 합산되어 팀 명함첩 운영자가 등록한 신용/체크카드로 매월 자동결제 됩니다.</span>
+			<span class="note">3) 엔터프라이즈는 팀 명함첩 구성원 수가 많을수록 단가가 낮아지는 구조입니다. 문의를 남겨주시면 사용 인원에 맞추어 제안드리겠습니다.</span>
+		</div>
+		<div class="questions">
+			<div class="title">자주 묻는 질문</div>
+			<div class="question_wrapper">
+				<div class="column">
+					<div class="question">
+						<span class="title">무료체험이 끝나면 어떻게 되나요?</span>
+						<span class="description">무료체험 기간이 끝나면 자동으로 유료 사용이 시작됩니다. 무료 기간 중 언제든지 팀 명함첩 사용을 중단할 수 있습니다.</span>
+					</div>
+					<div class="question">
+						<span class="title">프리미엄을 사용하다가 다시 베이직으로 변경할 수 있나요?</span>
+						<span class="description">베이직 이용 조건 (명함첩 1개, 명함 100장 이하)에 맞는 경우, 프리미엄에서 베이직으로 언제든지 변경할 수 있습니다.</span>
+					</div>
+					<div class="question">
+						<span class="title">환불 정책은 어떻게 되나요?</span>
+						<span class="description">팀 명함첩은 무료 체험 기간을 이용하신 후, 유료 사용 기간 중의 사용한 기간과 인원만큼 정산되어 ‘후불’로 청구되므로 별도의 환불은 없습니다.</span>
+					</div>
+					<div class="question">
+						<span class="title">팀 명함첩에 대해 추가로 궁금한 내용이 있으신가요?</span>
+						<span class="description">help@rememberapp.co.kr로 이메일을 보내주시거나 02-556-4202로 전화주시면, 친절하게 안내해드리겠습니다. (전화가능시간: 평일 오전 9시~오후 6시, 점심시간 오후 1시~2시)</span>
+					</div>
+				</div>
+				<div class="column">
+					<div class="question">
+						<span class="title">무료 체험 기간 중에는 참여 인원에 제한이 있나요?</span>
+						<span class="description">팀 명함첩은 기본적으로 사용 인원에 제한이 없습니다. 무료 사용 기간에는 사용 인원에 관계없이 무료로 사용 가능하며, 유료 사용 기간에는 참여한 인원 수를 기준으로 비용이 청구됩니다.</span>
+					</div>
+					<div class="question">
+						<span class="title">조직 구성원이 중간에 나가거나 추가되면 비용은 어떻게 청구되나요?</span>
+						<span class="description">팀 명함첩은 각 구성원들의 참여 일수에 따른 사용 금액을 계산하여 합산 청구됩니다. 중간에 참여하거나, 나간 구성원이 있을 경우 해당 구성원의 참여 일수를 기준으로 일할 계산됩니다.</span>
+					</div>
+					<div class="question">
+						<span class="title">유료 서비스를 이용하면 명함이 더 빠르고 더 정확하게 입력되나요?</span>
+						<span class="description">리멤버는 항상 더욱 빠르고 정확한 명함 정보 입력을 위해 노력하고 있습니다. 하지만 팀 명함첩 유료서비스는 명함 정보 입력이 아닌 동료들과 함께 명함을 관리할 수 있는 공간 및 관련 기능에 비용을 과금하는 상품이기 때문에 무료서비스 대비 더 신속하거나 높은 정확도의 입력을 보장드리지 않습니다.</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
 function makeChangeTeamNameModal() {
 	const div = document.createElement("div");
 	div.className = "modal";
