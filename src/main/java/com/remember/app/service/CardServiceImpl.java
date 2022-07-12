@@ -171,6 +171,7 @@ public class CardServiceImpl implements CardService {
 			Path path = Paths.get(filePath, "profile_images");
 			File fileForPathMake = new File(path.toString());
 			
+			System.out.println(path.toString());
 			if(! fileForPathMake.exists()) {
 				fileForPathMake.mkdirs();
 			}
