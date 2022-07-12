@@ -40,7 +40,7 @@ public class CommunityServiceImpl implements CommunityService {
 
 	private final CommunityRepository communityRepository;
 	
-	private final String filePath;
+	private String filePath = "";
 	
 	@Override
 	public List<SubCategoryDetail> getCategoriesWithJoinCount(int userId) {
