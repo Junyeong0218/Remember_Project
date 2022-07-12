@@ -63,8 +63,8 @@ coolsms:
   apisecret: R2QNFN1TTTODSVKB5GBCMTDRQ9BQLWOK
   fromnumber: 01035947111
   
-#file:
-#  path: classpath:/file_upload/
-#
-#module:
-#   path: classpath:/node_modules/
+file:
+  path: classpath:/file_upload/
+
+module:
+   path: classpath:/node_modules/
