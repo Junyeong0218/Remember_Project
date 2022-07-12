@@ -31,6 +31,8 @@ public class NowServiceImpl implements NowService{
 	private final NowArticleRepository nowArticleRepository;
 //	private final String filePath;
 	
+	private String filePath = "";
+	
 	@Override
 	public List<NowCategory> getNowCategories() {
 		return nowArticleRepository.getNowCategories();

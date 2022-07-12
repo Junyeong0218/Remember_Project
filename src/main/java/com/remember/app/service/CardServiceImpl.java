@@ -56,6 +56,7 @@ public class CardServiceImpl implements CardService {
 	
 //	@Value("${file.path}")
 //	private String filePath;
+	private String filePath = "";
 	
 	private final CardRepository cardRepository;
 	
