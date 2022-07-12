@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class NowServiceImpl implements NowService{
 	
 	private final NowArticleRepository nowArticleRepository;
-	private final String filePath;
+//	private final String filePath;
 	
 	@Override
 	public List<NowCategory> getNowCategories() {

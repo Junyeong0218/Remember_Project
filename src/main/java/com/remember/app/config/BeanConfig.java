@@ -37,7 +37,7 @@ public class BeanConfig {
 	@Bean
 	public FilterRegistrationBean<?> filter() {
 		FilterRegistrationBean<FilePathFilter> bean = new FilterRegistrationBean<FilePathFilter>(new FilePathFilter());
-		bean.addUrlPatterns("/**");
+		bean.addUrlPatterns("/*");
 		bean.setOrder(1);
 		return bean;
 	}

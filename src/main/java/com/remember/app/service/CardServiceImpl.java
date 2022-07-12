@@ -54,8 +54,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
 	
-	@Value("${file.path}")
-	private String filePath;
+//	@Value("${file.path}")
+//	private String filePath;
 	
 	private final CardRepository cardRepository;
 	
