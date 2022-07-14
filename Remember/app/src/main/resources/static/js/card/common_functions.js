@@ -594,12 +594,14 @@ function makeTabMenuTag() {
 			<li><a href="">공지사항</a></li>
 			<li><a href="">도움말</a></li>
 			<li><a href="">1:1 문의</a></li>
-			<li><a href="">설정</a></li>
+			<li><a class="user_set" href="/user/setting">설정</a></li>
 			<li><a href="/logout">로그아웃</a></li>
 		</ul>
 	`;
 	return div;
 }
+
+
 
 // ============================================================================================================================
 // 																											make modal functions

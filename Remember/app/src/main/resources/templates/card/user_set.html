@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+ <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>리멤버 - 직장인 필수 앱</title>
+    <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
+       <link rel="stylesheet" href="/static/css/container.css">
+    <link rel="stylesheet" href="/static/css/card/header.css">
+    <link rel="stylesheet" href="/static/css/card/user_set.css">
+    <link rel="stylesheet" href="/static/css/card/modal.css">
+    <script src="https://kit.fontawesome.com/a29a2deeae.js" crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="/static/js/card/ajax_functions.js"></script>
+    <script type="text/javascript" src="/static/js/card/common_functions.js"></script>
+    <script type="text/javascript" src="/static/js/get_principal.js"></script>
+</head>
+<body>
+	<div class="container">
+	    <header th:replace="fragment/header/card_header :: card_header"></header>
+		<main>
+			<div class="main_wrapper">
+                <aside class="setting_bar_menu">
+                	<div>
+						<div class="setting_list">공지사항</div>               	
+						<div class="setting_list">도움말</div>               	
+						<div class="setting_list">문의하기</div>               	
+						<div class="setting_list set">설정</div>               	
+                	</div>
+                </aside>
+                <div class="main_contents">
+                	<div class="setting_menu_wrapper">
+                		<div class="setting_title">설정</div>
+                		<div class="setting_contents">
+               				<div class="title">계정 관리</div>
+               				<div class="contents">
+               					<div class="item_title">계정 변경</div>
+               					<div class="item_description mail"></div>
+               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               				</div>
+               				<div class="contents">
+               					<div class="item_title">간편 로그인 설정</div>
+               					<div class="item_description">
+               						<div class="item_oauth">
+		               					<img src="/static/images/user_set_oauth_naver.png"></div>
+               						</div>
+               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               				</div>
+               				<div class="contents">
+               					<div class="item_title">휴대폰 번호 변경</div>
+               					<div class="item_description phone"></div>
+               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               				</div>
+               				<div class="contents">
+               					<div class="item_title">비밀번호 변경</div>
+               					<div class="item_description"></div>
+               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               				</div>
+               				<div class="contents">
+               					<div class="item_title">리멤버 탈퇴</div>
+               					<div class="item_description"></div>
+               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               				</div>
+               				<div class="title">명함</div>
+               				<div class="contents">
+               					<div class="item_title">구글 주소록 자동저장</div>
+               					<div class="item_description google_book">미설정</div>
+               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               				</div>
+               				<div class="title">법적고지</div>
+               				<div class="contents">
+               					<div class="item_title">이용약관</div>
+               					<div class="item_description"></div>
+               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               				</div>
+               				<div class="contents">
+               					<div class="item_title">개인정보처리방침</div>
+               					<div class="item_description"></div>
+               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               				</div>
+               				<div class="contents">
+               					<div class="item_title">팀 명함첩 운영정책</div>
+               					<div class="item_description"></div>
+               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               				</div>
+               				<div class="contents">
+               					<div class="item_title">위치기반 서비스 이용약관</div>
+               					<div class="item_description"></div>
+               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               				</div>
+                		</div>
+                	</div>
+                </div>  
+            </div>
+            
+		</main>
+	</div>
+	 <script type="text/javascript" src="/static/js/card/set_header.js"></script>
+	 <script type="text/javascript" src="/static/js/card/user_set.js"></script>
+</body>
+</html>

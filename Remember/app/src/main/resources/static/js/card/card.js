@@ -160,6 +160,7 @@ function myCard() {
 
         replaceTagInMainContents(add_card_form);
     }
+    add_card_form.querySelector('.cancel_button').onclick = () => location.reload();
 }
 
 function setGroupList() {
