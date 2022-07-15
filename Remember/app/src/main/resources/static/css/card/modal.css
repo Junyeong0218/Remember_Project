@@ -438,7 +438,9 @@
 .modal > .add_menu > .title,
 .modal > .alert > .title,
 .modal > .invite_team > .title,
-.modal > .show_invite_url > .title {
+.modal > .show_invite_url > .title,
+.modal > .delete_opinion > .title,
+.modal > .password > .title {
 	position: relative;
 	padding: 15px;
 	width: 100%;
@@ -456,7 +458,9 @@
 .modal > .add_menu > .title > span,
 .modal > .alert > .title > span,
 .modal > .invite_team > .title > span,
-.modal > .show_invite_url > .title > span {
+.modal > .show_invite_url > .title > span,
+.modal > .delete_opinion > .title  > span,
+.modal > .password > .title > span {
 	font-size: 17px;
 	font-weight: 500;
 	color: rgba(0, 0, 0, 0.85);
@@ -475,7 +479,9 @@
 .modal > .add_menu > .title > button,
 .modal > .alert > .title > button,
 .modal > .invite_team > .title > button,
-.modal > .show_invite_url > .title > button {
+.modal > .show_invite_url > .title > button,
+.modal > .delete_opinion > .title  > button,
+.modal > .password > .title > button {
 	position: absolute;
 	top: 50%;
 	right: 0;
@@ -500,7 +506,9 @@
 .modal > .add_menu > .title > button > img,
 .modal > .alert > .title > button > img,
 .modal > .invite_team > .title > button > img,
-.modal > .show_invite_url > button > img {
+.modal > .show_invite_url > button > img,
+.modal > .delete_opinion > .title  > button > img,
+.modal > .password > .title > button > img {
 	pointer-events: none;
 }
 
@@ -893,13 +901,17 @@
 	border-color: #403C3C;
 }
 
-.modal > .send_file {
+.modal > .send_file ,
+.modal > .delete_opinion,
+.modal > .password {
 	display: flex;
 	flex-direction: column;
 	width: 400px;
 }
 
-.modal > .send_file > .description {
+.modal > .send_file > .description ,
+.modal > .delete_opinion > .description,
+.modal > .password > .description  {
 	padding: 24px;
 	display: flex;
 	flex-direction: column;
@@ -908,7 +920,12 @@
 	border-bottom: 1px solid #E8E8E8;
 }
 
-.modal > .send_file > .description > .row {
+.modal > .password > .description {
+	border-bottom: none;
+}
+
+.modal > .send_file > .description > .row ,
+.modal > .delete_opinion > .description > .row {
 	position: relative;
 	margin-bottom: 17px;
 	display: flex;
@@ -920,13 +937,23 @@
 	margin: 0;
 }
 
-.modal > .send_file > .description > .row > span {
+.modal > .send_file > .description > .row > span ,
+.modal > .delete_opinion > .description > .row > span {
 	margin-bottom: 7px;
 	font-size: 13px;
 	color: #999;
 }
 
-.modal > .send_file > .description > .row > input {
+.modal > .password > .description > span {
+	margin: 4px 0 12px 0;
+	color:#333;
+	white-space: pre-line;
+	font-size: 15px;
+}
+
+.modal > .send_file > .description > .row > input ,
+.modal > .delete_opinion > .description > .row > input,
+.modal > .password > .description > input {
 	padding: 0 12px;
 	width: 100%;
 	height: 38px;
@@ -939,7 +966,8 @@
 	outline: none;
 }
 
-.modal > .send_file > .description > .row > .file_selector {
+.modal > .send_file > .description > .row > .file_selector ,
+.modal > .delete_opinion > .description > .row > .delete_opinion_selector {
 	padding: 0 12px;
 	display: flex;
 	justify-content: space-between;
@@ -955,12 +983,17 @@
 
 .modal > .send_file > .description > .row > .file_selector:focus,
 .modal > .send_file > .description > .row > .file_selector:hover,
+.modal > .delete_opinion > .description > .row > .delete_opinion_selector:focus,
+.modal > .delete_opinion > .description > .row > .delete_opinion_selector:hover,
 .modal > .send_file > .description > .row > input:focus,
-.modal > .send_file > .description > .row > input:hover {
+.modal > .send_file > .description > .row > input:hover,
+.modal > .delete_opinion > .description > textarea:hover,
+.modal > .delete_opinion > .description > textarea:focus {
 	border: 1px solid #0D0C0C;
 }
 
-.modal > .send_file > .description > .row > .file_list {
+.modal > .send_file > .description > .row > .file_list ,
+.modal > .delete_opinion > .description > .row > .opinion_list{
 	position: absolute;
 	top: 65px;
 	display: flex;
@@ -969,11 +1002,18 @@
 	background-color: white;
 }
 
-.modal > .send_file > .description > .row > .file_list.hidden {
+.modal > .delete_opinion > .description > .row > .opinion_list {
+	top: 45px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modal > .send_file > .description > .row > .file_list.hidden ,
+.modal > .delete_opinion > .description > .row > .opinion_list.hidden{
 	display: none;
 }
 
-.modal > .send_file > .description > .row > .file_list > span {
+.modal > .send_file > .description > .row > .file_list > span,
+.modal > .delete_opinion > .description > .row > .opinion_list > span {
 	padding: 5px 12px;
 	width: 100%;
 	font-size: 14px;
@@ -983,12 +1023,28 @@
 	transition: 300ms;
 }
 
-.modal > .send_file > .description > .row > .file_list > span:hover {
+.modal > .send_file > .description > .row > .file_list > span:hover,
+.modal > .delete_opinion > .description > .row > .opinion_list > span:hover {
 	background-color: #333;
 	color: white;
 }
 
-.modal > .send_file > .buttons {
+
+.modal > .delete_opinion > .description > textarea {
+	resize: none;
+	max-width: 100%;
+	height: auto;
+	padding: 4px 11px;
+	color: rgba(0,0,0,0.65);
+	border: 1px solid #d9d9d9;
+	font-size: 14px;
+	outline: none;
+	background-color: #fafafa;
+}
+
+.modal > .send_file > .buttons ,
+.modal > .delete_opinion > .buttons,
+.modal > .password > .buttons {
 	padding: 10px 16px;
 	display: flex;
 	justify-content: flex-end;
@@ -998,7 +1054,13 @@
 	gap: 8px;
 }
 
-.modal > .send_file > .buttons > button {
+.modal > .password > .buttons {
+	padding: 0 24px 24px 24px;
+}
+
+.modal > .send_file > .buttons > button ,
+.modal > .delete_opinion > .buttons > button,
+.modal > .password > .buttons > button {
 	padding: 0 15px;
 	height: 40px;
 	font-size: 16px;
@@ -1008,21 +1070,30 @@
 	cursor: pointer;
 }
 
-.modal > .send_file > .buttons > .cancel_button {
+.modal > .password > .buttons > button {
+	width: 100%;
+}
+
+.modal > .send_file > .buttons > .cancel_button ,
+.modal > .delete_opinion > .buttons > .cancel_button{
 	border: 1px solid #D9D9D9;
 	color: rgba(0, 0, 0, 0.65);
 }
 
-.modal > .send_file > .buttons > .cancel_button:hover {
+.modal > .send_file > .buttons > .cancel_button:hover ,
+.modal > .delete_opinion > .buttons > .cancel_button:hover {
 	border-color: #0D0C0C;
 }
 
-.modal > .send_file > .buttons > .submit_button {
+.modal > .send_file > .buttons > .submit_button ,
+.modal > .delete_opinion > .buttons > .submit_button,
+.modal > .password > .buttons > .submit_button {
 	background-color: #333;
 	color: white;
 }
 
-.modal > .send_file > .buttons > .submit_button:hover {
+.modal > .send_file > .buttons > .submit_button:hover ,
+.modal > .delete_opinion > .buttons > .submit_button:hover {
 	background-color: #403C3C;
 }
 

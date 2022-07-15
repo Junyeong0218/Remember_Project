@@ -601,6 +601,42 @@ function makeTabMenuTag() {
 	return div;
 }
 
+function makeUserDeleteTag() {
+	const div = document.createElement("div");
+	div.className = "delete_wrapper";
+	div.innerHTML=`
+		<div class="header">
+			<div class="label">설정 &gt; 탈퇴</div>
+			<div class="title">탈퇴</div>
+		</div>
+		<div class="contents">
+			<div class="contents_title">탈퇴하기 전에 아래 내용을 꼭 확인하세요</div>
+			<div class="contents_text">
+				<span>1. 탈퇴하시면 등록한 연락처는 모두 삭제되어 복구할 수 없습니다.
+				
+					2. 휴대폰 번호 변경은 [설정]&gt;[휴대폰번호 변경]에서 가능합니다.
+				
+					3. 계정(이메일) 변경은 [설정]&gt;[계정 변경]에서 가능합니다.
+				
+					4. 팀 명함첩 조직의 운영자는 조직을 삭제하거나 운영자를 위임한 후 탈퇴할 수 있습니다.
+			
+					5. 혹시 이용 과정에서 불편한 점이 있으셨다면, [1:1 문의]로 내용을 남겨주세요.
+				
+					6. 팀 명함첩 조직의 운영자는 조직을 삭제하거나 운영자를 위임한 후 탈퇴할 수 있습니다.
+				</span>
+			</div>
+		</div>
+		<div class="footer">
+			<div class="input_wrapper">
+				<input type="checkbox" class="delete_check">
+				<span> 전부 삭제하고 탈퇴하겠습니다.</span>
+			</div>			
+			<button type="button" id="delete_user_button" disabled>리멤버 탈퇴</button>
+		</div>
+`;
+	return div;
+}
+
 
 
 // ============================================================================================================================
@@ -970,6 +1006,65 @@ function makeAlertModal() {
 			</div>
 			<div class="alert_list">
 				<div class="no_alerts">알림이 없습니다.</div>
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeUpdatePasswordModal() {
+	const div = document.createElement('div');
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window password">
+			<div class="title">
+				<span>비밀번호 재설정</span>
+				<button class="close_modal">
+					<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+				</button>
+			</div>
+			<div class="description">
+				<input placeholder="새로운 비밀번호 입력" type="password" id="password">
+				<span class="text password">영문/숫자/특수문자 중 2가지 이상 조합하여 8자 이상 입력해 주세요.</span>
+				<input placeholder="새로운 비밀번호 재입력" type="password" id="re_password">
+			</div>
+			<div class="buttons">
+				<button class="submit_button">비밀번호 재설정</button>				
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeDeleteUserModal() {
+	const div = document.createElement('div');
+	div.className= "modal";
+	div.innerHTML =`
+		<div class="window delete_opinion">
+			<div class="title">
+				<span>탈퇴 사유 입력</span>
+				<button class="close_modal">
+					<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+				</button>
+			</div>
+			<div class="description">
+				<div class="row">
+					<button type="button" class="delete_opinion_selector">
+						<span>입력 속도 불만</span>
+						<img src="/static/images/card_file_list.png">
+					</button>
+					<div class="opinion_list hidden">
+						<span>입력 속도 불만</span>
+						<span>기능 미흡</span>
+						<span>더이상 필요하지 않음</span>
+						<span>기타</span>
+					</div>
+				</div>
+				<textarea maxlength="1000" rows="5" placeholder="탈퇴 사유를 기재해주세요 (선택)"></textarea>
+			</div>
+			<div class="buttons">
+				<button class="cancel_button">취소</button>
+				<button class="submit_button">탈퇴</button>				
 			</div>
 		</div>
 	`;

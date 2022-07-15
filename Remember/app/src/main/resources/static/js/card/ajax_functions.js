@@ -1266,6 +1266,24 @@ function deleteAllCardsInCardBook(selected_card_book_id, not_selected_card_id_li
 	return flag;
 }
 
+function deleteUserData(user_id) {
+	let flag = false;
+	$.ajax({
+		type:"delete",
+		url: "/api/v1/auth/" + user_id,
+		async: false,
+		dateType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
 // ============================================================================================================================
 // 																											start team functions
 // ============================================================================================================================

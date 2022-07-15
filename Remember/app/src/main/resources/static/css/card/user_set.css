@@ -124,3 +124,84 @@ main {
 	width: 24px;
 	height: 24px;
 }
+
+.delete_wrapper {
+	width: 450px;
+	color: #666;
+	border: 1px solid #cdcdcd;
+	background-color: #fff;
+}
+
+.delete_wrapper > .header {
+	padding: 12px;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.delete_wrapper > .header > .label {
+	font-size: 11px;
+	color: #6aa0e0;
+}
+
+.delete_wrapper > .header > .title {
+	font-size: 15px;
+}
+
+.delete_wrapper > .contents > .contents_title {
+	font-size: 15px;
+	padding: 16px;
+	text-align: center;
+}
+
+.delete_wrapper > .contents > .contents_text {
+	padding: 16px 20px;
+	margin: 0 12px;
+	color: #999;
+	background-color: #fafafa;
+	
+}
+
+.delete_wrapper > .contents > .contents_text  > span {
+	white-space: pre-line;
+}
+
+.delete_wrapper > .footer {
+	text-align: center;
+}
+
+.delete_wrapper > .footer > .input_wrapper > span {
+	padding: 0 8px;
+}
+
+.delete_wrapper > .footer > .input_wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 30px;	
+} 
+
+.delete_wrapper > .footer > button {
+	width: 300px;
+	height: 40px;
+	margin-bottom: 16px;
+	background-color: #ff5252;
+	color: #fff;
+	transition : 300ms;
+	cursor: pointer;
+}
+
+.delete_wrapper > .footer > button:disabled {
+	opacity: 0.3;
+	cursor: default;
+}
+
+.delete_wrapper > .footer > .input_wrapper > .delete_check{
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	background: url("/static/images/signup_unchecked_checkbox.png");
+	transition: 300ms;
+	cursor: pointer;
+}
+.delete_wrapper > .footer > .input_wrapper > .delete_check:checked{
+	background: url("/static/images/signup_checked_checkbox.png");	
+}

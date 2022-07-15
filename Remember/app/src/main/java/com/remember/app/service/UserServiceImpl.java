@@ -80,4 +80,10 @@ public class UserServiceImpl implements UserService {
 	public UserDetail getUserDetailById(int id) {
 		return userRepository.getUserById(id);
 	}
+	
+	@Override
+	public boolean deleteUser(int id) {
+		
+		return userRepository.deleteUser(id) ==1;
+	}
 }

@@ -15,4 +15,6 @@ public interface UserService {
 	public boolean insertUserDetail(UserDetailReqDto userDetailReqDto);
 	
 	public UserDetail getUserDetailById(int id);
+	
+	public boolean deleteUser(int id);
 }
