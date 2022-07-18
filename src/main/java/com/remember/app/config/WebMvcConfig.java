@@ -16,7 +16,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import com.remember.app.IntercepterHandler.CustomLoginIntercepter;
 
-//@Configuration
+@Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
 	@Value("${file.path}")
