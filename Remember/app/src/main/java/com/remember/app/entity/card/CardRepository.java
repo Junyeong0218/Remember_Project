@@ -113,6 +113,8 @@ public interface CardRepository {
 	
 	public int updateTeamName(Team team);
 	
+	public List<TeamProductDetail> getProducts(int teamId);
+	
 	public TeamDetail getInvitedTeam(TeamDetail teamDetail);
 	
 	public int checkDuplicateInviteCode(String inviteCode);

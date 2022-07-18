@@ -31,6 +31,7 @@ import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateTeamCardBelongTeamGroupReqDto;
 import com.remember.app.responseDto.CardDetailResDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
+import com.remember.app.responseDto.TeamProductDetailResDto;
 
 
 public interface CardService {
@@ -93,6 +94,8 @@ public interface CardService {
 	public boolean deleteTeam(Team team);
 	
 	public boolean updateTeamName(Team team);
+	
+	public TeamProductDetailResDto getTeamProducts(int teamId);
 	
 	public TeamDetail getInvitedTeamInfo(TeamDetail teamDetail);
 	

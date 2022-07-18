@@ -27,9 +27,11 @@ import com.remember.app.entity.card.TeamCardBook;
 import com.remember.app.entity.card.TeamCardBookSummary;
 import com.remember.app.entity.card.TeamCardDetail;
 import com.remember.app.entity.card.TeamDetail;
+import com.remember.app.entity.card.TeamGrade;
 import com.remember.app.entity.card.TeamGroup;
 import com.remember.app.entity.card.TeamGroupSummary;
 import com.remember.app.entity.card.TeamJoinUser;
+import com.remember.app.entity.card.TeamProductDetail;
 import com.remember.app.entity.card.TeamUserProfile;
 import com.remember.app.requestDto.AddAllCardsFromTeamCard;
 import com.remember.app.requestDto.AddAllTeamCardsFromCard;
@@ -47,6 +49,7 @@ import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateTeamCardBelongTeamGroupReqDto;
 import com.remember.app.responseDto.CardDetailResDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
+import com.remember.app.responseDto.TeamProductDetailResDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -478,6 +481,20 @@ public class CardServiceImpl implements CardService {
 	@Override
 	public boolean updateTeamName(Team team) {
 		return cardRepository.updateTeamName(team) == 1;
+	}
+	
+	@Override
+	public TeamProductDetailResDto getTeamProducts(int teamId) {
+		List<TeamProductDetail> productList = cardRepository.getProducts(teamId);
+		TeamProductDetailResDto dto = new TeamProductDetailResDto();
+		
+		dto.setTeam(productList.get(0).toTeamEntity());
+		dto.setTeam_product_list(new ArrayList<TeamGrade>());
+		for(int i = 0; i < productList.size(); i++) {
+			dto.getTeam_product_list().add(productList.get(i).toGradeEntity());
+		}
+		
+		return dto;
 	}
 	
 	@Override

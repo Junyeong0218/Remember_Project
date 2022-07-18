@@ -655,6 +655,37 @@
 				id = #{id};
 		</update>
 		
+		<select id="getProducts" parameterType="Integer" resultType="com.remember.app.entity.card.TeamProductDetail">
+			select
+				team.id as team_id,
+				team.made_user_id,
+				team.title,
+				
+				grade.id as grade_id,
+				grade.grade,
+				grade.name,
+				grade.price,
+				grade.memo_alert_flag,
+				grade.card_map_flag,
+				grade.extract_to_excel_flag,
+				grade.show_sended_info_flag,
+				grade.save_phone_flag,
+				grade.user_permission_flag,
+				grade.restore_card_flag,
+				grade.open_api_flag,
+				
+				if(team.grade_id = grade.id, true, false) as is_using,
+				if(count(distinct payment.id) > 0, false, true) as free_flag
+			from
+				team_mst team
+				left outer join team_grade_mst grade on(true)
+				left outer join product_payment_mst payment on(payment.team_id = team.id and payment.grade_id = 2)
+			where
+				team.id = #{teamId}
+			group by
+				grade.id; 
+		</select>
+		
 		<select id="getInvitedTeam" parameterType="com.remember.app.entity.card.TeamDetail" resultType="com.remember.app.entity.card.TeamDetail">
 			select
 				team.*,

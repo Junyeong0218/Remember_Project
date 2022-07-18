@@ -2,6 +2,8 @@ const team_members_button = document.querySelector(".menus .members");
 const team_manage_button = document.querySelector(".menus .team_manage");
 const change_team_button = document.querySelector(".menus .change_team");
 
+const upgrade_goods = document.querySelector(".menus .upgrade_goods");
+
 const card_book_wrapper = document.querySelector(".menus .card_books");
 const add_new_card_book_button = document.querySelector(".menus .add_new_card_book");
 
@@ -84,14 +86,41 @@ team_members_button.onclick = () => {
 	}
 }
 
+upgrade_goods.onclick = () => {
+	const products = ajax.loadProductInfo(service_object.selected_team.id);
+	console.log(products);
+	const products_tag = makeProductDescriptionTag();
+	const product_description = products_tag.querySelector(".product_description");
+	for(let i = 0; i < products.team_product_list.length; i++) {
+		const product_tag = makeProductColumnTag(products.team_product_list[i]);
+		product_description.appendChild(product_tag);
+	}
+	replaceTagInMainContents(products_tag);
+	
+	const return_to_basic_button = products_tag.querySelector("#return_to_basic");
+	if(return_to_basic_button != null) {
+		// 베이직으로 하향 확인 모달 출력
+		
+	}
+	
+	const buy_premium_button = products_tag.querySelector("#buy_premium");
+	if(buy_premium_button != null) {
+		// 프리미엄으로 결제 및 전환
+		
+	}
+	const inquery_enterprise_button = products_tag.querySelector("#inquery_enterprise");
+	if(inquery_enterprise_button != null) {
+		// 엔터프라이즈 문의 모달 출력
+		
+	}
+}
+
 team_manage_button.onclick = () => {
 	const team_manage_tag = makeTeamManageTag();
 	replaceTagInMainContents(team_manage_tag);
 	
 	const show_product_description = document.querySelector("#show_product_description");
-	show_product_description.onclick = () => {
-		// 상품 상세 페이지 출력
-	}
+	show_product_description.onclick = () => upgrade_goods.click();
 	
 	const show_history = document.querySelector("#show_history");
 	show_history.onclick = () => {
@@ -1905,33 +1934,26 @@ function makeMenuBoxTag() {
 	return div;
 }
 
-function makeProductDescriptionTtag() {
+function makeProductDescriptionTag() {
 	const div = document.createElement("div");
 	div.className = "product_wrapper";
 	div.innerHTML = `
 		<div class="product_description">
 			<div class="column">
 				<div class="title">
-					<span class="product_name"></span>
-					<span class="price_info"></span>
-					<span class="price_description">팀 명함첩에 저장되는\n명함이 100장\n이하일 때 적합한 상품</span>
+					<span class="product_name">상품 안내</span>
 				</div>
 				<div class="flags">
-					<div class="row"></div>
-					<div class="row"></div>
-					<div class="row"></div>
-					<div class="row"></div>
-					<div class="row"></div>
-					<div class="row"></div>
-					<div class="row"></div>
-					<div class="row"></div>
-					<div class="row"></div>
-					<div class="row"></div>
-				</div>
-				<div class="buy_product_button">
-					<span class="current">현재 이용중인 상품입니다.</span>
-					<button type="button" id="buy_premium">1개월 무료체험 하기</button>
-					<button type="button" id="inquery_enterprise">지금 문의하기</button>
+					<div class="row">생성 가능한 팀 명함첩 수</div>
+					<div class="row">등록 가능한 명함 수</div>
+					<div class="row">메모 작성 후 알림보내기</div>
+					<div class="row">명함 지도 기능</div>
+					<div class="row">엑셀 파일 내보내기</div>
+					<div class="row">발신자 명함 정보 표시<sub>(안드로이드만 제공)</sub></div>
+					<div class="row">휴대폰 연락처 저장</div>
+					<div class="row">구성원 사용권한 관리</div>
+					<div class="row">삭제 명함 복구</div>
+					<div class="row">Open API 연동</div>
 				</div>
 			</div>
 		</div>
@@ -1976,6 +1998,168 @@ function makeProductDescriptionTtag() {
 					</div>
 				</div>
 			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeProductColumnTag(product) {
+	const price_info_text = product.grade == "basic" ? '무료' : 
+												 product.grade == "premium" ? '<span class="premium">인당 <span class="big">₩4,900</span>/월</span><span class="vat">(VAT 별도)</span>' : 
+												 product.grade == "enterprise" ? '<span class="enterprise">별도 문의</span>' : '';
+	const price_description_text = product.grade == "basic" ? '팀 명함첩에 저장되는\n명함이 100장\n이하일 때 적합한 상품' : 
+																product.grade == "premium" ? '등록 명함 수 제한없이\n<span class="premium">DB 관리 & 영업 지원 기능</span>을\n이용할 수 있는 상품' : 
+																product.grade == "enterprise" ? '사내 시스템과 연계\n가능한 <span class="enterprise">Open API 연동</span>이\n지원되는 상품' : '';
+	const div = document.createElement("div");
+	div.className = "column " + product.grade;
+	div.innerHTML = `
+		<div class="title">
+			<span class="product_name">${product.name}</span>
+			<span class="price_info"></span>
+			<span class="price_description"></span>
+		</div>
+		<div class="flags">
+			<div class="row">${product.grade == "basic" ? "1개" : "무제한"}</div>
+			<div class="row">${product.grade == "basic" ? "100장" : "무제한"}</div>
+			<div class="row"><span class="${product.memo_alert_flag ? 'checked' : 'unchecked'}"></span></div>
+			<div class="row"><span class="${product.card_map_flag ? 'checked' : 'unchecked'}"></span></div>
+			<div class="row"><span class="${product.extract_to_excel_flag ? 'checked' : 'unchecked'}"></span></div>
+			<div class="row"><span class="${product.show_sended_info_flag ? 'checked' : 'unchecked'}"></span></div>
+			<div class="row"><span class="${product.save_phone_flag ? 'checked' : 'unchecked'}"></span></div>
+			<div class="row"><span class="${product.user_permission_flag ? 'checked' : 'unchecked'}"></span></div>
+			<div class="row"><span class="${product.restore_card_flag ? 'checked' : 'unchecked'}"></span></div>
+			<div class="row"><span class="${product.open_api_flag ? 'checked' : 'unchecked'}"></span></div>
+		</div>
+		<div class="buy_product_button">
+${product._using ? '<span class="current">현재 이용중인 상품입니다.</span>' : 
+	 product.grade == 'basic' ? '<button type="button" id="return_to_basic">베이직 이용하기</button>' : 
+	 product.grade == 'premium' ? product.free_flag ? '<button type="button" id="buy_premium">1개월 무료체험 하기</button>' :
+	 																								 '<button type="button" id="buy_premium">프리미엄 이용하기</button>' :
+	 product.grade == 'enterprise' ? '<button type="button" id="inquery_enterprise">지금 문의하기</button><span class="minimum">최소 이용 가능 인원 : 100명</span>' : ''}
+		</div>
+	`;
+	div.querySelector(".price_info").innerHTML = price_info_text;
+	div.querySelector(".price_description").innerHTML = price_description_text;
+	return div;
+}
+
+function makeInputPaymentInfoForm(free_flag) {
+	const div = document.createElement("div");
+	div.className = "payment_info";
+	div.innerHTML = `
+		<div class="title">결제 정보 입력</div>
+		<div class="description">
+			<div class="column">
+				<div class="input_wrapper">
+					<span class="title">카드 종류</span>
+					<div class="inputs">
+						<input type="radio" checked name="personal">
+						<button type="button">개인</button>
+					</div>
+				</div>
+				<div class="input_wrapper">
+					<span class="title">카드 번호</span>
+					<div class="inputs">
+						<input type="password">-<input type="password">-<input type="password">-<input type="text">
+					</div>
+				</div>
+				<div class="input_wrapper">
+					<div class="input_wrapper">
+						<span class="title">유효기간</span>
+						<div class="inputs">
+							<input type="text" placeholder="MM">월<input type="text" placeholder="YY">년
+						</div>
+					</div>
+					<div class="input_wrapper">
+						<span class="title">비밀번호 앞자리</span>
+						<div class="inputs">
+							<input type="password">**
+						</div>
+					</div>
+				</div>
+				<div class="input_wrapper">
+					<span class="title">생년월일 6자리</span>
+					<div class="inputs">
+						<input type="text" placeholder="YYMMDD">
+					</div>
+				</div>
+			</div>
+			<div class="column">
+				<div class="input_wrapper">
+					<span class="title">이름</span>
+					<div class="inputs">
+						<input type="text">
+					</div>
+				</div>
+				<div class="input_wrapper">
+					<span class="title">휴대폰</span>
+					<div class="inputs">
+						<input type="text">
+					</div>
+				</div>
+				<div class="input_wrapper">
+					<span class="title">이메일 (결제 안내)</span>
+					<div class="inputs">
+						<input type="text">
+					</div>
+				</div>
+				<div class="terms">
+					<div class="column">
+						<div class="title">
+							결제대행 서비스 동의
+							<span class="summary">: 결제대행업체에서 진행하는 절차입니다.</span>
+						</div>
+						<div class="checkboxes">
+							<div class="checkbox_wrapper">
+								<input type="checkbox" id="service_whole_check">
+								<span class="bold">전체 동의</span>
+							</div>
+							<div class="checkbox_wrapper">
+								<input type="checkbox" id="trade_terms">
+								<span>전자금융 거래 이용 약관 동의</span>
+								<span class="show_description">상세보기</span>
+							</div>
+							<div class="checkbox_wrapper">
+								<input type="checkbox" id="private_terms">
+								<span>개인정보의 수집 및 이용</span>
+								<span class="show_description">상세보기</span>
+							</div>
+							<div class="checkbox_wrapper">
+								<input type="checkbox" id="third_party_terms">
+								<span>개인정보의 제3자 제공</span>
+								<span class="show_description">상세보기</span>
+							</div>
+							<div class="checkbox_wrapper">
+								<input type="checkbox" id="regular_payment_terms">
+								<span>정기과금 (자동승인) 약관</span>
+								<span class="show_description">상세보기</span>
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<div class="title">팀 명함첩 결제 동의</div>
+						<div class="checkboxes">
+							<div class="checkbox_wrapper">
+								<input type="checkbox" id="team_whole_check">
+								<span class="bold">전체 동의</span>
+							</div>
+							<div class="checkbox_wrapper">
+								<input type="checkbox" id="team_private_terms">
+								<span>개인정보의 수집 및 이용</span>
+								<span class="show_description">상세보기</span>
+							</div>
+							<div class="checkbox_wrapper">
+								<input type="checkbox" id="team_third_party_terms">
+								<span>개인정보의 제3자 제공</span>
+								<span class="show_description">상세보기</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="buttons">
+${free_flag ? '<span>1달 무료체험으로 시작하시겟습니까?</span><button type="button" id="free_month" disabled>1달 무료체험을 시작</button>' : '<button type="button" id="to_premium" disabled>프리미엄 정기 결제</button>'}
 		</div>
 	`;
 	return div;

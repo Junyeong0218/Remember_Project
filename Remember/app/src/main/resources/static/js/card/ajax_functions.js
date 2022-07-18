@@ -41,6 +41,7 @@ const ajax = {
 	loadCardEmails: (card_id_list) => 																								loadCardEmails(card_id_list),
 	loadCardEmailsInGroup: (team_group_id, not_selected_card_id_list) => 						loadCardEmailsInGroup(team_group_id, not_selected_card_id_list),
 	loadCardEmailsInCardBook: (team_card_book_id, not_selected_card_id_list) => 	loadCardEmailsInCardBook(team_card_book_id, not_selected_card_id_list),
+	loadProductInfo: (team_id) =>																									loadProductInfo(team_id),
 	
 	// update functions
 	updateGroupName: (group_id, group_name) => 																	updateGroupName(group_id, group_name),
@@ -763,6 +764,24 @@ function loadCardEmailsInCardBook(team_card_book_id, not_selected_card_id_list) 
 		}
 	});
 	return cards;
+}
+
+function loadProductInfo(team_id) {
+	let product_info;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/team/" + team_id + "/products",
+		async: false,
+		dataType: "json",
+		success: function (data) {
+			product_info = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return product_info;
 }
 
 // ============================================================================================================================

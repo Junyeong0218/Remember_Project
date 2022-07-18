@@ -43,6 +43,7 @@ import com.remember.app.requestDto.UpdateCardDetailReqDto;
 import com.remember.app.requestDto.UpdateCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateTeamCardBelongTeamGroupReqDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
+import com.remember.app.responseDto.TeamProductDetailResDto;
 import com.remember.app.service.CardService;
 
 import lombok.RequiredArgsConstructor;
@@ -332,6 +333,11 @@ public class CardRestController {
 																	 Team team) {
 		team.setId(teamId);
 		return cardService.updateTeamName(team);
+	}
+	
+	@GetMapping("/team/{teamId}/products")
+	public TeamProductDetailResDto getProductList(@PathVariable int teamId) {
+		return cardService.getTeamProducts(teamId);
 	}
 	
 	@PostMapping("/team/book/{cardBookId}")
