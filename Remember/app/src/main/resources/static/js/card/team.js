@@ -1910,7 +1910,30 @@ function makeProductDescriptionTtag() {
 	div.className = "product_wrapper";
 	div.innerHTML = `
 		<div class="product_description">
-			
+			<div class="column">
+				<div class="title">
+					<span class="product_name"></span>
+					<span class="price_info"></span>
+					<span class="price_description">팀 명함첩에 저장되는\n명함이 100장\n이하일 때 적합한 상품</span>
+				</div>
+				<div class="flags">
+					<div class="row"></div>
+					<div class="row"></div>
+					<div class="row"></div>
+					<div class="row"></div>
+					<div class="row"></div>
+					<div class="row"></div>
+					<div class="row"></div>
+					<div class="row"></div>
+					<div class="row"></div>
+					<div class="row"></div>
+				</div>
+				<div class="buy_product_button">
+					<span class="current">현재 이용중인 상품입니다.</span>
+					<button type="button" id="buy_premium">1개월 무료체험 하기</button>
+					<button type="button" id="inquery_enterprise">지금 문의하기</button>
+				</div>
+			</div>
 		</div>
 		<div class="foot_notes">
 			<span class="note">1) 상기 안내된 이용 가격은 부가가치세(VAT)가 포함되지 않은 가격입니다.</span>
