@@ -106,7 +106,10 @@ upgrade_goods.onclick = () => {
 	const buy_premium_button = products_tag.querySelector("#buy_premium");
 	if(buy_premium_button != null) {
 		// 프리미엄으로 결제 및 전환
-		
+		buy_premium_button.onclick = () => {
+			const payment_form = makeInputPaymentInfoForm(true);
+			replaceTagInMainContents(payment_form);
+		}
 	}
 	const inquery_enterprise_button = products_tag.querySelector("#inquery_enterprise");
 	if(inquery_enterprise_button != null) {
@@ -2045,121 +2048,152 @@ ${product._using ? '<span class="current">현재 이용중인 상품입니다.</
 
 function makeInputPaymentInfoForm(free_flag) {
 	const div = document.createElement("div");
-	div.className = "payment_info";
+	div.className = "payment_wrapper";
 	div.innerHTML = `
-		<div class="title">결제 정보 입력</div>
-		<div class="description">
-			<div class="column">
-				<div class="input_wrapper">
-					<span class="title">카드 종류</span>
-					<div class="inputs">
-						<input type="radio" checked name="personal">
-						<button type="button">개인</button>
-					</div>
-				</div>
-				<div class="input_wrapper">
-					<span class="title">카드 번호</span>
-					<div class="inputs">
-						<input type="password">-<input type="password">-<input type="password">-<input type="text">
-					</div>
-				</div>
-				<div class="input_wrapper">
+		<div class="payment_info">
+			<div class="title">결제 정보 입력</div>
+			<div class="description">
+				<div class="column">
 					<div class="input_wrapper">
-						<span class="title">유효기간</span>
+						<div class="title">카드 종류</div>
 						<div class="inputs">
-							<input type="text" placeholder="MM">월<input type="text" placeholder="YY">년
+							<input type="radio" checked name="personal">
+							<button type="button">개인</button>
 						</div>
 					</div>
 					<div class="input_wrapper">
-						<span class="title">비밀번호 앞자리</span>
+						<div class="title">카드 번호</div>
 						<div class="inputs">
-							<input type="password">**
+							<input type="password">-<input type="password">-<input type="password">-<input type="text">
+						</div>
+					</div>
+					<div class="input_wrapper">
+						<div class="input_wrapper">
+							<div class="title">유효기간</div>
+							<div class="inputs">
+								<input type="text" placeholder="MM">월<input type="text" placeholder="YY">년
+							</div>
+						</div>
+						<div class="input_wrapper">
+							<div class="title">비밀번호 앞자리</div>
+							<div class="inputs">
+								<input type="password">**
+							</div>
+						</div>
+					</div>
+					<div class="input_wrapper">
+						<div class="title">생년월일 6자리</div>
+						<div class="inputs">
+							<input type="text" placeholder="YYMMDD">
 						</div>
 					</div>
 				</div>
-				<div class="input_wrapper">
-					<span class="title">생년월일 6자리</span>
-					<div class="inputs">
-						<input type="text" placeholder="YYMMDD">
+				<div class="column">
+					<div class="input_wrapper">
+						<div class="title">이름</div>
+						<div class="inputs">
+							<input type="text">
+						</div>
+					</div>
+					<div class="input_wrapper">
+						<div class="title">휴대폰</div>
+						<div class="inputs">
+							<input type="text">
+						</div>
+					</div>
+					<div class="input_wrapper">
+						<div class="title">이메일 (결제 안내)</div>
+						<div class="inputs">
+							<input type="text">
+						</div>
+					</div>
+					<div class="terms">
+						<div class="column">
+							<div class="title">
+								결제대행 서비스 동의
+								<span class="summary">: 결제대행업체에서 진행하는 절차입니다.</span>
+							</div>
+							<div class="checkboxes">
+								<div class="checkbox_wrapper">
+									<input type="checkbox" id="service_whole_check">
+									<span class="bold">전체 동의</span>
+								</div>
+								<div class="checkbox_wrapper">
+									<input type="checkbox" id="trade_terms">
+									<span>전자금융 거래 이용 약관 동의</span>
+									<span class="show_description">상세보기</span>
+								</div>
+								<div class="checkbox_wrapper">
+									<input type="checkbox" id="private_terms">
+									<span>개인정보의 수집 및 이용</span>
+									<span class="show_description">상세보기</span>
+								</div>
+								<div class="checkbox_wrapper">
+									<input type="checkbox" id="third_party_terms">
+									<span>개인정보의 제3자 제공</span>
+									<span class="show_description">상세보기</span>
+								</div>
+								<div class="checkbox_wrapper">
+									<input type="checkbox" id="regular_payment_terms">
+									<span>정기과금 (자동승인) 약관</span>
+									<span class="show_description">상세보기</span>
+								</div>
+							</div>
+						</div>
+						<div class="column">
+							<div class="title">팀 명함첩 결제 동의</div>
+							<div class="checkboxes">
+								<div class="checkbox_wrapper">
+									<input type="checkbox" id="team_whole_check">
+									<span class="bold">전체 동의</span>
+								</div>
+								<div class="checkbox_wrapper">
+									<input type="checkbox" id="team_private_terms">
+									<span>개인정보의 수집 및 이용</span>
+									<span class="show_description">상세보기</span>
+								</div>
+								<div class="checkbox_wrapper">
+									<input type="checkbox" id="team_third_party_terms">
+									<span>개인정보의 제3자 제공</span>
+									<span class="show_description">상세보기</span>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="column">
-				<div class="input_wrapper">
-					<span class="title">이름</span>
-					<div class="inputs">
-						<input type="text">
-					</div>
-				</div>
-				<div class="input_wrapper">
-					<span class="title">휴대폰</span>
-					<div class="inputs">
-						<input type="text">
-					</div>
-				</div>
-				<div class="input_wrapper">
-					<span class="title">이메일 (결제 안내)</span>
-					<div class="inputs">
-						<input type="text">
-					</div>
-				</div>
-				<div class="terms">
-					<div class="column">
-						<div class="title">
-							결제대행 서비스 동의
-							<span class="summary">: 결제대행업체에서 진행하는 절차입니다.</span>
-						</div>
-						<div class="checkboxes">
-							<div class="checkbox_wrapper">
-								<input type="checkbox" id="service_whole_check">
-								<span class="bold">전체 동의</span>
-							</div>
-							<div class="checkbox_wrapper">
-								<input type="checkbox" id="trade_terms">
-								<span>전자금융 거래 이용 약관 동의</span>
-								<span class="show_description">상세보기</span>
-							</div>
-							<div class="checkbox_wrapper">
-								<input type="checkbox" id="private_terms">
-								<span>개인정보의 수집 및 이용</span>
-								<span class="show_description">상세보기</span>
-							</div>
-							<div class="checkbox_wrapper">
-								<input type="checkbox" id="third_party_terms">
-								<span>개인정보의 제3자 제공</span>
-								<span class="show_description">상세보기</span>
-							</div>
-							<div class="checkbox_wrapper">
-								<input type="checkbox" id="regular_payment_terms">
-								<span>정기과금 (자동승인) 약관</span>
-								<span class="show_description">상세보기</span>
-							</div>
-						</div>
-					</div>
-					<div class="column">
-						<div class="title">팀 명함첩 결제 동의</div>
-						<div class="checkboxes">
-							<div class="checkbox_wrapper">
-								<input type="checkbox" id="team_whole_check">
-								<span class="bold">전체 동의</span>
-							</div>
-							<div class="checkbox_wrapper">
-								<input type="checkbox" id="team_private_terms">
-								<span>개인정보의 수집 및 이용</span>
-								<span class="show_description">상세보기</span>
-							</div>
-							<div class="checkbox_wrapper">
-								<input type="checkbox" id="team_third_party_terms">
-								<span>개인정보의 제3자 제공</span>
-								<span class="show_description">상세보기</span>
-							</div>
-						</div>
-					</div>
-				</div>
+			<div class="buttons">
+	${free_flag ? '<span>1달 무료체험으로 시작하시겠습니까?</span><button type="button" id="free_month" disabled>1달 무료체험을 시작</button>' : '<button type="button" id="to_premium" disabled>프리미엄 정기 결제</button>'}
 			</div>
 		</div>
-		<div class="buttons">
-${free_flag ? '<span>1달 무료체험으로 시작하시겟습니까?</span><button type="button" id="free_month" disabled>1달 무료체험을 시작</button>' : '<button type="button" id="to_premium" disabled>프리미엄 정기 결제</button>'}
+		<div class="questions">
+			<div class="title">자주 묻는 질문</div>
+			<div class="question_wrapper">
+				<div class="column">
+					<div class="question">
+						<span class="title">무료체험 기간에 대한 비용이 청구되나요?</span>
+						<span class="description">무료체험 기간 중 팀 명함첩을 사용한 부분에 대해서는 비용이 청구되지 않습니다.</span>
+					</div>
+					<div class="question">
+						<span class="title">나중에 다른 신용/체크카드로 변경할 수 있나요?</span>
+						<span class="description">팀 설정 메뉴에서 언제든 다른 신용/체크카드로 변경하여 등록하실 수 있습니다.</span>
+					</div>
+					<div class="question">
+						<span class="title">팀 명함첩에 대해 추가로 궁금한 내용이 있으신가요?</span>
+						<span class="description">help@rememberapp.co.kr로 이메일을 보내주시거나 02-556-4202로 전화주시면, 친절하게 안내해드리겠습니다. (전화가능시간: 평일 오전 9시~오후 6시, 점심시간 오후 1시~2시)</span>
+					</div>
+				</div>
+				<div class="column">
+					<div class="question">
+						<span class="title">무료체험 기간 중에 취소할 수 있나요?</span>
+						<span class="description">무료체험 기간 중에도 팀 설정 메뉴에서 언제든 베이직 (무료) 상품으로 되돌아가거나 팀 사용 중지, 팀 삭제를 할 수 있습니다.</span>
+					</div>
+					<div class="question">
+						<span class="title">신용/체크카드 등록이 어렵습니다. 다른 방식으로 결제할 수 있나요?</span>
+						<span class="description">리멤버 고객센터 (help@rememberapp.co.kr)로 문의주시면 다른 방법을 제안드릴 수 있도록 하겠습니다.</span>
+					</div>
+				</div>
+			</div>
 		</div>
 	`;
 	return div;

@@ -2273,7 +2273,8 @@ main {
 	box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.main_contents > .product_wrapper > .questions > .title {
+.main_contents > .product_wrapper > .questions > .title,
+.main_contents > .payment_wrapper > .questions > .title {
 	padding-bottom: 30px;
 	width: 100%;
 	font-size: 20px;
@@ -2281,37 +2282,271 @@ main {
 	line-height: 30px;
 }
 
-.main_contents > .product_wrapper > .questions > .question_wrapper {
+.main_contents > .product_wrapper > .questions > .question_wrapper,
+.main_contents > .payment_wrapper > .questions > .question_wrapper {
 	display: flex;
 }
 
-.main_contents > .product_wrapper > .questions > .question_wrapper > .column {
+.main_contents > .product_wrapper > .questions > .question_wrapper > .column,
+.main_contents > .payment_wrapper > .questions > .question_wrapper > .column {
 	padding: 0 10px;
 	display: flex;
 	flex-direction: column;
 	width: 450px;
 }
 
-.main_contents > .product_wrapper > .questions > .question_wrapper > .column:first-child {
+.main_contents > .product_wrapper > .questions > .question_wrapper > .column:first-child,
+.main_contents > .payment_wrapper > .questions > .question_wrapper > .column:first-child {
 	border-right: 1px solid #E5E5E5;
 }
 
-.main_contents > .product_wrapper > .questions > .question_wrapper > .column > .question {
+.main_contents > .product_wrapper > .questions > .question_wrapper > .column > .question,
+.main_contents > .payment_wrapper > .questions > .question_wrapper > .column > .question {
 	margin: 10px;
 	display: flex;
 	flex-direction: column;
 	min-height: 145px;
 }
 
-.main_contents > .product_wrapper > .questions > .question_wrapper > .column > .question > .title {
+.main_contents > .product_wrapper > .questions > .question_wrapper > .column > .question > .title,
+.main_contents > .payment_wrapper > .questions > .question_wrapper > .column > .question > .title {
 	margin-bottom: 10px;
 	font-size: 15px;
 	font-weight: 700;
 	color: #666;
 }
 
-.main_contents > .product_wrapper > .questions > .question_wrapper > .column > .question > .description {
+.main_contents > .product_wrapper > .questions > .question_wrapper > .column > .question > .description,
+.main_contents > .payment_wrapper > .questions > .question_wrapper > .column > .question > .description {
 	font-size: 15px;
 	color: #999;
 	white-space: pre-line;
+}
+
+.main_contents > .payment_wrapper {
+	display: flex;
+	flex-direction: column;
+	width: 935px;
+}
+
+.main_contents > .payment_wrapper > .payment_info,
+.main_contents > .payment_wrapper > .questions {
+	display: flex;
+	flex-direction: column;
+	width:100%;
+	border: 1px solid #CDCDCD;
+	background-color: white;
+	box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.main_contents > .payment_wrapper > .payment_info > .title {
+	padding: 12px;
+	width: 100%;
+	border-bottom: 1px solid #E5E5E5;
+	font-size: 15px;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 1.5;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description {
+	display: flex;
+	width: 100%;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column {
+	padding: 12px;
+	display: flex;
+	flex-direction: column;
+	width: 50%;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column:first-child {
+	border-right: 1px solid #E5E5E5;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper {
+	margin-bottom: 24px;
+	width:100%;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper > .input_wrapper {
+	display: inline-block;
+	width: 45%;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper > .input_wrapper:first-child {
+	margin-right: 29px;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper > .title,
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper > .input_wrapper > .title {
+	font-size: 12px;
+	font-weight: 700;
+	color: rgba(0, 0, 0, 0.85);
+	line-height: 32px;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper > .inputs,
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper > .input_wrapper > .inputs {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	font-size: 14px;
+	color: rgba(0, 0, 0, 0.65);
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper > .inputs > input[type="radio"] {
+	display: none;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper > .inputs > input[type="text"],
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper > .inputs > input[type="password"],
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper > .input_wrapper > .inputs > input[type="text"],
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper > .input_wrapper > .inputs > input[type="password"] {
+	padding: 4px 11px;
+	width: 100%;
+	height: 32px;
+	border: 1px solid #D9D9D9;
+	border-radius: 0px;
+	background-color: #FAFAFA;
+	font-size: 12px;
+	color: rgba(0, 0, 0, 0.65);
+	line-height: 32px;
+	outline: none;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper > .inputs > button {
+	padding: 0 15px;
+	border: 1px solid #D9D9D9;
+	font-size: 12px;
+	color: #333;
+	line-height: 32px;
+	cursor: pointer;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .input_wrapper > .inputs > input[type="radio"]:checked + button {
+	border-color: #333;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .terms {
+	display: flex;
+	width: 100%;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .terms > .column {
+	padding: 0 5px;
+	width: 100%;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .terms > .column:first-child {
+	border-right: 1px solid #E5E5E5;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .terms > .column > .title {
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: column;
+	min-height: 32px;
+	font-size: 14px;
+	font-weight: 600;
+	color: #333;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .terms > .column > .title > .summary {
+	font-size: 10px;
+	font-weight: 400;
+	color: #999;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .terms > .column > .checkboxes {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .terms > .column > .checkboxes > .checkbox_wrapper {
+	padding-left: 8px;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	min-height: 21px;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .terms > .column > .checkboxes > .checkbox_wrapper:first-child {
+	padding: 0;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .terms > .column > .checkboxes > .checkbox_wrapper > input[type="checkbox"] {
+	width: 14px;
+	height: 14px;
+	appearance: none;
+	background: url("/static/images/signup_unchecked_checkbox.png");
+	background-size: contain;
+	transition: 300ms;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .terms > .column > .checkboxes > .checkbox_wrapper > input[type="checkbox"]:checked {
+	background: url("/static/images/signup_checked_checkbox.png");
+	background-size: contain;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .terms > .column > .checkboxes > .checkbox_wrapper > span {
+	padding: 0 2px 0 8px;
+	font-size: 12px;
+	font-weight: 300;
+	color: #999;
+	pointer-events: none;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .description > .column > .terms > .column > .checkboxes > .checkbox_wrapper > span.show_description {
+	padding: 0;
+	color: #333;
+	text-decoration: underline;
+	pointer-events: auto;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .buttons {
+	padding: 24px 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	border-top: 1px solid #E5E5E5;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .buttons > span {
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .buttons > button {
+	padding: 0 15px;
+	min-width: 200px;
+	height: 48px;
+	background-color: #333;
+	font-size: 16px;
+	color: white;
+	line-height: 48px;
+	cursor: pointer;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .buttons > button:disabled {
+    border: 1px solid #D9D9D9;
+    background-color: #F5F5F5;
+	color: rgba(0, 0, 0, 0.25);
+	cursor: not-allowed;
+}
+
+.main_contents > .payment_wrapper > .payment_info > .buttons > button:not(:first-child) {
+	margin-top: 12px;
+}
+
+.main_contents > .payment_wrapper > .questions {
+	margin: 20px 0;
+	padding: 30px 24px;
+}
+
+.main_contents > .payment_wrapper > .questions > .question_wrapper > .column > .question {
+	min-height: 100px;
 }
