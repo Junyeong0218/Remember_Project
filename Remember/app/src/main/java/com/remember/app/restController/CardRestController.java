@@ -1,8 +1,10 @@
 package com.remember.app.restController;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -45,6 +47,7 @@ import com.remember.app.requestDto.UpdateTeamCardBelongTeamGroupReqDto;
 import com.remember.app.responseDto.TeamCardDetailResDto;
 import com.remember.app.responseDto.TeamProductDetailResDto;
 import com.remember.app.service.CardService;
+import com.remember.app.service.ImportService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -54,6 +57,8 @@ import lombok.RequiredArgsConstructor;
 public class CardRestController {
 	
 	private final CardService cardService;
+	
+	private final ImportService importService;
 	
 	@GetMapping("/all")
 	public ResponseEntity<?> getAllCard(@AuthenticationPrincipal PrincipalDetails principalDetails){
@@ -565,6 +570,11 @@ public class CardRestController {
 																							GetCardEmailReqDto getCardEmailReqDto) {
 		getCardEmailReqDto.setCardBookId(cardBookId);
 		return cardService.getTeamCardEmailsInCardBook(getCardEmailReqDto);
+	}
+	
+	@GetMapping("/team/payment/token")
+	public String getImportInfo() throws IOException {
+		return importService.getToken();
 	}
 	
 }

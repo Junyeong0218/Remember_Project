@@ -42,6 +42,7 @@ const ajax = {
 	loadCardEmailsInGroup: (team_group_id, not_selected_card_id_list) => 						loadCardEmailsInGroup(team_group_id, not_selected_card_id_list),
 	loadCardEmailsInCardBook: (team_card_book_id, not_selected_card_id_list) => 	loadCardEmailsInCardBook(team_card_book_id, not_selected_card_id_list),
 	loadProductInfo: (team_id) =>																									loadProductInfo(team_id),
+	getAPIToken: () => 																															getAPIToken(),
 	
 	// update functions
 	updateGroupName: (group_id, group_name) => 																	updateGroupName(group_id, group_name),
@@ -782,6 +783,44 @@ function loadProductInfo(team_id) {
 		}
 	});
 	return product_info;
+}
+
+function getAPIToken() {
+	let api_key;
+	let api_secret;
+	let access_token;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/card/team/payment/token",
+		async: false,
+		dataType: "text",
+		success: function (data) {
+			console.log(data);
+			access_token = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+/*	$.ajax({
+		type: "get",
+		url: "https://api.iamport.kr/users/getToken",
+		async: false,
+		"Content-Type": "application/json",
+		data: {"imp_key": api_key,
+					 "imp_secret": api_secret},
+		dataType: "json",
+		success: function (data) {
+			console.log(data);
+			access_token = data.response.access_token;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});*/
+	return access_token;
 }
 
 // ============================================================================================================================

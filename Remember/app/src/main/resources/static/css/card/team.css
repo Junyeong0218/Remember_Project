@@ -2529,6 +2529,7 @@ main {
 	color: white;
 	line-height: 48px;
 	cursor: pointer;
+	transition: 300ms;
 }
 
 .main_contents > .payment_wrapper > .payment_info > .buttons > button:disabled {

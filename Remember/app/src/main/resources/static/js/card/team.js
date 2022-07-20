@@ -109,6 +109,130 @@ upgrade_goods.onclick = () => {
 		buy_premium_button.onclick = () => {
 			const payment_form = makeInputPaymentInfoForm(true);
 			replaceTagInMainContents(payment_form);
+			
+			let number_flag = false;
+			let check_flag = false;
+			
+			payment_form.querySelectorAll(".number").forEach(e => {
+				e.oninput = () => {
+					number_flag = false;
+					const number_regex = /\D/;
+					const result = number_regex.exec(e.value);
+					console.log(result);
+					if(result != null) e.value = e.value.replace(result[0], ""); 
+					if(e.value.length > 3) {
+						const number_four_digits_regex = /([0-9]){4}/g;
+						const final_result = number_four_digits_regex.exec(e.value);
+						console.log(final_result);
+						e.value = final_result[0];
+						number_flag = true;
+						if(number_flag && check_flag) {
+							submit_button.disabled = false;
+						} else {
+							submit_button.disabled = true;
+						}
+					}
+				}
+			});
+			
+			payment_form.querySelectorAll(".number_two_digits").forEach(e => {
+				e.oninput = () => {
+					number_flag = false;
+					const number_regex = /\D/;
+					const result = number_regex.exec(e.value);
+					console.log(result);
+					if(result != null) e.value = e.value.replace(result[0], ""); 
+					if(e.value.length > 1) {
+						const number_four_digits_regex = /([0-9]){2}/g;
+						const result = number_four_digits_regex.exec(e.value);
+						console.log(result);
+						e.value = result[0];
+						number_flag = true;
+						if(number_flag && check_flag) {
+							submit_button.disabled = false;
+						} else {
+							submit_button.disabled = true;
+						}
+					}
+				}
+			});
+			
+			payment_form.querySelector(".number_six_digits").oninput = e => {
+				number_flag = false;
+				const number_regex = /\D/;
+				const result = number_regex.exec(e.target.value);
+				console.log(result);
+				if(result != null) e.target.value = e.target.value.replace(result[0], ""); 
+				if(e.target.value.length > 5) {
+					const number_four_digits_regex = /([0-9]){6}/g;
+					const result = number_four_digits_regex.exec(e.target.value);
+					console.log(result);
+					e.target.value = result[0];
+					number_flag = true;
+					if(number_flag && check_flag) {
+						submit_button.disabled = false;
+					} else {
+						submit_button.disabled = true;
+					}
+				}
+			}
+			
+			const submit_button = payment_form.querySelector(".buttons > button");
+			const all_checkboxes = payment_form.querySelectorAll(".terms input");
+			payment_form.querySelectorAll(".terms > .column").forEach(e => {
+				const checkboxes = e.querySelectorAll("input[id*='terms']");
+				const whole_checkbox = e.querySelector("input[id*='whole']");
+				
+				whole_checkbox.onclick = event => {
+					checkboxes.forEach(checkbox => {
+						checkbox.checked = event.target.checked;
+					});
+					
+					for(let i = 0; i < all_checkboxes.length; i++) {
+						if(all_checkboxes[i].checked) {
+							check_flag = true;
+							if(number_flag && check_flag) {
+								submit_button.disabled = false;
+							} else {
+								submit_button.disabled = true;
+							}
+						} else {
+							check_flag = false;
+							submit_button.disabled = true;
+							return;
+						}
+					}
+				}
+				
+				checkboxes.forEach(checkbox => {
+					checkbox.onclick = () => {
+						let checked_count = 0;
+						checkboxes.forEach(element => {
+							if(element.checked) checked_count++;
+						});
+						if(checked_count == checkboxes.length) whole_checkbox.checked = true;
+						for(let i = 0; i < all_checkboxes.length; i++) {
+							if(all_checkboxes[i].checked) {
+								check_flag = true;
+								if(number_flag && check_flag) {
+									submit_button.disabled = false;
+								} else {
+									submit_button.disabled = true;
+								}
+							} else {
+								check_flag = false;
+								submit_button.disabled = true;
+								return;
+							}
+						}
+					}
+				});
+			});
+			
+			submit_button.onclick = () => {
+				const access_token = ajax.getAPIToken();
+				console.log(access_token);
+			}
 		}
 	}
 	const inquery_enterprise_button = products_tag.querySelector("#inquery_enterprise");
@@ -2064,27 +2188,27 @@ function makeInputPaymentInfoForm(free_flag) {
 					<div class="input_wrapper">
 						<div class="title">카드 번호</div>
 						<div class="inputs">
-							<input type="password">-<input type="password">-<input type="password">-<input type="text">
+							<input type="password" class="number">-<input type="password" class="number">-<input type="password" class="number">-<input type="text" class="number">
 						</div>
 					</div>
 					<div class="input_wrapper">
 						<div class="input_wrapper">
 							<div class="title">유효기간</div>
 							<div class="inputs">
-								<input type="text" placeholder="MM">월<input type="text" placeholder="YY">년
+								<input type="text" class="number_two_digits" placeholder="MM">월<input type="text" class="number_two_digits" placeholder="YY">년
 							</div>
 						</div>
 						<div class="input_wrapper">
 							<div class="title">비밀번호 앞자리</div>
 							<div class="inputs">
-								<input type="password">**
+								<input type="password" class="number_two_digits">**
 							</div>
 						</div>
 					</div>
 					<div class="input_wrapper">
 						<div class="title">생년월일 6자리</div>
 						<div class="inputs">
-							<input type="text" placeholder="YYMMDD">
+							<input type="text" class="number_six_digits" placeholder="YYMMDD">
 						</div>
 					</div>
 				</div>
@@ -2092,19 +2216,19 @@ function makeInputPaymentInfoForm(free_flag) {
 					<div class="input_wrapper">
 						<div class="title">이름</div>
 						<div class="inputs">
-							<input type="text">
+							<input type="text" value="${service_object.principal_profile.nickname}">
 						</div>
 					</div>
 					<div class="input_wrapper">
 						<div class="title">휴대폰</div>
 						<div class="inputs">
-							<input type="text">
+							<input type="text" value="${principal.phone}">
 						</div>
 					</div>
 					<div class="input_wrapper">
 						<div class="title">이메일 (결제 안내)</div>
 						<div class="inputs">
-							<input type="text">
+							<input type="text" value="${principal.email}">
 						</div>
 					</div>
 					<div class="terms">
