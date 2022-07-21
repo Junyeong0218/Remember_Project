@@ -686,6 +686,92 @@
 				grade.id; 
 		</select>
 		
+		<select id="getPaymentMethods" parameterType="Integer" resultType="com.remember.app.entity.card.PaymentMethod">
+			select
+				*
+			from
+				payment_method_mst
+			where
+				user_id = #{userId};
+		</select>
+		
+		<select id="isExistCustomerUID" parameterType="String" resultType="Integer">
+			select
+				count(distinct id)
+			from
+				payment_method_mst
+			where
+				id = #{customerUID};
+		</select>
+		
+		<insert id="insertPaymentMethod" parameterType="com.remember.app.entity.card.PaymentMethod">
+			insert into
+				payment_method_mst
+			values(
+				#{id},
+				#{user_id},
+				#{card_name},
+				#{card_number},
+				#{expiration_date},
+				#{password},
+				#{birthday},
+				#{name},
+				#{phone},
+				#{email},
+				now(),
+				now(),
+				false
+			);
+		</insert>
+		
+		<update id="updatePaymentMethodToUsable" parameterType="com.remember.app.entity.card.PaymentMethod">
+			update
+				payment_method_mst
+			set
+				card_name = #{card_name},
+				usability = true
+			where
+				id = #{id};
+		</update>
+		
+		<select id="getTodaysLatestPaymentId" resultType="String">
+			select
+				id
+			from
+				product_payment_mst
+			where
+				date(create_date) = date(now())
+			order by
+				id desc
+			limit 1;
+		</select>
+		
+		<insert id="insertNewPayment" parameterType="com.remember.app.entity.card.ProductPayment">
+			insert into
+				product_payment_mst
+			values(
+				#{id},
+				#{team_id},
+				#{grade_id},
+				#{user_id},
+				#{method_id},
+				#{price},
+				#{create_date},
+				#{update_date},
+				#{next_payment_date}
+			);
+		</insert>
+		
+		<update id="updateTeamGrade" parameterType="com.remember.app.entity.card.Team">
+			update
+				team_mst
+			set
+				grade_id = #{grade_id},
+				update_date = now()
+			where
+				id = #{id};
+		</update>
+		
 		<select id="getInvitedTeam" parameterType="com.remember.app.entity.card.TeamDetail" resultType="com.remember.app.entity.card.TeamDetail">
 			select
 				team.*,

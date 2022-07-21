@@ -107,13 +107,14 @@ upgrade_goods.onclick = () => {
 	if(buy_premium_button != null) {
 		// 프리미엄으로 결제 및 전환
 		buy_premium_button.onclick = () => {
-			const payment_form = makeInputPaymentInfoForm(true);
+			const payment_form = makeInputPaymentInfoForm(products.team_product_list[1].free_flag);
 			replaceTagInMainContents(payment_form);
 			
 			let number_flag = false;
 			let check_flag = false;
 			
-			payment_form.querySelectorAll(".number").forEach(e => {
+			const number_list = payment_form.querySelectorAll(".number");
+			number_list.forEach(e => {
 				e.oninput = () => {
 					number_flag = false;
 					const number_regex = /\D/;
@@ -135,7 +136,8 @@ upgrade_goods.onclick = () => {
 				}
 			});
 			
-			payment_form.querySelectorAll(".number_two_digits").forEach(e => {
+			const number_two_digits_list = payment_form.querySelectorAll(".number_two_digits");
+			number_two_digits_list.forEach(e => {
 				e.oninput = () => {
 					number_flag = false;
 					const number_regex = /\D/;
@@ -157,7 +159,8 @@ upgrade_goods.onclick = () => {
 				}
 			});
 			
-			payment_form.querySelector(".number_six_digits").oninput = e => {
+			const number_six_digits = payment_form.querySelector(".number_six_digits");
+			number_six_digits.oninput = e => {
 				number_flag = false;
 				const number_regex = /\D/;
 				const result = number_regex.exec(e.target.value);
@@ -228,10 +231,39 @@ upgrade_goods.onclick = () => {
 					}
 				});
 			});
-			
+			console.log(service_object.selected_team);
 			submit_button.onclick = () => {
-				const access_token = ajax.getAPIToken();
-				console.log(access_token);
+				if(! (number_flag && check_flag)) return;
+				submit_button.disabled = true;
+				let card_number = "";
+				number_list.forEach(number => card_number += number.value + "-");
+				card_number = card_number.substring(0, card_number.length - 1);
+				
+				const expiration_date = "20" + number_two_digits_list[1].value + "-" + number_two_digits_list[0].value;
+				const password = number_two_digits_list[2].value;
+				const birthday = number_six_digits.value;
+				
+				const data = {
+					"card_number": card_number,
+					"expiration_date": expiration_date,
+					"password": password,
+					"birthday": birthday,
+					"name": payment_form.querySelector("input[name='name']").value,
+					"phone": payment_form.querySelector("input[name='phone']").value,
+					"email": payment_form.querySelector("input[name='email']").value,
+					"free_flag": products.team_product_list[1].free_flag,
+					"team_id": service_object.selected_team.id,
+					"grade_id": products.team_product_list[1].id,
+					"price": service_object.selected_team.total_join_user_count * products.team_product_list[1].price
+				}
+				const flag = ajax.insertCardInfo(data);
+				console.log(flag);
+				if(flag) {
+					location.href = "/card/team";
+				} else {
+					alert("카드 정보 및 잔액을 확인해주세요.");
+					submit_button.disabled = false;
+				}
 			}
 		}
 	}
@@ -2216,19 +2248,19 @@ function makeInputPaymentInfoForm(free_flag) {
 					<div class="input_wrapper">
 						<div class="title">이름</div>
 						<div class="inputs">
-							<input type="text" value="${service_object.principal_profile.nickname}">
+							<input type="text" name="name" value="${service_object.principal_profile.nickname}">
 						</div>
 					</div>
 					<div class="input_wrapper">
 						<div class="title">휴대폰</div>
 						<div class="inputs">
-							<input type="text" value="${principal.phone}">
+							<input type="text" name="phone" value="${principal.phone}">
 						</div>
 					</div>
 					<div class="input_wrapper">
 						<div class="title">이메일 (결제 안내)</div>
 						<div class="inputs">
-							<input type="text" value="${principal.email}">
+							<input type="text" name="email" value="${principal.email}">
 						</div>
 					</div>
 					<div class="terms">

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +20,8 @@ import com.remember.app.entity.card.CardBooksInTeam;
 import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
+import com.remember.app.entity.card.PaymentMethod;
+import com.remember.app.entity.card.ProductPayment;
 import com.remember.app.entity.card.Team;
 import com.remember.app.entity.card.TeamCardBook;
 import com.remember.app.entity.card.TeamCardBookSummary;
@@ -39,6 +40,7 @@ import com.remember.app.requestDto.CardDeleteReqDto;
 import com.remember.app.requestDto.CardInsertReqDto;
 import com.remember.app.requestDto.DeleteTeamCardsReqDto;
 import com.remember.app.requestDto.GetCardEmailReqDto;
+import com.remember.app.requestDto.InsertPaymentMethodReqDto;
 import com.remember.app.requestDto.JoinTeamReqDto;
 import com.remember.app.requestDto.UpdateAllCardsBelongGroupsReqDto;
 import com.remember.app.requestDto.UpdateCardDetailReqDto;
@@ -572,9 +574,55 @@ public class CardRestController {
 		return cardService.getTeamCardEmailsInCardBook(getCardEmailReqDto);
 	}
 	
-	@GetMapping("/team/payment/token")
-	public String getImportInfo() throws IOException {
-		return importService.getToken();
+	@PostMapping("/team/payment")
+	public boolean getImportInfo(InsertPaymentMethodReqDto insertPaymentMethodReqDto,
+															   @AuthenticationPrincipal PrincipalDetails principalDetails) throws IOException {
+		insertPaymentMethodReqDto.setUser_id(principalDetails.getId());
+		System.out.println(insertPaymentMethodReqDto);
+		String token = "Bearer " + importService.getToken();
+		System.out.println(token);
+		
+		PaymentMethod paymentMethod = insertPaymentMethodReqDto.toMethodEntity();
+		paymentMethod = cardService.getPaymentMethod(paymentMethod);
+		if(paymentMethod == null) {
+			// insert 실패
+			System.out.println("paymentMethod insert 실패");
+			return false;
+		} else {
+			paymentMethod = importService.checkCardInfo(token, paymentMethod);
+			if(paymentMethod != null) {
+				System.out.println(paymentMethod);
+				cardService.updatePaymentMethodToUsable(paymentMethod); 
+				
+				ProductPayment payment = insertPaymentMethodReqDto.toPaymentEntity();
+				payment.setMethod_id(paymentMethod.getId());
+				if(insertPaymentMethodReqDto.isFree_flag()) {
+					// 무료 체험 1개월 -> db에 인서트는 함 price 0 으로
+					payment.setPrice(0);
+					if(importService.useProductToFree(payment)) {
+						System.out.println("무료 체험 1개월 insert 성공");
+						return true;
+					} else {
+						// 무료 결제 db insert 실패
+						System.out.println("무료 체험 1개월 insert 실패");
+						return false;
+					}
+				} else {
+					// 실제 결제
+					if(importService.sendPayment(token, payment, paymentMethod)) {
+						System.out.println("결제 완료");
+						return true;
+					} else {
+						// 결제 실패
+						System.out.println("결제 실패");
+						return false;
+					}
+				}
+			}
+		}
+		// 카드 정보 아임포트에 등록 실패 혹은 네트워크 오류
+		System.out.println("카드 정보 아임포트에 등록 실패 혹은 네트워크 오류");
+		return false;
 	}
 	
 }

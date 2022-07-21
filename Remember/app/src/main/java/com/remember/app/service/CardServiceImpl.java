@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +22,7 @@ import com.remember.app.entity.card.CardMemoDetail;
 import com.remember.app.entity.card.CardRepository;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
+import com.remember.app.entity.card.PaymentMethod;
 import com.remember.app.entity.card.Team;
 import com.remember.app.entity.card.TeamAndCardBooks;
 import com.remember.app.entity.card.TeamCardBook;
@@ -495,6 +497,72 @@ public class CardServiceImpl implements CardService {
 		}
 		
 		return dto;
+	}
+	
+	@Override
+	public PaymentMethod getPaymentMethod(PaymentMethod paymentMethod) {
+		List<PaymentMethod> methods = cardRepository.getPaymentMethods(paymentMethod.getUser_id());
+		if(methods == null) {
+			// insert
+			String _second = Integer.toString(LocalDateTime.now().toLocalTime().toSecondOfDay());
+			String second = "";
+			if(_second.length() == 5) {
+				second = _second;
+			} else {
+				int max = _second.length();
+				for(int i = 0; i < max; i++) {
+					second += "0"; 
+				}
+				second += _second;
+			}
+			int generator = 0;
+			boolean isExist = true;
+			while(isExist) {
+				String customer_uid = "method_" + paymentMethod.getCard_number().substring(15, 19) + "_" + second;
+				if(generator < 10) {
+					customer_uid += "00" + ++generator;
+				} else if(generator < 100) {
+					customer_uid += "0" + ++generator;
+				} else {
+					customer_uid += ++generator;
+				}
+				System.out.println(customer_uid);
+				if(cardRepository.isExistCustomerUID(customer_uid) == 0) {
+					paymentMethod.setId(customer_uid);
+					isExist = false;
+				}
+			}
+			if(cardRepository.insertPaymentMethod(paymentMethod) == 1) {
+				return paymentMethod;
+			}
+		} else {
+			for(PaymentMethod method : methods) {
+				if(paymentMethod.equals(method)) {
+					return method;
+				}
+			}
+			// insert
+			String second = Integer.toString(LocalDateTime.now().toLocalTime().toSecondOfDay());
+			int generator = 0;
+			boolean isExist = true;
+			while(isExist) {
+				String customer_uid = "method_" + paymentMethod.getCard_number().substring(15, 19) + "_" + second + "_00" + ++generator;
+				System.out.println(customer_uid);
+				if(cardRepository.isExistCustomerUID(customer_uid) == 0) {
+					paymentMethod.setId(customer_uid);
+					isExist = false;
+				}
+			}
+			if(cardRepository.insertPaymentMethod(paymentMethod) == 1) {
+				return paymentMethod;
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public boolean updatePaymentMethodToUsable(PaymentMethod paymentMethod) {
+		return cardRepository.updatePaymentMethodToUsable(paymentMethod) == 1;
 	}
 	
 	@Override

@@ -7,6 +7,7 @@ import com.remember.app.entity.card.CardBooksInTeam;
 import com.remember.app.entity.card.CardMemo;
 import com.remember.app.entity.card.Group;
 import com.remember.app.entity.card.GroupSummary;
+import com.remember.app.entity.card.PaymentMethod;
 import com.remember.app.entity.card.Team;
 import com.remember.app.entity.card.TeamCardBook;
 import com.remember.app.entity.card.TeamCardBookSummary;
@@ -96,6 +97,10 @@ public interface CardService {
 	public boolean updateTeamName(Team team);
 	
 	public TeamProductDetailResDto getTeamProducts(int teamId);
+	
+	public PaymentMethod getPaymentMethod(PaymentMethod paymentMethod);
+	
+	public boolean updatePaymentMethodToUsable(PaymentMethod paymentMethod);
 	
 	public TeamDetail getInvitedTeamInfo(TeamDetail teamDetail);
 	

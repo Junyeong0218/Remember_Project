@@ -19,6 +19,7 @@ const ajax = {
 																																								insertAllCardsToTeam(not_selected_card_id_list, card_book_id_list, memo_include_flag),
 	generateNewInviteCode: (team_id) =>																					generateNewInviteCode(team_id), 
 	joinInvitedTeam: (team_id, nickname) => 																				joinInvitedTeam(team_id, nickname),
+	insertCardInfo: (data) => 																											insertCardInfo(data),
 	
 	// select functions
 	isTeamJoined: () => 																														isTeamJoined(),
@@ -373,6 +374,26 @@ function joinInvitedTeam(team_id, nickname) {
 					 "nickname": nickname},
 		dataType: "json",
 		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function insertCardInfo(data) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/card/team/payment",
+		async: false,
+		data: data,
+		dataType: "json",
+		success: function (data) {
+			console.log(data);
 			flag = data;
 		},
 		error: function (xhr, status) {
@@ -783,44 +804,6 @@ function loadProductInfo(team_id) {
 		}
 	});
 	return product_info;
-}
-
-function getAPIToken() {
-	let api_key;
-	let api_secret;
-	let access_token;
-	$.ajax({
-		type: "get",
-		url: "/api/v1/card/team/payment/token",
-		async: false,
-		dataType: "text",
-		success: function (data) {
-			console.log(data);
-			access_token = data;
-		},
-		error: function (xhr, status) {
-			console.log(xhr);
-			console.log(status);
-		}
-	});
-/*	$.ajax({
-		type: "get",
-		url: "https://api.iamport.kr/users/getToken",
-		async: false,
-		"Content-Type": "application/json",
-		data: {"imp_key": api_key,
-					 "imp_secret": api_secret},
-		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			access_token = data.response.access_token;
-		},
-		error: function (xhr, status) {
-			console.log(xhr);
-			console.log(status);
-		}
-	});*/
-	return access_token;
 }
 
 // ============================================================================================================================

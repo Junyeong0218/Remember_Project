@@ -115,6 +115,20 @@ public interface CardRepository {
 	
 	public List<TeamProductDetail> getProducts(int teamId);
 	
+	public List<PaymentMethod> getPaymentMethods(int userId);
+	
+	public int isExistCustomerUID(String customerUID);
+	
+	public int insertPaymentMethod(PaymentMethod paymentMethod);
+	
+	public int updatePaymentMethodToUsable(PaymentMethod paymentMethod);
+	
+	public String getTodaysLatestPaymentId();
+	
+	public int insertNewPayment(ProductPayment productPayment);
+	
+	public int updateTeamGrade(Team team);
+	
 	public TeamDetail getInvitedTeam(TeamDetail teamDetail);
 	
 	public int checkDuplicateInviteCode(String inviteCode);
