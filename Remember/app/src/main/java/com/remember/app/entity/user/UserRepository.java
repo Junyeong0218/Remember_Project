@@ -34,4 +34,6 @@ public interface UserRepository {
 	public int insertUserDetail(UserDetail userDetail);
 	
 	public int updateNameAndNickNameInMst(User user);
+	
+	public int deleteUser(int id);
 }

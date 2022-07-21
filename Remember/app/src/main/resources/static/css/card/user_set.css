@@ -1,0 +1,207 @@
+.container {
+	min-height: 100vh;
+}
+
+main {
+	margin-top: 72px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex-grow: 1;
+	width: 100%;
+	background-color: rgba(51, 51, 51, 0.08);
+}
+
+.main_wrapper {
+	display: flex;
+	min-width: 1200px;
+}
+
+.setting_bar_menu {
+	margin: 10px 5px 5px 0;
+    min-width: 230px;
+    max-width: 230px;
+}
+
+.setting_list {
+	display:flex;
+	align-items: center;
+	
+	padding-left: 16px;
+	font-size: 13px;
+	color: #333;
+	border: 1px solid #e5e5e5;
+	height: 48px;
+	background-color: #fff;
+	cursor: pointer;
+}
+
+.setting_list:hover {
+	padding-left: 12px;
+	border-left-width: 5px;
+	border-left-color: #333;
+	transition: border-width .3s cubic-bezier(.645,.045,.355,1);
+}
+
+.setting_list.set {
+	padding-left: 12px;
+	border-left-width: 5px;
+	border-left-color: #333;
+}
+
+.main_contents{
+	width: 956px;
+	margin: 10px 5px 5px 5px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.setting_menu_wrapper {
+	width: 100%;
+	border: 1px solid #e5e5e5;
+	background-color: #fff;
+}
+
+.setting_title {
+	padding: 0 12px;
+	height: 48px;
+	line-height: 48px;
+	font-size: 18px;
+	border-bottom: 1px solid #e5e5e5;
+	color: #666;
+}
+
+.setting_contents {
+	height: auto;
+}
+
+.setting_contents > .title {
+	font-size: 13px;
+	background-color: #fafafa;
+	color: #999;
+	height: 36px;
+	line-height: 36px;
+	padding-left: 12px;
+}
+
+.setting_contents > .contents {
+	display: flex;
+	align-items: center;
+	padding: 0 12px;
+	height: 48px;
+	border-bottom: 1px solid #e5e5e5;
+	cursor: pointer;
+}
+
+.item_title {
+	font-size: 15px;
+	color: #666;
+	min-width: 300px;
+}
+
+.item_description {
+	display: flex;
+	flex-grow: 1;
+	color: #999;
+	font-size: 15px;
+}
+
+.item_description.google_book {
+	color: #ccc;
+}
+
+.item_oauth {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 30px;
+	height: 30px;
+	border-radius: 15px;
+	background-color: #60d04c;
+}
+
+.item_oauth > img {
+	width: 24px;
+	height: 24px;
+}
+
+.delete_wrapper {
+	width: 450px;
+	color: #666;
+	border: 1px solid #cdcdcd;
+	background-color: #fff;
+}
+
+.delete_wrapper > .header {
+	padding: 12px;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.delete_wrapper > .header > .label {
+	font-size: 11px;
+	color: #6aa0e0;
+}
+
+.delete_wrapper > .header > .title {
+	font-size: 15px;
+}
+
+.delete_wrapper > .contents > .contents_title {
+	font-size: 15px;
+	padding: 16px;
+	text-align: center;
+}
+
+.delete_wrapper > .contents > .contents_text {
+	padding: 16px 20px;
+	margin: 0 12px;
+	color: #999;
+	background-color: #fafafa;
+	
+}
+
+.delete_wrapper > .contents > .contents_text  > span {
+	white-space: pre-line;
+}
+
+.delete_wrapper > .footer {
+	text-align: center;
+}
+
+.delete_wrapper > .footer > .input_wrapper > span {
+	padding: 0 8px;
+}
+
+.delete_wrapper > .footer > .input_wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 30px;	
+} 
+
+.delete_wrapper > .footer > button {
+	width: 300px;
+	height: 40px;
+	margin-bottom: 16px;
+	background-color: #ff5252;
+	color: #fff;
+	transition : 300ms;
+	cursor: pointer;
+}
+
+.delete_wrapper > .footer > button:disabled {
+	opacity: 0.3;
+	cursor: default;
+}
+
+.delete_wrapper > .footer > .input_wrapper > .delete_check{
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	background: url("/static/images/signup_unchecked_checkbox.png");
+	transition: 300ms;
+	cursor: pointer;
+}
+.delete_wrapper > .footer > .input_wrapper > .delete_check:checked{
+	background: url("/static/images/signup_checked_checkbox.png");	
+}

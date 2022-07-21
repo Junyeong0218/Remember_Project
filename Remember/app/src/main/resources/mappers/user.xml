@@ -288,5 +288,13 @@
 		where
 			id = #{id};
 	</update>
+	
+	<delete id="deleteUser" parameterType="Integer">
+		delete
+		from
+			user_mst
+		where
+			id = #{id};
+	</delete>
 
 </mapper>

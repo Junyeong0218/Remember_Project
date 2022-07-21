@@ -303,6 +303,11 @@ main{
 
 .qna_title > img {
     cursor: pointer;
+   transform: rotate(180deg);
+}
+
+.qna_title > img.deg{
+	transform: none;
 }
 
 .title_box{
@@ -324,18 +329,16 @@ main{
     border-top: 1px solid rgb(204, 204, 204);
     font-size: 20px;
     font-weight: 600;
-
     max-height: 1000px;
 
 }
 
 
 
-.answer_box{
-    display: flex;
+.answer_box {
+	display:flex;
     padding: 40px;
     width: 100%;
-
 }
 
 .answer{
