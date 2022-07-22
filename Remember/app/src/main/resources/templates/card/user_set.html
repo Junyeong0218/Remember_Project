@@ -5,6 +5,7 @@
  <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name ="google-signin-client_id" content="269750796517-rinre7c7s0b6al5t7u00oim5eh47edn0.apps.googleusercontent.com">
 	<title>리멤버 - 직장인 필수 앱</title>
     <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon">
        <link rel="stylesheet" href="/static/css/container.css">
@@ -37,67 +38,90 @@
                				<div class="title">계정 관리</div>
                				<div class="contents">
                					<div class="item_title">계정 변경</div>
-               					<div class="item_description mail"></div>
-               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					<div class="item_description email">
+               						<span></span>
+               						<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					</div>
                				</div>
-               				<div class="contents">
+               				<div class="contents check_oauth">
                					<div class="item_title">간편 로그인 설정</div>
                					<div class="item_description">
                						<div class="item_oauth">
-		               					<img src="/static/images/user_set_oauth_naver.png"></div>
-               						</div>
-               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+		               					<img src="/static/images/user_set_oauth_naver.png">
+		               				</div>
+       							</div>
+          						<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
                				</div>
                				<div class="contents">
                					<div class="item_title">휴대폰 번호 변경</div>
-               					<div class="item_description phone"></div>
-               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					<div class="item_description phone">
+ 	              					<span></span>
+ 	              					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					</div>
                				</div>
                				<div class="contents password">
                					<div class="item_title">비밀번호 변경</div>
-               					<div class="item_description"></div>
-               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					<div class="item_description">
+               						<span></span>
+									<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>               						
+               					</div>
                				</div>
                				<div class="contents delete">
                					<div class="item_title">리멤버 탈퇴</div>
-               					<div class="item_description"></div>
-               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					<div class="item_description">
+               						<span></span>
+               						<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					</div>
                				</div>
                				<div class="title">명함</div>
                				<div class="contents">
                					<div class="item_title">구글 주소록 자동저장</div>
-               					<div class="item_description google_book">미설정</div>
-               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					<div class="item_description google_book">
+               						<span>미설정</span>
+               						<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					</div>
                				</div>
                				<div class="title">법적고지</div>
                				<div class="contents">
                					<div class="item_title">이용약관</div>
-               					<div class="item_description"></div>
-               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					<div class="item_description">
+               						<span></span>
+               						<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					</div>
                				</div>
                				<div class="contents">
                					<div class="item_title">개인정보처리방침</div>
-               					<div class="item_description"></div>
-               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					<div class="item_description">
+               						<span></span>
+               						<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					</div>
                				</div>
                				<div class="contents">
                					<div class="item_title">팀 명함첩 운영정책</div>
-               					<div class="item_description"></div>
-               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					<div class="item_description">
+               						<span></span>
+               						<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					</div>
                				</div>
                				<div class="contents">
                					<div class="item_title">위치기반 서비스 이용약관</div>
-               					<div class="item_description"></div>
-               					<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					<div class="item_description">
+               						<span></span>
+               						<div class="item_arrow"><img src="/static/images/user_set_arrow.png"></div>
+               					</div>
                				</div>
                 		</div>
                 	</div>
                 </div>  
             </div>
-            
+            <!-- <div id="g_id_onload"
+		         data-client_id="269750796517-rinre7c7s0b6al5t7u00oim5eh47edn0.apps.googleusercontent.com"
+		         data-callback="handleCredentialResponse">
+		    </div> -->
 		</main>
 	</div>
 	 <script type="text/javascript" src="/static/js/card/set_header.js"></script>
 	 <script type="text/javascript" src="/static/js/card/user_set.js"></script>
+	 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </body>
 </html>

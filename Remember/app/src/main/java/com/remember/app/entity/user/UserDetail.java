@@ -25,6 +25,7 @@ public class UserDetail {
 	private String role;
 	private LocalDateTime create_date;
 	
+	private int oauth_id;
 	private String oauth_username;
 	private String provider;
 	private LocalDateTime oauth_create_date;
@@ -48,7 +49,8 @@ public class UserDetail {
 	
 	public UserOauthDetail toOauthDetailEntity() {
 		return UserOauthDetail.builder()
-													   .id(id)
+													   .id(oauth_id)
+													   .user_id(id)
 													   .oauth_username(oauth_username)
 													   .provider(provider)
 													   .create_date(oauth_create_date)

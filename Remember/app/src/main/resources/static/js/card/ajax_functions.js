@@ -20,6 +20,7 @@ const ajax = {
 	generateNewInviteCode: (team_id) =>																					generateNewInviteCode(team_id), 
 	joinInvitedTeam: (team_id, nickname) => 																				joinInvitedTeam(team_id, nickname),
 	insertCardInfo: (data) => 																											insertCardInfo(data),
+	insertNewPassword: (data) => 																									insertNewPassword(data),
 	
 	// select functions
 	isTeamJoined: () => 																														isTeamJoined(),
@@ -43,7 +44,7 @@ const ajax = {
 	loadCardEmailsInGroup: (team_group_id, not_selected_card_id_list) => 						loadCardEmailsInGroup(team_group_id, not_selected_card_id_list),
 	loadCardEmailsInCardBook: (team_card_book_id, not_selected_card_id_list) => 	loadCardEmailsInCardBook(team_card_book_id, not_selected_card_id_list),
 	loadProductInfo: (team_id) =>																									loadProductInfo(team_id),
-	getAPIToken: () => 																															getAPIToken(),
+	getAvailableLogins: (phone) => 																									getAvailableLogins(phone),
 	
 	// update functions
 	updateGroupName: (group_id, group_name) => 																	updateGroupName(group_id, group_name),
@@ -66,6 +67,7 @@ const ajax = {
 																																								updateAllTeamCardsInGroupBelongTeamGroups(group_id, not_selected_card_id_list, group_id_list, default_group_id),
 	updateAllTeamCardsBelongTeamGroups: (card_book_id, not_selected_card_id_list, group_id_list, default_group_id) =>
 																																								updateAllTeamCardsBelongTeamGroups(card_book_id, not_selected_card_id_list, group_id_list, default_group_id),
+	updatePassword: (data) => 																										updatePassword(data),
 	
 	// delete functions
 	deleteGroup: (group_id) => 																											deleteGroup(group_id),
@@ -78,6 +80,7 @@ const ajax = {
 	leaveTeam: (selected_team_id) => 																								leaveTeam(selected_team_id),
 	deleteAllCardsInTeamGroup: (selected_group_id, not_selected_card_id_list) => 		deleteAllCardsInTeamGroup(selected_group_id, not_selected_card_id_list),
 	deleteAllCardsInCardBook: (selected_card_book_id, not_selected_card_id_list) => deleteAllCardsInCardBook(selected_card_book_id, not_selected_card_id_list),
+	deleteOAuthInfo: (oauth_id) => 																								deleteOAuthInfo(oauth_id)
 }
 
 // ============================================================================================================================
@@ -394,6 +397,25 @@ function insertCardInfo(data) {
 		dataType: "json",
 		success: function (data) {
 			console.log(data);
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function insertNewPassword(data) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/auth/password",
+		async: false,
+		data: data,
+		dataType: "json",
+		success: function (data) {
 			flag = data;
 		},
 		error: function (xhr, status) {
@@ -806,6 +828,25 @@ function loadProductInfo(team_id) {
 	return product_info;
 }
 
+function getAvailableLogins(phone) {
+	let object;
+	$.ajax({
+		type: "get",
+		url: "/api/v1/auth/user",
+		async: false,
+		data: {"phone": phone},
+		dataType: "json",
+		success: function (data) {
+			object = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return object;
+}
+
 // ============================================================================================================================
 // 																											update functions
 // ============================================================================================================================
@@ -1114,6 +1155,26 @@ function updateAllTeamCardsBelongTeamGroups(card_book_id, not_selected_card_id_l
 	return flag;
 }
 
+function updatePassword(data) {
+	let flag = false;
+	$.ajax({
+		type: "put",
+		url: "/api/v1/auth/password",
+		async: false,
+		contentType: "application/json",
+		data: JSON.stringify(data),
+		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
 // ============================================================================================================================
 // 																											delete functions
 // ============================================================================================================================
@@ -1312,6 +1373,24 @@ function deleteUserData(user_id) {
 	$.ajax({
 		type:"delete",
 		url: "/api/v1/auth/" + user_id,
+		async: false,
+		dateType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function deleteOAuthInfo(oauth_id) {
+	let flag = false;
+	$.ajax({
+		type:"delete",
+		url: "/api/v1/auth/oauth/" + oauth_id,
 		async: false,
 		dateType: "json",
 		success: function (data) {

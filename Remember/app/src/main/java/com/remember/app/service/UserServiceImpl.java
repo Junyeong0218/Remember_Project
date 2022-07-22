@@ -83,7 +83,24 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public boolean deleteUser(int id) {
-		
 		return userRepository.deleteUser(id) ==1;
+	}
+	
+	@Override
+	public boolean insertNewPassword(User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		return userRepository.updatePassword(user) == 1;
+	}
+	
+	@Override
+	public boolean checkOriginPassword(User user) {
+		String dbPassword = userRepository.getOriginPassword(user.getId());
+		return passwordEncoder.matches(user.getPassword(), dbPassword);
+	}
+	
+	@Override
+	public boolean updatePassword(User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		return userRepository.updatePassword(user) == 1;
 	}
 }

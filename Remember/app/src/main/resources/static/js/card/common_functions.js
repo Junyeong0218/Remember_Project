@@ -21,6 +21,11 @@ function replaceTagInMainContents(tag) {
 	appendTagToMainContents(tag);
 }
 
+function isEmptyInput(input) {
+	if(input.value == "") return true;
+	else								  return false;
+}
+
 function makeCardSummaryCharacterText(name) {
 	if(name == null) return "";
 	const char = name.charCodeAt(0);
@@ -1012,7 +1017,7 @@ function makeAlertModal() {
 	return div;
 }
 
-function makeUpdatePasswordModal() {
+function makeInsertPasswordModal() {
 	const div = document.createElement('div');
 	div.className = "modal";
 	div.innerHTML = `
@@ -1026,10 +1031,35 @@ function makeUpdatePasswordModal() {
 			<div class="description">
 				<input placeholder="새로운 비밀번호 입력" type="password" id="password">
 				<span class="text password">영문/숫자/특수문자 중 2가지 이상 조합하여 8자 이상 입력해 주세요.</span>
-				<input placeholder="새로운 비밀번호 재입력" type="password" id="re_password">
+				<input placeholder="새로운 비밀번호 재입력" type="password" id="password_confirm">
 			</div>
 			<div class="buttons">
-				<button class="submit_button">비밀번호 재설정</button>				
+				<button class="submit_button" disabled>비밀번호 재설정</button>				
+			</div>
+		</div>
+	`;
+	return div;
+}
+
+function makeUpdatePasswordModal() {
+	const div = document.createElement('div');
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window password">
+			<div class="title">
+				<span>비밀번호 재설정</span>
+				<button class="close_modal">
+					<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+				</button>
+			</div>
+			<div class="description">
+				<input placeholder="기존 비밀번호 입력" type="password" id="origin_password">
+				<input placeholder="새로운 비밀번호 입력" type="password" id="password">
+				<span class="text password">영문/숫자/특수문자 중 2가지 이상 조합하여 8자 이상 입력해 주세요.</span>
+				<input placeholder="새로운 비밀번호 재입력" type="password" id="password_confirm">
+			</div>
+			<div class="buttons">
+				<button class="submit_button" disabled>비밀번호 재설정</button>				
 			</div>
 		</div>
 	`;
@@ -1068,5 +1098,48 @@ function makeDeleteUserModal() {
 			</div>
 		</div>
 	`;
+	return div;
+}
+
+function makeOAuthCheckModal(oauth_list) {
+	const naver_oauth = oauth_list.filter(e => e.provider == "naver")[0];
+	const google_oauth = oauth_list.filter(e => e.provider == "google")[0];
+	console.log(naver_oauth);
+	console.log(google_oauth);
+	const div = document.createElement("div");
+	div.className = "modal";
+	div.innerHTML = `
+		<div class="window check_oauth">
+			<div class="title">
+				<span>간편 로그인 설정</span>
+				<button class="close_modal">
+					<img src="/static/images/card_modal_close.png" alt="닫기버튼">
+				</button>
+			</div>
+			<div class="description">
+				<div class="row naver">
+					<div class="image">
+						<img src="/static/images/user_set_oauth_naver.png">
+					</div>
+					<div class="email">${naver_oauth != null ? "연결됨" : "연결되지 않음"}</div>
+					<div class="buttons">
+						<button  type="button" class="${naver_oauth != null ? 'disconnect' : 'connect'}">${naver_oauth != null ? '연동해제' : '연동하기'}</button>
+					</div>
+				</div>
+				<div class="row google">
+					<div class="image">
+						<img src="/static/images/user_set_oauth_google.png">
+					</div>
+					<div class="email">${google_oauth != null ? "연결됨" : "연결되지 않음"}</div>
+					<div class="buttons">
+${google_oauth == null ? '<button  type="button" class="connect">연동하기</button>' : 
+												'<button  type="button" class="disconnect">연동해제</button>'}
+${google_oauth == null ? '<button type="button" class="g_id_signin" data-client_id="269750796517-rinre7c7s0b6al5t7u00oim5eh47edn0.apps.googleusercontent.com" data-type="standard" data-auto_prompt="false" data-callback="googleTokenHandler"' : ''}
+					</div>
+				</div>
+			</div>
+		</div>
+	`;
+	
 	return div;
 }

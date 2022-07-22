@@ -24,23 +24,25 @@ main {
 }
 
 .setting_list {
+	padding-left: 16px;
 	display:flex;
 	align-items: center;
-	
-	padding-left: 16px;
+	border-left: 5px solid transparent;
 	font-size: 13px;
 	color: #333;
-	border: 1px solid #e5e5e5;
 	height: 48px;
 	background-color: #fff;
 	cursor: pointer;
+	transition: 300ms;
+}
+
+.setting_list:not(:last-child) {
+	border-bottom: 1px solid #E5E5E5;
 }
 
 .setting_list:hover {
-	padding-left: 12px;
-	border-left-width: 5px;
+	padding-left: 16px;
 	border-left-color: #333;
-	transition: border-width .3s cubic-bezier(.645,.045,.355,1);
 }
 
 .setting_list.set {
@@ -101,9 +103,12 @@ main {
 
 .item_description {
 	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	flex-grow: 1;
-	color: #999;
+	height: 100%;
 	font-size: 15px;
+	color: #999;
 }
 
 .item_description.google_book {
@@ -204,4 +209,9 @@ main {
 }
 .delete_wrapper > .footer > .input_wrapper > .delete_check:checked{
 	background: url("/static/images/signup_checked_checkbox.png");	
+}
+
+#g_id_onload,
+.g_id_signin {
+	display: none;
 }

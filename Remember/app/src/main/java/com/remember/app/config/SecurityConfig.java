@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 						.anonymous()
 					.antMatchers("/now/upload", "/api/v1/now/article")
 						.access("hasRole('ROLE_CONNECTORS')")
-					.antMatchers("/career/profile/registration")
+					.antMatchers("/career/profile/registration", "/user/setting")
 						.access("hasRole('ROLE_USER')")
 			 		.anyRequest()
 			 			.permitAll()

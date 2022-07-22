@@ -1,5 +1,6 @@
 package com.remember.app.service;
 
+import com.remember.app.entity.user.User;
 import com.remember.app.entity.user.UserDetail;
 import com.remember.app.requestDto.EmailSignupReqDto;
 import com.remember.app.requestDto.TermsReqDto;
@@ -17,4 +18,11 @@ public interface UserService {
 	public UserDetail getUserDetailById(int id);
 	
 	public boolean deleteUser(int id);
+	
+	public boolean insertNewPassword(User user);
+	
+	public boolean checkOriginPassword(User user);
+	
+	public boolean updatePassword(User user);
+	
 }

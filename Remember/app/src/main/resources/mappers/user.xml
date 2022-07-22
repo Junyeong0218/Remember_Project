@@ -154,6 +154,7 @@
 			um.role,
 			um.create_date,
 			
+			oauth.id as oauth_id,
 			oauth.oauth_username,
 			oauth.provider,
 			oauth.create_date as oauth_create_date,
@@ -296,5 +297,24 @@
 		where
 			id = #{id};
 	</delete>
-
+	
+	<update id="updatePassword" parameterType="com.remember.app.entity.user.User">
+		update
+			user_mst
+		set
+			password = #{password},
+			update_date = now()
+		where
+			id = #{id};
+	</update>
+	
+	<select id="getOriginPassword" parameterType="Integer" resultType="String">
+		select
+			password
+		from
+			user_mst
+		where
+			id = #{id};
+	</select>
+	
 </mapper>

@@ -36,4 +36,9 @@ public interface UserRepository {
 	public int updateNameAndNickNameInMst(User user);
 	
 	public int deleteUser(int id);
+	
+	public String getOriginPassword(int id);
+	
+	public int updatePassword(User user);
+	
 }

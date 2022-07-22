@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.remember.app.entity.user.UserDetail;
 import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.requestDto.EmailSignupReqDto;
+import com.remember.app.requestDto.PasswordDto;
 import com.remember.app.requestDto.TermsReqDto;
 import com.remember.app.requestDto.UserDetailReqDto;
 import com.remember.app.responseDto.UserLoginFlagsResDto;
@@ -94,6 +97,21 @@ public class AuthRestController {
 	public ResponseEntity<?> deleteUser(@PathVariable int userId) {
 		boolean result = userService.deleteUser(userId);
 		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+	
+	@PostMapping("/password")
+	public boolean insertNewPassword(PasswordDto passwordDto,
+																		  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		return userService.insertNewPassword(passwordDto.toUserEntity(principalDetails.getId()));
+	}
+	
+	@PutMapping("/password")
+	public boolean updatePassword(@RequestBody PasswordDto passwordDto,
+																	@AuthenticationPrincipal PrincipalDetails principalDetails) {
+		if(userService.checkOriginPassword(passwordDto.toUserEntityForCheck(principalDetails.getId()))) {
+			return userService.updatePassword(passwordDto.toUserEntity(principalDetails.getId()));
+		}
+		return false;
 	}
 	
 }
