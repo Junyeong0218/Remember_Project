@@ -1427,6 +1427,7 @@
 	display: flex;
 	flex-direction: column;
 	width: 450px;
+	overflow: hidden;
 }
 
 .modal > .check_oauth > .description {
@@ -1478,11 +1479,15 @@
 }
 
 .modal > .check_oauth > .description > .row > .buttons {
-	min-width: fit-content;
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+	min-width: 207px;
 }
 
 .modal > .check_oauth > .description > .row > .buttons > button {
-	padding: 0 15px;
+	position: relative;
+	top: -3px;
 	height: 32px;
 	font-size: 14px;
 	line-height: 32px;
@@ -1499,7 +1504,11 @@
 	border-color: #333;
 }
 
-.modal > .check_oauth > .description > .row > .buttons > button.connect {
+/* .modal > .check_oauth > .description > .row > .buttons > button.connect {
 	color: white;
 	background-color: #333;
+} */
+
+.modal > .check_oauth > .description > .row.naver > .buttons > button img {
+	pointer-events: none;
 }

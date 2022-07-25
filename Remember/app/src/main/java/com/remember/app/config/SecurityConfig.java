@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.web.filter.CorsFilter;
 
 import com.remember.app.exceptionHandler.FormLoginAuthenticationExceptionHandler;
 import com.remember.app.exceptionHandler.OAuth2AuthenticationExceptionHandler;
@@ -28,6 +29,8 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private final PrincipalOauth2UserService principalOauth2UserService;
+	
+	private final CorsFilter corsFilter;
 	
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
@@ -48,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			 		.anyRequest()
 			 			.permitAll()
 				 .and()
+				 	.addFilter(corsFilter)
 				 	.formLogin()
 				 		.failureHandler(new FormLoginAuthenticationExceptionHandler())
 				 		.loginPage("/auth/signup")

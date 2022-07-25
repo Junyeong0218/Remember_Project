@@ -5,6 +5,15 @@ const setting_button = document.querySelector(".setting_list.set");
 const email = document.querySelector('.item_description.email');
 const phone = document.querySelector('.item_description.phone');
 
+window.onload = () => {
+	google.accounts.id.initialize({
+		client_id: "269750796517-rinre7c7s0b6al5t7u00oim5eh47edn0.apps.googleusercontent.com",
+		callback: googleTokenHandler,
+		ux_mode: "popup",
+		state_cookie_domain: "localhost"
+	});
+}
+
 email.innerText = principal.email;
 phone.innerText = principal.phone;
 
@@ -13,23 +22,58 @@ setting_button.onclick = () => location.reload();
 document.querySelector(".contents.check_oauth").onclick = () => {
 	const available_logins = ajax.getAvailableLogins(principal.phone);
 	console.log(available_logins);
-	available_logins.oauthDetails.pop();
-	const check_modal = makeOAuthCheckModal(available_logins.oauthDetails);
+	/*available_logins.oauthDetails.pop();available_logins.oauthDetails*/
+	const check_modal = makeOAuthCheckModal([]);
 	appendModalToContainer(check_modal);
 	
 	check_modal.querySelector(".close_modal").onclick = () => removeModal(check_modal);
+	
+	const g_id_signin = check_modal.querySelector(".g_id_signin");
+	if(g_id_signin != null) {
+		const options = {
+			"data-ux_mode": "popup",
+			"data-client_id":"269750796517-rinre7c7s0b6al5t7u00oim5eh47edn0.apps.googleusercontent.com",
+			"data-type": "icon",
+			"data-auto_prompt": "false",
+			"data-size": "small",
+			"data-width": 200,
+			"data-callback": "googleTokenHandler"
+			
+		}
+		google.accounts.id.renderButton(g_id_signin, options);
+	}
+	
+	let naver_id_login = check_modal.querySelector("#naverIdLogin");
+	if(naver_id_login != null) {
+		naver_id_login = new naver.LoginWithNaverId({
+			clientId: "9_dnPO2aAshpkXkjaOfQ",
+			callbackUrl: "http://localhost:8080/user/setting/redirect/naver/oauth",
+			isPopup: true,
+			loginButton: {color: "white", type: 3, height: "38"},
+			callbackHandle: true
+		});
+		naver_id_login.init();
+	}
 	
 	const rows = check_modal.querySelectorAll(".row");
 	rows.forEach(row => {
 		const provider = row.className.replace("row ", "");
 		console.log(provider);
 		row.querySelector("button[class*='connect']").onclick = (event) => {
+			console.log(event.target);
 			if(event.target.className.includes("connect")) {
 				if(provider == "naver") {
-					
+					console.log("네이버");
+					naver_id_login.getLoginStatus(async function(status) {
+						if(status) {
+							console.log(naver_id_login.loginStatus.naverUser.id);
+						} else {
+							alert("로그인 실패");
+						}
+					});
 				} else {
 					// google
-					row.querySelector(".g_id_signin").click();
+					console.log("구글 버튼 클릭");
 				}
 			} else {
 				// disconnect
@@ -179,12 +223,9 @@ function handleCredentialResponse(data, data2, data3, data4, data5) {
 	console.log(data5);
 }
 
-function googleTokenHandler(data, data2, data3, data4, data5) {
-	console.log(data);
-	console.log(data2);
-	console.log(data3);
-	console.log(data4);
-	console.log(data5);
+function googleTokenHandler(response) {
+	const credential = response.credential;
+	console.log(credential);
 }
 
 /*function init() {

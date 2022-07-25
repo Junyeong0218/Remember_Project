@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.remember.app.entity.user.UserDetail;
+import com.remember.app.entity.user.UserOauthDetail;
 import com.remember.app.principal.PrincipalDetails;
 import com.remember.app.requestDto.EmailSignupReqDto;
 import com.remember.app.requestDto.PasswordDto;
@@ -93,10 +94,18 @@ public class AuthRestController {
 		return false;
 	}
 	
-	@DeleteMapping("/{userId}")
+	@DeleteMapping("/user/{userId}")
 	public ResponseEntity<?> deleteUser(@PathVariable int userId) {
 		boolean result = userService.deleteUser(userId);
 		return new ResponseEntity<>(result,HttpStatus.OK);
+	}
+	
+	@PostMapping("/user/{userId}/oauth")
+	public boolean insertNewOAuthDetail(@PathVariable int userId,
+																			  UserOauthDetail userOauthDetail) {
+		userOauthDetail.setUser_id(userId);
+		System.out.println(userOauthDetail);
+		return true;
 	}
 	
 	@PostMapping("/password")

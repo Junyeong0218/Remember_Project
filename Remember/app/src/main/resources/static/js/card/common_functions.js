@@ -1123,7 +1123,8 @@ function makeOAuthCheckModal(oauth_list) {
 					</div>
 					<div class="email">${naver_oauth != null ? "연결됨" : "연결되지 않음"}</div>
 					<div class="buttons">
-						<button  type="button" class="${naver_oauth != null ? 'disconnect' : 'connect'}">${naver_oauth != null ? '연동해제' : '연동하기'}</button>
+${naver_oauth == null ? '<button type="button" id="naverIdLogin" class="connect"></button>' : 
+											  '<button  type="button" class="disconnect">연동해제</button>'}
 					</div>
 				</div>
 				<div class="row google">
@@ -1132,9 +1133,8 @@ function makeOAuthCheckModal(oauth_list) {
 					</div>
 					<div class="email">${google_oauth != null ? "연결됨" : "연결되지 않음"}</div>
 					<div class="buttons">
-${google_oauth == null ? '<button  type="button" class="connect">연동하기</button>' : 
+${google_oauth == null ? '<button type="button" class="connect g_id_signin"></button>' : 
 												'<button  type="button" class="disconnect">연동해제</button>'}
-${google_oauth == null ? '<button type="button" class="g_id_signin" data-client_id="269750796517-rinre7c7s0b6al5t7u00oim5eh47edn0.apps.googleusercontent.com" data-type="standard" data-auto_prompt="false" data-callback="googleTokenHandler"' : ''}
 					</div>
 				</div>
 			</div>

@@ -207,11 +207,7 @@ main {
 	transition: 300ms;
 	cursor: pointer;
 }
+
 .delete_wrapper > .footer > .input_wrapper > .delete_check:checked{
 	background: url("/static/images/signup_checked_checkbox.png");	
-}
-
-#g_id_onload,
-.g_id_signin {
-	display: none;
 }
