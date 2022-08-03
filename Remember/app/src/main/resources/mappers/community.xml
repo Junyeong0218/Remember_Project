@@ -60,7 +60,7 @@
 		select
 			am.id,
 			am.title,
-			count(distinct al.id) as like_count,
+			count(distinct al.id) as like_count
 		from
 			article_mst am
 			left outer join article_like al on(al.article_id = am.id)
@@ -197,14 +197,13 @@
 		limit #{page}, 15;
 	</select>
 	
-	<select id="getTotalArticleCount" parameterType="Integer" resultType="Integer">
+	<select id="getTotalArticleCount" resultType="Integer">
 		select
 			count(id)
 		from
 			article_mst
 		where
-			deleted = false
-		limit #{page}, 15;
+			deleted = false;
 	</select>
 	
 	<select id="getTopicArticleCount" parameterType="Integer" resultType="Integer">
@@ -214,8 +213,7 @@
 			article_mst
 		where
 			sub_category_id = #{categoryId} and
-			deleted = false
-		limit #{page}, 15;
+			deleted = false;
 	</select>
 	
 	<select id="getTopicArticleCountWithTag" parameterType="Integer" resultType="Integer">
@@ -226,8 +224,7 @@
 		where
 			sub_category_id = #{categoryId} and
 			article_tag_id = #{tagId} and
-			deleted = false
-		limit #{page}, 15;
+			deleted = false;
 	</select>
 	
 	<select id="getArticleDetail" parameterType="Integer" resultType="com.remember.app.entity.community.article.ArticleDetail">

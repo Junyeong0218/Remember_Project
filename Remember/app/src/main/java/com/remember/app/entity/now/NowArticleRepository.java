@@ -19,7 +19,7 @@ public interface NowArticleRepository {
 	
 	public List<NowArticleDetail> getArticleDetail(int articleId);
 	
-	public List<NowAnotherArticles> getAnotherArticles(int articleId);
+	public List<NowArticleSummary> getAnotherArticles(int articleId);
 	
 	public int insertArticle(NowArticle nowArticle);
 	

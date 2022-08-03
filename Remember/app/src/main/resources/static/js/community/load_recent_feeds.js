@@ -14,9 +14,12 @@ function loadRecentFeeds() {
 		url: url,
 		data: data,
 		dataType: "json",
-		success: function (article_list) {
-			console.log(article_list);
-			addArticleTags(article_list);
+		success: function (response) {
+			if(response.code == 0) {
+				addArticleTags(response.data);
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);

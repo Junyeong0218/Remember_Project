@@ -9,9 +9,12 @@ function loadCategoryData() {
 		type: "get",
 		url: "/api/v1/community/categories",
 		dataType: "json",
-		success: function (category_list) {
-			console.log(category_list);
-			addLiTags(category_list);
+		success: function (response) {
+			if(response.code == 0) {
+				addLiTags(response.data);
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -104,10 +107,15 @@ function joinCategoryForAside(event, category_id) {
 		type: "post",
 		url: "/api/v1/community/category/" + category_id,
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			if(data == true) {
-				location.reload();
+		success: function (response) {
+			if(response.code == 0) {
+				if(response.data == true) {
+					location.reload();
+				} else {
+					alert("카테고리 참여 실패");
+				}
+			} else {
+				alert(response.message);
 			}
 		},
 		error: function (xhr, status) {
@@ -155,12 +163,15 @@ function submitProfile(modal) {
 					 "company_name":modal.querySelector("input[name='company_name']").value,
 					 "department_name":modal.querySelector("input[name='department_name']").value},
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			if(data == true) {
-				location.reload();
+		success: function (response) {
+			if(response.code == 0) {
+				if(response.data == true) {
+					location.reload();
+				} else {
+					alert("프로필 생성에 실패했습니다\n다시 시도해주세요.");
+				}
 			} else {
-				alert("프로필 생성에 실패했습니다\n다시 시도해주세요.");
+				alert(response.message);
 			}
 		},
 		error: function (xhr, status) {

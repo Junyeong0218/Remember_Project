@@ -8,9 +8,12 @@ function getCategoryDetail() {
 		type: "get",
 		url: "/api/v1/community/category/" + category_id + "/detail",
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			setCategoryDetail(data);
+		success: function (response) {
+			if(response.code == 0) {
+				setCategoryDetail(response.data);
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -50,12 +53,15 @@ function setCategoryDetail(category_detail) {
 					type: "delete",
 					url: "/api/v1/community/category/" + category_id,
 					dataType: "json",
-					success: function (data) {
-						console.log(data);
-						if(data == true) {
-							location.reload();
+					success: function (response) {
+						if(response.code == 0) {
+							if(response.data == true) {
+								location.reload();
+							} else {
+								alert("카테고리 퇴장 실패");
+							}
 						} else {
-							alert("카테고리 퇴장 실패");
+							alert(response.message);
 						}
 					},
 					error: function (xhr, status) {
@@ -76,12 +82,15 @@ function setCategoryDetail(category_detail) {
 					type: "post",
 					url: "/api/v1/community/category/" + category_id,
 					dataType: "json",
-					success: function (data) {
-						console.log(data);
-						if(data == true) {
-							location.reload();
+					success: function (response) {
+						if(response.code == 0) {
+							if(response.data == true) {
+								location.reload();
+							} else {
+								alert("카테고리 참가 실패");
+							}
 						} else {
-							alert("카테고리 참가 실패");
+							alert(response.message);
 						}
 					},
 					error: function (xhr, status) {

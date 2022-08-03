@@ -130,11 +130,15 @@ function insertArticleModalForSpecificCategory() {
 				processData: false,
 				contentType: false,
 				dataType: "json",
-				success: function (data) {
-					if(data == false) {
-						location.href =  "/now/detail/" + data[i].id
+				success: function (response) {
+					if(response.code == 0) {
+						if(response.data == false) {
+							location.href =  "/now/detail/" + response.data[i].id
+						} else {
+							console.log(data);
+						}
 					} else {
-						console.log(data);
+						alert(response.message);
 					}
 				},
 				error: function (xhr, status) {
@@ -269,11 +273,15 @@ function insertArticleModalForTotalCategory() {
 				processData: false,
 				contentType: false,
 				dataType: "json",
-				success: function (data) {
-					if(data == true) {
-						location.reload();
+				success: function (response) {
+					if(response.code == 0) {
+						if(response.data == true) {
+							location.reload();
+						} else {
+							console.log(data);
+						}
 					} else {
-						console.log(data);
+						alert(response.message);
 					}
 				},
 				error: function (xhr, status) {
@@ -382,9 +390,12 @@ function getTagsAbountSubCategory(sub_category_id) {
 		url: "/api/v1/community/" + sub_category_id + "/tag/list",
 		async: false,
 		dataType: "json",
-		success: function (tag_list) {
-			console.log(tag_list);
-			tags = tag_list;
+		success: function (response) {
+			if(response.code == 0) {
+				tags = response.data;
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -401,9 +412,12 @@ function getJoinedCagories() {
 		url: "/api/v1/community/article/categories",
 		async: false,
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			categories = data;
+		success: function (response) {
+			if(response.code == 0) {
+				categories = response.data;
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -418,11 +432,15 @@ function joinCategory() {
 		type: "post",
 		url: "/api/v1/community/category/" + category_id,
 		dataType: "json",
-		success: function (data) {
-			if(data == true) {
-				location.reload();
+		success: function (response) {
+			if(response.code == 0) {
+				if(response.data == true) {
+					location.reload();
+				} else {
+					alert("카테고리 가입에 실패했습니다.");
+				}
 			} else {
-				alert("카테고리 가입에 실패했습니다.");
+				alert(response.message);
 			}
 		},
 		error: function (xhr, status) {
@@ -439,9 +457,12 @@ function getCategoryName() {
 		url: "/api/v1/community/category/" + category_id,
 		async: false,
 		dataType: "text",
-		success: function (data) {
-			console.log(data);
-			category_name = data;
+		success: function (response) {
+			if(response.code == 0) {
+				category_name = response.data;
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -458,9 +479,12 @@ function getCategoryJoinFlag() {
 		url: "/api/v1/community/" + category_id + "/user",
 		async: false,
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			flag = data;
+		success: function (response) {
+			if(response.code == 0) {
+				flag = response.data;
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -498,7 +522,6 @@ function makeLoginModal() {
 
 function makeJoinCategoryModal() {
 	const category_name = getCategoryName();
-	console.log(category_name);
 	const div = document.createElement("div");
 	div.className = "modal";
 	div.innerHTML = `

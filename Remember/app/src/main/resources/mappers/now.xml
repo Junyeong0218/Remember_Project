@@ -106,7 +106,7 @@
 			article.id = #{articleId};
   	</select>
   	
-  	<select id="getAnotherArticles" parameterType="Integer" resultType="com.remember.app.entity.now.NowAnotherArticles">
+  	<select id="getAnotherArticles" parameterType="Integer" resultType="com.remember.app.entity.now.NowArticleSummary">
   		select
 			nam.id,
 			nam.title,

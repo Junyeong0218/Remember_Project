@@ -15,8 +15,12 @@ function loadTotalArticleCount() {
 		url: url,
 		data: data,
 		dataType: "json",
-		success: function (count) {
-			appendPageLinks(Number(count));
+		success: function (response) {
+			if(response.code == 0) {
+				appendPageLinks(Number(response.data));
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, error) {
 			console.log(xhr);

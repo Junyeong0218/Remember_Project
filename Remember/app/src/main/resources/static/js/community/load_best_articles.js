@@ -5,9 +5,12 @@ function loadBestArticleList() {
 		type: "get",
 		url: "/api/v1/community/best/list",
 		dataType: "json",
-		success: function (article_summary_list) {
-			console.log(article_summary_list);
-			addBestArticleSummaryTags(article_summary_list);
+		success: function (response) {
+			if(response.code == 0) {
+				addBestArticleSummaryTags(response.data);
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);

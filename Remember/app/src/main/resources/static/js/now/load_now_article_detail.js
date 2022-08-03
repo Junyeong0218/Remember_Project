@@ -8,26 +8,27 @@ function loadArticleDetail(){
 		type: "get",
 		url: url,
 		datatype: "json",
-		success: function (data) {
-			const article_data = data.nowArticleDetail;
-			const article_images = data.imageList;
-			console.log(article_data);
-			console.log(article_images);
-			if(article_data == null){
-				alert("asdfasdf");
-			}else {
-			document.querySelector("title").innerText = article_data.title;
-			setArticleDetailTag(article_data, article_images);
-			loadAnotherArticles();
+		success: function (response) {
+			if(response.code == 0) {
+				const article_data = response.data.nowArticleDetail;
+				const article_images = response.data.imageList;
+				console.log(article_data);
+				console.log(article_images);
+				if(article_data == null){
+					alert("asdfasdf");
+				}else {
+					document.querySelector("title").innerText = article_data.title;
+					setArticleDetailTag(article_data, article_images);
+					loadAnotherArticles();
+				}
+			} else {
+				alert(response.data.message);
 			}
-			
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
 			console.log(status);
-		
 		}
-		
 	});
 }
 

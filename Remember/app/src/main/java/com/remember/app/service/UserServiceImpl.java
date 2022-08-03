@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public boolean deleteUser(int id) {
-		return userRepository.deleteUser(id) ==1;
+		return userRepository.deleteUser(id) == 1;
 	}
 	
 	@Override

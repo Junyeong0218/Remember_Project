@@ -2,7 +2,6 @@ package com.remember.app.service;
 
 import java.util.List;
 
-import com.remember.app.entity.now.NowAnotherArticles;
 import com.remember.app.entity.now.NowArticleSummary;
 import com.remember.app.entity.now.NowCategory;
 import com.remember.app.requestDto.AddNowArticleReqDto;
@@ -22,7 +21,7 @@ public interface NowService {
 	
 	public NowArticleDetailRespDto getArticleDetail(int articleId);
 	
-	public List<NowAnotherArticles> getAnotherArticles(int articleId);
+	public List<NowArticleSummary> getAnotherArticles(int articleId);
 	
 	public boolean insertArticle(AddNowArticleReqDto addNowArticleReqDto);
 

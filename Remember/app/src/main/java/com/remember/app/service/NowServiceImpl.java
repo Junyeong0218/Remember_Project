@@ -11,7 +11,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.remember.app.entity.now.NowAnotherArticles;
 import com.remember.app.entity.now.NowArticle;
 import com.remember.app.entity.now.NowArticleContentsImage;
 import com.remember.app.entity.now.NowArticleDetail;
@@ -29,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class NowServiceImpl implements NowService{
 	
 	private final NowArticleRepository nowArticleRepository;
+	
 	private final String filePath;
 	
 	@Override
@@ -69,12 +69,11 @@ public class NowServiceImpl implements NowService{
 																													   .nowArticleDetail(details.get(0))
 																													   .imageList(articleContentsImages)
 																													   .build();
-		System.out.println(dto);
 		return dto;
 	}
 	
 	@Override
-	public List<NowAnotherArticles> getAnotherArticles(int articleId) {
+	public List<NowArticleSummary> getAnotherArticles(int articleId) {
 		return nowArticleRepository.getAnotherArticles(articleId);
 	}
 	

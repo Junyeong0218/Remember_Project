@@ -10,9 +10,13 @@ function loadArticleList() {
 		url: url,
 		data: {"page":page_param},
 		dataType: "json",
-		success: function (article_list) {
-			console.log(article_list);
-			addArticleTags(article_list);
+		success: function (response) {
+			if(response.code == 0) {
+				console.log(response.data);
+				addArticleTags(response.data);
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);

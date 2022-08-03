@@ -63,7 +63,7 @@ public class CommunityServiceImpl implements CommunityService {
 	
 	@Override
 	public List<BestArticleSummary> getBestArticleSummariesAboutCategory(int categoryId) {
-		return null;
+		return communityRepository.getBestArticleSummariesAboutCategory(categoryId);
 	}
 	
 	@Override
@@ -81,16 +81,16 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 	
 	@Override
-	public int getTotalArticleCount(int page) {
-		return communityRepository.getTotalArticleCount(page * 15);
+	public int getTotalArticleCount() {
+		return communityRepository.getTotalArticleCount();
 	}
 	
 	@Override
-	public int getTopicArticleCount(int categoryId, int tagId, int page) {
+	public int getTopicArticleCount(int categoryId, int tagId) {
 		if(tagId == 0) {
-			return communityRepository.getTopicArticleCount(categoryId, page * 15);
+			return communityRepository.getTopicArticleCount(categoryId);
 		} else {
-			return communityRepository.getTopicArticleCountWithTag(categoryId, tagId, page * 15);
+			return communityRepository.getTopicArticleCountWithTag(categoryId, tagId);
 		}
 	}
 	
@@ -146,12 +146,10 @@ public class CommunityServiceImpl implements CommunityService {
 				index = 0;
 			}
 		}
-		System.out.println(orderedCommentList);
 		ArticleDetailResDto dto = ArticleDetailResDto.builder().articleDetail(details.get(0))
 																												  .imageList(articleImages)
 																												  .commentList(orderedCommentList)
 																												  .build();
-		System.out.println(dto);
 		return dto;
 	}
 	
@@ -181,7 +179,6 @@ public class CommunityServiceImpl implements CommunityService {
 				index = 0;
 			}
 		}
-		System.out.println(orderedCommentList);
 		
 		return orderedCommentList;
 	}
@@ -195,8 +192,6 @@ public class CommunityServiceImpl implements CommunityService {
 			details = communityRepository.getCommentListForUserDESC(articleId, userId);
 		}
 		
-		System.out.println("details");
-		System.out.println(details);
 		List<CommentDetail> orderedCommentList = new ArrayList<CommentDetail>();
 		int index = 0;
 		while(details.size() != 0) {
@@ -206,7 +201,6 @@ public class CommunityServiceImpl implements CommunityService {
 				orderedCommentList.add(comment);
 				for(int i = 0; i < index + 1; i++) {
 					if(details.get(i).getRelated_comment_id() == comment.getId()) {
-						System.out.println(details.get(i));
 						orderedCommentList.add(details.get(i));
 					}
 				}
@@ -214,11 +208,8 @@ public class CommunityServiceImpl implements CommunityService {
 				index = 0;
 			} else index++;
 		}
-		System.out.println(orderedCommentList);
 		orderedCommentList.sort((a, b) -> {
 			if(a.getRelated_comment_id() != 0 && b.getRelated_comment_id() != 0 && a.getRelated_comment_id() == b.getRelated_comment_id()) {
-				System.out.println("a " + a.getId() + " comp b " + b.getId());
-				System.out.println(a.getCreate_date().compareTo(b.getCreate_date()));
 				return a.getCreate_date().compareTo(b.getCreate_date());
 			} else {
 				return 0;

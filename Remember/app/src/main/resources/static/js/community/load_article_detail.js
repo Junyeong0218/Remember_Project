@@ -11,20 +11,24 @@ function loadArticleDetail() {
 		type: "get",
 		url: url,
 		dataType: "json",
-		success: function (data) {
-			const article_data = data.articleDetail;
-			const comment_list = data.commentList;
-			const article_images = data.imageList;
-			console.log(article_data);
-			console.log(comment_list);
-			console.log(article_images);
-			if(article_data == null) {
-				alert("asfadsfasdf");
+		success: function (response) {
+			if(response.code == 0) {
+				const article_data = response.data.articleDetail;
+				const comment_list = response.data.commentList;
+				const article_images = response.data.imageList;
+				console.log(article_data);
+				console.log(comment_list);
+				console.log(article_images);
+				if(article_data == null) {
+					alert("asfadsfasdf");
+				} else {
+					document.querySelector("title").innerText = article_data.title;
+					setArticleDetailTag(article_data, article_images);
+					loadRelatedArticles(article_data.sub_category_id);
+					setComments(comment_list);
+				}
 			} else {
-				document.querySelector("title").innerText = article_data.title;
-				setArticleDetailTag(article_data, article_images);
-				loadRelatedArticles(article_data.sub_category_id);
-				setComments(comment_list);
+				alert(response.message);
 			}
 		},
 		error: function (xhr, status) {
@@ -39,15 +43,18 @@ comment_order_asc_button.onclick = () => {
 		type: "get",
 		url: "/api/v1/community/article/" + article_id + "/comments/asc",
 		dataType: "json",
-		success: function (comment_list) {
-			console.log(comment_list);
-			const best_comments = document.querySelectorAll(".best_comments > .comment");
-			const whole_comments = document.querySelectorAll(".whole_comments > .comment");
-			comment_order_asc_button.classList.add("active");
-			comment_order_desc_button.classList.remove("active");
-			best_comments.forEach(e => e.remove());
-			whole_comments.forEach(e => e.remove());
-			setComments(comment_list);
+		success: function (response) {
+			if(response.code == 0) {
+				const best_comments = document.querySelectorAll(".best_comments > .comment");
+				const whole_comments = document.querySelectorAll(".whole_comments > .comment");
+				comment_order_asc_button.classList.add("active");
+				comment_order_desc_button.classList.remove("active");
+				best_comments.forEach(e => e.remove());
+				whole_comments.forEach(e => e.remove());
+				setComments(response.data);
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -61,15 +68,18 @@ comment_order_desc_button.onclick = () => {
 		type: "get",
 		url: "/api/v1/community/article/" + article_id + "/comments/desc",
 		dataType: "json",
-		success: function (comment_list) {
-			console.log(comment_list);
-			const best_comments = document.querySelectorAll(".best_comments > .comment");
-			const whole_comments = document.querySelectorAll(".whole_comments > .comment");
-			comment_order_desc_button.classList.add("active");
-			comment_order_asc_button.classList.remove("active");
-			best_comments.forEach(e => e.remove());
-			whole_comments.forEach(e => e.remove());
-			setComments(comment_list);
+		success: function (response) {
+			if(response.code == 0) {
+				const best_comments = document.querySelectorAll(".best_comments > .comment");
+				const whole_comments = document.querySelectorAll(".whole_comments > .comment");
+				comment_order_desc_button.classList.add("active");
+				comment_order_asc_button.classList.remove("active");
+				best_comments.forEach(e => e.remove());
+				whole_comments.forEach(e => e.remove());
+				setComments(response.data);
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -132,8 +142,12 @@ function updateViewCountPlusOne() {
 			type: "put",
 			url: "/api/v1/community/article/" + article_id + "/view",
 			dataType: "json",
-			success: function (data) {
-				console.log("is updated : " + data);
+			success: function (response) {
+				if(response.code == 0) {
+					console.log("is updated : " + response.data);
+				} else {
+					alert(response.message);
+				}
 			},
 			error: function (xhr, status) {
 				console.log(xhr);
@@ -242,12 +256,12 @@ function setComments(comment_list) {
 	}
 	
 	if(comment_list.length == 1 && comment_list[0].id == 0) {
-		total_comment_count.innerText += ` ${comment_list.length - 1}`;
+		total_comment_count.innerText = `댓글 ${comment_list.length - 1}`;
 		const no_comments_tag = makeNoCommentsTag();
 		whole_comments.classList.add("hidden");
 		comments_wrapper.appendChild(no_comments_tag);
 	} else {
-		total_comment_count.innerText += ` ${comment_list.length}`;
+		total_comment_count.innerText = `댓글 ${comment_list.length}`;
 		for(let i = 0; i < comment_list.length; i++) {
 			let comment_tag;
 			if(comment_list[i].deleted == true) {
@@ -313,12 +327,15 @@ function setComments(comment_list) {
 												 "use_nickname":input_wrapper.children[0].checked,
 												 "related_comment_id":comment_list[i].id},
 									dataType: "json",
-									success: function (data) {
-										console.log(data);
-										if(data == true) {
-											location.reload();
+									success: function (response) {
+										if(response.code == 0) {
+											if(response.data == true) {
+												location.reload();
+											} else {
+												alert("댓글 달기 실패");
+											}
 										} else {
-											alert("댓글 달기 실패");
+											alert(response.message);
 										}
 									},
 									error: function (xhr, status) {
@@ -342,11 +359,15 @@ function setComments(comment_list) {
 									type: "delete",
 									url: "/api/v1/community/article/" + article_id + "/comment/" + comment_list[i].id,
 									dataType: "json",
-									success: function (data) {
-										if(data == true) {
-											location.reload();
+									success: function (response) {
+										if(response.code == 0) {
+											if(response.data == true) {
+												location.reload();
+											} else {
+												alert("댓글 삭제 실패");
+											}
 										} else {
-											alert("댓글 삭제 실패");
+											alert(response.message);
 										}
 									},
 									error: function (xhr, status) {
@@ -476,12 +497,15 @@ function setComments(comment_list) {
 											 "use_nickname":input_wrapper.children[0].checked,
 											 "related_comment_id":comment_list[i].id},
 								dataType: "json",
-								success: function (data) {
-									console.log(data);
-									if(data == true) {
-										location.reload();
+								success: function (response) {
+									if(response.code == 0) {
+										if(response.data == true) {
+											location.reload();
+										} else {
+											alert("댓글 달기 실패");
+										}
 									} else {
-										alert("댓글 달기 실패");
+										alert(response.message);
 									}
 								},
 								error: function (xhr, status) {
@@ -546,9 +570,12 @@ function insertCommentLike(comment_id) {
 		url: "/api/v1/community/comment/" + comment_id + "/like",
 		async: false,
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			flag = data;
+		success: function (response) {
+			if(response.code == 0) {
+				flag = response.data;
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -565,9 +592,12 @@ function deleteCommentLike(comment_id) {
 		url: "/api/v1/community/comment/" + comment_id + "/like",
 		async: false,
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			flag = data;
+		success: function (response) {
+			if(response.code == 0) {
+				flag = response.data;
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -592,13 +622,16 @@ function loadRelatedArticles(article_category_id) {
 		type: "get",
 		url: "/api/v1/community/" + article_category_id + "/best/list",
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			const related_article_list = document.querySelector(".related_article_list");
-			for(let i = 0; i < data.length; i++) {
-				const tag = makeRelatedArticleTag(data[i], i + 1);
-				related_article_list.appendChild(tag);
-				tag.onclick = () => location.href = category_id == 0 ? "/community/detail" + data[i].id : "/community/" + category_id + "/detail/" + data[i].id;
+		success: function (response) {
+			if(response.code == 0) {
+				const related_article_list = document.querySelector(".related_article_list");
+				for(let i = 0; i < response.data.length; i++) {
+					const tag = makeRelatedArticleTag(response.data[i], i + 1);
+					related_article_list.appendChild(tag);
+					tag.onclick = () => location.href = category_id == 0 ? "/community/detail" + response.data[i].id : "/community/" + category_id + "/detail/" + response.data[i].id;
+				}
+			} else {
+				alert(response.message);
 			}
 		},
 		error: function (xhr, status) {
@@ -937,11 +970,15 @@ function setArticleDetailTag(article_data, article_images) {
 								processData: false,
 								contentType: false,
 								dataType: "json",
-								success: function (data) {
-									if(data == true) {
-										location.reload();
+								success: function (response) {
+									if(response.code == 0) {
+										if(response.data == true) {
+											location.reload();
+										} else {
+											console.log(data);
+										}
 									} else {
-										console.log(data);
+										alert(response.message);
 									}
 								},
 								error: function (xhr, status) {
@@ -967,12 +1004,16 @@ function setArticleDetailTag(article_data, article_images) {
 							type: "delete",
 							url: "/api/v1/community/article/" + article_id,
 							dataType: "json",
-							success: function (data) {
-								if(data == true) {
-									alert("게시글 삭제가 완료되었습니다.");
-									location.href = "/community";
+							success: function (response) {
+								if(response.code == 0) {
+									if(response.data == true) {
+										alert("게시글 삭제가 완료되었습니다.");
+										location.href = "/community";
+									} else {
+										alert("게시글 삭제 실패");
+									}
 								} else {
-									alert("게시글 삭제 실패");
+									alert(response.message);
 								}
 							},
 							error: function (xhr, status) {
@@ -1045,9 +1086,12 @@ function getTagsAbountSubCategory(sub_category_id) {
 		url: "/api/v1/community/" + sub_category_id + "/tag/list",
 		async: false,
 		dataType: "json",
-		success: function (tag_list) {
-			console.log(tag_list);
-			tags = tag_list;
+		success: function (response) {
+			if(response.code == 0) {
+				tags = response.data;
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -1112,9 +1156,12 @@ function insertLike() {
 		url: "/api/v1/community/article/" + article_id + "/like",
 		async: false,
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			flag = data;
+		success: function (response) {
+			if(response.code == 0) {
+				flag = response.data;
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);
@@ -1131,9 +1178,12 @@ function deleteLike() {
 		url: "/api/v1/community/article/" + article_id + "/like",
 		async: false,
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			flag = data;
+		success: function (response) {
+			if(response.code == 0) {
+				flag = response.data;
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);

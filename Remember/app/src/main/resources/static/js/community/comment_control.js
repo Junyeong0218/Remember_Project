@@ -51,12 +51,15 @@ if(principal == null) {
 			data: {"contents":comment_contents.value,
 						 "use_nickname":input_wrapper.children[0].checked},
 			dataType: "json",
-			success: function (data) {
-				console.log(data);
-				if(data == true) {
-					location.reload();
+			success: function (response) {
+				if(response.code == 0) {
+					if(response.data == true) {
+						location.reload();
+					} else {
+						alert("댓글 달기 실패");
+					}
 				} else {
-					alert("댓글 달기 실패");
+					alert(response.message);
 				}
 			},
 			error: function (xhr, status) {
@@ -161,12 +164,15 @@ function submitProfile(modal) {
 					 "company_name":modal.querySelector("input[name='company_name']").value,
 					 "department_name":modal.querySelector("input[name='department_name']").value},
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			if(data == true) {
-				location.reload();
+		success: function (response) {
+			if(response.code == 0) {
+				if(response.data == true) {
+					location.reload();
+				} else {
+					alert("프로필 생성에 실패했습니다\n다시 시도해주세요.");
+				}
 			} else {
-				alert("프로필 생성에 실패했습니다\n다시 시도해주세요.");
+				alert(response.message);
 			}
 		},
 		error: function (xhr, status) {

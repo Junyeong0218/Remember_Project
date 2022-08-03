@@ -30,9 +30,9 @@ public interface CommunityService {
 
 	public List<ArticleSummary> getRecentArticleSummariesAbountCategory(int categoryId, int tagId, int page);
 	
-	public int getTotalArticleCount(int page);
+	public int getTotalArticleCount();
 	
-	public int getTopicArticleCount(int categoryId, int tagId, int page);
+	public int getTopicArticleCount(int categoryId, int tagId);
 	
 	public ArticleDetailResDto getArticleDetail(int articleId, int userId);
 	

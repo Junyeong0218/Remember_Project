@@ -43,11 +43,11 @@ public interface CommunityRepository {
 	
 	
 	// 게시글 paging 처리를 위한 게시글 총 개수 ( categoryId 가 존재하는 경우에만 tag로 검색 가능함 )
-	public int getTotalArticleCount(int page);
+	public int getTotalArticleCount();
 	
-	public int getTopicArticleCount(int categoryId, int page);
+	public int getTopicArticleCount(int categoryId);
 
-	public int getTopicArticleCountWithTag(int categoryId, int tagId, int page);
+	public int getTopicArticleCountWithTag(int categoryId, int tagId);
 	
 	
 	// 게시글 좋아요, 댓글 좋아요, 댓글 내용 수정 삭제를 위한 로그인 / 비로그인 개별 검색
