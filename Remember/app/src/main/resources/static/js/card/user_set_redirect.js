@@ -3,29 +3,25 @@ const uris = uri.split("&");
 const access_token = "Bearer " + uris[0].split("=")[1];
 console.log(access_token);
 
-const naver_id_login = new naver.LoginWithNaverId({
+let naver_id_login = new naver.LoginWithNaverId({
 	clientId: "9_dnPO2aAshpkXkjaOfQ",
 	callbackUrl: "http://localhost:8080/user/setting/redirect/naver/oauth",
-	isPopup: true,
-	loginButton: {color: "white", type: 3, height: "38"},
-	callBackHandle: true 
+	isPopup: false,
+	callBackHandle: true,
+	accessToken: access_token
 });
 
 window.onload = () => {
+	naver_id_login.init();
+	
 	console.log(naver_id_login);
 	naver_id_login.getLoginStatus(status => {
 		console.log(status);
 		if(status) {
-			alert(status)
+			console.log(status);
+			console.log(naver_id_login.user.id);
+			window.opener.getNaverLoginId(naver_id_login.user.id);
 			window.close();
-			/*const result = insertNewOauthDetail();
-			if(result) {
-				window.returnValue = true;
-				window.close();
-			} else {
-				window.returnValue = false;
-				window.close();
-			}*/
 		}
 	});
 }

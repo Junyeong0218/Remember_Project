@@ -21,6 +21,7 @@ const ajax = {
 	joinInvitedTeam: (team_id, nickname) => 																				joinInvitedTeam(team_id, nickname),
 	insertCardInfo: (data) => 																											insertCardInfo(data),
 	insertNewPassword: (data) => 																									insertNewPassword(data),
+	insertNewOauthDetail: (data) => 																								insertNewOauthDetail(data),
 	
 	// select functions
 	isTeamJoined: () => 																														isTeamJoined(),
@@ -415,6 +416,24 @@ function insertNewPassword(data) {
 		async: false,
 		data: data,
 		dataType: "json",
+		success: function (data) {
+			flag = data;
+		},
+		error: function (xhr, status) {
+			console.log(xhr);
+			console.log(status);
+		}
+	});
+	return flag;
+}
+
+function insertNewOauthDetail(data) {
+	let flag = false;
+	$.ajax({
+		type: "post",
+		url: "/api/v1/auth/user/" + principal.id + "/oauth",
+		async: false,
+		data: data,
 		success: function (data) {
 			flag = data;
 		},
@@ -1390,7 +1409,7 @@ function deleteOAuthInfo(oauth_id) {
 	let flag = false;
 	$.ajax({
 		type:"delete",
-		url: "/api/v1/auth/oauth/" + oauth_id,
+		url: "/api/v1/auth/user/oauth/" + oauth_id,
 		async: false,
 		dateType: "json",
 		success: function (data) {

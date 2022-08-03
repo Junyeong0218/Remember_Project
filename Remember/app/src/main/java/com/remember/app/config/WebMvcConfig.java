@@ -25,7 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Value("${module.path}")
 	private String modulePath;
 	
-	private List<String> excludePathPatterns = Arrays.asList("/static/**", "/image/**", "", "/auth/signin", "/api/**");
+	private List<String> excludePathPatterns = Arrays.asList("/static/**", "/module/**", "/image/**", "", "/auth/signin", "/api/**");
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {

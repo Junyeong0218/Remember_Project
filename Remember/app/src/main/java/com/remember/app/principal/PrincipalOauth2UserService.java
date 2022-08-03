@@ -96,7 +96,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 				throw new OAuth2AuthenticationException(new OAuth2Error("400", provider + "로 이미 가입된 회원입니다.\\n로그인 화면으로 이동합니다.", "/auth/signin"));
 			}
 		} else if(userDetail == null) {
-			throw new OAuth2AuthenticationException(new OAuth2Error("400", "간편 로그인 실패", "/auth/signup"));
+			throw new OAuth2AuthenticationException(new OAuth2Error("400", "회원가입 후 이용해주세요", "/auth/signup"));
 		}
 		
 		return new PrincipalDetails(userDetail, attributes);

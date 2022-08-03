@@ -105,7 +105,13 @@ public class AuthRestController {
 																			  UserOauthDetail userOauthDetail) {
 		userOauthDetail.setUser_id(userId);
 		System.out.println(userOauthDetail);
-		return true;
+		return userService.insertNewOAuthDetail(userOauthDetail);
+	}
+	
+	@DeleteMapping("/user/oauth/{id}")
+	public boolean deleteOAuthDetail(@PathVariable int id) {
+		System.out.println(id);
+		return userService.deleteOAuthDetail(id);
 	}
 	
 	@PostMapping("/password")

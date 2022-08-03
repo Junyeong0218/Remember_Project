@@ -5,6 +5,8 @@ const setting_button = document.querySelector(".setting_list.set");
 const email = document.querySelector('.item_description.email');
 const phone = document.querySelector('.item_description.phone');
 
+let naver_id_login;
+
 window.onload = () => {
 	google.accounts.id.initialize({
 		client_id: "269750796517-rinre7c7s0b6al5t7u00oim5eh47edn0.apps.googleusercontent.com",
@@ -12,6 +14,23 @@ window.onload = () => {
 		ux_mode: "popup",
 		state_cookie_domain: "localhost"
 	});
+}
+
+window.getNaverLoginId = (id) => {
+	if(id != null) {
+		console.log(id);
+		
+		const data = {
+			"oauth_username": "naver_" + id,
+			"provider": "naver"
+		}
+		
+		if(ajax.insertNewOauthDetail(data)) {
+			location.reload();
+			return;
+		}
+	}
+	alert("간편 로그인 연동에 실패했습니다.");
 }
 
 email.innerText = principal.email;
@@ -22,8 +41,8 @@ setting_button.onclick = () => location.reload();
 document.querySelector(".contents.check_oauth").onclick = () => {
 	const available_logins = ajax.getAvailableLogins(principal.phone);
 	console.log(available_logins);
-	/*available_logins.oauthDetails.pop();available_logins.oauthDetails*/
-	const check_modal = makeOAuthCheckModal([]);
+	
+	const check_modal = makeOAuthCheckModal(available_logins.oauthDetails);
 	appendModalToContainer(check_modal);
 	
 	check_modal.querySelector(".close_modal").onclick = () => removeModal(check_modal);
@@ -38,46 +57,37 @@ document.querySelector(".contents.check_oauth").onclick = () => {
 			"data-size": "small",
 			"data-width": 200,
 			"data-callback": "googleTokenHandler"
-			
 		}
 		google.accounts.id.renderButton(g_id_signin, options);
 	}
 	
-	let naver_id_login = check_modal.querySelector("#naverIdLogin");
-	if(naver_id_login != null) {
+	const naver_login_button = check_modal.querySelector("#naverIdLogin");
+	if(naver_login_button != null) {
 		naver_id_login = new naver.LoginWithNaverId({
 			clientId: "9_dnPO2aAshpkXkjaOfQ",
 			callbackUrl: "http://localhost:8080/user/setting/redirect/naver/oauth",
 			isPopup: true,
 			loginButton: {color: "white", type: 3, height: "38"},
-			callbackHandle: true
+			callbackHandle: false
 		});
 		naver_id_login.init();
+		console.log(naver_id_login);
+		
+		naver_login_button.onclick = () => {
+			naver_login_button.children[0].click();
+		}
 	}
 	
 	const rows = check_modal.querySelectorAll(".row");
 	rows.forEach(row => {
 		const provider = row.className.replace("row ", "");
 		console.log(provider);
-		row.querySelector("button[class*='connect']").onclick = (event) => {
-			console.log(event.target);
-			if(event.target.className.includes("connect")) {
-				if(provider == "naver") {
-					console.log("네이버");
-					naver_id_login.getLoginStatus(async function(status) {
-						if(status) {
-							console.log(naver_id_login.loginStatus.naverUser.id);
-						} else {
-							alert("로그인 실패");
-						}
-					});
-				} else {
-					// google
-					console.log("구글 버튼 클릭");
-				}
-			} else {
-				// disconnect
-				if(deleteOauthInfo(available_logins.oauthDetails.filter(e => e.provider == provider)[0].id)) {
+		
+		const disconnect_button = row.querySelector("button[class='disconnect']");
+		
+		if(disconnect_button != null) {
+			disconnect_button.onclick = () => {
+				if(ajax.deleteOAuthInfo(available_logins.oauthDetails.filter(e => e.provider == provider)[0].id)) {
 					alert("간편 로그인 삭제 성공\n다시 로그인해주세요.");
 					location.replace("/logout");
 				} else {
@@ -215,49 +225,25 @@ user_delete.onclick = () => {
 	}
 }
 
-function handleCredentialResponse(data, data2, data3, data4, data5) {
-	console.log(data);
-	console.log(data2);
-	console.log(data3);
-	console.log(data4);
-	console.log(data5);
-}
-
-function googleTokenHandler(response) {
+async function googleTokenHandler(response) {
 	const credential = response.credential;
+	console.log(response);
 	console.log(credential);
+	
+	console.log(google.accounts.id);
+	
+	const base64Payload = response.credential.split(".")[1];
+	const payload = JSON.parse(atob(base64Payload));
+	const sub = payload.sub;
+	
+	const data = {
+		"oauth_username": "google_" + sub,
+		"provider": "google"
+	}
+		
+	if(ajax.insertNewOauthDetail(data)) {
+		location.reload();
+	} else {
+		alert("간편 로그인 연동에 실패했습니다.");
+	}
 }
-
-/*function init() {
-	gapi.load('auth2', function() {
-		gapi.auth2.init();
-		options = new gapi.auth2.SigninOptionsBuilder();
-		options.setPrompt('select_account');
-        // 추가는 Oauth 승인 권한 추가 후 띄어쓰기 기준으로 추가
-		options.setScope('email openid https://www.googleapis.com/auth/user');
-        // 인스턴스의 함수 호출 - element에 로그인 기능 추가
-        // GgCustomLogin은 li태그안에 있는 ID, 위에 설정한 options와 아래 성공,실패시 실행하는 함수들
-		gapi.auth2.getAuthInstance().attachClickHandler('google_oauth_login', options, onSignIn, onSignInFailure);
-	});
-}
-
-function onSignIn(googleUser) {
-	console.log(googleUser);
-	const access_token = googleUser.getAuthResponse().access_token;
-	$.ajax({
-		url: 'https://www.googleapis.com/oauth2/v2/userinfo'
-		, data: {personFields:'email', key:'AIzaSyCStHBJD-b3SUZ7UsarRtzMiX9hEpnT0ms', 'access_token': access_token}
-		, method:'GET'
-	})
-	.done(function(e){
-        //프로필을 가져온다.
-		var profile = googleUser.getBasicProfile();
-		console.log(profile);
-	})
-	.fail(function(e){
-		console.log(e);
-	});
-}
-function onSignInFailure(t){		
-	console.log(t);
-}*/

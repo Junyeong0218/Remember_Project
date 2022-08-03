@@ -37,6 +37,10 @@ public interface UserRepository {
 	
 	public int deleteUser(int id);
 	
+	public int insertNewOAuthDetail(UserOauthDetail userOauthDetail);
+	
+	public int deleteOAuthDetail(int id);
+	
 	public String getOriginPassword(int id);
 	
 	public int updatePassword(User user);

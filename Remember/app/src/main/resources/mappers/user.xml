@@ -298,6 +298,26 @@
 			id = #{id};
 	</delete>
 	
+	<insert id="insertNewOAuthDetail" parameterType="com.remember.app.entity.user.UserOauthDetail">
+		insert into
+			user_oauth_detail
+		values(
+			0,
+			#{user_id},
+			#{oauth_username},
+			#{provider},
+			now(),
+			now()
+		);
+	</insert>
+	
+	<delete id="deleteOAuthDetail" parameterType="Integer">
+		delete from
+			user_oauth_detail
+		where
+			id = #{id};
+	</delete>
+	
 	<update id="updatePassword" parameterType="com.remember.app.entity.user.User">
 		update
 			user_mst
