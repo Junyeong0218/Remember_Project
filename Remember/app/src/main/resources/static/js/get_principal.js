@@ -7,9 +7,12 @@ function getPrincipal() {
         url: "/api/v1/auth/principal",
         async: false,
         dataType: "json",
-        success: function (data) {
-            console.log(data);
-            user_data = data;
+        success: function (response) {
+			if(response.code == 0) {
+	            user_data = response.data;
+			} else {
+				alert(response.message);
+			}
         },
         error: function (xhr, status) {
             console.log(xhr);

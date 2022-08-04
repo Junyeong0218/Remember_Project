@@ -855,8 +855,12 @@ function getAvailableLogins(phone) {
 		async: false,
 		data: {"phone": phone},
 		dataType: "json",
-		success: function (data) {
-			object = data;
+		success: function (response) {
+			if(response.code == 0) {
+				object = response.data;
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, status) {
 			console.log(xhr);

@@ -49,12 +49,15 @@ signup_email_button.onclick = () => {
 		data: {"email":email_input.value,
 					 "password":password_input.value},
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			if(data == true) {
-				email_form.submit();
+		success: function (response) {
+			if(response.code == 0) {
+				if(response.data == true) {
+					email_form.submit();
+				} else {
+					alert("가입 실패");
+				}
 			} else {
-				alert("가입 실패");
+				alert(response.message);
 			}
 		},
 		error: function (xhr, status) {
@@ -84,19 +87,23 @@ function checkAvailableLogins() {
 					 "alert_flag":terms_checkboxes[5].children[0].checked,
 					 "phone":phone_number_input.value},
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			if(data.user == null && data.oauthDetails == null) {
-				// 가입된 계정 없는 경우
-				showPhoneCertificateModal(phone_number_input.value);
-			} else {
-				// 가입된 계정이 있는 경우 modal창 출력
-				if(data.user != null && data.oauthDetails.length == 2) {
-					alert("더 이상 가입할 수 없습니다.\n로그인 페이지로 이동합니다.");
-					location.replace("/auth/signin");
+		success: function (response) {
+			console.log(response);
+			if(response.code == 0) {
+				if(response.data == null) {
+					// 가입된 계정 없는 경우
+					showPhoneCertificateModal(phone_number_input.value);
 				} else {
-					showAlreadyHaveAccountModal(phone_number_input.value);
+					// 가입된 계정이 있는 경우 modal창 출력
+					if(response.data.user != null && response.data.oauthDetails.length == 2) {
+						alert("더 이상 가입할 수 없습니다.\n로그인 페이지로 이동합니다.");
+						location.replace("/auth/signin");
+					} else {
+						showAlreadyHaveAccountModal(phone_number_input.value);
+					}
 				}
+			} else {
+				alert(response.message);
 			}
 		},
 		error: function (xhr, status) {
@@ -134,49 +141,53 @@ function showPhoneCertificateModal(phone_number) {
 		url: "/api/v1/auth/phone/certificate",
 		data: {"phone":phone_number},
 		dataType: "json",
-		success: function (data) {
-			if(data == true) {
-				const div = makePhoneCertificateModal();
-				document.querySelector(".container").appendChild(div);
-				const left_time_tag = div.querySelector(".left_time");
-				const wrong_message = div.querySelector(".wrong_message");
-				div.querySelector("input").onblur = (event) => {
-					if(event.target.value == "") {
-						wrong_message.innerText = "인증번호를 입력하세요.";
-						event.target.classList.add("wrong");
-					} else {
-						wrong_message.innerText = "";
-						event.target.classList.remove("wrong");
-						if(event.target.value.length == 4) {
-							div.querySelector(".apply").disabled = false;
+		success: function (response) {
+			if(response.code == 0) {
+				if(response.data == true) {
+					const div = makePhoneCertificateModal();
+					document.querySelector(".container").appendChild(div);
+					const left_time_tag = div.querySelector(".left_time");
+					const wrong_message = div.querySelector(".wrong_message");
+					div.querySelector("input").onblur = (event) => {
+						if(event.target.value == "") {
+							wrong_message.innerText = "인증번호를 입력하세요.";
+							event.target.classList.add("wrong");
 						} else {
-							div.querySelector(".apply").disabled = true;
+							wrong_message.innerText = "";
+							event.target.classList.remove("wrong");
+							if(event.target.value.length == 4) {
+								div.querySelector(".apply").disabled = false;
+							} else {
+								div.querySelector(".apply").disabled = true;
+							}
+						}
+					}
+					let time = Date.now() + 1000 * 60 * 3;
+					let left_time = new Date(Math.abs(time - Date.now()));
+					let timer = setInterval(() => {
+						left_time = new Date(Math.abs(time - Date.now()));
+						left_time_tag.innerText = `${String(left_time.getMinutes()).padStart(2, "0")}:${String(left_time.getSeconds()).padStart(2, "0")}`;
+						if(left_time > 1000 * 60 * 3) timer = null;
+					}, 1000);
+					div.querySelector(".close_button").onclick = () => div.remove();
+					div.querySelector(".cancel").onclick = () => div.remove();
+					div.querySelector(".resend_button").onclick = () => {
+						div.remove();
+						showPhoneCertificateModal(phone_number);
+					}
+					div.querySelector(".apply").onclick = () => {
+						const result = sendAuthenticateCode(div.querySelector("input").value, phone_number);
+						console.log("code isEqual : " + result);
+						if(result == true) {
+							div.remove();
+							toSelectTypeForm();
+						} else {
+							alert("인증 실패");
 						}
 					}
 				}
-				let time = Date.now() + 1000 * 60 * 3;
-				let left_time = new Date(Math.abs(time - Date.now()));
-				let timer = setInterval(() => {
-					left_time = new Date(Math.abs(time - Date.now()));
-					left_time_tag.innerText = `${String(left_time.getMinutes()).padStart(2, "0")}:${String(left_time.getSeconds()).padStart(2, "0")}`;
-					if(left_time > 1000 * 60 * 3) timer = null;
-				}, 1000);
-				div.querySelector(".close_button").onclick = () => div.remove();
-				div.querySelector(".cancel").onclick = () => div.remove();
-				div.querySelector(".resend_button").onclick = () => {
-					div.remove();
-					showPhoneCertificateModal(phone_number);
-				}
-				div.querySelector(".apply").onclick = () => {
-					const result = sendAuthenticateCode(div.querySelector("input").value, phone_number);
-					console.log("code isEqual : " + result);
-					if(result == true) {
-						div.remove();
-						toSelectTypeForm();
-					} else {
-						alert("인증 실패");
-					}
-				}
+			} else {
+				alert(response.message);
 			}
 		},
 		error: function (xhr, stauts) {
@@ -195,9 +206,12 @@ function sendAuthenticateCode(code, phone_number) {
 					 "phone":phone_number},
 		async: false,
 		dataType: "json",
-		success: function (data) {
-			console.log(data);
-			flag = data;
+		success: function (response) {
+			if(response.code == 0) {
+				flag = response.data;
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, stauts) {
 			console.log(xhr);
@@ -215,8 +229,12 @@ function resendPhoneCertificationCode(phone_number) {
 		data: {"phone":phone_number},
 		async: false,
 		dataType: "json",
-		success: function (data) {
-			flag = data;
+		success: function (response) {
+			if(response.code == 0) {
+				flag = response.data;
+			} else {
+				alert(response.message);
+			}
 		},
 		error: function (xhr, stauts) {
 			console.log(xhr);
